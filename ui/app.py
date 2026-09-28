@@ -641,7 +641,7 @@ def draw_graph(nodes: list[dict[str, Any]], edges: list[dict[str, Any]]) -> None
         kind = str(node.get("kind", "Unknown"))
         kinds[node_id] = kind
         props = node.get("properties") if isinstance(node.get("properties"), dict) else {}
-        detail = " · ".join(f"{key}: {display(value)}" for key, value in list(props.items())[:3])
+        detail = " · ".join(f"{key}: {display(value)[:100]}" for key, value in list(props.items())[:3])
         labels[node_id] = f"{label}<br><sup>{KIND_LABELS.get(kind, kind)}{(' · ' + detail) if detail else ''}</sup>"
     for edge in edges:
         source = str(edge.get("source", edge.get("source_node_id", "")))
