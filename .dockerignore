@@ -1,0 +1,13 @@
+.git
+.env
+.env.*
+.venv
+__pycache__
+artifacts
+data/raw
+data/processed
+.pytest_cache
+.ruff_cache
+.coverage
+htmlcov
+*.egg-info
