@@ -31,14 +31,14 @@ PROVIDER_LABELS = {
     "mock": "Mock · 离线演示",
 }
 STAGE_DEFINITIONS = [
-    ("interpret", "需求理解", "把自然语言约束转成可验证任务"),
-    ("retrieve", "证据检索", "从知识库与图谱召回依据"),
-    ("plan", "候选规划", "生成可比较的算法方案"),
-    ("generate", "代码生成", "按受限语法生成候选 Pipeline"),
-    ("validate", "独立验证", "隔离进程训练并计算指标"),
-    ("repair", "有限修复", "根据失败证据修复，最多两轮"),
-    ("writeback", "经验沉淀", "写入版本化能力与失败经验"),
-    ("report", "报告交付", "汇总证据、资源与可复现制品"),
+    ("interpret", "🧭 需求理解", "把自然语言约束转成可验证任务"),
+    ("retrieve", "🔎 证据检索", "从知识库与图谱召回依据"),
+    ("plan", "🗺️ 候选规划", "生成可比较的算法方案"),
+    ("generate", "🧩 代码生成", "按受限语法生成候选 Pipeline"),
+    ("validate", "🧪 独立验证", "隔离进程训练并计算指标"),
+    ("repair", "🛠️ 有限修复", "根据失败证据修复，最多两轮"),
+    ("writeback", "🧠 经验沉淀", "写入版本化能力与失败经验"),
+    ("report", "📄 报告交付", "汇总证据、资源与可复现制品"),
 ]
 EVENT_STAGE_ALIASES = {
     "INTERPRET": "interpret", "INTERPRETER": "interpret", "TASK_INTERPRETED": "interpret", "SPEC_VALIDATED": "interpret", "RECEIVED": "interpret",
@@ -56,6 +56,54 @@ DEFAULTS = {
     "sms": ("构建短信垃圾信息分类能力，比较 TF-IDF 与线性或朴素贝叶斯方案。"
             "保持训练、验证、测试隔离，报告 AP、F1 和接口检查结果。"),
 }
+
+STATUS_LABELS = {
+    "passed": "通过",
+    "completed": "已完成",
+    "succeeded": "已完成",
+    "failed": "未通过",
+    "error": "错误",
+    "cancelled": "已取消",
+    "running": "执行中",
+    "queued": "排队中",
+    "pending": "待执行",
+    "proposed": "待验证",
+    "verified": "已验证",
+    "extracted": "已抽取",
+    "draft": "草稿",
+    "deprecated": "已废弃",
+}
+KIND_LABELS = {
+    "TaskType": "任务类型", "Capability": "算法能力", "Algorithm": "算法",
+    "Transform": "数据变换", "DatasetVersion": "数据版本", "Metric": "评价指标",
+    "Environment": "运行环境", "Source": "证据来源", "Artifact": "代码制品",
+    "ValidationRun": "验证运行", "FailureExperience": "失败经验",
+}
+KIND_COLORS = {
+    "TaskType": "#6d5dfc", "Capability": "#087f8c", "Algorithm": "#2563eb",
+    "Transform": "#16a34a", "DatasetVersion": "#d97706", "Metric": "#db2777",
+    "Environment": "#64748b", "Source": "#9333ea", "Artifact": "#0f766e",
+    "ValidationRun": "#0891b2", "FailureExperience": "#dc2626",
+}
+RELATION_LABELS = {
+    "SOLVES": "解决", "IMPLEMENTS": "实现", "USES": "使用", "REQUIRES": "依赖",
+    "DERIVED_FROM": "派生自", "EVALUATED_ON": "评测于", "EVALUATES": "评测",
+    "MEASURED_BY": "由指标测量", "REPAIRS": "修复", "SUPERSEDES": "替代",
+    "AVOIDED_BY": "规避方式",
+}
+
+
+def status_label(value: Any) -> str:
+    return STATUS_LABELS.get(str(value).lower(), str(value) if value not in (None, "") else "未记录")
+
+
+def format_metric(value: Any, key: str = "") -> str:
+    value = number(value)
+    if value is None:
+        return "—"
+    if "lift" in key.lower():
+        return f"{value:.2f}×"
+    return f"{value:.4f}"
 
 
 def records(value: Any) -> list[dict[str, Any]]:
@@ -261,6 +309,120 @@ def render_resources(run: dict[str, Any]) -> None:
     st.caption(f"LLM 请求 {display(usage.get('calls'))} 次 · 输入 token {display(usage.get('input_tokens'))} · 输出 token {display(usage.get('output_tokens'))}。")
 
 
+def _check_rows(checks: Any) -> list[dict[str, str]]:
+    """Flatten validator checks into a human-readable table."""
+    if not isinstance(checks, dict):
+        return []
+    rows = []
+    for key, value in checks.items():
+        if isinstance(value, dict):
+            for child, result in value.items():
+                rows.append({"检查项": f"{key} / {child}", "结果": status_label(result) if isinstance(result, str) else ("通过" if result is True else "未通过" if result is False else display(result))})
+        else:
+            rows.append({"检查项": str(key), "结果": "通过" if value is True else "未通过" if value is False else display(value)})
+    return rows
+
+
+def _human_candidate(candidate: dict[str, Any]) -> dict[str, Any]:
+    plan = candidate.get("plan") if isinstance(candidate.get("plan"), dict) else {}
+    metrics = candidate.get("metrics") if isinstance(candidate.get("metrics"), dict) else {}
+    checks = candidate.get("checks") if isinstance(candidate.get("checks"), dict) else {}
+    resources = candidate.get("resources") if isinstance(candidate.get("resources"), dict) else {}
+    return {
+        "候选": candidate.get("candidate_id", "未命名"),
+        "算法": plan.get("algorithm") or candidate.get("algorithm") or "未记录",
+        "变体": plan.get("variant") or "默认",
+        "状态": status_label(candidate.get("status")),
+        "质量门槛": status_label(candidate.get("quality_status")),
+        "AP": format_metric(metrics.get("average_precision", metrics.get("AP")), "ap"),
+        "ROC-AUC": format_metric(metrics.get("roc_auc", metrics.get("ROC_AUC")), "auc"),
+        "F1": format_metric(metrics.get("f1", metrics.get("f1_at_0_5")), "f1"),
+        "Lift@10%": format_metric(metrics.get("lift_at_10pct", metrics.get("lift10")), "lift"),
+        "通过检查": sum(1 for row in _check_rows(checks) if row["结果"] == "通过"),
+        "总检查": len(_check_rows(checks)),
+        "训练耗时": resources.get("fit_seconds", resources.get("fit_s")),
+    }
+
+
+def render_human_report(run: dict[str, Any], summary: dict[str, Any] | None = None) -> None:
+    """Present a decision-oriented report; raw JSON remains an advanced evidence view."""
+    candidates = records(run.get("candidates"))
+    selected_id = run.get("selected_candidate_id")
+    selected = next((item for item in candidates if item.get("candidate_id") == selected_id), None)
+    task_spec = run.get("task_spec") if isinstance(run.get("task_spec"), dict) else {}
+    primary = str(task_spec.get("primary_metric", "average_precision"))
+    quality = str(run.get("quality_status", ""))
+    status = str(run.get("status", ""))
+    if status in {"passed", "completed", "succeeded"} and selected:
+        st.success(f"验证完成：已选择 {selected_id}，质量门槛为“{status_label(quality)}”。")
+    elif status in {"failed", "error"}:
+        st.error("验证结束但未达到质量门槛。下面保留失败证据和修复轨迹，便于复盘。")
+    elif status == "cancelled":
+        st.warning("运行已取消，已产生的验证事实仍然保留。")
+    else:
+        st.info(f"当前状态：{status_label(status)}。候选和事件会随着服务端进度更新。")
+
+    overview = st.columns(4)
+    overview[0].metric("运行状态", status_label(status))
+    overview[1].metric("任务数据", str(run.get("dataset_id", task_spec.get("dataset_id", "未记录"))))
+    overview[2].metric("候选数量", len(candidates))
+    overview[3].metric("主指标", primary.replace("average_precision", "AP").upper())
+
+    if selected:
+        plan = selected.get("plan") if isinstance(selected.get("plan"), dict) else {}
+        metrics = selected.get("metrics") if isinstance(selected.get("metrics"), dict) else {}
+        st.markdown("#### 选择依据")
+        st.markdown(
+            f"系统在同一数据切分和预算下比较了 **{len(candidates)}** 个候选，"
+            f"按预注册主指标 **{primary.replace('average_precision', 'AP').upper()}** 选择 **{selected_id}**。"
+            f"该候选使用 **{plan.get('algorithm', '未记录')}**，当前观测值为 **{format_metric(metrics.get(primary), primary)}**。"
+        )
+        if run.get("provenance"):
+            provenance = run["provenance"]
+            st.caption(f"评测口径：{display(provenance.get('split', '验证集'))} · 数据和特征约束来自后端固定协议。")
+        if quality in {"passed", "verified", "quality_passed"}:
+            st.info("交付建议：本次候选通过了原型质量门槛，可进入人工复核或预发布评审；最终上线仍需在业务数据、封存测试集和监控告警下重新验收。")
+        else:
+            st.warning("交付建议：当前结果只适合作为失败复盘或继续修复的输入，不能作为生产模型结论。")
+    elif not candidates:
+        st.caption("候选尚未生成。")
+
+    st.markdown("#### 候选对比")
+    if candidates:
+        st.dataframe([_human_candidate(item) for item in candidates], use_container_width=True, hide_index=True)
+        render_metric_chart(candidates)
+    else:
+        st.info("暂无候选结果。")
+
+    if selected:
+        with st.expander("中间过程：选中方案的规划、检查、修复和资源", expanded=False):
+            st.markdown("#### 选中方案详情")
+            detail_cols = st.columns(2)
+            plan = selected.get("plan") if isinstance(selected.get("plan"), dict) else {}
+            detail_cols[0].markdown(f"**算法方案**  \n{display(plan.get('algorithm'))} · {display(plan.get('variant'))}")
+            detail_cols[0].markdown(f"**代码制品**  \n`{display(selected.get('artifact_id'))}`")
+            detail_cols[1].markdown(f"**代码校验**  \n`{display(selected.get('code_sha256'))}`")
+            detail_cols[1].markdown(f"**修复次数**  \n{len(records(selected.get('repairs')))} 次")
+            checks = _check_rows(selected.get("checks"))
+            if checks:
+                st.dataframe(checks, use_container_width=True, hide_index=True)
+            tabs = st.tabs(["规划与依据", "修复记录", "资源观测"])
+            with tabs[0]:
+                st.write(plan.get("rationale", plan.get("reason", "规划依据由候选事实和召回证据组成。")))
+                evidence = plan.get("evidence", plan.get("retrieved_evidence"))
+                if evidence:
+                    st.dataframe([{ "来源": item.get("source_id", item.get("source", "")), "摘要": item.get("summary", item.get("text", display(item))) } if isinstance(item, dict) else {"来源": "证据", "摘要": item} for item in records(evidence)], use_container_width=True, hide_index=True)
+            with tabs[1]:
+                repairs = records(selected.get("repairs"))
+                st.dataframe([{ "轮次": item.get("attempt", index + 1), "结果": status_label(item.get("status")), "原因": item.get("error", item.get("diagnosis", "未记录")) } for index, item in enumerate(repairs)], use_container_width=True, hide_index=True) if repairs else st.caption("本候选没有修复记录。")
+            with tabs[2]:
+                resources = selected.get("resources") if isinstance(selected.get("resources"), dict) else {}
+                st.dataframe([{ "训练耗时（秒）": resources.get("fit_seconds", resources.get("fit_s")), "预测耗时（秒）": resources.get("predict_seconds", resources.get("predict_s")), "峰值内存（MiB）": resources.get("peak_rss_mib", resources.get("peak_rss")), "进程限制": display(resources.get("limits")) }], use_container_width=True, hide_index=True)
+    warnings = records(run.get("warnings"))
+    if warnings:
+        st.warning("；".join(display(item) for item in warnings))
+
+
 def show_identity(run: dict[str, Any]) -> None:
     st.info(mode_label(run.get("mode")))
     columns = st.columns(5)
@@ -309,7 +471,8 @@ def monitor() -> None:
                 st.error(str(exc))
     if run.get("warnings"):
         st.warning("此运行包含警告，请在答辩和报告中保留。")
-        st.json(run["warnings"])
+        with st.expander("查看警告原文", expanded=False):
+            st.json(run["warnings"])
     rows = candidate_rows(run.get("candidates"))
     if rows:
         st.subheader("候选验证进度")
@@ -318,20 +481,20 @@ def monitor() -> None:
         render_metric_chart(records(run.get("candidates")))
         with st.expander("训练资源与 LLM 预算", expanded=False):
             render_resources(run)
-    st.subheader("可追溯步骤")
-    try:
-        if events:
-            event_rows = [{"时间": event.get("timestamp", event.get("created_at", "")),
-                           "步骤": event_name(event) or "事件",
-                           "详情": display(event.get("detail", event.get("payload", event.get("data", event))))}
-                          for event in events]
-            st.dataframe(event_rows, use_container_width=True, hide_index=True)
-            with st.expander("完整事件 JSON"):
-                st.json(events)
-        else:
-            st.caption("尚无已记录事件。")
-    except RuntimeError as exc:
-        st.warning(str(exc))
+    with st.expander("中间过程：事件时间线与 Agent 事件", expanded=False):
+        try:
+            if events:
+                event_rows = [{"时间": event.get("timestamp", event.get("created_at", "")),
+                               "步骤": event_name(event) or "事件",
+                               "详情": display(event.get("detail", event.get("payload", event.get("data", event))))}
+                              for event in events]
+                st.dataframe(event_rows, use_container_width=True, hide_index=True)
+                with st.expander("完整事件 JSON"):
+                    st.json(events)
+            else:
+                st.caption("尚无已记录事件。")
+        except RuntimeError as exc:
+            st.warning(str(exc))
     with st.expander("需求、数据与预算约束"):
         st.json(run.get("task_spec") or {})
         st.json(run.get("provenance") or {})
@@ -398,68 +561,67 @@ def submission_view() -> None:
 
 def report_view() -> None:
     run_id = st.session_state.get("active_run", "")
-    st.subheader("候选、代码与验证报告")
+    st.subheader("📄 可读验证报告")
+    st.caption("先看结论和依据，再按需展开代码与原始证据。JSON 仅作为审计和复现格式，不作为主阅读界面。")
     if not run_id:
         st.info("先选择或创建一个运行。")
         return
     run = get_run(run_id)
     if run is None:
         return
-    show_identity(run)
-    rows = candidate_rows(run.get("candidates"))
-    if rows:
-        st.dataframe(rows, use_container_width=True, hide_index=True)
-        render_candidate_cards(records(run.get("candidates")), run.get("selected_candidate_id"))
-        render_metric_chart(records(run.get("candidates")))
-    st.caption("缺失值保留为空，不代表零分或通过。仅同一数据、切分与指标定义下的候选适合比较。")
+    st.caption(f"{mode_label(run.get('mode'))} · 模型：{display(run.get('model'))} · 运行 ID：{run_id}")
+    try:
+        summary = api("GET", run_path(run_id) + "/summary")
+    except RuntimeError:
+        summary = None
+    render_human_report(run, summary if isinstance(summary, dict) else None)
     candidates = records(run.get("candidates"))
     if candidates:
-        index = st.selectbox("检查候选", range(len(candidates)),
-                             format_func=lambda value: display(candidates[value].get("candidate_id")))
-        selected = candidates[index]
-        for key, label in [("plan", "规划与证据"), ("checks", "功能、接口与稳定性检查"),
-                           ("repairs", "修复轨迹"), ("resources", "资源观测")]:
-            with st.expander(label, expanded=key == "checks"):
-                st.json(selected.get(key))
-    try:
-        payload = api("GET", run_path(run_id) + "/artifacts")
-        artifacts = records(payload.get("artifacts")) if isinstance(payload, dict) else []
-        if artifacts:
-            choice = st.selectbox("代码制品（只读）", range(len(artifacts)),
-                                  format_func=lambda value: display(artifacts[value].get("artifact_id")))
-            artifact_id = str(artifacts[choice].get("artifact_id", ""))
-            detail = api("GET", run_path(run_id) + "/artifacts/" + quote(artifact_id, safe=""))
-            if isinstance(detail, dict):
-                st.caption("制品哈希：" + display(detail.get("code_sha256", detail.get("sha256"))))
-                code = detail.get("code", detail.get("source"))
-                if isinstance(code, str):
-                    st.code(code, language="python", line_numbers=True)
-                    st.download_button("下载代码文本", code, file_name="model.py", mime="text/plain")
+        with st.expander("中间过程：查看生成代码（只读）", expanded=False):
+            index = st.selectbox("选择需要查看的候选代码", range(len(candidates)),
+                                 format_func=lambda value: display(candidates[value].get("candidate_id")),
+                                 key="report_candidate_code")
+            selected = candidates[index]
+            artifact_id = str(selected.get("artifact_id", ""))
+            try:
+                detail = api("GET", run_path(run_id) + "/artifacts/" + quote(artifact_id, safe=""))
+                if isinstance(detail, dict) and isinstance(detail.get("code"), str):
+                    st.caption("只读代码制品 · SHA256：" + display(detail.get("code_sha256")))
+                    st.code(detail["code"], language="python", line_numbers=True)
+                    st.download_button("下载生成代码", detail["code"], file_name=f"{artifact_id}.py", mime="text/plain")
                 else:
-                    st.json(detail)
-        else:
-            st.caption("尚无可读取代码制品。")
-    except RuntimeError as exc:
-        st.warning(str(exc))
-    col1, col2 = st.columns(2)
+                    st.caption("当前候选没有可读取的代码制品。")
+            except RuntimeError as exc:
+                st.warning(str(exc))
+
+    st.markdown("#### 报告下载")
+    col1, col2, col3 = st.columns(3)
     try:
         report = api("GET", run_path(run_id) + "/report")
-        col1.download_button("下载 JSON 原始报告", json.dumps(report, ensure_ascii=False, indent=2),
-                             file_name="report.json", mime="application/json")
-        with st.expander("完整原始报告"):
-            st.json(report)
+        col1.download_button("下载审计 JSON", json.dumps(report, ensure_ascii=False, indent=2),
+                             file_name="report.json", mime="application/json", help="供程序回放和审计使用")
     except RuntimeError as exc:
         col1.caption(str(exc))
     try:
         content = api("GET", run_path(run_id) + "/report.html", raw=True)
-        col2.download_button("下载离线 HTML 报告", content, file_name="report.html", mime="text/html")
+        col2.download_button("下载可打印 HTML 报告", content, file_name="report.html", mime="text/html")
     except RuntimeError as exc:
         col2.caption(str(exc))
+    try:
+        markdown = api("GET", run_path(run_id) + "/report.md", raw=True)
+        col3.download_button("下载 Markdown 报告", markdown, file_name="report.md", mime="text/markdown")
+    except RuntimeError as exc:
+        col3.caption(str(exc))
+    with st.expander("高级：查看原始 JSON 证据", expanded=False):
+        try:
+            st.json(api("GET", run_path(run_id) + "/report"))
+        except RuntimeError as exc:
+            st.warning(str(exc))
     st.caption("浏览器界面只显示转义文本，不执行模型代码或直接嵌入后端 HTML。")
 
 
 def draw_graph(nodes: list[dict[str, Any]], edges: list[dict[str, Any]]) -> None:
-    """Draw a bounded local graph; facts remain available in the tables below."""
+    """Draw the persisted property graph with type colors and relation labels."""
     try:
         import networkx as nx
         import plotly.graph_objects as go
@@ -468,6 +630,7 @@ def draw_graph(nodes: list[dict[str, Any]], edges: list[dict[str, Any]]) -> None
         return
     graph = nx.DiGraph()
     labels = {}
+    kinds = {}
     for node in nodes[:120]:
         node_id = node.get("id", node.get("node_id"))
         if node_id is None:
@@ -475,45 +638,75 @@ def draw_graph(nodes: list[dict[str, Any]], edges: list[dict[str, Any]]) -> None
         node_id = str(node_id)
         graph.add_node(node_id)
         label = node.get("label", node.get("name", node_id))
-        labels[node_id] = html.escape(str(label), quote=True)
+        kind = str(node.get("kind", "Unknown"))
+        kinds[node_id] = kind
+        props = node.get("properties") if isinstance(node.get("properties"), dict) else {}
+        detail = " · ".join(f"{key}: {display(value)}" for key, value in list(props.items())[:3])
+        labels[node_id] = f"{label}<br><sup>{KIND_LABELS.get(kind, kind)}{(' · ' + detail) if detail else ''}</sup>"
     for edge in edges:
         source = str(edge.get("source", edge.get("source_node_id", "")))
         target = str(edge.get("target", edge.get("target_node_id", "")))
         if source in graph and target in graph:
-            graph.add_edge(source, target)
+            graph.add_edge(source, target, relation=edge.get("relation", edge.get("type", "关系")))
     if not graph:
         return
     positions = nx.spring_layout(graph, seed=42)
     edge_x, edge_y = [], []
-    for source, target in graph.edges:
+    edge_labels = []
+    for source, target, data in graph.edges(data=True):
         edge_x += [float(positions[source][0]), float(positions[target][0]), None]
         edge_y += [float(positions[source][1]), float(positions[target][1]), None]
-    figure = go.Figure([
-        go.Scatter(x=edge_x, y=edge_y, mode="lines", hoverinfo="skip",
-                   line={"width": 1, "color": "#a9bac6"}),
-        go.Scatter(x=[float(positions[node][0]) for node in graph],
-                   y=[float(positions[node][1]) for node in graph], mode="markers",
-                   text=[labels[node] for node in graph], hoverinfo="text",
-                   marker={"size": 13, "color": "#087f8c", "line": {"width": 1, "color": "white"}}),
-    ])
-    figure.update_layout(showlegend=False, height=390, margin={"l": 10, "r": 10, "t": 10, "b": 10},
+        midpoint = ((positions[source][0] + positions[target][0]) / 2, (positions[source][1] + positions[target][1]) / 2)
+        edge_labels.append((midpoint, RELATION_LABELS.get(str(data.get("relation")), str(data.get("relation")))))
+    traces = [go.Scatter(x=edge_x, y=edge_y, mode="lines", hoverinfo="skip",
+                         line={"width": 1.2, "color": "#b4c6cf"}, showlegend=False)]
+    for kind in sorted(set(kinds.values()), key=lambda value: KIND_LABELS.get(value, value)):
+        selected_nodes = [node for node in graph if kinds.get(node) == kind]
+        traces.append(go.Scatter(
+            x=[float(positions[node][0]) for node in selected_nodes],
+            y=[float(positions[node][1]) for node in selected_nodes], mode="markers",
+            name=KIND_LABELS.get(kind, kind), text=[labels[node] for node in selected_nodes], hoverinfo="text",
+            marker={"size": 16, "color": KIND_COLORS.get(kind, "#64748b"),
+                    "symbol": {"TaskType": "hexagon", "Capability": "circle", "Algorithm": "diamond", "Transform": "square", "DatasetVersion": "triangle-up", "Metric": "star", "Environment": "x", "Source": "circle-open", "Artifact": "square-open", "ValidationRun": "diamond-open", "FailureExperience": "triangle-down"}.get(kind, "circle"),
+                    "line": {"width": 1, "color": "white"}},
+        ))
+    if edge_labels:
+        traces.append(go.Scatter(x=[point[0][0] for point in edge_labels], y=[point[0][1] for point in edge_labels], mode="text", text=[point[1] for point in edge_labels], textfont={"size": 9, "color": "#637782"}, hoverinfo="skip", showlegend=False))
+    figure = go.Figure(traces)
+    figure.update_layout(showlegend=True, legend={"orientation": "h", "y": -0.02}, height=500, margin={"l": 10, "r": 10, "t": 10, "b": 45},
                          paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
                          xaxis={"visible": False}, yaxis={"visible": False})
     st.plotly_chart(figure, use_container_width=True, config={"displayModeBar": False})
-    st.caption("布局只显示前 120 个节点；有向关系、类型与证据以完整边表为准。无外部 CDN 请求。")
+    st.caption("图中每个节点和关系都来自 SQLite property graph；布局仅负责可视化，类型、关系、来源和属性才是可审计事实。最多展示 120 个节点。")
 
 
 def knowledge_view() -> None:
-    st.subheader("可追溯能力与知识图谱")
-    st.caption("能力数量不是效果指标：查看出处、适用约束、验证状态和回写运行，确认知识确实影响生成。")
+    st.subheader("🧠 能力知识库与图谱")
+    st.caption("这里展示的是可追溯 property graph：能力、算法、数据、指标、来源、验证运行和失败经验是节点，USES / REQUIRES / EVALUATED_ON 等是有语义的关系。图不是装饰性连线。")
     try:
         payload = api("GET", "/capabilities")
         capabilities = records(payload.get("capabilities")) if isinstance(payload, dict) else []
         if capabilities:
-            st.dataframe([{key: display(value) for key, value in item.items()}
-                          for item in capabilities], use_container_width=True, hide_index=True)
-            with st.expander("能力版本完整记录"):
-                st.json(capabilities)
+            capability_rows = []
+            for item in capabilities:
+                capability_rows.append({
+                    "能力": item.get("name", item.get("label", item.get("capability_id", "未命名"))),
+                    "任务类型": display(item.get("task_types", item.get("task_type"))),
+                    "状态": status_label(item.get("status")),
+                    "版本": item.get("version", "—"),
+                    "来源/证据": len(records(item.get("evidence", item.get("source_ids")))),
+                })
+            st.dataframe(capability_rows, use_container_width=True, hide_index=True)
+            with st.expander("能力卡详情（面向答辩展示）"):
+                choice = st.selectbox("选择能力", range(len(capabilities)), format_func=lambda index: capability_rows[index]["能力"], key="capability_detail")
+                card = capabilities[choice]
+                cols = st.columns(3)
+                cols[0].metric("状态", status_label(card.get("status")))
+                cols[1].metric("版本", display(card.get("version", "—")))
+                cols[2].metric("证据数", len(records(card.get("evidence", card.get("source_ids")))))
+                st.markdown(f"**能力摘要**  \n{display(card.get('summary', card.get('description', '未记录')))}")
+                st.dataframe([{"前置条件": display(value)} for value in records(card.get("preconditions"))] or [{"前置条件": "未记录"}], use_container_width=True, hide_index=True)
+                st.caption("能力卡只描述可复用知识；只有存在匹配验证运行证据时，才会进入 verified 状态。")
         else:
             st.info("尚无能力条目；请先初始化知识库并完成一次运行。")
         graph = api("GET", "/graph")
@@ -523,12 +716,26 @@ def knowledge_view() -> None:
         col1.metric("节点", len(nodes))
         col2.metric("关系", len(edges))
         draw_graph(nodes, edges)
+        if nodes:
+            st.markdown("#### 节点邻域与证据")
+            node_options = [str(item.get("id")) for item in nodes if item.get("id")]
+            selected_node_id = st.selectbox("选择一个节点查看它如何连接", node_options, format_func=lambda node_id: next((f"{item.get('label', node_id)} · {KIND_LABELS.get(item.get('kind', ''), item.get('kind', ''))}" for item in nodes if str(item.get('id')) == node_id), node_id), key="graph_node_detail")
+            selected_node = next((item for item in nodes if str(item.get("id")) == selected_node_id), {})
+            neighbors = []
+            for edge in edges:
+                source = str(edge.get("source", edge.get("source_node_id", "")))
+                target = str(edge.get("target", edge.get("target_node_id", "")))
+                if selected_node_id not in {source, target}:
+                    continue
+                other = target if source == selected_node_id else source
+                other_node = next((item for item in nodes if str(item.get("id")) == other), {})
+                neighbors.append({"方向": "出边" if source == selected_node_id else "入边", "关系": RELATION_LABELS.get(str(edge.get("relation", edge.get("type", ""))), edge.get("relation", edge.get("type", "关系"))), "关联节点": other_node.get("label", other), "节点类型": KIND_LABELS.get(other_node.get("kind", ""), other_node.get("kind", "")), "证据": display(edge.get("properties", {}))})
+            st.info(f"{selected_node.get('label', selected_node_id)} · {KIND_LABELS.get(selected_node.get('kind', ''), selected_node.get('kind', ''))}")
+            st.dataframe(neighbors or [{"方向": "—", "关系": "暂无邻居", "关联节点": "—", "节点类型": "—", "证据": "—"}], use_container_width=True, hide_index=True)
         with st.expander("节点与来源", expanded=False):
-            st.dataframe([{key: display(value) for key, value in item.items()}
-                          for item in nodes], use_container_width=True, hide_index=True)
+            st.dataframe([{ "节点": item.get("label", item.get("id")), "类型": KIND_LABELS.get(item.get("kind", ""), item.get("kind", "")), "属性": display(item.get("properties", {})) } for item in nodes], use_container_width=True, hide_index=True)
         with st.expander("关系、路径与失败经验", expanded=False):
-            st.dataframe([{key: display(value) for key, value in item.items()}
-                          for item in edges], use_container_width=True, hide_index=True)
+            st.dataframe([{ "起点": item.get("source"), "关系": RELATION_LABELS.get(item.get("relation", ""), item.get("relation", "")), "终点": item.get("target"), "证据属性": display(item.get("properties", {})) } for item in edges], use_container_width=True, hide_index=True)
         st.download_button("导出知识图 JSON", json.dumps(graph, ensure_ascii=False, indent=2),
                            file_name="knowledge_graph.json", mime="application/json")
     except RuntimeError as exc:

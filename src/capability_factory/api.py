@@ -7,12 +7,12 @@ from contextlib import asynccontextmanager
 from urllib.parse import urlsplit, urlunsplit
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse
 
 from capability_factory.contracts import RunRequest
 from capability_factory.inference import load_inference_profiles, local_profile_metadata
 from capability_factory.knowledge import KnowledgeStore
-from capability_factory.reporting import render_html
+from capability_factory.reporting import render_html, render_markdown
 from capability_factory.settings import Settings, load_settings
 from capability_factory.workflow import Workflow, now
 
@@ -439,6 +439,11 @@ def create_app(settings: Settings | None = None):
     @app.get("/runs/{run_id}/report.html", response_class=HTMLResponse)
     def report_html(run_id: str):
         return render_html(report_for(run_id))
+
+    @app.get("/runs/{run_id}/report.md", response_class=PlainTextResponse)
+    def report_markdown(run_id: str):
+        """Serve the readable Markdown report for review systems and notebooks."""
+        return PlainTextResponse(render_markdown(report_for(run_id)), media_type="text/markdown")
 
     @app.get("/runs/{run_id}/artifacts")
     def artifacts(run_id: str):

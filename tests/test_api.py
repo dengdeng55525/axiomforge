@@ -125,3 +125,6 @@ def test_visual_run_metrics_resources_and_timeline_are_compact(tmp_path):
         summary = client.get(f"/runs/{run_id}/summary").json()
         assert summary["metrics"]["selected_candidate_id"] == "bank_lr"
         assert summary["resources"]["run_id"] == run_id
+        markdown = client.get(f"/runs/{run_id}/report.md")
+        assert markdown.status_code == 200
+        assert "算法能力验证报告" in markdown.text
