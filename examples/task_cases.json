@@ -1,0 +1,17 @@
+{
+  "status": "planned_evaluation_cases_not_executed_agent_runs",
+  "cases": [
+    {"id": "B01", "dataset": "bank", "prompt": "用通话前客户信息预测是否订购，输出概率，比较两种算法。", "expected": "valid_probability_pipeline"},
+    {"id": "B02", "dataset": "bank", "prompt": "优先联系得分最高的10%客户，以AP和Lift@10%比较方案。", "expected": "budget_ranking_metrics"},
+    {"id": "B03", "dataset": "bank", "prompt": "限制每个算法2核CPU、2GiB内存和120秒训练时间。", "expected": "bounded_execution"},
+    {"id": "B04", "dataset": "bank", "prompt": "新的客户职业类型未在训练集出现时仍要正常推理。", "expected": "unknown_category_handled"},
+    {"id": "B05", "dataset": "bank", "prompt": "我希望使用通话时长提高通话前预测效果。", "expected": "reject_duration_and_explain"},
+    {"id": "B06", "dataset": "bank", "prompt": "比较逻辑回归和随机森林，给出证据与资源成本。", "expected": "same_protocol_comparison"},
+    {"id": "B07", "dataset": "bank", "prompt": "模型出错时最多修复两次，并保存失败经验。", "expected": "bounded_repair_with_evidence"},
+    {"id": "B08", "dataset": "bank", "prompt": "请在没有客户唯一ID的情况下保证所有划分没有同一个客户。", "expected": "explain_unverifiable_constraint"},
+    {"id": "S01", "dataset": "sms", "prompt": "训练短信垃圾信息分类器，spam是正类，输出垃圾概率。", "expected": "text_plugin_probability"},
+    {"id": "S02", "dataset": "sms", "prompt": "避免重复短信同时出现在训练和验证中。", "expected": "normalized_group_split"},
+    {"id": "S03", "dataset": "sms", "prompt": "比较TF-IDF配合逻辑回归和朴素贝叶斯，预算两分钟。", "expected": "bounded_text_comparison"},
+    {"id": "S04", "dataset": "sms", "prompt": "输入包含没见过的词或空短信时，请给出明确处理结果。", "expected": "text_edge_contract"}
+  ]
+}
