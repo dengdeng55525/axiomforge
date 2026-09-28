@@ -1,0 +1,889 @@
+[
+  {
+    "capability_id": "bank-precontact-policy",
+    "name": "银行营销通话前特征与泄漏防护",
+    "summary": "预测银行客户是否订购定期存款。通话前预测禁止使用 duration：官方字段说明指出通话结束前无法知道时长。主协议使用项目定义的保守字段白名单；它是项目设计约束，不是 UCI 原始数据唯一允许的协议。",
+    "task_types": [
+      "tabular_binary_classification"
+    ],
+    "source_keys": [
+      "bank-duration",
+      "project-bank-policy"
+    ],
+    "tags": [
+      "银行",
+      "通话前",
+      "duration",
+      "泄漏",
+      "precontact"
+    ],
+    "uses": [],
+    "related": [
+      "bank-target",
+      "bank-ordered-split"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "tabular_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "bank-pdays-sentinel",
+    "name": "识别 pdays=999 的未联系标记",
+    "summary": "官方字段说明：pdays 为距离前一次营销联系的天数；999 表示此前未联系。派生 previously_contacted 时保留这个语义，不把 999 当普通连续天数解释。派生规则必须在训练和推理中一致。",
+    "task_types": [
+      "tabular_binary_classification"
+    ],
+    "source_keys": [
+      "bank-pdays"
+    ],
+    "tags": [
+      "pdays",
+      "999",
+      "未联系",
+      "sentinel"
+    ],
+    "uses": [],
+    "related": [
+      "mixed-type-columns"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "tabular_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "bank-target",
+    "name": "银行订购响应二分类的正类定义",
+    "summary": "UCI Bank Marketing 的 y 表示客户是否订购定期存款，yes 是本项目正类，no 是负类。该标签不是流失、信用违约或营销因果增量。",
+    "task_types": [
+      "tabular_binary_classification"
+    ],
+    "source_keys": [
+      "bank-target",
+      "project-bank-policy"
+    ],
+    "tags": [
+      "y",
+      "yes",
+      "正类",
+      "银行",
+      "目标"
+    ],
+    "uses": [],
+    "related": [
+      "probability-logistic",
+      "average-precision"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "tabular_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "bank-unknown",
+    "name": "保留银行 unknown 类别语义",
+    "summary": "官方说明分类属性中的缺失值编码为 unknown，允许作为类别处理；主协议保留此类别。类别映射必须仅由训练集学习，验证集新类别由编码器的明确策略处理。",
+    "task_types": [
+      "tabular_binary_classification"
+    ],
+    "source_keys": [
+      "bank-unknown",
+      "project-bank-policy"
+    ],
+    "tags": [
+      "unknown",
+      "未知",
+      "缺失",
+      "类别"
+    ],
+    "uses": [],
+    "related": [
+      "unknown-category-onehot"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "tabular_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "bank-ordered-split",
+    "name": "银行原始顺序留出与测试封存",
+    "summary": "本项目主协议按原始行位置作 60/20/20 顺序划分。训练和验证可用于候选选择；最终测试在代码、提示词和阈值冻结后使用。CSV 没有完整时间戳或可靠客户 ID，不声称精确日期边界或客户级隔离。",
+    "task_types": [
+      "tabular_binary_classification"
+    ],
+    "source_keys": [
+      "project-bank-split"
+    ],
+    "tags": [
+      "顺序",
+      "切分",
+      "测试",
+      "泄漏",
+      "ordered",
+      "split"
+    ],
+    "uses": [],
+    "related": [
+      "training-only-pipeline"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "tabular_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "sms-format",
+    "name": "SMS 垃圾短信标签和文本格式",
+    "summary": "官方 README 规定每行含标签和原始短信两列，标签为 ham 或 spam。项目逐行按首个制表符分隔，spam 作为正类；模型接收原始文本，演示和外部 LLM 只接收脱敏摘要。",
+    "task_types": [
+      "text_binary_classification"
+    ],
+    "source_keys": [
+      "sms-format",
+      "project-sms-split"
+    ],
+    "tags": [
+      "sms",
+      "文本",
+      "短信",
+      "spam",
+      "ham",
+      "tab"
+    ],
+    "uses": [],
+    "related": [
+      "text-tfidf",
+      "average-precision"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "text_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "sms-grouped-split",
+    "name": "SMS 规范化去重分层划分",
+    "summary": "项目协议用大小写归一化和空白折叠生成文本组哈希；冲突标签隔离审查，每组保留首条后以 seed=42 分层 60/20/20。词表和 IDF 只在训练集拟合；精确哈希不保证消除全部语义近重复。",
+    "task_types": [
+      "text_binary_classification"
+    ],
+    "source_keys": [
+      "project-sms-split"
+    ],
+    "tags": [
+      "短信",
+      "去重",
+      "分层",
+      "split",
+      "重复",
+      "词表"
+    ],
+    "uses": [],
+    "related": [
+      "text-tfidf",
+      "training-only-pipeline"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "text_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "mixed-type-columns",
+    "name": "混合数值与类别列预处理",
+    "summary": "ColumnTransformer 将指定的不同列分别交给变换器，再组合输出。银行任务可对数值列插补和缩放、类别列 OneHotEncoder 编码；输入列选择必须遵守特征白名单，输出稀疏或稠密类型须与下游模型兼容。",
+    "task_types": [
+      "tabular_binary_classification"
+    ],
+    "source_keys": [
+      "sklearn-columns",
+      "sklearn-onehot"
+    ],
+    "tags": [
+      "ColumnTransformer",
+      "混合类型",
+      "数值",
+      "类别",
+      "预处理"
+    ],
+    "uses": [
+      {
+        "kind": "Transform",
+        "label": "ColumnTransformer"
+      },
+      {
+        "kind": "Transform",
+        "label": "OneHotEncoder"
+      }
+    ],
+    "related": [
+      "unknown-category-onehot",
+      "missing-imputation",
+      "sparse-scaling"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "tabular_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "unknown-category-onehot",
+    "name": "OneHotEncoder 未知类别容错",
+    "summary": "OneHotEncoder(handle_unknown=\"ignore\") 可以在 transform 遇到训练时未出现的类别时避免默认报错，对该类别对应特征编码为全零。当前 scikit-learn 使用 sparse_output 参数控制稀疏输出，不沿用旧版 sparse 参数。",
+    "task_types": [
+      "tabular_binary_classification"
+    ],
+    "source_keys": [
+      "sklearn-onehot"
+    ],
+    "tags": [
+      "未知类别",
+      "unseen",
+      "unknown",
+      "OneHotEncoder",
+      "sparse_output"
+    ],
+    "uses": [
+      {
+        "kind": "Transform",
+        "label": "OneHotEncoder"
+      }
+    ],
+    "related": [],
+    "preconditions": [
+      "编码器仅在训练集 fit。"
+    ],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "tabular_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "training-only-pipeline",
+    "name": "只在训练集拟合的 Pipeline",
+    "summary": "Pipeline 顺序连接变换器和最终估计器，使训练和推理使用相同变换链。仅将训练集传给 fit；验证和测试只调用 transform 或 predict_proba。Pipeline 本身不会阻止调用者错误地传入测试数据。",
+    "task_types": [
+      "tabular_binary_classification",
+      "text_binary_classification"
+    ],
+    "source_keys": [
+      "sklearn-pipeline",
+      "project-bank-split",
+      "project-sms-split"
+    ],
+    "tags": [
+      "Pipeline",
+      "fit",
+      "训练",
+      "泄漏",
+      "概率"
+    ],
+    "uses": [
+      {
+        "kind": "Transform",
+        "label": "Pipeline"
+      }
+    ],
+    "related": [
+      "probability-logistic"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "tabular_binary_classification",
+        "text_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "sparse-scaling",
+    "name": "稀疏特征 StandardScaler 缩放",
+    "summary": "对稀疏 CSR/CSC 特征缩放时设置 StandardScaler(with_mean=False)，避免中心化破坏稀疏性。对独立的稠密数值列可以使用常规缩放。稀疏和稠密策略应按实际变换器输出选择。",
+    "task_types": [
+      "tabular_binary_classification",
+      "text_binary_classification"
+    ],
+    "source_keys": [
+      "sklearn-scaler"
+    ],
+    "tags": [
+      "sparse",
+      "稀疏",
+      "StandardScaler",
+      "with_mean",
+      "缩放"
+    ],
+    "uses": [
+      {
+        "kind": "Transform",
+        "label": "StandardScaler"
+      }
+    ],
+    "related": [
+      "mixed-type-columns"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "tabular_binary_classification",
+        "text_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "missing-imputation",
+    "name": "SimpleImputer 训练统计量插补",
+    "summary": "SimpleImputer 支持均值、中位数、众数或常数插补。训练期学习的插补统计量应用于推理；有业务语义的类别 unknown 或 pdays=999 不应未经协议允许被任意当作 NaN。",
+    "task_types": [
+      "tabular_binary_classification"
+    ],
+    "source_keys": [
+      "sklearn-imputer",
+      "bank-pdays",
+      "bank-unknown"
+    ],
+    "tags": [
+      "SimpleImputer",
+      "缺失",
+      "插补",
+      "median"
+    ],
+    "uses": [
+      {
+        "kind": "Transform",
+        "label": "SimpleImputer"
+      }
+    ],
+    "related": [
+      "mixed-type-columns"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "tabular_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "probability-logistic",
+    "name": "逻辑回归二分类概率接口",
+    "summary": "LogisticRegression 提供 predict_proba，输出列顺序由 classes_ 决定。必须根据正类标签映射提取正确一列，不能把 predict 的类别标签当概率。适合经过编码的表格特征及 TF-IDF 稀疏文本特征。",
+    "task_types": [
+      "tabular_binary_classification",
+      "text_binary_classification"
+    ],
+    "source_keys": [
+      "sklearn-logistic"
+    ],
+    "tags": [
+      "LogisticRegression",
+      "predict_proba",
+      "概率",
+      "二分类",
+      "classes_"
+    ],
+    "uses": [
+      {
+        "kind": "Algorithm",
+        "label": "LogisticRegression"
+      }
+    ],
+    "related": [
+      "average-precision"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "tabular_binary_classification",
+        "text_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "random-forest",
+    "name": "随机森林表格分类候选",
+    "summary": "RandomForestClassifier 集成多棵决策树并提供类别概率；固定 random_state，并用 n_jobs 和树数量限制 CPU 与内存。它是可比较的候选，不预设其性能优于逻辑回归。",
+    "task_types": [
+      "tabular_binary_classification"
+    ],
+    "source_keys": [
+      "sklearn-forest"
+    ],
+    "tags": [
+      "RandomForestClassifier",
+      "森林",
+      "非线性",
+      "random_state",
+      "cpu"
+    ],
+    "uses": [
+      {
+        "kind": "Algorithm",
+        "label": "RandomForestClassifier"
+      }
+    ],
+    "related": [
+      "mixed-type-columns",
+      "average-precision"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "tabular_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "hist-gradient-boosting",
+    "name": "直方图梯度提升分类候选",
+    "summary": "HistGradientBoostingClassifier 提供直方图梯度提升分类和概率预测。与预处理器组合时明确验证输入表示、类别编码和内存预算；它是独立候选，必须在相同验证协议下比较。",
+    "task_types": [
+      "tabular_binary_classification"
+    ],
+    "source_keys": [
+      "sklearn-histgb"
+    ],
+    "tags": [
+      "HistGradientBoostingClassifier",
+      "提升",
+      "直方图",
+      "非线性"
+    ],
+    "uses": [
+      {
+        "kind": "Algorithm",
+        "label": "HistGradientBoostingClassifier"
+      }
+    ],
+    "related": [
+      "mixed-type-columns",
+      "average-precision"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "tabular_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "text-tfidf",
+    "name": "TF-IDF 文本稀疏向量",
+    "summary": "TfidfVectorizer 将原始文本转成 TF-IDF 特征。训练词表和 IDF 只使用训练文本；通过 ngram_range、max_features 和 min_df 控制表示及资源。与线性分类器或朴素贝叶斯组合，保持稀疏表示。",
+    "task_types": [
+      "text_binary_classification"
+    ],
+    "source_keys": [
+      "sklearn-tfidf",
+      "project-sms-split"
+    ],
+    "tags": [
+      "TfidfVectorizer",
+      "tfidf",
+      "短信",
+      "文本",
+      "词表",
+      "稀疏"
+    ],
+    "uses": [
+      {
+        "kind": "Transform",
+        "label": "TfidfVectorizer"
+      }
+    ],
+    "related": [
+      "probability-logistic",
+      "complement-naive-bayes"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "text_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "complement-naive-bayes",
+    "name": "ComplementNB 文本分类",
+    "summary": "ComplementNB 是面向不平衡数据的补集朴素贝叶斯估计器，适合非负文本计数或 TF-IDF 特征。不得将中心化后含负数的特征直接传入；必须由验证集实测性能。",
+    "task_types": [
+      "text_binary_classification"
+    ],
+    "source_keys": [
+      "sklearn-complementnb"
+    ],
+    "tags": [
+      "ComplementNB",
+      "朴素贝叶斯",
+      "不平衡",
+      "非负",
+      "文本"
+    ],
+    "uses": [
+      {
+        "kind": "Algorithm",
+        "label": "ComplementNB"
+      },
+      {
+        "kind": "Transform",
+        "label": "TfidfVectorizer"
+      }
+    ],
+    "related": [
+      "text-tfidf",
+      "average-precision"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "text_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "multinomial-naive-bayes",
+    "name": "MultinomialNB 文本概率基线",
+    "summary": "MultinomialNB 适合离散计数形式特征，实际文本分类也常使用非负 TF-IDF。提供 predict_proba，可作为快速、可解释的 CPU 参考候选；输入必须非负。",
+    "task_types": [
+      "text_binary_classification"
+    ],
+    "source_keys": [
+      "sklearn-multinomialnb"
+    ],
+    "tags": [
+      "MultinomialNB",
+      "文本",
+      "非负",
+      "baseline"
+    ],
+    "uses": [
+      {
+        "kind": "Algorithm",
+        "label": "MultinomialNB"
+      },
+      {
+        "kind": "Transform",
+        "label": "TfidfVectorizer"
+      }
+    ],
+    "related": [
+      "text-tfidf"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "text_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "average-precision",
+    "name": "不平衡二分类 Average Precision",
+    "summary": "average_precision_score 根据预测分数汇总精确率召回率曲线，定义为召回增量对 precision 的加权和。输入真实二值标签和正类预测分数；本项目以 AP 为主指标，并记录正类率基线。不得将其等同于梯形插值 PR-AUC。",
+    "task_types": [
+      "tabular_binary_classification",
+      "text_binary_classification"
+    ],
+    "source_keys": [
+      "sklearn-ap"
+    ],
+    "tags": [
+      "average_precision",
+      "AP",
+      "排序",
+      "不平衡",
+      "precision",
+      "recall",
+      "正类"
+    ],
+    "uses": [
+      {
+        "kind": "Metric",
+        "label": "average_precision"
+      }
+    ],
+    "related": [],
+    "preconditions": [
+      "由可信验证器计算，使用同一分割协议。"
+    ],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "tabular_binary_classification",
+        "text_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "roc-auc",
+    "name": "ROC-AUC 补充排序指标",
+    "summary": "roc_auc_score 使用预测分数计算 ROC 曲线下面积。二分类评分应与正类定义一致；只有一个类别的评估集合不能提供有效二分类 ROC-AUC。主选型仍按项目预先规定的 AP，不按结果临时更换主指标。",
+    "task_types": [
+      "tabular_binary_classification",
+      "text_binary_classification"
+    ],
+    "source_keys": [
+      "sklearn-rocauc",
+      "sklearn-ap"
+    ],
+    "tags": [
+      "roc_auc",
+      "ROC",
+      "AUC",
+      "排序",
+      "指标"
+    ],
+    "uses": [
+      {
+        "kind": "Metric",
+        "label": "roc_auc"
+      }
+    ],
+    "related": [
+      "average-precision"
+    ],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "tabular_binary_classification",
+        "text_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  },
+  {
+    "capability_id": "evidence-versioning",
+    "name": "出处与失败经验版本化",
+    "summary": "项目知识协议要求保存来源哈希、定位、抽取方式和版本；LLM 置信度不是正确率。未经复测的修复仅标记 proposed，真实验证通过后才可作为 validated 经验检索；失败结果仍须保留。",
+    "task_types": [
+      "tabular_binary_classification",
+      "text_binary_classification"
+    ],
+    "source_keys": [
+      "project-evidence"
+    ],
+    "tags": [
+      "出处",
+      "provenance",
+      "失败",
+      "修复",
+      "版本",
+      "evidence"
+    ],
+    "uses": [],
+    "related": [],
+    "preconditions": [],
+    "dependencies": [
+      "Python >=3.10",
+      "scikit-learn"
+    ],
+    "input_schema": {
+      "type": "features",
+      "task_types": [
+        "tabular_binary_classification",
+        "text_binary_classification"
+      ]
+    },
+    "output_schema": {
+      "type": "implementation-guidance"
+    },
+    "confidence": 1.0
+  }
+]

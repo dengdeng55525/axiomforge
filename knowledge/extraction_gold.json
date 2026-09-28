@@ -1,0 +1,274 @@
+{
+  "dataset_version": "curated_assertions_v1",
+  "annotation_origin": "manual reference labels grounded in approved local source corpus",
+  "unit": "one atomic assertion; multiple assertions can share one source or capability",
+  "caution": "Do not send these answer labels to the extractor. Exact normalized triple agreement is narrower than semantic correctness. No model evaluation has been run merely by creating this file.",
+  "assertions": [
+    {
+      "id": "gold-001",
+      "subject": "bank.duration",
+      "predicate": "available_before_call",
+      "object": "false",
+      "source_key": "bank-duration"
+    },
+    {
+      "id": "gold-002",
+      "subject": "bank.duration",
+      "predicate": "role_in_precontact_model",
+      "object": "excluded",
+      "source_key": "bank-duration"
+    },
+    {
+      "id": "gold-003",
+      "subject": "bank.pdays",
+      "predicate": "sentinel_value",
+      "object": "999",
+      "source_key": "bank-pdays"
+    },
+    {
+      "id": "gold-004",
+      "subject": "bank.pdays.999",
+      "predicate": "meaning",
+      "object": "not_previously_contacted",
+      "source_key": "bank-pdays"
+    },
+    {
+      "id": "gold-005",
+      "subject": "bank.y",
+      "predicate": "target",
+      "object": "term_deposit_subscription",
+      "source_key": "bank-target"
+    },
+    {
+      "id": "gold-006",
+      "subject": "bank.y",
+      "predicate": "positive_label",
+      "object": "yes",
+      "source_key": "bank-target"
+    },
+    {
+      "id": "gold-007",
+      "subject": "bank.categorical_missing",
+      "predicate": "encoded_as",
+      "object": "unknown",
+      "source_key": "bank-unknown"
+    },
+    {
+      "id": "gold-008",
+      "subject": "bank.categorical_missing",
+      "predicate": "may_be_treated_as",
+      "object": "category",
+      "source_key": "bank-unknown"
+    },
+    {
+      "id": "gold-009",
+      "subject": "bank.main_split",
+      "predicate": "method",
+      "object": "original_row_order",
+      "source_key": "project-bank-split"
+    },
+    {
+      "id": "gold-010",
+      "subject": "bank.main_split",
+      "predicate": "ratios",
+      "object": "60/20/20",
+      "source_key": "project-bank-split"
+    },
+    {
+      "id": "gold-011",
+      "subject": "bank.main_split",
+      "predicate": "full_timestamps_available",
+      "object": "false",
+      "source_key": "project-bank-split"
+    },
+    {
+      "id": "gold-012",
+      "subject": "bank.final_test",
+      "predicate": "used_for_candidate_selection",
+      "object": "false",
+      "source_key": "project-bank-split"
+    },
+    {
+      "id": "gold-013",
+      "subject": "sms.label",
+      "predicate": "possible_value",
+      "object": "ham",
+      "source_key": "sms-format"
+    },
+    {
+      "id": "gold-014",
+      "subject": "sms.label",
+      "predicate": "possible_value",
+      "object": "spam",
+      "source_key": "sms-format"
+    },
+    {
+      "id": "gold-015",
+      "subject": "sms.record",
+      "predicate": "format",
+      "object": "label_and_raw_text",
+      "source_key": "sms-format"
+    },
+    {
+      "id": "gold-016",
+      "subject": "sms.main_split",
+      "predicate": "group_normalization",
+      "object": "lowercase_and_whitespace_collapse",
+      "source_key": "project-sms-split"
+    },
+    {
+      "id": "gold-017",
+      "subject": "sms.main_split",
+      "predicate": "seed",
+      "object": "42",
+      "source_key": "project-sms-split"
+    },
+    {
+      "id": "gold-018",
+      "subject": "sms.main_split",
+      "predicate": "ratios",
+      "object": "60/20/20",
+      "source_key": "project-sms-split"
+    },
+    {
+      "id": "gold-019",
+      "subject": "sms.tfidf",
+      "predicate": "fit_scope",
+      "object": "training_only",
+      "source_key": "project-sms-split"
+    },
+    {
+      "id": "gold-020",
+      "subject": "Pipeline",
+      "predicate": "kind",
+      "object": "class",
+      "source_key": "sklearn-pipeline"
+    },
+    {
+      "id": "gold-021",
+      "subject": "Pipeline",
+      "predicate": "has_method",
+      "object": "fit",
+      "source_key": "sklearn-pipeline"
+    },
+    {
+      "id": "gold-022",
+      "subject": "Pipeline",
+      "predicate": "has_method",
+      "object": "predict_proba",
+      "source_key": "sklearn-pipeline"
+    },
+    {
+      "id": "gold-023",
+      "subject": "ColumnTransformer",
+      "predicate": "kind",
+      "object": "class",
+      "source_key": "sklearn-columns"
+    },
+    {
+      "id": "gold-024",
+      "subject": "ColumnTransformer",
+      "predicate": "has_method",
+      "object": "fit_transform",
+      "source_key": "sklearn-columns"
+    },
+    {
+      "id": "gold-025",
+      "subject": "OneHotEncoder",
+      "predicate": "has_parameter",
+      "object": "handle_unknown",
+      "source_key": "sklearn-onehot"
+    },
+    {
+      "id": "gold-026",
+      "subject": "OneHotEncoder",
+      "predicate": "has_parameter",
+      "object": "sparse_output",
+      "source_key": "sklearn-onehot"
+    },
+    {
+      "id": "gold-027",
+      "subject": "StandardScaler",
+      "predicate": "has_parameter",
+      "object": "with_mean",
+      "source_key": "sklearn-scaler"
+    },
+    {
+      "id": "gold-028",
+      "subject": "SimpleImputer",
+      "predicate": "has_parameter",
+      "object": "strategy",
+      "source_key": "sklearn-imputer"
+    },
+    {
+      "id": "gold-029",
+      "subject": "LogisticRegression",
+      "predicate": "has_method",
+      "object": "predict_proba",
+      "source_key": "sklearn-logistic"
+    },
+    {
+      "id": "gold-030",
+      "subject": "RandomForestClassifier",
+      "predicate": "has_parameter",
+      "object": "n_estimators",
+      "source_key": "sklearn-forest"
+    },
+    {
+      "id": "gold-031",
+      "subject": "TfidfVectorizer",
+      "predicate": "has_parameter",
+      "object": "ngram_range",
+      "source_key": "sklearn-tfidf"
+    },
+    {
+      "id": "gold-032",
+      "subject": "ComplementNB",
+      "predicate": "kind",
+      "object": "class",
+      "source_key": "sklearn-complementnb"
+    },
+    {
+      "id": "gold-033",
+      "subject": "MultinomialNB",
+      "predicate": "kind",
+      "object": "class",
+      "source_key": "sklearn-multinomialnb"
+    },
+    {
+      "id": "gold-034",
+      "subject": "average_precision_score",
+      "predicate": "kind",
+      "object": "function",
+      "source_key": "sklearn-ap"
+    },
+    {
+      "id": "gold-035",
+      "subject": "roc_auc_score",
+      "predicate": "kind",
+      "object": "function",
+      "source_key": "sklearn-rocauc"
+    },
+    {
+      "id": "gold-036",
+      "subject": "unvalidated_repair",
+      "predicate": "status",
+      "object": "proposed",
+      "source_key": "project-evidence"
+    },
+    {
+      "id": "gold-037",
+      "subject": "llm_confidence",
+      "predicate": "equals_factual_accuracy",
+      "object": "false",
+      "source_key": "project-evidence"
+    },
+    {
+      "id": "gold-038",
+      "subject": "knowledge_fact",
+      "predicate": "requires",
+      "object": "source_hash_and_locator",
+      "source_key": "project-evidence"
+    }
+  ]
+}

@@ -1,0 +1,439 @@
+{
+  "schema_version": "1.0",
+  "mode": "real",
+  "model": "deepseek-flash",
+  "created_at": "2026-09-28T11:26:07.916165+00:00",
+  "sources": [
+    {
+      "source_id": "src-036a9125a071ef6a1ae3c21f",
+      "source_key": "bank-duration",
+      "uri": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+      "revision": "sha256:10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+      "content_sha256": "10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+      "license": "CC-BY-4.0",
+      "locator": {
+        "relative_path": "data/raw/bank-additional-names.txt",
+        "line_start": 56,
+        "line_end": 58,
+        "symbol": null
+      }
+    },
+    {
+      "source_id": "src-9d912fa3bc826e2bfd7f1aff",
+      "source_key": "project-bank-policy",
+      "uri": "repository:docs/02_数据与知识来源.md",
+      "revision": "sha256:10bbedb7d1e5d03c92860a5aef348cb020e7a385a5ce520677bd95790881a970",
+      "content_sha256": "10bbedb7d1e5d03c92860a5aef348cb020e7a385a5ce520677bd95790881a970",
+      "license": "original-project-notes",
+      "locator": {
+        "relative_path": "docs/02_数据与知识来源.md",
+        "line_start": 18,
+        "line_end": 34,
+        "symbol": null
+      }
+    },
+    {
+      "source_id": "src-df4abddd7280ca49a8328ee6",
+      "source_key": "project-sms-split",
+      "uri": "repository:docs/02_数据与知识来源.md",
+      "revision": "sha256:10bbedb7d1e5d03c92860a5aef348cb020e7a385a5ce520677bd95790881a970",
+      "content_sha256": "10bbedb7d1e5d03c92860a5aef348cb020e7a385a5ce520677bd95790881a970",
+      "license": "original-project-notes",
+      "locator": {
+        "relative_path": "docs/02_数据与知识来源.md",
+        "line_start": 51,
+        "line_end": 62,
+        "symbol": null
+      }
+    },
+    {
+      "source_id": "src-8a2d3c4ad618f98dc3d974e1",
+      "source_key": "sklearn-pipeline",
+      "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/pipeline.py",
+      "revision": "1.7.2",
+      "content_sha256": "06f7ccb74a31ab9d3c900d87c814b7ce81b8acbd938ad74fe9cc674075f07869",
+      "license": "BSD-3-Clause",
+      "locator": {
+        "relative_path": "sklearn/pipeline.py",
+        "line_start": 123,
+        "line_end": 1407,
+        "symbol": "Pipeline"
+      }
+    },
+    {
+      "source_id": "src-edb49349edd5d01d96366d15",
+      "source_key": "sklearn-columns",
+      "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/compose/_column_transformer.py",
+      "revision": "1.7.2",
+      "content_sha256": "e0fcb314512c8a487f48dfb7f52df5cda7e1a5b1fbc00c9121c2e337b5faac94",
+      "license": "BSD-3-Clause",
+      "locator": {
+        "relative_path": "sklearn/compose/_column_transformer.py",
+        "line_start": 63,
+        "line_end": 1327,
+        "symbol": "ColumnTransformer"
+      }
+    },
+    {
+      "source_id": "src-57ad627bd0c9f7e3e2b0f4c4",
+      "source_key": "sklearn-onehot",
+      "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/preprocessing/_encoders.py",
+      "revision": "1.7.2",
+      "content_sha256": "182ad858c63cf28c26d6b332250006c052a502e483740b5b236a3c8e7493db97",
+      "license": "BSD-3-Clause",
+      "locator": {
+        "relative_path": "sklearn/preprocessing/_encoders.py",
+        "line_start": 465,
+        "line_end": 1251,
+        "symbol": "OneHotEncoder"
+      }
+    },
+    {
+      "source_id": "src-584b66a31950a968f84ef11b",
+      "source_key": "sklearn-logistic",
+      "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/linear_model/_logistic.py",
+      "revision": "1.7.2",
+      "content_sha256": "981f4e11c9a6fc2b02cd9322f2926849143e4a8bf1819e3a4159a9fce615a00c",
+      "license": "BSD-3-Clause",
+      "locator": {
+        "relative_path": "sklearn/linear_model/_logistic.py",
+        "line_start": 829,
+        "line_end": 1497,
+        "symbol": "LogisticRegression"
+      }
+    },
+    {
+      "source_id": "src-ecb336a2fa483eb3b4f26d0b",
+      "source_key": "sklearn-tfidf",
+      "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/feature_extraction/text.py",
+      "revision": "1.7.2",
+      "content_sha256": "876f0d334735f77174822fabff287fab5602ccff8973a5430ebc70548916da62",
+      "license": "BSD-3-Clause",
+      "locator": {
+        "relative_path": "sklearn/feature_extraction/text.py",
+        "line_start": 1735,
+        "line_end": 2137,
+        "symbol": "TfidfVectorizer"
+      }
+    },
+    {
+      "source_id": "src-01e94fa0e553de89c2a7a671",
+      "source_key": "sklearn-complementnb",
+      "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/naive_bayes.py",
+      "revision": "1.7.2",
+      "content_sha256": "ee265c08217b2b4a0543bd984cb11a962b4d2f4c9a8150332e84f1364b5d37ec",
+      "license": "BSD-3-Clause",
+      "locator": {
+        "relative_path": "sklearn/naive_bayes.py",
+        "line_start": 907,
+        "line_end": 1059,
+        "symbol": "ComplementNB"
+      }
+    },
+    {
+      "source_id": "src-9ca2de7b8493fff6ad94d779",
+      "source_key": "sklearn-ap",
+      "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/metrics/_ranking.py",
+      "revision": "1.7.2",
+      "content_sha256": "a1fc02f0b042a3945c37692c9377a746800dd2a90cdc227df5268f218bea3f74",
+      "license": "BSD-3-Clause",
+      "locator": {
+        "relative_path": "sklearn/metrics/_ranking.py",
+        "line_start": 118,
+        "line_end": 268,
+        "symbol": "average_precision_score"
+      }
+    }
+  ],
+  "capabilities": [
+    {
+      "capability_id": "extracted_bank_marketing_tabular_binary_classification",
+      "name": "Bank marketing subscription propensity binary classification",
+      "summary": "Predict whether a client subscribes to a term deposit (y=yes positive) from pre-contact customer attributes and prior campaign history, producing a propensity score and contact priority ranking.",
+      "task_types": [
+        "tabular_binary_classification"
+      ],
+      "inputs": [
+        "age",
+        "job",
+        "marital",
+        "education",
+        "default",
+        "housing",
+        "loan",
+        "pdays",
+        "previous",
+        "poutcome"
+      ],
+      "outputs": [
+        "subscription propensity probability",
+        "contact priority ranking"
+      ],
+      "preconditions": [
+        "duration must be excluded as a business leakage field",
+        "campaign excluded from main protocol",
+        "contact/month/day_of_week excluded unless a planned-schedule protocol is defined",
+        "economic indicators excluded from main protocol without point-in-time alignment",
+        "unknown retained as a meaningful category",
+        "pdays=999 treated as never-contacted, not imputed as extreme days",
+        "derived features previously_contacted and days_since_previous fitted only on training data"
+      ],
+      "dependencies": [
+        "scikit-learn"
+      ],
+      "source_ids": [
+        "src-036a9125a071ef6a1ae3c21f",
+        "src-9d912fa3bc826e2bfd7f1aff"
+      ],
+      "metrics": [
+        "average_precision_score",
+        "roc_auc_score"
+      ]
+    },
+    {
+      "capability_id": "extracted_sms_spam_text_binary_classification",
+      "name": "SMS spam binary text classification",
+      "summary": "Classify SMS messages as spam (positive) or ham using TF-IDF text features, with grouped splitting by normalized-text hash to control near-duplicates.",
+      "task_types": [
+        "text_binary_classification"
+      ],
+      "inputs": [
+        "raw SMS text"
+      ],
+      "outputs": [
+        "spam/ham label",
+        "spam probability"
+      ],
+      "preconditions": [
+        "UTF-8 read, split each line on first tab only",
+        "grouping hash uses case-normalized and whitespace-collapsed text while model input keeps original text",
+        "conflicting-label groups isolated for review",
+        "one record per normalized group, stratified 60/20/20 split with seed=42",
+        "vocabulary, IDF and tuning must not touch validation/test",
+        "positive class is spam; all-ham predictions must not be reported as success"
+      ],
+      "dependencies": [
+        "scikit-learn"
+      ],
+      "source_ids": [
+        "src-df4abddd7280ca49a8328ee6"
+      ],
+      "metrics": [
+        "average_precision_score",
+        "roc_auc_score"
+      ]
+    },
+    {
+      "capability_id": "extracted_sklearn_pipeline_composition",
+      "name": "Sequential transformer-predictor pipeline",
+      "summary": "Chain data transformers with an optional final predictor so preprocessing and modeling steps are cross-validated together and parameters are set by step name.",
+      "task_types": [
+        "tabular_binary_classification",
+        "text_binary_classification"
+      ],
+      "inputs": [
+        "list of (name, estimator) steps",
+        "feature matrix X",
+        "target y"
+      ],
+      "outputs": [
+        "fitted pipeline",
+        "predictions",
+        "predicted probabilities"
+      ],
+      "preconditions": [
+        "all steps define fit",
+        "all non-final steps define transform",
+        "final estimator defines fit",
+        "optional memory caching path or joblib.Memory object"
+      ],
+      "dependencies": [
+        "scikit-learn"
+      ],
+      "source_ids": [
+        "src-8a2d3c4ad618f98dc3d974e1"
+      ],
+      "metrics": [
+        "score"
+      ]
+    },
+    {
+      "capability_id": "extracted_sklearn_column_transformer",
+      "name": "Heterogeneous column-wise feature transformation",
+      "summary": "Apply different transformers to distinct column subsets and concatenate their outputs into a single feature space for heterogeneous tabular data.",
+      "task_types": [
+        "tabular_binary_classification"
+      ],
+      "inputs": [
+        "list of (name, transformer, columns) tuples",
+        "array or pandas DataFrame"
+      ],
+      "outputs": [
+        "concatenated transformed feature matrix"
+      ],
+      "preconditions": [
+        "each transformer supports fit and transform",
+        "remainder set to drop, passthrough or an estimator",
+        "DataFrame column order identical between fit and transform when using remainder estimator"
+      ],
+      "dependencies": [
+        "scikit-learn"
+      ],
+      "source_ids": [
+        "src-edb49349edd5d01d96366d15"
+      ],
+      "metrics": []
+    },
+    {
+      "capability_id": "extracted_sklearn_onehot_encoding",
+      "name": "Categorical one-hot encoding",
+      "summary": "Encode categorical integer or string features as a one-hot numeric array, with configurable unknown-category and infrequent-category handling.",
+      "task_types": [
+        "tabular_binary_classification"
+      ],
+      "inputs": [
+        "array-like of categorical values"
+      ],
+      "outputs": [
+        "sparse or dense one-hot encoded matrix"
+      ],
+      "preconditions": [
+        "categories derived from training data or supplied explicitly",
+        "handle_unknown set to error, ignore, infrequent_if_exist or warn",
+        "drop option applied after infrequent-category grouping"
+      ],
+      "dependencies": [
+        "scikit-learn"
+      ],
+      "source_ids": [
+        "src-57ad627bd0c9f7e3e2b0f4c4"
+      ],
+      "metrics": []
+    },
+    {
+      "capability_id": "extracted_sklearn_logistic_regression",
+      "name": "Regularized logistic regression classifier",
+      "summary": "Fit a regularized linear logistic classifier supporting L1, L2 and elastic-net penalties with dense or sparse input and probability outputs.",
+      "task_types": [
+        "tabular_binary_classification",
+        "text_binary_classification"
+      ],
+      "inputs": [
+        "feature matrix X",
+        "binary target y"
+      ],
+      "outputs": [
+        "class predictions",
+        "predicted probabilities",
+        "decision function scores"
+      ],
+      "preconditions": [
+        "penalty compatible with chosen solver",
+        "liblinear handles binary classification only",
+        "C must be a positive float"
+      ],
+      "dependencies": [
+        "scikit-learn"
+      ],
+      "source_ids": [
+        "src-584b66a31950a968f84ef11b"
+      ],
+      "metrics": [
+        "score",
+        "predict_proba"
+      ]
+    },
+    {
+      "capability_id": "extracted_sklearn_tfidf_vectorization",
+      "name": "TF-IDF text feature extraction",
+      "summary": "Convert raw documents into a TF-IDF feature matrix, equivalent to count vectorization followed by TF-IDF transformation.",
+      "task_types": [
+        "text_binary_classification"
+      ],
+      "inputs": [
+        "sequence of raw text documents"
+      ],
+      "outputs": [
+        "sparse TF-IDF feature matrix"
+      ],
+      "preconditions": [
+        "input mode set to content, file or filename",
+        "encoding and decode_error configured",
+        "analyzer set to word, char, char_wb or callable"
+      ],
+      "dependencies": [
+        "scikit-learn"
+      ],
+      "source_ids": [
+        "src-ecb336a2fa483eb3b4f26d0b"
+      ],
+      "metrics": []
+    },
+    {
+      "capability_id": "extracted_sklearn_complement_nb",
+      "name": "Complement Naive Bayes text classifier",
+      "summary": "Naive Bayes classifier designed to correct Multinomial NB assumptions and particularly suited to imbalanced datasets.",
+      "task_types": [
+        "text_binary_classification"
+      ],
+      "inputs": [
+        "non-negative feature matrix X",
+        "class labels y"
+      ],
+      "outputs": [
+        "class predictions",
+        "class log probabilities"
+      ],
+      "preconditions": [
+        "features non-negative",
+        "alpha smoothing parameter configured",
+        "force_alpha controls handling of near-zero alpha"
+      ],
+      "dependencies": [
+        "scikit-learn"
+      ],
+      "source_ids": [
+        "src-01e94fa0e553de89c2a7a671"
+      ],
+      "metrics": [
+        "score"
+      ]
+    },
+    {
+      "capability_id": "extracted_average_precision_metric",
+      "name": "Average precision scoring for ranking",
+      "summary": "Compute average precision from prediction scores as the weighted mean of precisions at each threshold, useful for imbalanced binary ranking evaluation.",
+      "task_types": [
+        "tabular_binary_classification",
+        "text_binary_classification"
+      ],
+      "inputs": [
+        "true binary labels y_true",
+        "prediction scores y_score"
+      ],
+      "outputs": [
+        "average precision float"
+      ],
+      "preconditions": [
+        "y_score may be probabilities, confidences or decision function scores",
+        "pos_label applies only to binary y_true",
+        "for decision_function scores values >= 0 indicate positive class"
+      ],
+      "dependencies": [
+        "scikit-learn"
+      ],
+      "source_ids": [
+        "src-9ca2de7b8493fff6ad94d779"
+      ],
+      "metrics": [
+        "average_precision"
+      ]
+    }
+  ],
+  "usage": {
+    "calls": 1,
+    "input_tokens": 13783,
+    "output_tokens": 1657,
+    "cached_input_tokens": 0
+  }
+}
