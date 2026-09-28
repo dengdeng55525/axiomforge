@@ -108,5 +108,23 @@
     "status": "passed",
     "selected_candidate_id": "fixed_c1",
     "note": "Local loopback smoke after final commit; report remains in ignored artifacts/runs."
+  },
+  "final_code_real_smoke": {
+    "run_id": "8ac3258d81d34815ae8d4c9f48e3bd27",
+    "provider": "deepseek",
+    "model": "deepseek-flash (DeepSeek-V4.1-Flash)",
+    "dataset": "sms",
+    "orchestration": "single_shot",
+    "retrieval": false,
+    "status": "passed",
+    "calls": 1,
+    "input_tokens": 949,
+    "cached_input_tokens": 512,
+    "output_tokens": 177,
+    "selected_candidate_id": "fixed_c1",
+    "average_precision": 0.9583895772337544,
+    "final_test_scored": false,
+    "source": "artifacts/runs/8ac3258d81d34815ae8d4c9f48e3bd27/report.json",
+    "note": "Final code path smoke after all implementation commits; fixed single-shot ablation intentionally skips interpreter/planner/curator."
   }
 }
