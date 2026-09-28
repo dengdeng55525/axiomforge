@@ -50,3 +50,20 @@ def test_tp_six_is_rejected_for_40_attention_heads():
 def test_insufficient_devices_rejected():
     with pytest.raises(ValueError, match="more GPUs"):
         MODULE.build_plan(CONFIG, "six_gpu", available_gpus=1)
+
+
+def test_four_gpu_14b_profile_is_four_single_gpu_replicas():
+    plan = MODULE.build_plan(CONFIG, "four_gpu_14b", available_gpus=4)
+    assert plan["gpu_count"] == 4
+    assert len(plan["endpoints"]) == 4
+    assert [item["environment"]["CUDA_VISIBLE_DEVICES"] for item in plan["endpoints"]] == ["0", "1", "2", "3"]
+    assert {item["model_id"] for item in plan["endpoints"]} == {"Qwen/Qwen2.5-Coder-14B-Instruct-AWQ"}
+    assert all(item["argv"][item["argv"].index("--tensor-parallel-size") + 1] == "1" for item in plan["endpoints"])
+
+
+def test_local_runtime_plan_is_explicitly_not_deployed():
+    runtime = CONFIG["local_runtime"]
+    assert runtime["default_profile"] == "four_gpu_14b"
+    assert runtime["status"] == "planned_not_deployed"
+    assert runtime["weights_downloaded_by_algoforge"] is False
+    assert runtime["process_started_by_algoforge"] is False

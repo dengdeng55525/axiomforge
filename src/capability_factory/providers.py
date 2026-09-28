@@ -39,6 +39,8 @@ class Usage:
 
 class HTTPProvider:
     def __init__(self, settings: Settings, mode="deepseek", event_callback: Callable | None = None):
+        if mode not in {"deepseek", "local_http"}:
+            raise ProviderError("Unsupported HTTP provider mode")
         self.settings = settings
         self.mode = mode
         self.usage = Usage()
@@ -54,6 +56,18 @@ class HTTPProvider:
             raise ProviderError("DeepSeek credentials can only be sent to the official HTTPS host")
         if mode == "deepseek" and not settings.api_key.get_secret_value():
             raise ProviderError("DEEPSEEK_API_KEY is missing; configure a private .env or environment")
+
+    def metadata(self) -> dict:
+        """Return UI-safe connection metadata without credentials or prompts."""
+
+        return {
+            "provider": self.mode,
+            "model": self.model,
+            "base_url": self.base_url,
+            "authorization": "bearer" if self.mode == "deepseek" else "none",
+            "local_profile": self.settings.local_profile if self.mode == "local_http" else None,
+            "deployment": "official_api" if self.mode == "deepseek" else "external_local_http",
+        }
 
     def generate(self, role, system, payload, max_tokens=4096):
         serialized = json.dumps(payload, ensure_ascii=False, sort_keys=True)

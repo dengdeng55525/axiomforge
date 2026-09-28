@@ -4,6 +4,25 @@
 提供应用容器配置，本机没有 Docker，因此 **没有宣称镜像构建或容器部署已验收**。
 这里不安装、不下载、不启动任何本地大模型。
 
+## 本地 14B / 四卡 4090D 兼容框架
+
+项目已经把本地模型接入抽象为 OpenAI 兼容 HTTP Provider。默认静态方案
+`four_gpu_14b` 使用 `Qwen/Qwen2.5-Coder-14B-Instruct-AWQ`，为四张卡各保留
+一个单卡副本（端口 8100–8103），便于解释、规划、编码和审查角色并行调度。
+完整的 GPU 分组、固定 revision、量化和启动参数在
+`configs/inference_profiles.json`，可以用下面的命令只生成静态计划：
+
+~~~bash
+python scripts/plan_inference.py --profile four_gpu_14b --available-gpus 4
+~~~
+
+该命令只校验设备分配并打印未来的 vLLM 命令，不下载权重、不启动服务，也不
+宣称本机已经部署。独立部署完成后，将 `.env` 中的
+`LOCAL_LLM_BASE_URL`、`LOCAL_LLM_MODEL` 和 `LOCAL_LLM_PROFILE` 指向实际端点，
+再通过 `RunRequest(provider="local_http")` 或 UI 的“本地模型”选项使用。服务的
+`/health` 与 `/inference/profiles` 会展示静态配置和“planned_not_deployed”状态，
+不会把 DeepSeek 密钥发送到本地端点。
+
 ## 已实现的本地启动
 
 从仓库根目录运行，先按主 README 安装依赖、校验公开数据并填写 .env：

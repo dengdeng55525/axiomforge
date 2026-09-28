@@ -12,6 +12,7 @@ import typer
 
 from capability_factory import prompts
 from capability_factory.contracts import RunRequest
+from capability_factory.inference import local_profile_metadata
 from capability_factory.knowledge import KnowledgeStore
 from capability_factory.providers import HTTPProvider, ProviderError
 from capability_factory.reporting import write_report
@@ -111,6 +112,7 @@ def doctor(check_api: Annotated[bool, typer.Option()] = False):
               "credential_configured": bool(settings.api_key.get_secret_value()),
               "executor": "constrained_ast_subprocess", "arbitrary_python_execution": False,
               "docker_available": bool(shutil.which("docker")), "local_model_deployed": False,
+              "local_provider": local_profile_metadata(settings),
               "datasets": {name: (settings.root / "data/raw" / name).is_file() for name in ["bank-additional-full.csv", "SMSSpamCollection"]}}
     if check_api:
         # Provider construction validates the destination before any credential is sent.

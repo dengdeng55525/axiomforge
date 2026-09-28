@@ -14,6 +14,9 @@ class Settings(BaseModel):
     model: str = "deepseek-flash"
     local_base_url: str = "http://127.0.0.1:8100/v1"
     local_model: str = "coder_a"
+    # Static deployment plan selected for an independently managed local server.
+    # This setting never downloads weights or starts a process.
+    local_profile: str = "four_gpu_14b"
     request_timeout_s: float = 120.0
     max_calls: int = 24
     max_input_tokens: int = 200000
@@ -42,4 +45,5 @@ def load_settings(root: Path | str | None = None) -> Settings:
         model=value("DEEPSEEK_MODEL", "deepseek-flash"),
         local_base_url=value("LOCAL_LLM_BASE_URL", "http://127.0.0.1:8100/v1"),
         local_model=value("LOCAL_LLM_MODEL", "coder_a"),
+        local_profile=value("LOCAL_LLM_PROFILE", "four_gpu_14b"),
     )
