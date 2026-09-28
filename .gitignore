@@ -14,3 +14,7 @@ artifacts/*
 !artifacts/.gitkeep
 *.sqlite*
 *.log
+*.egg-info/
+.coverage
+coverage.xml
+htmlcov/
