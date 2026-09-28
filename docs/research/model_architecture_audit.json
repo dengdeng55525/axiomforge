@@ -1,0 +1,67 @@
+[
+  {
+    "model": "Qwen/Qwen2.5-Coder-7B-Instruct-AWQ",
+    "revision": "8e8ed243bbe6f9a5aff549a0924562fc719b2b8a",
+    "num_attention_heads": 28,
+    "num_key_value_heads": 4,
+    "num_hidden_layers": 28,
+    "hidden_size": 3584,
+    "quantization_config": {
+      "bits": 4,
+      "group_size": 128,
+      "modules_to_not_convert": null,
+      "quant_method": "awq",
+      "version": "gemm",
+      "zero_point": true
+    },
+    "weights_downloaded": false,
+    "inference_tested": false
+  },
+  {
+    "model": "Qwen/Qwen2.5-Coder-14B-Instruct-AWQ",
+    "revision": "eb3172f06a6d6b3a15f08947b0668d782e4d2d2c",
+    "num_attention_heads": 40,
+    "num_key_value_heads": 8,
+    "num_hidden_layers": 48,
+    "hidden_size": 5120,
+    "quantization_config": {
+      "bits": 4,
+      "group_size": 128,
+      "modules_to_not_convert": null,
+      "quant_method": "awq",
+      "version": "gemm",
+      "zero_point": true
+    },
+    "weights_downloaded": false,
+    "inference_tested": false
+  },
+  {
+    "model": "Qwen/Qwen2.5-Coder-32B-Instruct-AWQ",
+    "revision": "1ed0a6145da0ce550c628e8e8b678f51e695995d",
+    "num_attention_heads": 40,
+    "num_key_value_heads": 8,
+    "num_hidden_layers": 64,
+    "hidden_size": 5120,
+    "quantization_config": {
+      "bits": 4,
+      "group_size": 128,
+      "modules_to_not_convert": null,
+      "quant_method": "awq",
+      "version": "gemm",
+      "zero_point": true
+    },
+    "weights_downloaded": false,
+    "inference_tested": false
+  },
+  {
+    "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
+    "revision": "381fc969f78efac66bc87ff7ddeadb7e73c218a7",
+    "num_attention_heads": 40,
+    "num_key_value_heads": 8,
+    "num_hidden_layers": 64,
+    "hidden_size": 5120,
+    "quantization_config": null,
+    "weights_downloaded": false,
+    "inference_tested": false
+  }
+]

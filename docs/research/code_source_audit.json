@@ -1,0 +1,481 @@
+{
+  "repository": "https://github.com/scikit-learn/scikit-learn",
+  "release": "1.7.2",
+  "tag_commit_verified_via_git_ls_remote": "25dee604bae18205b01548348388baf7a1cdfe0e",
+  "inspection_source": "installed scikit-learn 1.7.2 wheel source; AST only; not executed as ingested code",
+  "remote_raw_download": "TLS failure; local wheel source used for feasibility inspection",
+  "license": "BSD-3-Clause",
+  "files": [
+    {
+      "path": "sklearn/metrics/_ranking.py",
+      "sha256": "a1fc02f0b042a3945c37692c9377a746800dd2a90cdc227df5268f218bea3f74",
+      "bytes": 78995,
+      "functions": [
+        {
+          "name": "auc",
+          "line": 43,
+          "end_line": 105
+        },
+        {
+          "name": "average_precision_score",
+          "line": 118,
+          "end_line": 268
+        },
+        {
+          "name": "det_curve",
+          "line": 281,
+          "end_line": 418
+        },
+        {
+          "name": "_binary_roc_auc_score",
+          "line": 421,
+          "end_line": 451
+        },
+        {
+          "name": "roc_auc_score",
+          "line": 466,
+          "end_line": 700
+        },
+        {
+          "name": "_multiclass_roc_auc_score",
+          "line": 703,
+          "end_line": 823
+        },
+        {
+          "name": "_binary_clf_curve",
+          "line": 826,
+          "end_line": 908
+        },
+        {
+          "name": "precision_recall_curve",
+          "line": 921,
+          "end_line": 1056
+        },
+        {
+          "name": "roc_curve",
+          "line": 1069,
+          "end_line": 1209
+        },
+        {
+          "name": "label_ranking_average_precision_score",
+          "line": 1220,
+          "end_line": 1310
+        },
+        {
+          "name": "coverage_error",
+          "line": 1321,
+          "end_line": 1387
+        },
+        {
+          "name": "label_ranking_loss",
+          "line": 1398,
+          "end_line": 1489
+        },
+        {
+          "name": "_dcg_sample_scores",
+          "line": 1492,
+          "end_line": 1549
+        },
+        {
+          "name": "_tie_averaged_dcg",
+          "line": 1552,
+          "end_line": 1597
+        },
+        {
+          "name": "_check_dcg_target_type",
+          "line": 1600,
+          "end_line": 1612
+        },
+        {
+          "name": "dcg_score",
+          "line": 1626,
+          "end_line": 1732
+        },
+        {
+          "name": "_ndcg_sample_scores",
+          "line": 1735,
+          "end_line": 1783
+        },
+        {
+          "name": "ndcg_score",
+          "line": 1796,
+          "end_line": 1903
+        },
+        {
+          "name": "top_k_accuracy_score",
+          "line": 1917,
+          "end_line": 2077
+        },
+        {
+          "name": "_binary_uninterpolated_average_precision",
+          "line": 224,
+          "end_line": 234
+        }
+      ]
+    },
+    {
+      "path": "sklearn/compose/_column_transformer.py",
+      "sha256": "e0fcb314512c8a487f48dfb7f52df5cda7e1a5b1fbc00c9121c2e337b5faac94",
+      "bytes": 63786,
+      "functions": [
+        {
+          "name": "_check_X",
+          "line": 1330,
+          "end_line": 1338
+        },
+        {
+          "name": "_is_empty_column_selection",
+          "line": 1341,
+          "end_line": 1359
+        },
+        {
+          "name": "_get_transformer_list",
+          "line": 1362,
+          "end_line": 1371
+        },
+        {
+          "name": "make_column_transformer",
+          "line": 1376,
+          "end_line": 1507
+        },
+        {
+          "name": "_feature_names_out_with_str_format",
+          "line": 1599,
+          "end_line": 1604
+        },
+        {
+          "name": "__init__",
+          "line": 302,
+          "end_line": 321
+        },
+        {
+          "name": "_transformers",
+          "line": 324,
+          "end_line": 337
+        },
+        {
+          "name": "_transformers",
+          "line": 340,
+          "end_line": 350
+        },
+        {
+          "name": "set_output",
+          "line": 352,
+          "end_line": 391
+        },
+        {
+          "name": "get_params",
+          "line": 393,
+          "end_line": 411
+        },
+        {
+          "name": "set_params",
+          "line": 413,
+          "end_line": 431
+        },
+        {
+          "name": "_iter",
+          "line": 433,
+          "end_line": 495
+        },
+        {
+          "name": "_validate_transformers",
+          "line": 497,
+          "end_line": 523
+        },
+        {
+          "name": "_validate_column_callables",
+          "line": 525,
+          "end_line": 544
+        },
+        {
+          "name": "_validate_remainder",
+          "line": 546,
+          "end_line": 555
+        },
+        {
+          "name": "_get_remainder_cols_dtype",
+          "line": 557,
+          "end_line": 566
+        },
+        {
+          "name": "_get_remainder_cols",
+          "line": 568,
+          "end_line": 574
+        },
+        {
+          "name": "named_transformers_",
+          "line": 577,
+          "end_line": 585
+        },
+        {
+          "name": "_get_feature_name_out_for_transformer",
+          "line": 587,
+          "end_line": 600
+        },
+        {
+          "name": "get_feature_names_out",
+          "line": 602,
+          "end_line": 646
+        },
+        {
+          "name": "_add_prefix_for_feature_names_out",
+          "line": 648,
+          "end_line": 708
+        },
+        {
+          "name": "_update_fitted_transformers",
+          "line": 710,
+          "end_line": 743
+        },
+        {
+          "name": "_validate_output",
+          "line": 745,
+          "end_line": 791
+        },
+        {
+          "name": "_record_output_indices",
+          "line": 793,
+          "end_line": 818
+        },
+        {
+          "name": "_log_message",
+          "line": 820,
+          "end_line": 823
+        },
+        {
+          "name": "_call_func_on_transformers",
+          "line": 825,
+          "end_line": 903
+        },
+        {
+          "name": "fit",
+          "line": 905,
+          "end_line": 935
+        },
+        {
+          "name": "fit_transform",
+          "line": 941,
+          "end_line": 1026
+        },
+        {
+          "name": "transform",
+          "line": 1028,
+          "end_line": 1109
+        },
+        {
+          "name": "_hstack",
+          "line": 1111,
+          "end_line": 1220
+        },
+        {
+          "name": "_sk_visual_block_",
+          "line": 1222,
+          "end_line": 1242
+        },
+        {
+          "name": "__getitem__",
+          "line": 1244,
+          "end_line": 1252
+        },
+        {
+          "name": "_get_empty_routing",
+          "line": 1254,
+          "end_line": 1272
+        },
+        {
+          "name": "get_metadata_routing",
+          "line": 1274,
+          "end_line": 1312
+        },
+        {
+          "name": "__sklearn_tags__",
+          "line": 1314,
+          "end_line": 1327
+        }
+      ]
+    },
+    {
+      "path": "sklearn/feature_extraction/text.py",
+      "sha256": "876f0d334735f77174822fabff287fab5602ccff8973a5430ebc70548916da62",
+      "bytes": 77416,
+      "functions": [
+        {
+          "name": "_preprocess",
+          "line": 42,
+          "end_line": 65
+        },
+        {
+          "name": "_analyze",
+          "line": 68,
+          "end_line": 112
+        },
+        {
+          "name": "strip_accents_unicode",
+          "line": 115,
+          "end_line": 144
+        },
+        {
+          "name": "strip_accents_ascii",
+          "line": 147,
+          "end_line": 168
+        },
+        {
+          "name": "strip_tags",
+          "line": 171,
+          "end_line": 187
+        },
+        {
+          "name": "_check_stop_list",
+          "line": 190,
+          "end_line": 198
+        },
+        {
+          "name": "_document_frequency",
+          "line": 921,
+          "end_line": 926
+        },
+        {
+          "name": "_make_int_array",
+          "line": 1486,
+          "end_line": 1488
+        },
+        {
+          "name": "decode",
+          "line": 206,
+          "end_line": 236
+        },
+        {
+          "name": "_word_ngrams",
+          "line": 238,
+          "end_line": 266
+        },
+        {
+          "name": "_char_ngrams",
+          "line": 268,
+          "end_line": 289
+        },
+        {
+          "name": "_char_wb_ngrams",
+          "line": 291,
+          "end_line": 317
+        },
+        {
+          "name": "build_preprocessor",
+          "line": 319,
+          "end_line": 344
+        },
+        {
+          "name": "build_tokenizer",
+          "line": 346,
+          "end_line": 364
+        },
+        {
+          "name": "get_stop_words",
+          "line": 366,
+          "end_line": 374
+        },
+        {
+          "name": "_check_stop_words_consistency",
+          "line": 376,
+          "end_line": 413
+        },
+        {
+          "name": "build_analyzer",
+          "line": 415,
+          "end_line": 464
+        },
+        {
+          "name": "_validate_vocabulary",
+          "line": 466,
+          "end_line": 494
+        },
+        {
+          "name": "_check_vocabulary",
+          "line": 496,
+          "end_line": 504
+        },
+        {
+          "name": "_validate_ngram_range",
+          "line": 506,
+          "end_line": 513
+        },
+        {
+          "name": "_warn_for_unused_params",
+          "line": 515,
+          "end_line": 555
+        },
+        {
+          "name": "__init__",
+          "line": 764,
+          "end_line": 799
+        },
+        {
+          "name": "partial_fit",
+          "line": 802,
+          "end_line": 821
+        },
+        {
+          "name": "fit",
+          "line": 824,
+          "end_line": 853
+        },
+        {
+          "name": "transform",
+          "line": 855,
+          "end_line": 883
+        },
+        {
+          "name": "fit_transform",
+          "line": 885,
+          "end_line": 903
+        },
+        {
+          "name": "_get_hasher",
+          "line": 905,
+          "end_line": 911
+        },
+        {
+          "name": "__sklearn_tags__",
+          "line": 913,
+          "end_line": 918
+        },
+        {
+          "name": "__init__",
+          "line": 1155,
+          "end_line": 1192
+        },
+        {
+          "name": "_sort_features",
+          "line": 1194,
+          "end_line": 1206
+        },
+        {
+          "name": "_limit_features",
+          "line": 1208,
+          "end_line": 1245
+        },
+        {
+          "name": "_count_vocab",
+          "line": 1247,
+          "end_line": 1310
+        },
+        {
+          "name": "fit",
+          "line": 1312,
+          "end_line": 1329
+        },
+        {
+          "name": "fit_transform",
+          "line": 1332,
+          "end_line": 1397
+        },
+        {
+          "name": "transform",
+          "line": 1399,
+          "end_line": 1425
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": "0.1.0",
+  "status": "design_config_for_implementation",
+  "task_type": "tabular_binary_classification",
+  "dataset_id": "uci-bank-additional-full",
+  "target": "y",
+  "positive_label": "yes",
+  "feature_policy": "precontact_conservative_v1",
+  "allowed_features": ["age", "job", "marital", "education", "default", "housing", "loan", "pdays", "previous", "poutcome"],
+  "forbidden_features": ["duration", "campaign", "contact", "month", "day_of_week", "emp.var.rate", "cons.price.idx", "cons.conf.idx", "euribor3m", "nr.employed"],
+  "split": {"method": "original_order", "train_fraction": 0.6, "validation_fraction": 0.2, "test_fraction": 0.2},
+  "primary_metric": "average_precision",
+  "secondary_metrics": ["roc_auc", "f1", "precision_at_10pct", "recall_at_10pct", "lift_at_10pct"],
+  "seed": 42,
+  "limits": {"candidate_cpu_cores": 2, "candidate_memory_mib": 2048, "candidate_timeout_s": 120, "max_total_candidates": 6, "max_repairs_per_candidate": 2, "run_timeout_s": 900}
+}

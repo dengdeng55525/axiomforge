@@ -1,0 +1,38 @@
+{
+  "schema_version": "0.1.0",
+  "status": "design_only_inference_not_tested",
+  "default_max_model_len": 8192,
+  "default_max_num_seqs": 2,
+  "default_gpu_memory_utilization": 0.85,
+  "models": {
+    "coder7_awq": {"model_id": "Qwen/Qwen2.5-Coder-7B-Instruct-AWQ", "revision": "8e8ed243bbe6f9a5aff549a0924562fc719b2b8a", "attention_heads": 28, "quantization": "awq", "dtype": "half"},
+    "coder14_awq": {"model_id": "Qwen/Qwen2.5-Coder-14B-Instruct-AWQ", "revision": "eb3172f06a6d6b3a15f08947b0668d782e4d2d2c", "attention_heads": 40, "quantization": "awq", "dtype": "half"},
+    "coder32_awq": {"model_id": "Qwen/Qwen2.5-Coder-32B-Instruct-AWQ", "revision": "1ed0a6145da0ce550c628e8e8b678f51e695995d", "attention_heads": 40, "quantization": "awq", "dtype": "half"},
+    "coder32_bf16": {"model_id": "Qwen/Qwen2.5-Coder-32B-Instruct", "revision": "381fc969f78efac66bc87ff7ddeadb7e73c218a7", "attention_heads": 40, "quantization": null, "dtype": "bfloat16"}
+  },
+  "profiles": {
+    "api": {"gpu_count": 0, "recommended_host_ram_gib": 16, "groups": []},
+    "single_gpu": {"gpu_count": 1, "recommended_host_ram_gib": 32, "groups": [{"name": "coder_a", "gpu_ids": [0], "tensor_parallel_size": 1, "model": "coder7_awq", "port": 8100}]},
+    "single_gpu_14b": {"gpu_count": 1, "recommended_host_ram_gib": 32, "groups": [{"name": "coder_a", "gpu_ids": [0], "tensor_parallel_size": 1, "model": "coder14_awq", "port": 8100}]},
+    "two_gpu": {"gpu_count": 2, "recommended_host_ram_gib": 64, "groups": [{"name": "coder_a", "gpu_ids": [0, 1], "tensor_parallel_size": 2, "model": "coder32_awq", "port": 8100}]},
+    "four_gpu": {"gpu_count": 4, "recommended_host_ram_gib": 128, "groups": [{"name": "coder_a", "gpu_ids": [0, 1, 2, 3], "tensor_parallel_size": 4, "model": "coder32_bf16", "port": 8100}]},
+    "six_gpu": {"gpu_count": 6, "recommended_host_ram_gib": 128, "groups": [
+      {"name": "coder_a", "gpu_ids": [0, 1], "tensor_parallel_size": 2, "model": "coder32_awq", "port": 8100},
+      {"name": "coder_b", "gpu_ids": [2, 3], "tensor_parallel_size": 2, "model": "coder32_awq", "port": 8101},
+      {"name": "coder_c", "gpu_ids": [4, 5], "tensor_parallel_size": 2, "model": "coder32_awq", "port": 8102}
+    ]},
+    "six_gpu_replicas": {"gpu_count": 6, "recommended_host_ram_gib": 128, "groups": [
+      {"name": "coder_a", "gpu_ids": [0], "tensor_parallel_size": 1, "model": "coder14_awq", "port": 8100},
+      {"name": "coder_b", "gpu_ids": [1], "tensor_parallel_size": 1, "model": "coder14_awq", "port": 8101},
+      {"name": "coder_c", "gpu_ids": [2], "tensor_parallel_size": 1, "model": "coder14_awq", "port": 8102},
+      {"name": "coder_d", "gpu_ids": [3], "tensor_parallel_size": 1, "model": "coder14_awq", "port": 8103},
+      {"name": "coder_e", "gpu_ids": [4], "tensor_parallel_size": 1, "model": "coder14_awq", "port": 8104},
+      {"name": "coder_f", "gpu_ids": [5], "tensor_parallel_size": 1, "model": "coder14_awq", "port": 8105}
+    ]},
+    "six_gpu_quality": {"gpu_count": 6, "recommended_host_ram_gib": 128, "groups": [
+      {"name": "main_coder", "gpu_ids": [0, 1, 2, 3], "tensor_parallel_size": 4, "model": "coder32_bf16", "port": 8100},
+      {"name": "helper_a", "gpu_ids": [4], "tensor_parallel_size": 1, "model": "coder7_awq", "port": 8101},
+      {"name": "helper_b", "gpu_ids": [5], "tensor_parallel_size": 1, "model": "coder7_awq", "port": 8102}
+    ]}
+  }
+}

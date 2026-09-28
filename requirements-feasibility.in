@@ -1,0 +1,8 @@
+# Only the dataset and CPU feasibility probes, not the future Agent application.
+numpy
+scipy
+pandas
+scikit-learn
+psutil
+pytest
+ruff

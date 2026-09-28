@@ -1,0 +1,15 @@
+{
+  "checked_at_utc": "2026-09-28T11:07:47.091990+00:00",
+  "scope": "preparation tooling and design only; not an implemented Agent system",
+  "tests_passed": 20,
+  "ruff_check": "passed",
+  "ruff_format_check": "passed",
+  "local_markdown_links": "passed",
+  "json_parse_check": "passed",
+  "data_archive_sha256_recheck": "passed",
+  "single_gpu_plan": "static checks passed",
+  "six_gpu_plan": "static checks passed; three TP=2 endpoints",
+  "gpu_inference": "not run",
+  "agent_end_to_end": "not implemented",
+  "final_test_model_metrics": "not computed"
+}
