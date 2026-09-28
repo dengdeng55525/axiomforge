@@ -418,9 +418,9 @@ def render_human_report(run: dict[str, Any], summary: dict[str, Any] | None = No
             with tabs[2]:
                 resources = selected.get("resources") if isinstance(selected.get("resources"), dict) else {}
                 st.dataframe([{ "训练耗时（秒）": resources.get("fit_seconds", resources.get("fit_s")), "预测耗时（秒）": resources.get("predict_seconds", resources.get("predict_s")), "峰值内存（MiB）": resources.get("peak_rss_mib", resources.get("peak_rss")), "进程限制": display(resources.get("limits")) }], use_container_width=True, hide_index=True)
-    warnings = records(run.get("warnings"))
-    if warnings:
-        st.warning("；".join(display(item) for item in warnings))
+    warning_items = run.get("warnings") if isinstance(run.get("warnings"), list) else []
+    if warning_items:
+        st.warning("；".join(display(item) for item in warning_items))
 
 
 def show_identity(run: dict[str, Any]) -> None:
