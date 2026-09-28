@@ -4,11 +4,13 @@ import threading
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
+from urllib.parse import urlsplit, urlunsplit
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 
 from capability_factory.contracts import RunRequest
+from capability_factory.inference import load_inference_profiles, local_profile_metadata
 from capability_factory.knowledge import KnowledgeStore
 from capability_factory.reporting import render_html
 from capability_factory.settings import Settings, load_settings
@@ -58,6 +60,223 @@ class RunManager:
         self.pool.shutdown(wait=False, cancel_futures=True)
 
 
+def _safe_endpoint(value: str) -> str | None:
+    """Return a display-only URL with credentials and query state removed.
+
+    Provider configuration is shown in the visual client, so this helper must not
+    echo an accidental ``user:password@host`` or signed query URL from a deployer's
+    environment.  It deliberately does not perform a network request.
+    """
+    try:
+        parsed = urlsplit(str(value))
+        if parsed.scheme not in {"http", "https"} or not parsed.hostname or parsed.username or parsed.password:
+            return None
+        hostname = parsed.hostname
+        if ":" in hostname and not hostname.startswith("["):
+            hostname = f"[{hostname}]"
+        netloc = hostname
+        if parsed.port:
+            netloc += f":{parsed.port}"
+        path = parsed.path.rstrip("/")
+        return urlunsplit((parsed.scheme, netloc, path, "", ""))
+    except (TypeError, ValueError):
+        return None
+
+
+def _provider_catalog(settings: Settings) -> dict:
+    """Safe provider profiles consumed by the visual workflow client.
+
+    ``local_http`` is intentionally advertised as a planned OpenAI-compatible
+    endpoint.  AlgoForge does not start it, download weights, or probe arbitrary
+    URLs; the deployment status remains explicit until an operator runs the local
+    serving stack.
+    """
+    key_configured = bool(settings.api_key.get_secret_value())
+    remote_endpoint = _safe_endpoint(settings.base_url)
+    local_endpoint = _safe_endpoint(settings.local_base_url)
+    return {
+        "schema_version": "1.0",
+        "default_provider": "deepseek",
+        "providers": [
+            {
+                "id": "deepseek",
+                "label": "DeepSeek API",
+                "kind": "remote_api",
+                "model": settings.model,
+                "endpoint": remote_endpoint,
+                "configured": key_configured,
+                "available": key_configured and remote_endpoint is not None,
+                "status": "configured" if key_configured else "missing_credentials",
+                "requires_api_key": True,
+                "local_model_deployed": False,
+                "capabilities": ["structured_json", "multi_role", "beam_search"],
+            },
+            {
+                "id": "local_http",
+                "label": "本地大模型（OpenAI 兼容）",
+                "kind": "local_openai_compatible",
+                "model": settings.local_model,
+                "endpoint": local_endpoint,
+                "configured": local_endpoint is not None,
+                "available": False,
+                "status": "planned_not_deployed",
+                "requires_api_key": False,
+                "local_model_deployed": False,
+                "model_plan": {
+                    "model_family": "Qwen2.5-Coder-14B-Instruct-AWQ",
+                    "profile": "four_gpu_14b",
+                    "gpu_count": 4,
+                    "tensor_parallel_size": 1,
+                    "serving_stack": "vllm_openai_compatible",
+                    "ports": [8100, 8101, 8102, 8103],
+                    "weights_managed_by_algoforge": False,
+                },
+                "capabilities": ["structured_json", "multi_role", "beam_search"],
+            },
+            {
+                "id": "mock",
+                "label": "Mock（工程流程验证）",
+                "kind": "deterministic_mock",
+                "model": "deterministic-mock-v1",
+                "endpoint": None,
+                "configured": True,
+                "available": True,
+                "status": "ready",
+                "requires_api_key": False,
+                "local_model_deployed": False,
+                "capabilities": ["structured_json", "multi_role", "beam_search"],
+            },
+        ],
+    }
+
+
+def _safe_local_profile(settings: Settings) -> dict:
+    """Sanitize the static local profile before exposing it over HTTP."""
+    profile = dict(local_profile_metadata(settings))
+    safe_url = _safe_endpoint(settings.local_base_url)
+    profile["base_url"] = safe_url
+    profile["configured"] = safe_url is not None
+    return profile
+
+
+def _dataset_catalog(settings: Settings) -> list[dict]:
+    """Public dataset contracts for the UI; never returns raw data or paths."""
+    bank_raw = settings.root / "data" / "raw" / "bank-additional-full.csv"
+    sms_raw = settings.root / "data" / "raw" / "SMSSpamCollection"
+    return [
+        {
+            "id": "bank",
+            "canonical_id": "uci-bank-additional-full",
+            "label": "UCI Bank Marketing",
+            "task_type": "tabular_binary_classification",
+            "source_url": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+            "license": "CC BY 4.0",
+            "feature_policy": "precontact_conservative_v1",
+            "feature_count": 10,
+            "train_rows": 24712,
+            "validation_rows": 8238,
+            "sealed_test_rows": 8238,
+            "sealed_test_scored": False,
+            "available": bank_raw.is_file(),
+            "positive_label": "yes",
+            "primary_metric": "average_precision",
+        },
+        {
+            "id": "sms",
+            "canonical_id": "uci-sms-spam",
+            "label": "UCI SMS Spam Collection",
+            "task_type": "text_binary_classification",
+            "source_url": "https://archive.ics.uci.edu/dataset/228/sms+spam+collection",
+            "license": "CC BY 4.0",
+            "feature_policy": "text_only_group_dedup_v1",
+            "feature_count": 1,
+            "train_rows": 3095,
+            "validation_rows": 1032,
+            "sealed_test_rows": 1032,
+            "sealed_test_scored": False,
+            "available": sms_raw.is_file(),
+            "positive_label": "spam",
+            "primary_metric": "average_precision",
+        },
+    ]
+
+
+def _finite(value):
+    """Keep API aggregates JSON-safe without converting absent values to zero."""
+    return value if isinstance(value, (int, float)) and not isinstance(value, bool) else None
+
+
+def _metric_summary(report: dict) -> dict:
+    candidates = [item for item in report.get("candidates", []) if isinstance(item, dict)]
+    rows = []
+    for candidate in candidates:
+        plan = candidate.get("plan") if isinstance(candidate.get("plan"), dict) else {}
+        metrics = candidate.get("metrics") if isinstance(candidate.get("metrics"), dict) else {}
+        rows.append({
+            "candidate_id": candidate.get("candidate_id"),
+            "algorithm": plan.get("algorithm"),
+            "variant": plan.get("variant"),
+            "parent_id": candidate.get("parent_id") or plan.get("parent_id"),
+            "status": candidate.get("status"),
+            "quality_status": candidate.get("quality_status"),
+            "metrics": metrics,
+        })
+    scored = [(row["candidate_id"], row["metrics"].get("average_precision")) for row in rows
+              if isinstance(row["metrics"].get("average_precision"), (int, float))]
+    best_id, best_ap = max(scored, key=lambda pair: pair[1]) if scored else (None, None)
+    statuses = {}
+    for row in rows:
+        status = str(row.get("status") or "unknown")
+        statuses[status] = statuses.get(status, 0) + 1
+    return {
+        "run_id": report.get("run_id"),
+        "status": report.get("status"),
+        "dataset_id": report.get("dataset_id"),
+        "primary_metric": (report.get("task_spec") or {}).get("primary_metric", "average_precision"),
+        "selected_candidate_id": report.get("selected_candidate_id"),
+        "quality_status": report.get("quality_status"),
+        "candidate_count": len(rows),
+        "candidate_status_counts": statuses,
+        "best_observed_average_precision": best_ap,
+        "best_observed_candidate_id": best_id,
+        "candidates": rows,
+    }
+
+
+def _resource_summary(report: dict) -> dict:
+    candidates = [item for item in report.get("candidates", []) if isinstance(item, dict)]
+    rows = []
+    for candidate in candidates:
+        resources = candidate.get("resources") if isinstance(candidate.get("resources"), dict) else {}
+        rows.append({
+            "candidate_id": candidate.get("candidate_id"),
+            "status": candidate.get("status"),
+            "wall_seconds": _finite(resources.get("wall_seconds")),
+            "total_seconds": _finite(resources.get("total_seconds")),
+            "fit_seconds": _finite(resources.get("fit_seconds")),
+            "predict_seconds": _finite(resources.get("predict_seconds")),
+            "cpu_seconds": _finite(resources.get("cpu_seconds")),
+            "peak_rss_mib": _finite(resources.get("peak_rss_mib")),
+            "limits": resources.get("limits") if isinstance(resources.get("limits"), dict) else {},
+        })
+    observed_rss = [row["peak_rss_mib"] for row in rows if row["peak_rss_mib"] is not None]
+    observed_wall = [row["wall_seconds"] for row in rows if row["wall_seconds"] is not None]
+    usage = report.get("usage") if isinstance(report.get("usage"), dict) else {}
+    timing = report.get("timing") if isinstance(report.get("timing"), dict) else {}
+    return {
+        "run_id": report.get("run_id"),
+        "status": report.get("status"),
+        "usage": {key: usage.get(key) for key in ("calls", "input_tokens", "output_tokens", "cached_input_tokens")
+                  if usage.get(key) is not None},
+        "timing": timing,
+        "candidate_count": len(rows),
+        "observed_candidate_resources": len(observed_wall),
+        "peak_candidate_rss_mib": max(observed_rss) if observed_rss else None,
+        "sum_candidate_wall_seconds": sum(observed_wall) if observed_wall else None,
+        "candidates": rows,
+    }
+
+
 def create_app(settings: Settings | None = None):
     settings = settings or load_settings()
     manager = RunManager(settings)
@@ -83,7 +302,63 @@ def create_app(settings: Settings | None = None):
         return {"status": "ok", "provider": "deepseek", "model": settings.model,
                 "credential_configured": bool(settings.api_key.get_secret_value()),
                 "sandbox": "constrained_ast_subprocess", "os_sandbox": False,
-                "local_model_deployed": False, "max_parallel_runs": 2}
+                "local_model_deployed": False, "local_provider": _safe_local_profile(settings),
+                "max_parallel_runs": 2}
+
+    @app.get("/inference/profiles")
+    def inference_profiles():
+        """Expose static local deployment plans for the visual console.
+
+        The response is configuration only.  This endpoint deliberately does
+        not probe or launch a local model server.
+        """
+
+        config = load_inference_profiles(settings.root)
+        return {
+            "schema_version": config.get("schema_version"),
+            "status": config.get("status"),
+            "local_runtime": config.get("local_runtime", {}),
+            "active_local": _safe_local_profile(settings),
+            "models": config.get("models", {}),
+            "profiles": config.get("profiles", {}),
+        }
+
+    @app.get("/config/providers")
+    def provider_config():
+        """Return provider choices without credentials or hidden settings."""
+        return _provider_catalog(settings)
+
+    @app.get("/config/datasets")
+    def dataset_config():
+        """Return the public data contracts used by the visual console."""
+        return {"datasets": _dataset_catalog(settings)}
+
+    @app.get("/datasets")
+    def datasets():
+        """Short alias for clients that only need the dataset catalog."""
+        return {"datasets": _dataset_catalog(settings)}
+
+    @app.get("/config")
+    def public_config():
+        """Return bounded, non-secret UI configuration in one request."""
+        return {
+            "schema_version": "1.0",
+            "service": {"name": "AlgoForge 算法能力工厂", "version": "0.1.0"},
+            "providers": _provider_catalog(settings),
+            "datasets": _dataset_catalog(settings),
+            "limits": {
+                "max_candidates": {"min": 1, "max": 6},
+                "max_repairs": {"min": 0, "max": 2},
+                "max_parallel_runs": 2,
+                "run_queue_limit": 8,
+            },
+            "execution": {
+                "validator": "constructor_only_ast",
+                "sandbox": "constrained_ast_subprocess",
+                "os_sandbox": False,
+                "sealed_test_scored": False,
+            },
+        }
 
     @app.post("/runs", status_code=202)
     def submit(request: RunRequest):
@@ -101,9 +376,65 @@ def create_app(settings: Settings | None = None):
     def events(run_id: str):
         return {"events": report_for(run_id).get("events", [])}
 
+    @app.get("/runs/{run_id}/timeline")
+    def timeline(run_id: str):
+        """Compact event stream intended for a progress/timeline visualization."""
+        report = report_for(run_id)
+        all_events = report.get("events", [])
+        compact = []
+        for event in all_events if isinstance(all_events, list) else []:
+            if not isinstance(event, dict):
+                continue
+            data = event.get("data") if isinstance(event.get("data"), dict) else {}
+            compact.append({
+                "sequence": event.get("sequence"),
+                "event_type": event.get("event_type", event.get("type")),
+                "created_at": event.get("created_at"),
+                "role": data.get("role"),
+                "candidate_id": data.get("candidate_id"),
+                "attempt": data.get("attempt"),
+                "status": data.get("status"),
+                "message": data.get("message") or data.get("error"),
+            })
+        return {"run_id": run_id, "status": report.get("status"), "events": compact,
+                "event_count": len(compact), "last_event": compact[-1] if compact else None}
+
     @app.get("/runs/{run_id}/report")
     def report_json(run_id: str):
         return report_for(run_id)
+
+    @app.get("/runs/{run_id}/metrics")
+    def metrics(run_id: str):
+        return _metric_summary(report_for(run_id))
+
+    @app.get("/runs/{run_id}/resources")
+    def resources(run_id: str):
+        return _resource_summary(report_for(run_id))
+
+    @app.get("/runs/{run_id}/summary")
+    def summary(run_id: str):
+        report = report_for(run_id)
+        metric_report = _metric_summary(report)
+        resource_report = _resource_summary(report)
+        all_events = report.get("events") if isinstance(report.get("events"), list) else []
+        return {
+            "run_id": report.get("run_id"),
+            "status": report.get("status"),
+            "provider": report.get("provider"),
+            "mode": report.get("mode"),
+            "model": report.get("model"),
+            "dataset_id": report.get("dataset_id"),
+            "description": report.get("description"),
+            "created_at": report.get("created_at"),
+            "finished_at": report.get("finished_at"),
+            "selected_candidate_id": report.get("selected_candidate_id"),
+            "quality_status": report.get("quality_status"),
+            "candidate_count": metric_report["candidate_count"],
+            "event_count": len(all_events),
+            "metrics": metric_report,
+            "resources": resource_report,
+            "warnings": report.get("warnings", []),
+        }
 
     @app.get("/runs/{run_id}/report.html", response_class=HTMLResponse)
     def report_html(run_id: str):

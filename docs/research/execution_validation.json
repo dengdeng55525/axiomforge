@@ -5,10 +5,10 @@
   "validation_scope": "local CPU, public-data reproducibility and authenticated DeepSeek API smoke evidence",
   "test_command": ".venv/bin/pytest -q tests ui",
   "test_result": {
-    "passed": 324,
+    "passed": 334,
     "failed": 0,
     "warnings": 2,
-    "note": "Counts from the final post-integration run; warning details are dependency deprecations."
+    "note": "Counts from the final post-visualization and local-profile integration run; warning details are dependency deprecations."
   },
   "lint_command": ".venv/bin/ruff check src tests scripts ui",
   "lint_result": "passed",
@@ -126,5 +126,46 @@
     "final_test_scored": false,
     "source": "artifacts/runs/8ac3258d81d34815ae8d4c9f48e3bd27/report.json",
     "note": "Final code path smoke after all implementation commits; fixed single-shot ablation intentionally skips interpreter/planner/curator."
+  },
+  "visualization": {
+    "streamlit_views": [
+      "任务与监控",
+      "代码与报告",
+      "知识图谱",
+      "历史与资源"
+    ],
+    "ui_contract_tests": 8,
+    "api_visual_routes": [
+      "/config",
+      "/config/providers",
+      "/config/datasets",
+      "/runs/{id}/timeline",
+      "/runs/{id}/metrics",
+      "/runs/{id}/resources",
+      "/runs/{id}/summary"
+    ],
+    "status": "passed"
+  },
+  "local_14b_four_gpu_plan": {
+    "profile": "four_gpu_14b",
+    "model": "Qwen2.5-Coder-14B-Instruct-AWQ",
+    "gpu_count": 4,
+    "replicas": 4,
+    "gpu_ids": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "ports": [
+      8100,
+      8101,
+      8102,
+      8103
+    ],
+    "status": "static_plan_only_runtime_untested",
+    "weights_downloaded_by_algoforge": false,
+    "process_started_by_algoforge": false,
+    "source": "configs/inference_profiles.json"
   }
 }

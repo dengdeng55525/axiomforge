@@ -25,6 +25,31 @@ MODE_LABELS = {
     "mock": "模拟 LLM / 仅验证工程流程",
     "replay": "历史回放 / 非当前实时执行",
 }
+PROVIDER_LABELS = {
+    "deepseek": "DeepSeek V4.1 API",
+    "local_http": "本地 14B · OpenAI 兼容接口",
+    "mock": "Mock · 离线演示",
+}
+STAGE_DEFINITIONS = [
+    ("interpret", "需求理解", "把自然语言约束转成可验证任务"),
+    ("retrieve", "证据检索", "从知识库与图谱召回依据"),
+    ("plan", "候选规划", "生成可比较的算法方案"),
+    ("generate", "代码生成", "按受限语法生成候选 Pipeline"),
+    ("validate", "独立验证", "隔离进程训练并计算指标"),
+    ("repair", "有限修复", "根据失败证据修复，最多两轮"),
+    ("writeback", "经验沉淀", "写入版本化能力与失败经验"),
+    ("report", "报告交付", "汇总证据、资源与可复现制品"),
+]
+EVENT_STAGE_ALIASES = {
+    "INTERPRET": "interpret", "INTERPRETER": "interpret", "TASK_INTERPRETED": "interpret", "SPEC_VALIDATED": "interpret", "RECEIVED": "interpret",
+    "RETRIEVE": "retrieve", "EVIDENCE": "retrieve", "KNOWLEDGE_RETRIEVED": "retrieve",
+    "PLAN": "plan", "PLANNER": "plan", "PLANNED": "plan", "CANDIDATE_PLANNED": "plan", "BEAM_EXPANDED": "plan", "COMPARED": "plan",
+    "GENERATE": "generate", "CODER": "generate", "CODE_GENERATED": "generate",
+    "VALIDATE": "validate", "VALIDATING": "validate", "VERIFY": "validate", "VERIFIED": "validate",
+    "REVIEW": "repair", "REPAIR": "repair", "REPAIRED": "repair", "REPAIR_PLANNED": "repair", "FAILURE_INJECTED": "repair",
+    "WRITEBACK": "writeback", "MEMORY": "writeback", "CURATOR": "writeback", "RECORDED": "writeback",
+    "REPORT": "report", "COMPLETED": "report", "PASSED": "report",
+}
 DEFAULTS = {
     "bank": ("预测客户是否订购银行定期存款；仅使用通话前可得特征，禁止 duration。"
              "比较两个候选，使用验证集 AP 选择方案，输出来源、检查、资源和修复记录。"),
@@ -49,6 +74,55 @@ def display(value: Any) -> str:
     if isinstance(value, (dict, list)):
         return json.dumps(value, ensure_ascii=False)
     return str(value)
+
+
+def metric_value(candidate: dict[str, Any], *names: str) -> float | None:
+    """Read a metric without treating a missing observation as zero."""
+    groups = [candidate.get("metrics"), candidate]
+    for group in groups:
+        if not isinstance(group, dict):
+            continue
+        for name in names:
+            for key in (name, name.lower(), name.upper()):
+                value = number(group.get(key))
+                if value is not None:
+                    return value
+    return None
+
+
+def event_name(event: dict[str, Any]) -> str:
+    for key in ("event_type", "type", "step", "event", "name"):
+        value = event.get(key)
+        if value:
+            return str(value).upper()
+    return ""
+
+
+def stage_state(run: dict[str, Any], events: list[dict[str, Any]]) -> dict[str, str]:
+    """Infer a display state from persisted events without inventing run results."""
+    states = {key: "pending" for key, _, _ in STAGE_DEFINITIONS}
+    seen: list[str] = []
+    for event in events:
+        key = EVENT_STAGE_ALIASES.get(event_name(event))
+        if key and key not in seen:
+            seen.append(key)
+        if key:
+            states[key] = "done"
+    status = str(run.get("status", "")).lower()
+    if status in {"running", "queued"} and seen:
+        current = seen[-1]
+        states[current] = "running"
+        for key, _, _ in STAGE_DEFINITIONS:
+            if key == current:
+                break
+            states[key] = "done"
+    elif status in TERMINAL:
+        for key in seen:
+            states[key] = "done"
+        states["report"] = "done" if status in {"passed", "completed", "succeeded"} else "failed"
+        if status in {"failed", "error", "cancelled"} and seen:
+            states[seen[-1]] = "failed"
+    return states
 
 
 def mode_label(value: Any) -> str:
@@ -107,6 +181,86 @@ def candidate_rows(candidates: Any) -> list[dict[str, Any]]:
     return rows
 
 
+def render_stage_timeline(run: dict[str, Any], events: list[dict[str, Any]]) -> None:
+    states = stage_state(run, events)
+    cards = []
+    icons = {"done": "✓", "running": "●", "failed": "!", "pending": "○"}
+    for key, title, subtitle in STAGE_DEFINITIONS:
+        state = states[key]
+        color = {"done": "#159957", "running": "#f59e0b", "failed": "#d64545", "pending": "#9aabba"}[state]
+        cards.append(
+            f"<div class='stage-card stage-{state}'>"
+            f"<div class='stage-icon' style='color:{color}'>{icons[state]}</div>"
+            f"<div><b>{html.escape(title)}</b><small>{html.escape(subtitle)}</small></div></div>"
+        )
+    st.markdown("<div class='stage-track'>" + "".join(cards) + "</div>", unsafe_allow_html=True)
+
+
+def render_candidate_cards(candidates: list[dict[str, Any]], selected_id: str | None = None) -> None:
+    if not candidates:
+        st.info("候选尚未生成，验证完成后会在这里显示对比卡片。")
+        return
+    columns = st.columns(min(3, len(candidates)))
+    for index, candidate in enumerate(candidates):
+        col = columns[index % len(columns)]
+        candidate_id = str(candidate.get("candidate_id", f"candidate-{index + 1}"))
+        status = str(candidate.get("status", "pending"))
+        badge_class = "good" if status in {"passed", "succeeded"} else "bad" if status in {"failed", "error"} else "wait"
+        ap = metric_value(candidate, "average_precision", "AP", "ap")
+        lift = metric_value(candidate, "lift_at_10pct", "lift10", "lift_at_10")
+        roc = metric_value(candidate, "roc_auc", "ROC_AUC", "auc")
+        marker = " · 已选中" if selected_id and candidate_id == selected_id else ""
+        with col:
+            st.markdown(
+                f"<div class='candidate-card'><div class='candidate-top'><b>{html.escape(candidate_id)}</b>"
+                f"<span class='badge {badge_class}'>{html.escape(status)}{marker}</span></div>"
+                f"<div class='candidate-algo'>{html.escape(str(candidate.get('algorithm') or (candidate.get('plan') or {}).get('algorithm') or '方案'))}</div>"
+                f"<div class='candidate-stat'><span>AP</span><strong>{'—' if ap is None else f'{ap:.4f}'}</strong></div>"
+                f"<div class='candidate-stat'><span>ROC-AUC</span><strong>{'—' if roc is None else f'{roc:.4f}'}</strong></div>"
+                f"<div class='candidate-stat'><span>Lift@10%</span><strong>{'—' if lift is None else f'{lift:.2f}×'}</strong></div>"
+                "</div>", unsafe_allow_html=True
+            )
+
+
+def render_metric_chart(candidates: list[dict[str, Any]]) -> None:
+    try:
+        import plotly.graph_objects as go
+    except ImportError:
+        st.caption("未安装 Plotly，保留表格指标。")
+        return
+    rows = []
+    for index, candidate in enumerate(candidates):
+        rows.append((str(candidate.get("candidate_id", index + 1)), metric_value(candidate, "average_precision", "AP", "ap"),
+                     metric_value(candidate, "roc_auc", "ROC_AUC", "auc"), metric_value(candidate, "lift_at_10pct", "lift10")))
+    rows = [row for row in rows if any(value is not None for value in row[1:])]
+    if not rows:
+        return
+    figure = go.Figure()
+    for label, name, color in (("AP", 1, "#0f766e"), ("ROC-AUC", 2, "#2563eb"), ("Lift@10%", 3, "#d97706")):
+        values = [row[name] if row[name] is not None else None for row in rows]
+        if any(value is not None for value in values):
+            figure.add_bar(name=label, x=[row[0] for row in rows], y=values, marker_color=color)
+    figure.update_layout(height=280, barmode="group", margin={"l": 20, "r": 20, "t": 20, "b": 20},
+                         paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                         legend={"orientation": "h", "y": 1.12}, yaxis={"title": "验证值"})
+    st.plotly_chart(figure, use_container_width=True, config={"displayModeBar": False})
+
+
+def render_resources(run: dict[str, Any]) -> None:
+    candidates = records(run.get("candidates"))
+    rows = []
+    for candidate in candidates:
+        resources = candidate.get("resources") if isinstance(candidate.get("resources"), dict) else {}
+        rows.append({"候选": candidate.get("candidate_id"), "状态": candidate.get("status"),
+                     "训练秒数": resources.get("fit_seconds", resources.get("fit_s")),
+                     "峰值 RSS(MiB)": resources.get("peak_rss_mib", resources.get("peak_rss")),
+                     "验证进程": resources.get("pid")})
+    if rows:
+        st.dataframe(rows, use_container_width=True, hide_index=True)
+    usage = run.get("usage") if isinstance(run.get("usage"), dict) else {}
+    st.caption(f"LLM 请求 {display(usage.get('calls'))} 次 · 输入 token {display(usage.get('input_tokens'))} · 输出 token {display(usage.get('output_tokens'))}。")
+
+
 def show_identity(run: dict[str, Any]) -> None:
     st.info(mode_label(run.get("mode")))
     columns = st.columns(5)
@@ -129,6 +283,22 @@ def monitor() -> None:
     if run is None:
         return
     show_identity(run)
+    try:
+        event_payload = api("GET", run_path(run_id) + "/events")
+        events = records(event_payload.get("events")) if isinstance(event_payload, dict) else []
+    except RuntimeError:
+        events = []
+    render_stage_timeline(run, events)
+    current_status = str(run.get("status", "")).lower()
+    if current_status in {"queued", "running"}:
+        st.progress(0.38 if current_status == "queued" else 0.72,
+                    text="任务已进入执行队列" if current_status == "queued" else "Agent 正在处理，请保留此页面或稍后刷新")
+    elif current_status in {"passed", "completed", "succeeded"}:
+        st.success("流程完成：候选已通过独立验证，报告和制品可在“代码与报告”查看。")
+    elif current_status in {"failed", "error"}:
+        st.error("流程结束但未通过质量门槛；请查看失败原因、检查项和修复轨迹。")
+    elif current_status == "cancelled":
+        st.warning("流程已取消，已产生的事件和资源记录仍然保留。")
     if str(run.get("status", "")).lower() not in TERMINAL:
         if st.button("取消当前任务", key="cancel_active"):
             try:
@@ -144,13 +314,18 @@ def monitor() -> None:
     if rows:
         st.subheader("候选验证进度")
         st.dataframe(rows, use_container_width=True, hide_index=True)
+        render_candidate_cards(records(run.get("candidates")), run.get("selected_candidate_id"))
+        render_metric_chart(records(run.get("candidates")))
+        with st.expander("训练资源与 LLM 预算", expanded=False):
+            render_resources(run)
     st.subheader("可追溯步骤")
     try:
-        payload = api("GET", run_path(run_id) + "/events")
-        events = records(payload.get("events")) if isinstance(payload, dict) else []
         if events:
-            st.dataframe([{key: display(value) for key, value in event.items()}
-                          for event in events], use_container_width=True, hide_index=True)
+            event_rows = [{"时间": event.get("timestamp", event.get("created_at", "")),
+                           "步骤": event_name(event) or "事件",
+                           "详情": display(event.get("detail", event.get("payload", event.get("data", event))))}
+                          for event in events]
+            st.dataframe(event_rows, use_container_width=True, hide_index=True)
             with st.expander("完整事件 JSON"):
                 st.json(events)
         else:
@@ -173,18 +348,23 @@ def submission_view() -> None:
         description = st.text_area("中文能力需求", value=DEFAULTS[dataset],
                                    height=130, key=f"description_{dataset}")
         col1, col2, col3 = st.columns(3)
-        provider = col1.selectbox("LLM 来源", ["deepseek", "mock"],
-                                  format_func=lambda value: "DeepSeek 真实 API" if value == "deepseek"
-                                  else "Mock 模拟（标记展示）")
+        provider = col1.selectbox("LLM 来源", ["deepseek", "local_http", "mock"],
+                                  format_func=lambda value: PROVIDER_LABELS[value])
         search = col2.selectbox("候选搜索", ["compare", "beam"],
                                 format_func=lambda value: "并列候选比较" if value == "compare"
                                 else "Beam Search")
-        candidates = col3.selectbox("候选上限", [2, 6], index=0)
+        candidates = col3.selectbox("候选上限", [2, 4, 6], index=0)
         with st.expander("修复、知识与演示设置"):
-            max_repairs = st.slider("每候选最多修复次数", 0, 2, 2)
+            option1, option2 = st.columns(2)
+            max_repairs = option1.slider("每候选最多修复次数", 0, 2, 2)
+            orchestration = option2.selectbox("编排方式", ["multi_role", "single_shot"],
+                                              format_func=lambda value: "多角色协作（推荐）" if value == "multi_role" else "单次生成（消融）")
             use_graph = st.checkbox("使用知识图谱证据检索", value=True)
+            use_retrieval = st.checkbox("注入文本证据上下文", value=True)
             inject_failure = st.checkbox("注入标记故障（仅用于修复演示）", value=False)
             st.caption("故障注入结果应与自然错误分开统计。候选数是上限，失败或预算耗尽可能提前停止。")
+            if provider == "local_http":
+                st.info("本地 14B 使用 OpenAI 兼容 HTTP 接口。当前服务会读取 LOCAL_LLM_BASE_URL；界面只提交 provider，不接触模型密钥。")
         submitted = st.form_submit_button("提交并开始验证", type="primary")
     if submitted:
         if not description.strip():
@@ -195,6 +375,7 @@ def submission_view() -> None:
                     "description": description.strip(), "dataset_id": dataset,
                     "provider": provider, "max_candidates": candidates,
                     "max_repairs": max_repairs, "use_graph": use_graph,
+                    "use_retrieval": use_retrieval, "orchestration": orchestration,
                     "search": search, "inject_failure": inject_failure,
                 })
                 if not isinstance(result, dict) or not result.get("run_id"):
@@ -228,6 +409,8 @@ def report_view() -> None:
     rows = candidate_rows(run.get("candidates"))
     if rows:
         st.dataframe(rows, use_container_width=True, hide_index=True)
+        render_candidate_cards(records(run.get("candidates")), run.get("selected_candidate_id"))
+        render_metric_chart(records(run.get("candidates")))
     st.caption("缺失值保留为空，不代表零分或通过。仅同一数据、切分与指标定义下的候选适合比较。")
     candidates = records(run.get("candidates"))
     if candidates:
@@ -398,13 +581,17 @@ def main() -> None:
     st.set_page_config(page_title="算法能力工厂 · AlgoForge", page_icon="🧩", layout="wide")
     # This literal stylesheet contains no model or user values.
     st.markdown("""<style>
-    .stApp{background:#f6f9fc}.block-container{max-width:1320px;padding-top:2.1rem}
-    h1,h2,h3{color:#18364a}[data-testid='stMetric']{background:white;border:1px solid #dce6ed;
-    border-radius:10px;padding:13px}[data-testid='stSidebar']{background:#eef4f7}
-    .stButton>button{border-radius:8px}section[data-testid='stSidebar'] small{color:#526578}
+    .stApp{background:linear-gradient(135deg,#f5f8fb 0%,#eef6f5 100%)}.block-container{max-width:1440px;padding-top:1.6rem}
+    h1,h2,h3{color:#173b52}.stCaption{color:#5b7180}[data-testid='stMetric']{background:rgba(255,255,255,.9);border:1px solid #d8e5e9;border-radius:12px;padding:13px;box-shadow:0 2px 8px rgba(18,52,70,.04)}
+    [data-testid='stSidebar']{background:#eaf2f4}.stButton>button{border-radius:9px;border:1px solid #b8d0d5}.stButton>button[kind='primary']{background:#087f8c;color:white;border:0}
+    .hero{background:linear-gradient(120deg,#123c52,#087f8c);color:#fff;border-radius:18px;padding:24px 28px;margin:4px 0 20px;box-shadow:0 10px 28px rgba(8,127,140,.18)}
+    .hero h1{color:#fff;margin:0;font-size:2.2rem}.hero p{margin:7px 0 0;color:#d9f4f2;font-size:1rem}.hero-chip{display:inline-block;border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:4px 10px;margin:12px 6px 0 0;font-size:.78rem;color:#e5fffc}
+    .stage-track{display:grid;grid-template-columns:repeat(8,minmax(90px,1fr));gap:7px;margin:12px 0 18px}.stage-card{background:rgba(255,255,255,.9);border:1px solid #dce8eb;border-radius:11px;padding:10px 8px;min-height:74px;display:flex;gap:7px;align-items:flex-start}.stage-card small{display:block;color:#70848e;font-size:.69rem;line-height:1.3;margin-top:4px}.stage-icon{font-size:1.2rem;font-weight:700;line-height:1.1}.stage-running{border-color:#f5b84b;box-shadow:0 0 0 2px rgba(245,184,75,.16)}.stage-done{border-color:#9fd3bf}.stage-failed{border-color:#df9696}
+    .candidate-card{background:#fff;border:1px solid #d9e6ea;border-radius:13px;padding:15px;min-height:188px;box-shadow:0 3px 12px rgba(18,52,70,.05)}.candidate-top{display:flex;justify-content:space-between;align-items:center}.candidate-algo{color:#087f8c;font-weight:600;margin:12px 0}.badge{font-size:.71rem;border-radius:99px;padding:3px 8px}.badge.good{background:#dcf4e9;color:#13744e}.badge.bad{background:#fde5e5;color:#a63333}.badge.wait{background:#eef2f4;color:#61737d}.candidate-stat{display:flex;justify-content:space-between;border-top:1px solid #edf1f2;padding-top:6px;margin-top:6px;color:#6c7d85;font-size:.78rem}.candidate-stat strong{color:#193f52;font-size:.95rem}
+    .info-card{background:#fff;border:1px solid #dce8eb;border-radius:12px;padding:13px 15px;min-height:74px}.info-card b{display:block;color:#173b52}.info-card span{font-size:.8rem;color:#68808a}
+    @media(max-width:900px){.stage-track{grid-template-columns:repeat(4,minmax(110px,1fr))}}
     </style>""", unsafe_allow_html=True)
-    st.title("算法能力工厂")
-    st.caption("理解需求 → 检索证据 → 生成候选 → 统一验证 → 有限修复 → 知识沉淀")
+    st.markdown("<div class='hero'><h1>算法能力工厂</h1><p>从自然语言需求到可验证、可追溯、可复现的算法能力</p><span class='hero-chip'>需求理解</span><span class='hero-chip'>知识检索</span><span class='hero-chip'>候选生成</span><span class='hero-chip'>安全验证</span><span class='hero-chip'>经验回写</span></div>", unsafe_allow_html=True)
     with st.sidebar:
         st.subheader("工作台")
         page = st.radio("视图", ["任务与监控", "代码与报告", "知识图谱", "历史与资源"],
@@ -414,7 +601,14 @@ def main() -> None:
         with st.expander("连接与环境状态"):
             try:
                 health = api("GET", "/health")
-                st.json(health)
+                health_cols = st.columns(2)
+                health_cols[0].metric("API", "在线" if health.get("status") == "ok" else "异常")
+                health_cols[1].metric("并发上限", display(health.get("max_parallel_runs", "—")))
+                st.caption(f"默认模型：{display(health.get('model'))} · 约束执行：{display(health.get('sandbox'))}")
+                if health.get("local_model_deployed"):
+                    st.success("本地模型已连接")
+                else:
+                    st.info("本地 14B 接口尚未部署，选择 local_http 后可直接接入兼容服务。")
             except RuntimeError as exc:
                 st.error(str(exc))
         with st.form("load_run"):
@@ -422,8 +616,12 @@ def main() -> None:
             if st.form_submit_button("打开运行") and run_id.strip():
                 st.session_state["active_run"] = run_id.strip()
         st.divider()
+        st.markdown("<div class='info-card'><b>推理后端</b><span>DeepSeek V4.1 API / 本地 14B HTTP</span></div>", unsafe_allow_html=True)
+        st.markdown("<div class='info-card'><b>4× RTX 4090D 路线</b><span>张量并行或服务副本 · 仅展示配置，不虚构实测</span></div>", unsafe_allow_html=True)
+        with st.expander("本地 14B 接入说明"):
+            st.code("LOCAL_LLM_BASE_URL=http://127.0.0.1:8001/v1\nLOCAL_LLM_MODEL=your-14b-model\n# provider: local_http", language="bash")
+            st.caption("建议使用 vLLM/SGLang 的 OpenAI 兼容服务；4 张 4090D 的显存分配、并行策略与吞吐需要在目标主机实测。")
         st.caption("模型凭证仅由后端读取。UI 不执行生成代码。缺失指标不补零。")
-        st.caption("API 优先完成当前项目；1–6 卡本地推理是后续兼容路径，未实测不展示加速结论。")
     {"任务与监控": submission_view, "代码与报告": report_view,
      "知识图谱": knowledge_view, "历史与资源": history_view}[page]()
 

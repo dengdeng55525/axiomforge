@@ -4,7 +4,10 @@ AlgoForge 将中文算法需求转成受控的 scikit-learn 管道代码，执�
 
 当前已经有 Python 工作流、DeepSeek API、SQLite 知识图谱、CLI、FastAPI、Streamlit 和自动报告。此次 [模型发现记录](docs/research/deepseek_model_discovery.json) 将 **DeepSeek-V4.1-Flash** 对应到 API ID **deepseek-flash**。真实、mock 与历史记录明确区分，不把模拟输出当作真实模型成绩。
 
-**当前使用云端 API，没有部署本地大模型。** 1–6 张 RTX 4090D 仅保留后续推理配置与静态预检。执行后端为受限 AST 构造器加资源限制子进程，**不是 Docker 或完整操作系统沙箱**。最终测试统计和验收清单以 `docs/research/execution_validation.json` 为准，不能由本文推定未完成实验已经通过。
+**当前默认使用云端 API，没有部署本地大模型。** 本地 14B 接入框架已经搭好：
+`four_gpu_14b` 为四个 Qwen2.5-Coder-14B AWQ 单卡副本（GPU 0–3、端口 8100–8103），
+通过 OpenAI 兼容 HTTP Provider 接入；权重下载、vLLM 启动和四卡实测仍由后续部署完成。
+1–6 张 RTX 4090D 只展示静态配置，不虚构吞吐。执行后端为受限 AST 构造器加资源限制子进程，**不是 Docker 或完整操作系统沙箱**。最终测试统计和验收清单以 `docs/research/execution_validation.json` 为准。
 
 ## 快速开始
 
@@ -62,8 +65,9 @@ ALGOFORGE_API_URL=http://127.0.0.1:8000 \
 
 - 工作台：`http://127.0.0.1:8501`；四个视图为任务与监控、代码与报告、知识图谱、历史与资源。
 - 自动生成的 OpenAPI 文档：`http://127.0.0.1:8000/docs`。
-- 主要接口：提交、运行状态/事件/制品/报告、取消、能力列表与图导出。
+- 主要接口：提交、运行状态/事件/时间线、候选指标、资源、制品/报告、取消、能力列表与图导出。
 - UI 只通过 HTTP 访问后端，不执行生成代码、不读取模型凭证、不直接嵌入模型 HTML。
+- 页面中的“LLM 来源”支持 DeepSeek V4.1 API、本地 14B OpenAI 兼容接口和 Mock。本地选项只提交 `provider=local_http`，浏览器不会保存或传递 DeepSeek 密钥；`GET /config` 与 `GET /inference/profiles` 会显示四卡静态计划及 `planned_not_deployed` 状态。
 
 ~~~bash
 curl --noproxy '*' -sS http://127.0.0.1:8000/runs \

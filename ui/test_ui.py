@@ -88,3 +88,28 @@ def test_offline_backend_is_visible_error(monkeypatch):
     app = AppTest.from_file(str(APP)).run(timeout=15)
     assert not app.exception
     assert any("无法读取 API" in error.value for error in app.error)
+
+
+def test_local_14b_provider_is_an_explicit_http_backend(backend):
+    """The UI exposes the future local 14B route without embedding a model or key."""
+    app = AppTest.from_file(str(APP)).run(timeout=15)
+    provider = next(item for item in app.selectbox if item.label == "LLM 来源")
+    provider.set_value("local_http")
+    submit = next(item for item in app.button if item.label == "提交并开始验证")
+    submit.click().run(timeout=15)
+    body = next(body for method, path, body in backend if method == "POST" and path == "/runs")
+    assert body["provider"] == "local_http"
+    assert body["orchestration"] == "multi_role"
+    assert body["use_retrieval"] is True
+    assert "api_key" not in body
+    assert not app.exception
+
+
+def test_monitor_renders_stage_timeline_and_missing_metrics_as_dash(backend):
+    app = AppTest.from_file(str(APP)).run(timeout=15)
+    app.session_state["active_run"] = "run-ui"
+    app.sidebar.radio[0].set_value("任务与监控").run(timeout=15)
+    assert not app.exception
+    # AP is present, while ROC-AUC/lift are absent in the fixture and must not become zero.
+    assert any("—" in item.value for item in app.markdown)
+    assert any("需求理解" in item.value for item in app.markdown)
