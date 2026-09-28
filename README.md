@@ -55,13 +55,16 @@ python -m capability_factory run \
 在两个终端分别运行：
 
 ~~~bash
-python -m capability_factory serve --host 127.0.0.1 --port 8000
+cd /root/algorithm-capability-factory
+./scripts/start_api.sh
 ~~~
 
 ~~~bash
-ALGOFORGE_API_URL=http://127.0.0.1:8000 \
-  streamlit run ui/app.py --server.address 127.0.0.1 --server.port 8501
+cd /root/algorithm-capability-factory
+./scripts/start_ui.sh
 ~~~
+
+两个脚本会自动定位仓库和项目虚拟环境，因此不依赖当前终端位于哪个目录，也不会误用系统 `base` Python。首次使用仍需先按快速开始安装依赖。
 
 - 工作台：`http://127.0.0.1:8501`；四个视图为任务与监控、代码与报告、知识图谱、历史与资源。
 - 自动生成的 OpenAPI 文档：`http://127.0.0.1:8000/docs`。

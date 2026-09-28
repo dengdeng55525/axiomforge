@@ -29,9 +29,9 @@ python scripts/plan_inference.py --profile four_gpu_14b --available-gpus 4
 
 ~~~bash
 .venv/bin/algoforge init --provider mock
-.venv/bin/algoforge serve --host 127.0.0.1 --port 8000
+./scripts/start_api.sh
 # 第二个终端
-.venv/bin/streamlit run ui/app.py --server.address 127.0.0.1 --server.port 8501
+./scripts/start_ui.sh
 ~~~
 
 API 文档是 http://127.0.0.1:8000/docs；UI 是 http://127.0.0.1:8501。
