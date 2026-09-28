@@ -1,0 +1,43 @@
+{
+  "status": "failed",
+  "checks": [
+    {
+      "name": "source_policy",
+      "passed": false,
+      "mandatory": true,
+      "detail": "Define exactly one function named build_pipeline(task_spec)"
+    }
+  ],
+  "metrics": {},
+  "resources": {
+    "limits": {
+      "timeout_s": 120.0,
+      "memory_mib": 2048,
+      "cpu_cores": 2
+    },
+    "total_seconds": 0.000879945931956172
+  },
+  "error": {
+    "type": "CodePolicyError",
+    "message": "Define exactly one function named build_pipeline(task_spec)",
+    "repairable": true,
+    "stage": "source_policy"
+  },
+  "artifact_paths": {
+    "source": "artifacts/runs/0f25cc2b756648439ccccdabc4b9aa70/candidates/bank_logistic_default/attempt_0/model.py",
+    "result": "artifacts/runs/0f25cc2b756648439ccccdabc4b9aa70/candidates/bank_logistic_default/attempt_0/validation_result.json"
+  },
+  "containment": {
+    "backend": "constrained_ast_subprocess",
+    "arbitrary_python_execution": false,
+    "os_sandbox": false,
+    "network_namespace": false,
+    "filesystem_namespace": false,
+    "source_evaluated_with_exec_or_eval": false,
+    "constructors_allowlisted": true,
+    "resource_limited_fresh_process": true,
+    "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+  },
+  "quality_status": "not_evaluated",
+  "source_sha256": "b4dd5f8eebd665f9e6f4a06eb7a6ae7d0fa3a16c2d724e71bce32c7552233384"
+}

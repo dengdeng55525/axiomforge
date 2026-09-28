@@ -1,0 +1,36 @@
+{
+  "record": {
+    "attempt": 0,
+    "code_sha256": "c07ae59bb18721928365b87290ed2bf2b9fa850bda1b2d6f83ccd1a24d9cda45",
+    "code_path": "candidates/bank_logreg_balanced/attempt_0/model.py",
+    "status": "failed",
+    "error": {
+      "type": "CodePolicyError",
+      "message": "Define exactly one function named build_pipeline(task_spec)",
+      "repairable": true,
+      "stage": "source_policy"
+    },
+    "checks": [
+      {
+        "name": "source_policy",
+        "passed": false,
+        "mandatory": true,
+        "detail": "Define exactly one function named build_pipeline(task_spec)"
+      }
+    ],
+    "metrics": {},
+    "resources": {
+      "limits": {
+        "timeout_s": 120.0,
+        "memory_mib": 2048,
+        "cpu_cores": 2
+      },
+      "total_seconds": 0.0009513138793408871
+    }
+  },
+  "source_code": "artifacts/runs/13edb7649f0d41bba608251b6079e4d1/candidates/bank_logreg_balanced/attempt_0/model.py",
+  "source_code_sha256": "c07ae59bb18721928365b87290ed2bf2b9fa850bda1b2d6f83ccd1a24d9cda45",
+  "source_verification": "artifacts/runs/13edb7649f0d41bba608251b6079e4d1/candidates/bank_logreg_balanced/attempt_0/verification.json",
+  "source_verification_sha256": "0dd6033fd8d9fae12d706ce082756e31bc8e638a6b0d9d2f71c8bdaa2e8d7fbe",
+  "model_metadata": null
+}

@@ -1,0 +1,143 @@
+{
+  "schema_version": "1.0",
+  "source_report": "artifacts/runs/13edb7649f0d41bba608251b6079e4d1/report.json",
+  "source_report_sha256": "f418eefed8bfa6ce8d6b30533c7c8e19e1e21a9cc1f0ba60e0532e2b36c159d9",
+  "exported_at": "2026-09-28T11:50:40.821000+00:00",
+  "note": "Portable historical evidence export. Original mode, statuses, failed attempts, metrics, usage records, and content hashes are preserved. Project-root absolute paths in JSON are made repository-relative. Datasets, predictions, raw LLM requests/responses, worker logs, credentials, and the private database are omitted. This is not a new execution or a replay-mode relabel. Historical pre-numerical-tolerance fix; one candidate passed and one failed.",
+  "omitted": [
+    "datasets",
+    "predictions",
+    "raw_llm_payloads",
+    "worker_logs",
+    "credentials",
+    "database"
+  ],
+  "run_id": "13edb7649f0d41bba608251b6079e4d1",
+  "name": "bank_repair",
+  "mode": "real",
+  "status": "passed",
+  "candidate_count": 2,
+  "attempt_count": 5,
+  "files": [
+    {
+      "path": "candidates/bank_forest_shallower/attempt_0/metadata.json",
+      "sha256": "7446cde99776a91f767f965518684ded5728e589d8f5deb1b0b03b6622ed65fa",
+      "bytes": 1929
+    },
+    {
+      "path": "candidates/bank_forest_shallower/attempt_0/model.py",
+      "sha256": "31525d863939727c4ac6b09e8222c45c5f9397fd19b7f6ac484ef54ad4d3f53c",
+      "bytes": 789
+    },
+    {
+      "path": "candidates/bank_forest_shallower/attempt_0/verification.json",
+      "sha256": "1e2ffdd148c6a510bfb50edd0138c462f9973b6136ae111aa8539cfdda1d153c",
+      "bytes": 2767
+    },
+    {
+      "path": "candidates/bank_forest_shallower/attempt_1/metadata.json",
+      "sha256": "dc3bbfdafd23b02acb39b054ab219a7f47f2903c2da5aafd22cb513b104ac7b4",
+      "bytes": 2002
+    },
+    {
+      "path": "candidates/bank_forest_shallower/attempt_1/model.py",
+      "sha256": "6f3c2230e1440b3c9ba759219551ce1afe1b7f563b78bf4a49e6d91a2bdce481",
+      "bytes": 821
+    },
+    {
+      "path": "candidates/bank_forest_shallower/attempt_1/verification.json",
+      "sha256": "732378788b19d02462ae2f8670d83814a5d77a235b572fed3ea66d9ebe8524a8",
+      "bytes": 2840
+    },
+    {
+      "path": "candidates/bank_forest_shallower/attempt_2/metadata.json",
+      "sha256": "e94f5bebbc179a537f2e08999f14c2daef19be42ecc2b3de8bbfed6dafd32347",
+      "bytes": 1934
+    },
+    {
+      "path": "candidates/bank_forest_shallower/attempt_2/model.py",
+      "sha256": "31525d863939727c4ac6b09e8222c45c5f9397fd19b7f6ac484ef54ad4d3f53c",
+      "bytes": 789
+    },
+    {
+      "path": "candidates/bank_forest_shallower/attempt_2/verification.json",
+      "sha256": "af3b3968fea603b3555f43bd2bdb77a57140876ef40b094b10c55a0f6afec363",
+      "bytes": 2772
+    },
+    {
+      "path": "candidates/bank_forest_shallower/metadata.json",
+      "sha256": "930d6a57ea745161d9c3f4f0b1e563baf8be8fe5b0a0983003f25dbc8b18a193",
+      "bytes": 9692
+    },
+    {
+      "path": "candidates/bank_forest_shallower/model.py",
+      "sha256": "31525d863939727c4ac6b09e8222c45c5f9397fd19b7f6ac484ef54ad4d3f53c",
+      "bytes": 789
+    },
+    {
+      "path": "candidates/bank_forest_shallower/verification.json",
+      "sha256": "af3b3968fea603b3555f43bd2bdb77a57140876ef40b094b10c55a0f6afec363",
+      "bytes": 2772
+    },
+    {
+      "path": "candidates/bank_logreg_balanced/attempt_0/metadata.json",
+      "sha256": "e2f96dd8f432ca6ce106c79601eb9b3ac03df99f46da4390a9c1b7eceaf1affb",
+      "bytes": 1286
+    },
+    {
+      "path": "candidates/bank_logreg_balanced/attempt_0/model.py",
+      "sha256": "c07ae59bb18721928365b87290ed2bf2b9fa850bda1b2d6f83ccd1a24d9cda45",
+      "bytes": 833
+    },
+    {
+      "path": "candidates/bank_logreg_balanced/attempt_0/verification.json",
+      "sha256": "7fc524150cb763ecf41921a3462bbd2967503c5608dff18c21d7836f6c5cf2ea",
+      "bytes": 1518
+    },
+    {
+      "path": "candidates/bank_logreg_balanced/attempt_1/metadata.json",
+      "sha256": "659e21740cfada21ed143fb91d77a23661cc0985cc5c611152eb35223f077877",
+      "bytes": 4111
+    },
+    {
+      "path": "candidates/bank_logreg_balanced/attempt_1/model.py",
+      "sha256": "74d2b5eb131330d7c6b16c91fb96ebbcce9cea3de95e73138064ac02bdedb0a9",
+      "bytes": 832
+    },
+    {
+      "path": "candidates/bank_logreg_balanced/attempt_1/verification.json",
+      "sha256": "e90f412172794dc60a6c215b65375a76181201a32df4b1c9c83b2efe945155e0",
+      "bytes": 4804
+    },
+    {
+      "path": "candidates/bank_logreg_balanced/metadata.json",
+      "sha256": "f95ec7d88011cd2c21bd6c64e483045d14beddebdecd1b6d53dcda0129181b57",
+      "bytes": 10845
+    },
+    {
+      "path": "candidates/bank_logreg_balanced/model.py",
+      "sha256": "74d2b5eb131330d7c6b16c91fb96ebbcce9cea3de95e73138064ac02bdedb0a9",
+      "bytes": 832
+    },
+    {
+      "path": "candidates/bank_logreg_balanced/verification.json",
+      "sha256": "e90f412172794dc60a6c215b65375a76181201a32df4b1c9c83b2efe945155e0",
+      "bytes": 4804
+    },
+    {
+      "path": "report.html",
+      "sha256": "11b104ce9a6de22f110ba150516d42a524f4f0189a24b8a8d62879ec34705a0b",
+      "bytes": 183189
+    },
+    {
+      "path": "report.json",
+      "sha256": "ed749761a456a07d24411fd04e014b852fb7e43e8ab203ad818c55b0d20a6767",
+      "bytes": 89738
+    },
+    {
+      "path": "report.md",
+      "sha256": "820e260c985fccaab35bdf27f523af749d71892a6bee56b0982c08c1c08dd2e0",
+      "bytes": 89952
+    }
+  ]
+}

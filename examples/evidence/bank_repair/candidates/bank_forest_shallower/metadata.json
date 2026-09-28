@@ -1,0 +1,251 @@
+{
+  "record": {
+    "candidate_id": "bank_forest_shallower",
+    "plan": {
+      "candidate_id": "bank_forest_shallower",
+      "algorithm": "forest",
+      "variant": "shallower",
+      "rationale": "随机森林作为非线性对照，限制深度与树数量以适配 CPU/内存与超时；固定 random_state，按原始顺序留出协议比较 AP 与前10%联系名单效果，不预设优于逻辑回归。",
+      "evidence_ids": [
+        "bank-precontact-policy",
+        "bank-target",
+        "random-forest",
+        "average-precision",
+        "bank-ordered-split"
+      ],
+      "parent_id": null
+    },
+    "status": "failed",
+    "metrics": {},
+    "checks": [
+      {
+        "name": "source_policy",
+        "passed": true,
+        "mandatory": true,
+        "detail": "AST parsed as approved constructors without exec/eval"
+      },
+      {
+        "name": "dataset_integrity",
+        "passed": true,
+        "mandatory": true,
+        "detail": "SHA256, split disjointness, row alignment, feature policy"
+      },
+      {
+        "name": "labels_withheld",
+        "passed": true,
+        "mandatory": true,
+        "detail": "Worker receives no validation labels or final test"
+      },
+      {
+        "name": "worker_execution",
+        "passed": false,
+        "mandatory": true,
+        "detail": "Repeated prediction is not deterministic"
+      }
+    ],
+    "resources": {
+      "limits": {
+        "timeout_s": 120.0,
+        "memory_mib": 2048,
+        "cpu_cores": 2
+      },
+      "worker_pid": 18852,
+      "wall_seconds": 2.4564444590359926,
+      "worker_wall_seconds": 2.210659825010225,
+      "peak_rss_mib": 229.37890625,
+      "total_seconds": 2.5568398849572986
+    },
+    "repairs": [
+      {
+        "error_type": "nondeterministic_worker_execution",
+        "diagnosis": "The pipeline sets random_state only on RandomForestClassifier, but the worker's repeated-prediction determinism check fails because the pipeline is not fully seeded: the OneHotEncoder and the overall estimator construction rely on global RNG state, and n_jobs=2 can introduce thread-scheduling nondeterminism in prediction. The constructor program must make every stochastic component explicitly seeded and avoid parallel nondeterminism.",
+        "fix": "In build_pipeline, set random_state=task_spec['seed'] on OneHotEncoder (and any other stochastic transformer), and set n_jobs=1 on RandomForestClassifier so prediction is single-threaded and reproducible. Keep the existing random_state on the classifier.",
+        "repairable": true,
+        "attempt": 1,
+        "before_hash": "31525d863939727c4ac6b09e8222c45c5f9397fd19b7f6ac484ef54ad4d3f53c",
+        "after_hash": "6f3c2230e1440b3c9ba759219551ce1afe1b7f563b78bf4a49e6d91a2bdce481"
+      },
+      {
+        "error_type": "TypeError",
+        "diagnosis": "OneHotEncoder does not accept a random_state argument in the installed scikit-learn version; the constructor call passes an unsupported keyword, causing worker execution to fail before fitting.",
+        "fix": "Remove random_state=task_spec['seed'] from the OneHotEncoder(...) call in the ColumnTransformer, leaving OneHotEncoder(handle_unknown='ignore').",
+        "repairable": true,
+        "attempt": 2,
+        "before_hash": "6f3c2230e1440b3c9ba759219551ce1afe1b7f563b78bf4a49e6d91a2bdce481",
+        "after_hash": "31525d863939727c4ac6b09e8222c45c5f9397fd19b7f6ac484ef54ad4d3f53c"
+      }
+    ],
+    "attempts": [
+      {
+        "attempt": 0,
+        "code_sha256": "31525d863939727c4ac6b09e8222c45c5f9397fd19b7f6ac484ef54ad4d3f53c",
+        "code_path": "candidates/bank_forest_shallower/attempt_0/model.py",
+        "status": "failed",
+        "error": {
+          "type": "ValueError",
+          "message": "Repeated prediction is not deterministic",
+          "repairable": true,
+          "stage": "worker_execution"
+        },
+        "checks": [
+          {
+            "name": "source_policy",
+            "passed": true,
+            "mandatory": true,
+            "detail": "AST parsed as approved constructors without exec/eval"
+          },
+          {
+            "name": "dataset_integrity",
+            "passed": true,
+            "mandatory": true,
+            "detail": "SHA256, split disjointness, row alignment, feature policy"
+          },
+          {
+            "name": "labels_withheld",
+            "passed": true,
+            "mandatory": true,
+            "detail": "Worker receives no validation labels or final test"
+          },
+          {
+            "name": "worker_execution",
+            "passed": false,
+            "mandatory": true,
+            "detail": "Repeated prediction is not deterministic"
+          }
+        ],
+        "metrics": {},
+        "resources": {
+          "limits": {
+            "timeout_s": 120.0,
+            "memory_mib": 2048,
+            "cpu_cores": 2
+          },
+          "worker_pid": 18782,
+          "wall_seconds": 2.456341185141355,
+          "worker_wall_seconds": 2.2259167509619147,
+          "peak_rss_mib": 235.375,
+          "total_seconds": 2.5580467239487916
+        }
+      },
+      {
+        "attempt": 1,
+        "code_sha256": "6f3c2230e1440b3c9ba759219551ce1afe1b7f563b78bf4a49e6d91a2bdce481",
+        "code_path": "candidates/bank_forest_shallower/attempt_1/model.py",
+        "status": "failed",
+        "error": {
+          "type": "TypeError",
+          "message": "OneHotEncoder.__init__() got an unexpected keyword argument 'random_state'",
+          "repairable": true,
+          "stage": "worker_execution"
+        },
+        "checks": [
+          {
+            "name": "source_policy",
+            "passed": true,
+            "mandatory": true,
+            "detail": "AST parsed as approved constructors without exec/eval"
+          },
+          {
+            "name": "dataset_integrity",
+            "passed": true,
+            "mandatory": true,
+            "detail": "SHA256, split disjointness, row alignment, feature policy"
+          },
+          {
+            "name": "labels_withheld",
+            "passed": true,
+            "mandatory": true,
+            "detail": "Worker receives no validation labels or final test"
+          },
+          {
+            "name": "worker_execution",
+            "passed": false,
+            "mandatory": true,
+            "detail": "OneHotEncoder.__init__() got an unexpected keyword argument 'random_state'"
+          }
+        ],
+        "metrics": {},
+        "resources": {
+          "limits": {
+            "timeout_s": 120.0,
+            "memory_mib": 2048,
+            "cpu_cores": 2
+          },
+          "worker_pid": 18838,
+          "wall_seconds": 0.8034419061150402,
+          "worker_wall_seconds": 0.6226368388161063,
+          "peak_rss_mib": 224.58984375,
+          "total_seconds": 0.9101883950643241
+        }
+      },
+      {
+        "attempt": 2,
+        "code_sha256": "31525d863939727c4ac6b09e8222c45c5f9397fd19b7f6ac484ef54ad4d3f53c",
+        "code_path": "candidates/bank_forest_shallower/attempt_2/model.py",
+        "status": "failed",
+        "error": {
+          "type": "ValueError",
+          "message": "Repeated prediction is not deterministic",
+          "repairable": true,
+          "stage": "worker_execution"
+        },
+        "checks": [
+          {
+            "name": "source_policy",
+            "passed": true,
+            "mandatory": true,
+            "detail": "AST parsed as approved constructors without exec/eval"
+          },
+          {
+            "name": "dataset_integrity",
+            "passed": true,
+            "mandatory": true,
+            "detail": "SHA256, split disjointness, row alignment, feature policy"
+          },
+          {
+            "name": "labels_withheld",
+            "passed": true,
+            "mandatory": true,
+            "detail": "Worker receives no validation labels or final test"
+          },
+          {
+            "name": "worker_execution",
+            "passed": false,
+            "mandatory": true,
+            "detail": "Repeated prediction is not deterministic"
+          }
+        ],
+        "metrics": {},
+        "resources": {
+          "limits": {
+            "timeout_s": 120.0,
+            "memory_mib": 2048,
+            "cpu_cores": 2
+          },
+          "worker_pid": 18852,
+          "wall_seconds": 2.4564444590359926,
+          "worker_wall_seconds": 2.210659825010225,
+          "peak_rss_mib": 229.37890625,
+          "total_seconds": 2.5568398849572986
+        }
+      }
+    ],
+    "artifact_id": "bank_forest_shallower",
+    "parent_id": null,
+    "error": {
+      "type": "ValueError",
+      "message": "Repeated prediction is not deterministic",
+      "repairable": true,
+      "stage": "worker_execution"
+    },
+    "quality_status": "not_evaluated",
+    "code_sha256": "31525d863939727c4ac6b09e8222c45c5f9397fd19b7f6ac484ef54ad4d3f53c",
+    "code_path": "candidates/bank_forest_shallower/attempt_2/model.py",
+    "explanation": "Removed the unsupported random_state argument from OneHotEncoder (the reported TypeError) while keeping the precontact conservative feature policy, median-impute/scale numeric branch, ignore-unknown categorical encoding, and a depth-limited forest with fixed seed and bounded CPU."
+  },
+  "source_code": "artifacts/runs/13edb7649f0d41bba608251b6079e4d1/candidates/bank_forest_shallower/attempt_2/model.py",
+  "source_code_sha256": "31525d863939727c4ac6b09e8222c45c5f9397fd19b7f6ac484ef54ad4d3f53c",
+  "source_verification": "artifacts/runs/13edb7649f0d41bba608251b6079e4d1/candidates/bank_forest_shallower/attempt_2/verification.json",
+  "source_verification_sha256": "a18ad3797c56c51494d4c720c2c0a1aea64834f6ca0518f4e2420c86f87fa907",
+  "model_metadata": null
+}

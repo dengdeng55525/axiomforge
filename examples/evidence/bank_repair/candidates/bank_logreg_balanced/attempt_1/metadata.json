@@ -1,0 +1,130 @@
+{
+  "record": {
+    "attempt": 1,
+    "code_sha256": "74d2b5eb131330d7c6b16c91fb96ebbcce9cea3de95e73138064ac02bdedb0a9",
+    "code_path": "candidates/bank_logreg_balanced/attempt_1/model.py",
+    "status": "passed",
+    "error": null,
+    "checks": [
+      {
+        "name": "source_policy",
+        "passed": true,
+        "mandatory": true,
+        "detail": "AST parsed as approved constructors without exec/eval"
+      },
+      {
+        "name": "dataset_integrity",
+        "passed": true,
+        "mandatory": true,
+        "detail": "SHA256, split disjointness, row alignment, feature policy"
+      },
+      {
+        "name": "labels_withheld",
+        "passed": true,
+        "mandatory": true,
+        "detail": "Worker receives no validation labels or final test"
+      },
+      {
+        "name": "worker_execution",
+        "passed": true,
+        "mandatory": true,
+        "detail": "Resource-limited fresh process exited successfully"
+      },
+      {
+        "name": "prediction_contract",
+        "passed": true,
+        "mandatory": true,
+        "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+      },
+      {
+        "name": "single_row",
+        "passed": true,
+        "mandatory": true,
+        "detail": ""
+      },
+      {
+        "name": "repeat_prediction",
+        "passed": true,
+        "mandatory": true,
+        "detail": ""
+      },
+      {
+        "name": "empty_batch_wrapper",
+        "passed": true,
+        "mandatory": true,
+        "detail": ""
+      },
+      {
+        "name": "unknown_category",
+        "passed": true,
+        "mandatory": true,
+        "detail": ""
+      },
+      {
+        "name": "missing_numeric",
+        "passed": true,
+        "mandatory": true,
+        "detail": ""
+      },
+      {
+        "name": "clean_environment",
+        "passed": true,
+        "mandatory": true,
+        "detail": "No API keys/tokens passed to worker"
+      },
+      {
+        "name": "ap_above_dummy",
+        "passed": true,
+        "mandatory": false,
+        "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+      },
+      {
+        "name": "host_evaluation",
+        "passed": true,
+        "mandatory": true,
+        "detail": "Metrics computed only by trusted host using validation labels"
+      }
+    ],
+    "metrics": {
+      "average_precision": 0.1807589966629477,
+      "roc_auc": 0.6093179752719227,
+      "f1_threshold_0_5": 0.22881855710634952,
+      "precision_at_10pct": 0.2196601941747573,
+      "recall_at_10pct": 0.19846491228070176,
+      "lift_at_10pct": 1.9841674118548802,
+      "validation_positive_rate": 0.11070648215586307,
+      "top_10pct_count": 824,
+      "validation_rows": 8238,
+      "classification_threshold": 0.5,
+      "evaluation_split": "validation_only",
+      "sealed_test_scored": false,
+      "ranking_tie_break": "original_validation_row_order",
+      "dummy_average_precision": 0.11070648215586307,
+      "ap_improvement_over_dummy": 0.07005251450708463
+    },
+    "resources": {
+      "limits": {
+        "timeout_s": 120.0,
+        "memory_mib": 2048,
+        "cpu_cores": 2
+      },
+      "worker_pid": 18696,
+      "wall_seconds": 1.1536987680010498,
+      "fit_seconds": 0.11273374012671411,
+      "predict_seconds": 0.027600021101534367,
+      "worker_wall_seconds": 0.9614746631123126,
+      "peak_rss_mib": 224.5625,
+      "cpu_seconds": 1.2693089999999998,
+      "sklearn_version": "1.7.2",
+      "python_version": "3.10.8",
+      "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+      "joblib_backend": "threading",
+      "total_seconds": 1.8334333230741322
+    }
+  },
+  "source_code": "artifacts/runs/13edb7649f0d41bba608251b6079e4d1/candidates/bank_logreg_balanced/attempt_1/model.py",
+  "source_code_sha256": "74d2b5eb131330d7c6b16c91fb96ebbcce9cea3de95e73138064ac02bdedb0a9",
+  "source_verification": "artifacts/runs/13edb7649f0d41bba608251b6079e4d1/candidates/bank_logreg_balanced/attempt_1/verification.json",
+  "source_verification_sha256": "5a3c03219d5cfdbff322a0994e6889b4c8e2b81854535025d92eee90259133a1",
+  "model_metadata": null
+}

@@ -1,0 +1,58 @@
+{
+  "record": {
+    "attempt": 1,
+    "code_sha256": "6f3c2230e1440b3c9ba759219551ce1afe1b7f563b78bf4a49e6d91a2bdce481",
+    "code_path": "candidates/bank_forest_shallower/attempt_1/model.py",
+    "status": "failed",
+    "error": {
+      "type": "TypeError",
+      "message": "OneHotEncoder.__init__() got an unexpected keyword argument 'random_state'",
+      "repairable": true,
+      "stage": "worker_execution"
+    },
+    "checks": [
+      {
+        "name": "source_policy",
+        "passed": true,
+        "mandatory": true,
+        "detail": "AST parsed as approved constructors without exec/eval"
+      },
+      {
+        "name": "dataset_integrity",
+        "passed": true,
+        "mandatory": true,
+        "detail": "SHA256, split disjointness, row alignment, feature policy"
+      },
+      {
+        "name": "labels_withheld",
+        "passed": true,
+        "mandatory": true,
+        "detail": "Worker receives no validation labels or final test"
+      },
+      {
+        "name": "worker_execution",
+        "passed": false,
+        "mandatory": true,
+        "detail": "OneHotEncoder.__init__() got an unexpected keyword argument 'random_state'"
+      }
+    ],
+    "metrics": {},
+    "resources": {
+      "limits": {
+        "timeout_s": 120.0,
+        "memory_mib": 2048,
+        "cpu_cores": 2
+      },
+      "worker_pid": 18838,
+      "wall_seconds": 0.8034419061150402,
+      "worker_wall_seconds": 0.6226368388161063,
+      "peak_rss_mib": 224.58984375,
+      "total_seconds": 0.9101883950643241
+    }
+  },
+  "source_code": "artifacts/runs/13edb7649f0d41bba608251b6079e4d1/candidates/bank_forest_shallower/attempt_1/model.py",
+  "source_code_sha256": "6f3c2230e1440b3c9ba759219551ce1afe1b7f563b78bf4a49e6d91a2bdce481",
+  "source_verification": "artifacts/runs/13edb7649f0d41bba608251b6079e4d1/candidates/bank_forest_shallower/attempt_1/verification.json",
+  "source_verification_sha256": "2a2c548a7862cfdd42eb4430deb08333e768ebecfcd1b2ca9ee949a23781a477",
+  "model_metadata": null
+}

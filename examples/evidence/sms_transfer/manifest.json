@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0",
+  "source_report": "artifacts/runs/30fbcd522366415880a0e2dfc9e17999/report.json",
+  "source_report_sha256": "78fad572910d4a51574f4a24d2218bf9eea65f357b0ee5dd3ea67c64a5fa53fb",
+  "exported_at": "2026-09-28T11:50:41.038444+00:00",
+  "note": "Portable historical evidence export. Original mode, statuses, failed attempts, metrics, usage records, and content hashes are preserved. Project-root absolute paths in JSON are made repository-relative. Datasets, predictions, raw LLM requests/responses, worker logs, credentials, and the private database are omitted. This is not a new execution or a replay-mode relabel. Cross-scenario SMS transfer demonstration; two candidates passed in this historical run.",
+  "omitted": [
+    "datasets",
+    "predictions",
+    "raw_llm_payloads",
+    "worker_logs",
+    "credentials",
+    "database"
+  ],
+  "run_id": "30fbcd522366415880a0e2dfc9e17999",
+  "name": "sms_transfer",
+  "mode": "real",
+  "status": "passed",
+  "candidate_count": 2,
+  "attempt_count": 2,
+  "files": [
+    {
+      "path": "candidates/sms_logreg_tfidf_default/attempt_0/metadata.json",
+      "sha256": "dd614ce955d74426fa4b793078befa839d5d7e0da8c8c04d7c111d781f2679bd",
+      "bytes": 5610
+    },
+    {
+      "path": "candidates/sms_logreg_tfidf_default/attempt_0/model.py",
+      "sha256": "0817a4e25a597a0f82bac86ee3ba0f88f19291b77e35aa9173ba52907b9156f0",
+      "bytes": 405
+    },
+    {
+      "path": "candidates/sms_logreg_tfidf_default/attempt_0/verification.json",
+      "sha256": "a4645b0694be6345d17d5b7e8dd35239126741fd72d6ec09d80dc65d4e51d43d",
+      "bytes": 5443
+    },
+    {
+      "path": "candidates/sms_logreg_tfidf_default/metadata.json",
+      "sha256": "7cdc1b83b1d83ff0669f36899ab94811cc558481bfcb07fcafb47287842c721c",
+      "bytes": 11878
+    },
+    {
+      "path": "candidates/sms_logreg_tfidf_default/model.py",
+      "sha256": "0817a4e25a597a0f82bac86ee3ba0f88f19291b77e35aa9173ba52907b9156f0",
+      "bytes": 405
+    },
+    {
+      "path": "candidates/sms_logreg_tfidf_default/verification.json",
+      "sha256": "a4645b0694be6345d17d5b7e8dd35239126741fd72d6ec09d80dc65d4e51d43d",
+      "bytes": 5443
+    },
+    {
+      "path": "candidates/sms_nb_tfidf_default/attempt_0/metadata.json",
+      "sha256": "a705b1bd6af5588b26a160f5a779763a133c01a5c19e3b8a8e8b758dc7b0c429",
+      "bytes": 5475
+    },
+    {
+      "path": "candidates/sms_nb_tfidf_default/attempt_0/model.py",
+      "sha256": "48609503c23783ac1d75e0dce802164ec27e93c8fdcac59a950c78df3f06a241",
+      "bytes": 344
+    },
+    {
+      "path": "candidates/sms_nb_tfidf_default/attempt_0/verification.json",
+      "sha256": "cd753bd5aa99ec855384f8e63b37e2c21ba8b6e58b7bed382461076b4cea3ccb",
+      "bytes": 5338
+    },
+    {
+      "path": "candidates/sms_nb_tfidf_default/metadata.json",
+      "sha256": "bf1d6368bf1c3bb67cc1da8257c0cb3b5bce8d84597944357a93afcf41f17501",
+      "bytes": 11786
+    },
+    {
+      "path": "candidates/sms_nb_tfidf_default/model.py",
+      "sha256": "48609503c23783ac1d75e0dce802164ec27e93c8fdcac59a950c78df3f06a241",
+      "bytes": 344
+    },
+    {
+      "path": "candidates/sms_nb_tfidf_default/verification.json",
+      "sha256": "cd753bd5aa99ec855384f8e63b37e2c21ba8b6e58b7bed382461076b4cea3ccb",
+      "bytes": 5338
+    },
+    {
+      "path": "report.html",
+      "sha256": "483972ce207ae4d1f827bf1773cbae0a30dc44ddfcfb70f81da08a4db3867956",
+      "bytes": 156682
+    },
+    {
+      "path": "report.json",
+      "sha256": "a9600ada4548064ce2716810965023e7fd7ec6d499371c4ca98278d1841c444d",
+      "bytes": 82047
+    },
+    {
+      "path": "report.md",
+      "sha256": "c77f07551a73ca20f969e180dda4a53a3b000d82ae07fffdcaa99d2486fe20cd",
+      "bytes": 82261
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "record": {
+    "attempt": 2,
+    "code_sha256": "31525d863939727c4ac6b09e8222c45c5f9397fd19b7f6ac484ef54ad4d3f53c",
+    "code_path": "candidates/bank_forest_shallower/attempt_2/model.py",
+    "status": "failed",
+    "error": {
+      "type": "ValueError",
+      "message": "Repeated prediction is not deterministic",
+      "repairable": true,
+      "stage": "worker_execution"
+    },
+    "checks": [
+      {
+        "name": "source_policy",
+        "passed": true,
+        "mandatory": true,
+        "detail": "AST parsed as approved constructors without exec/eval"
+      },
+      {
+        "name": "dataset_integrity",
+        "passed": true,
+        "mandatory": true,
+        "detail": "SHA256, split disjointness, row alignment, feature policy"
+      },
+      {
+        "name": "labels_withheld",
+        "passed": true,
+        "mandatory": true,
+        "detail": "Worker receives no validation labels or final test"
+      },
+      {
+        "name": "worker_execution",
+        "passed": false,
+        "mandatory": true,
+        "detail": "Repeated prediction is not deterministic"
+      }
+    ],
+    "metrics": {},
+    "resources": {
+      "limits": {
+        "timeout_s": 120.0,
+        "memory_mib": 2048,
+        "cpu_cores": 2
+      },
+      "worker_pid": 18852,
+      "wall_seconds": 2.4564444590359926,
+      "worker_wall_seconds": 2.210659825010225,
+      "peak_rss_mib": 229.37890625,
+      "total_seconds": 2.5568398849572986
+    }
+  },
+  "source_code": "artifacts/runs/13edb7649f0d41bba608251b6079e4d1/candidates/bank_forest_shallower/attempt_2/model.py",
+  "source_code_sha256": "31525d863939727c4ac6b09e8222c45c5f9397fd19b7f6ac484ef54ad4d3f53c",
+  "source_verification": "artifacts/runs/13edb7649f0d41bba608251b6079e4d1/candidates/bank_forest_shallower/attempt_2/verification.json",
+  "source_verification_sha256": "a18ad3797c56c51494d4c720c2c0a1aea64834f6ca0518f4e2420c86f87fa907",
+  "model_metadata": null
+}

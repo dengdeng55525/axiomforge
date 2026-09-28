@@ -1,0 +1,233 @@
+{
+  "schema_version": "1.0",
+  "source_report": "artifacts/runs/0f25cc2b756648439ccccdabc4b9aa70/report.json",
+  "source_report_sha256": "e0f23c492dcbb39ac30148b5a2b6ebbea5af390b2c7cdaa34c30ae503ba9e31a",
+  "exported_at": "2026-09-28T11:50:40.910582+00:00",
+  "note": "Portable historical evidence export. Original mode, statuses, failed attempts, metrics, usage records, and content hashes are preserved. Project-root absolute paths in JSON are made repository-relative. Datasets, predictions, raw LLM requests/responses, worker logs, credentials, and the private database are omitted. This is not a new execution or a replay-mode relabel. Beam search bank demonstration; six candidates passed in this historical run.",
+  "omitted": [
+    "datasets",
+    "predictions",
+    "raw_llm_payloads",
+    "worker_logs",
+    "credentials",
+    "database"
+  ],
+  "run_id": "0f25cc2b756648439ccccdabc4b9aa70",
+  "name": "bank_beam",
+  "mode": "real",
+  "status": "passed",
+  "candidate_count": 6,
+  "attempt_count": 7,
+  "files": [
+    {
+      "path": "candidates/bank_forest_balanced/attempt_0/metadata.json",
+      "sha256": "73ce404817eef4629467179f1f3b9838f8b6f1b881ba3ed11ca13dcb8efe0942",
+      "bytes": 6178
+    },
+    {
+      "path": "candidates/bank_forest_balanced/attempt_0/model.py",
+      "sha256": "608f6098d0793224e4b0deac6c2baf11521a5fcbdd2f3f1dd781aedcb8225c83",
+      "bytes": 814
+    },
+    {
+      "path": "candidates/bank_forest_balanced/attempt_0/verification.json",
+      "sha256": "9bad928e2722325d7411824465871a850c080e33788f9364e57b218228910cb0",
+      "bytes": 5759
+    },
+    {
+      "path": "candidates/bank_forest_balanced/metadata.json",
+      "sha256": "942340c46440116e86becbb08a94b5c953a20df99f995a1e730d7744ea499374",
+      "bytes": 12964
+    },
+    {
+      "path": "candidates/bank_forest_balanced/model.py",
+      "sha256": "608f6098d0793224e4b0deac6c2baf11521a5fcbdd2f3f1dd781aedcb8225c83",
+      "bytes": 814
+    },
+    {
+      "path": "candidates/bank_forest_balanced/verification.json",
+      "sha256": "9bad928e2722325d7411824465871a850c080e33788f9364e57b218228910cb0",
+      "bytes": 5759
+    },
+    {
+      "path": "candidates/bank_forest_default/attempt_0/metadata.json",
+      "sha256": "7a0d8e3074387a6b2507a2986968ecdcfb958a9dc267cf4ddd17d8043dd1193c",
+      "bytes": 6089
+    },
+    {
+      "path": "candidates/bank_forest_default/attempt_0/model.py",
+      "sha256": "bc1719eb0ba8dc09660ac5c1b80b14a5382e9cf775d69cdd104ae4d1e51f5bb8",
+      "bytes": 789
+    },
+    {
+      "path": "candidates/bank_forest_default/attempt_0/verification.json",
+      "sha256": "013d06e9c72df8817f98a2d1fd30e8a887a0f78037b7759246df2b69f9d68e4f",
+      "bytes": 5701
+    },
+    {
+      "path": "candidates/bank_forest_default/metadata.json",
+      "sha256": "e38e5aa1a0cd30c86d3e7b3d9b6313a9771ce90a44349da649fe8b26fad3d96b",
+      "bytes": 12792
+    },
+    {
+      "path": "candidates/bank_forest_default/model.py",
+      "sha256": "bc1719eb0ba8dc09660ac5c1b80b14a5382e9cf775d69cdd104ae4d1e51f5bb8",
+      "bytes": 789
+    },
+    {
+      "path": "candidates/bank_forest_default/verification.json",
+      "sha256": "013d06e9c72df8817f98a2d1fd30e8a887a0f78037b7759246df2b69f9d68e4f",
+      "bytes": 5701
+    },
+    {
+      "path": "candidates/bank_forest_shallower/attempt_0/metadata.json",
+      "sha256": "e74dfc820ba5497b496d791ebc813be3c463d16c8b5a42c3ad9cdd4d1334735b",
+      "bytes": 6126
+    },
+    {
+      "path": "candidates/bank_forest_shallower/attempt_0/model.py",
+      "sha256": "e32b8fea3b336108b961d4a8995d694e98d2c78893c6cc12b1b7fbac89369453",
+      "bytes": 788
+    },
+    {
+      "path": "candidates/bank_forest_shallower/attempt_0/verification.json",
+      "sha256": "bcb7704eab85ee42eb2c44f6e4696625dec61d0acf5802c09e44d78b32351446",
+      "bytes": 5749
+    },
+    {
+      "path": "candidates/bank_forest_shallower/metadata.json",
+      "sha256": "0f49a2dd8637f32d9c5083709ddbcbeb3f6b722a3fb323d35accbc1ca50f62a6",
+      "bytes": 12855
+    },
+    {
+      "path": "candidates/bank_forest_shallower/model.py",
+      "sha256": "e32b8fea3b336108b961d4a8995d694e98d2c78893c6cc12b1b7fbac89369453",
+      "bytes": 788
+    },
+    {
+      "path": "candidates/bank_forest_shallower/verification.json",
+      "sha256": "bcb7704eab85ee42eb2c44f6e4696625dec61d0acf5802c09e44d78b32351446",
+      "bytes": 5749
+    },
+    {
+      "path": "candidates/bank_logistic_balanced/attempt_0/metadata.json",
+      "sha256": "ec00673332ac386a721aa89ec2c356353aff7303f7fb00d537377d36de33ce4e",
+      "bytes": 6023
+    },
+    {
+      "path": "candidates/bank_logistic_balanced/attempt_0/model.py",
+      "sha256": "df78067d263ab32d9f8a90daece77619edf41852761086dcba8b1cbcc2008aef",
+      "bytes": 793
+    },
+    {
+      "path": "candidates/bank_logistic_balanced/attempt_0/verification.json",
+      "sha256": "cab2c11cf2578330e985b74a89e7255237e2e18b1ac769e7a67677c67934147c",
+      "bytes": 5700
+    },
+    {
+      "path": "candidates/bank_logistic_balanced/metadata.json",
+      "sha256": "5363204d9971307345a7e06d9039c27fb3fbcc7fae2f08de5ec977ca730c42f8",
+      "bytes": 12681
+    },
+    {
+      "path": "candidates/bank_logistic_balanced/model.py",
+      "sha256": "df78067d263ab32d9f8a90daece77619edf41852761086dcba8b1cbcc2008aef",
+      "bytes": 793
+    },
+    {
+      "path": "candidates/bank_logistic_balanced/verification.json",
+      "sha256": "cab2c11cf2578330e985b74a89e7255237e2e18b1ac769e7a67677c67934147c",
+      "bytes": 5700
+    },
+    {
+      "path": "candidates/bank_logistic_default/attempt_0/metadata.json",
+      "sha256": "0a23684a6f5e5f6b891e65d6958f0cb199249cd403e0d9aeeb74cbf7278fc0cb",
+      "bytes": 1889
+    },
+    {
+      "path": "candidates/bank_logistic_default/attempt_0/model.py",
+      "sha256": "b4dd5f8eebd665f9e6f4a06eb7a6ae7d0fa3a16c2d724e71bce32c7552233384",
+      "bytes": 769
+    },
+    {
+      "path": "candidates/bank_logistic_default/attempt_0/verification.json",
+      "sha256": "9cd3f59356d2e63893283e4b8aa764777584432a811a04c0dc7a4a7c7b59c3e7",
+      "bytes": 1519
+    },
+    {
+      "path": "candidates/bank_logistic_default/attempt_1/metadata.json",
+      "sha256": "02b0198faca9daad50e0ab48a808b76d3db70558ceab05d93ce7ddf14afa7e3c",
+      "bytes": 5934
+    },
+    {
+      "path": "candidates/bank_logistic_default/attempt_1/model.py",
+      "sha256": "e674bef0808a2926a4f2fc8127f09a0c5c1a3b575582f73703c026fb4a8961c1",
+      "bytes": 768
+    },
+    {
+      "path": "candidates/bank_logistic_default/attempt_1/verification.json",
+      "sha256": "9ceb4156b488229c858a3ceea53c739435ae5eaedf4cf9489b94685c6916b6ac",
+      "bytes": 5642
+    },
+    {
+      "path": "candidates/bank_logistic_default/metadata.json",
+      "sha256": "855d58d87024a049c588a9e4f585fc23aa6173e7e550f072621c95020617a3d0",
+      "bytes": 14946
+    },
+    {
+      "path": "candidates/bank_logistic_default/model.py",
+      "sha256": "e674bef0808a2926a4f2fc8127f09a0c5c1a3b575582f73703c026fb4a8961c1",
+      "bytes": 768
+    },
+    {
+      "path": "candidates/bank_logistic_default/verification.json",
+      "sha256": "9ceb4156b488229c858a3ceea53c739435ae5eaedf4cf9489b94685c6916b6ac",
+      "bytes": 5642
+    },
+    {
+      "path": "candidates/bank_logistic_regularized/attempt_0/metadata.json",
+      "sha256": "926fa686ccca4daca8f2b98f59646885e1d3aaa5574af1715184e1dd1582f213",
+      "bytes": 5981
+    },
+    {
+      "path": "candidates/bank_logistic_regularized/attempt_0/model.py",
+      "sha256": "ff866df73a58fa0d2e8b0ce41a0342a889fce756d005a9ad325bcf8bc9ad68db",
+      "bytes": 775
+    },
+    {
+      "path": "candidates/bank_logistic_regularized/attempt_0/verification.json",
+      "sha256": "8959b8075a08e861b796d8c07a4a7992e5b190749a11f9ef535be66469357e4a",
+      "bytes": 5691
+    },
+    {
+      "path": "candidates/bank_logistic_regularized/metadata.json",
+      "sha256": "e39df40dd6a29377ce762d73a0712a6c83226c98433e722dbb06bd71f2590c20",
+      "bytes": 12639
+    },
+    {
+      "path": "candidates/bank_logistic_regularized/model.py",
+      "sha256": "ff866df73a58fa0d2e8b0ce41a0342a889fce756d005a9ad325bcf8bc9ad68db",
+      "bytes": 775
+    },
+    {
+      "path": "candidates/bank_logistic_regularized/verification.json",
+      "sha256": "8959b8075a08e861b796d8c07a4a7992e5b190749a11f9ef535be66469357e4a",
+      "bytes": 5691
+    },
+    {
+      "path": "report.html",
+      "sha256": "e4bbcb85fc4cdf689fee27663b4649622c2be57562643a727f19bf77e56a6364",
+      "bytes": 338644
+    },
+    {
+      "path": "report.json",
+      "sha256": "1f471c404c81c715dbf7f003d2331cc258e31f9a273b374d4fa64f101b67087c",
+      "bytes": 153912
+    },
+    {
+      "path": "report.md",
+      "sha256": "012f92b3300b2ea9b4ed469391f371b5ad0e9facb44a010611252372efeae2dd",
+      "bytes": 154126
+    }
+  ]
+}
