@@ -100,5 +100,13 @@
     "Three real runs and one mock matrix do not establish statistical significance or production SLA.",
     "API pricing is a dated snapshot; recorded tokens are not a billing receipt.",
     "GPU/local-model deployment and Docker image build are not tested on this host."
-  ]
+  ],
+  "api_smoke": {
+    "endpoint": "FastAPI /health + POST /runs + GET /runs/{id}",
+    "provider": "mock",
+    "run_id": "8c630e3ed13f4af78199d6755e01ceb4",
+    "status": "passed",
+    "selected_candidate_id": "fixed_c1",
+    "note": "Local loopback smoke after final commit; report remains in ignored artifacts/runs."
+  }
 }
