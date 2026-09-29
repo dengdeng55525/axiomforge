@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Single index for the latest repository validation evidence",
+  "code_validation_commit": "d1a15b02e566afed31388c4b914d322c9aef64e6",
+  "validated_at_utc": "2026-09-29",
+  "backend": {
+    "command": ".venv/bin/pytest -q tests ui",
+    "passed": 358,
+    "failed": 0,
+    "lint": ".venv/bin/ruff check src scripts tests ui",
+    "compileall": ".venv/bin/python -m compileall -q src scripts ui"
+  },
+  "frontend": {
+    "format": "cd web && npm run format:check",
+    "build": "cd web && npm run build",
+    "browser": "cd web && npm run test:e2e",
+    "browser_passed": 23,
+    "browser_failed": 0,
+    "evidence": "frontend_validation.json"
+  },
+  "remote_ci": {
+    "cpu": "https://github.com/dengdeng55525/algorithm-capability-factory/actions/runs/36567574778",
+    "web": "https://github.com/dengdeng55525/algorithm-capability-factory/actions/runs/36567574861",
+    "status": "success"
+  },
+  "real_local_smoke": {
+    "provider": "mock",
+    "run_id": "cb4b86e9449f429887455adff3c55e0d",
+    "status": "passed",
+    "report_json_markdown_html": 200,
+    "artifact_index": 200,
+    "graph_explore": 200
+  },
+  "historical_evidence": [
+    "examples/evidence/bank_repair",
+    "examples/evidence/bank_beam",
+    "examples/evidence/sms_transfer"
+  ],
+  "limitations": [
+    "No paid DeepSeek call was made during this validation.",
+    "Local 14B serving, four/six GPU throughput and OOM recovery were not benchmarked.",
+    "Docker and OS-level sandbox deployment were not executed.",
+    "preparation_checks.json is an early preparation snapshot, not final validation."
+  ]
+}

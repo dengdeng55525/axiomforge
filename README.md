@@ -1,20 +1,43 @@
-# AlgoForge：可验证的算法能力工厂
+# AlgoForge · 可验证的算法能力工厂
 
-AlgoForge 将中文算法需求转成受控的 scikit-learn 管道代码，执行统一验证，依据错误进行有限修复，再把代码、指标、来源和失败经验写回知识库。主场景是**银行营销响应预测**，短信垃圾信息分类用于展示跨场景复用。项目对应 [LLM Agent 笔试原题](docs/source/exam.txt)。
+> 将自然语言算法需求变成**有来源、有验证、有版本**的可运行算法能力。
 
-当前已经有 Python 工作流、DeepSeek API、SQLite 知识图谱、CLI、FastAPI、Vue 交互工作台和自动报告。Streamlit 保留为可选旧版界面。此次 [模型发现记录](docs/research/deepseek_model_discovery.json) 将 **DeepSeek-V4.1-Flash** 对应到 API ID **deepseek-flash**。真实、mock 与历史记录明确区分，不把模拟输出当作真实模型成绩。
+AlgoForge 是面向 LLM Agent 笔试场景的小型可复现原型。它以**银行营销响应预测**为主场景，以 **SMS 垃圾信息分类**验证跨任务迁移，完整演示：能力理解、知识检索、方案规划、代码生成、自动验证、有限修复和知识回写。
 
-**当前默认使用云端 API，没有部署本地大模型。** 本地 14B 接入框架已经搭好：
-`four_gpu_14b` 为四个 Qwen2.5-Coder-14B AWQ 单卡副本（GPU 0–3、端口 8100–8103），
-通过 OpenAI 兼容 HTTP Provider 接入；权重下载、vLLM 启动和四卡实测仍由后续部署完成。
-1–6 张 RTX 4090D 只展示静态配置，不虚构吞吐。执行后端为受限 AST 构造器加资源限制子进程，**不是 Docker 或完整操作系统沙箱**。最终测试统计和验收清单以 `docs/research/execution_validation.json` 为准。
+[![CPU verification](https://github.com/dengdeng55525/algorithm-capability-factory/actions/workflows/ci.yml/badge.svg)](https://github.com/dengdeng55525/algorithm-capability-factory/actions/workflows/ci.yml) [![Web verification](https://github.com/dengdeng55525/algorithm-capability-factory/actions/workflows/frontend.yml/badge.svg)](https://github.com/dengdeng55525/algorithm-capability-factory/actions/workflows/frontend.yml)
 
-## 快速开始
+当前仓库为私有仓库；文档按成熟开源项目的方式组织，但仓库当前仍为私有，项目尚未声明开源许可证，若要公开发布请先补充许可证和第三方 NOTICE。
 
-Linux、Python 3.10+。首次安装与下载公开数据需要网络；mock 流程不需要模型凭证或 GPU。
+## 项目背景与目标
 
-~~~bash
-cd /root/algorithm-capability-factory
+真实团队的算法能力通常分散在需求文档、历史代码、实验记录和专家经验里。AlgoForge 的目标不是让 LLM 任意执行代码，而是把这些能力转成有来源的结构化知识，再在固定数据协议和受限执行器中复刻、验证并沉淀。这样可以同时回答“为什么选这个算法”“代码是否能运行”“指标是否真实”“失败经验是否可复用”。
+
+本原型面向题面要求的可复核闭环，主场景只选择一个具体业务问题：银行客户是否订购定期存款。SMS 分类用于证明相同编排和报告接口可以迁移到文本任务。
+
+## 你可以先看到什么
+
+- **Vue 工作台**：需求输入、运行监控、候选比较、折叠式验证报告、知识图谱和运行历史。
+- **统一 Agent 工作流**：解释器 → 检索器 → 规划器 → 代码生成器 → 验证器 → 审查/修复器 → 回写器。
+- **可审计知识图谱**：SQLite 持久化来源、能力、算法、数据、环境、验证运行、制品和失败经验。
+- **可复现验证**：固定数据切分、主指标 AP、Dummy 基线、接口/功能/稳定性/资源检查，缺失值不填零。
+- **多候选和有限搜索**：比较候选方案，并提供有界 Beam Search、修复预算和失败分母。
+- **三种推理后端**：DeepSeek API、确定性 Mock、本地 OpenAI 兼容 HTTP 接口。当前不把本地 14B 或多卡吞吐写成已完成事实。
+
+![工作台概览](docs/images/workbench-overview.png)
+
+![知识图谱](docs/images/workbench-graph.png)
+
+![验证报告](docs/images/workbench-report.png)
+
+截图只是界面证据；真实指标、运行状态和代码哈希以运行报告为准。
+
+## 60 秒离线体验
+
+Mock 不需要 API Key 或 GPU，可以先验证完整工程闭环：
+
+```bash
+git clone https://github.com/dengdeng55525/algorithm-capability-factory.git
+cd algorithm-capability-factory
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
@@ -22,246 +45,318 @@ python -m pip install -e '.[dev,ui]'
 python scripts/verify_data.py
 python -m capability_factory init --provider mock
 python -m capability_factory run \
-  --description '预测银行客户是否订购定期存款，仅用通话前特征，禁止 duration，比较两个候选并报告验证结果。' \
-  --dataset bank --provider mock --max-candidates 2 --max-repairs 2
-~~~
+  --dataset bank \
+  --provider mock \
+  --max-candidates 2 \
+  --max-repairs 2 \
+  --description '预测银行客户是否订购定期存款，仅使用通话前特征，禁止 duration，比较两个候选并生成验证报告。'
+```
 
-`requirements.txt` 锁定完整应用环境，`pyproject.toml` 声明直接依赖与 UI/测试依赖。已有虚拟环境时直接激活。`requirements-feasibility.txt` 仅保留早期人工基线环境，不代替应用依赖。
+命令会返回新的 `run_id`。报告可以通过 CLI 导出：
 
-### 使用 DeepSeek V4.1 API
+```bash
+python -m capability_factory report RUN_ID --format json --output artifacts/demo-report.json
+python -m capability_factory report RUN_ID --format markdown --output artifacts/demo-report.md
+python -m capability_factory report RUN_ID --format html --output artifacts/demo-report.html
+```
 
-在私有环境变量或未入 Git 的 `.env` 中配置 `DEEPSEEK_API_KEY`。已有凭证无需重复配置，也不要覆盖当前私有配置。其他可配置项见 `.env.example`：
+Mock 代表语言模型响应采用确定性规则，仍会执行真实的数据处理和算法验证；它不能作为真实 LLM 生成质量结论。
 
-~~~dotenv
+## 启动 Web 工作台
+
+先构建 Vue 前端，需要 Node.js 22.12+ 和 npm：
+
+```bash
+# 在已按上一步创建的项目目录中执行
+./scripts/build_web.sh
+```
+
+在两个终端启动 API 和 UI 网关：
+
+```bash
+# 终端 1
+./scripts/start_api.sh
+
+# 终端 2
+./scripts/start_ui.sh
+```
+
+打开 <http://127.0.0.1:8501/app/>。API 进程也直接挂载同一工作台：<http://127.0.0.1:8000/app/>；OpenAPI 文档位于 <http://127.0.0.1:8000/docs>。
+
+页面路径如下：
+
+| 页面 | 路径 | 用途 |
+| --- | --- | --- |
+| 工作台概览 | `/app/#/` | 查看真实运行、能力和关系统计 |
+| 创建算法任务 | `/app/#/workbench` | 输入需求、选择数据和推理后端 |
+| 运行与验证报告 | `/app/#/runs/{run_id}` | 查看候选、检查、修复、代码和导出物 |
+| 知识探索 | `/app/#/knowledge` | 探索图谱、来源、版本和验证路径 |
+| 运行历史 | `/app/#/history` | 搜索、过滤和复用历史任务 |
+| 模型与环境 | `/app/#/settings` | 查看 API、本地 14B 规划和执行边界 |
+
+`start_ui.sh` 和 `start_api.sh` 会从脚本位置定位项目根目录，不依赖当前 shell 所在目录，也不会误用系统 `base` Python。旧版 Streamlit 入口保留在 `scripts/start_legacy_ui.sh`，默认 Vue 工作台是交付入口。
+
+## 使用 DeepSeek API
+
+凭证只放在服务端环境或未入 Git 的 `.env`：
+
+```dotenv
+DEEPSEEK_API_KEY=your-key
 DEEPSEEK_BASE_URL=https://api.deepseek.com
 DEEPSEEK_MODEL=deepseek-flash
-~~~
+```
 
-API Key 不写入代码、需求、报告或 Git。凭证仅由后端读取，算法 worker 不继承它。
+然后检查并运行：
 
-~~~bash
+```bash
 python -m capability_factory doctor --check-api
 python -m capability_factory init --provider deepseek
 python -m capability_factory run \
-  --description '预测银行定期存款订购，禁止通话后特征。比较两个方案，以验证集 AP 选择候选，保存代码、检查、修复和来源。' \
-  --dataset bank --provider deepseek --max-candidates 2 --max-repairs 2 \
-  --search compare --use-graph --max-seconds 900
-~~~
+  --dataset bank \
+  --provider deepseek \
+  --search compare \
+  --max-candidates 2 \
+  --max-repairs 2 \
+  --description '预测银行定期存款订购，禁止通话后特征，按验证集 AP 选择方案并保留来源和修复证据。'
+```
 
-这些命令会调用真实模型并可能产生 API 费用。`doctor --check-api` 只检查模型端点；完整 run 才证明生成与验证闭环。`algoforge` 和 `python -m capability_factory` 是同一入口。
+`doctor --check-api` 只能证明端点可访问；完整 `run` 才能证明生成、验证和回写链路成功。真实 API 调用可能产生费用，浏览器不会读取或保存 API Key。
 
-## API 与中文界面
+## 端到端闭环
 
-中文工作台使用 Vue 3、TypeScript、Vite、D3 与 `@lucide/vue`。首次克隆后，在已安装 **Node.js 22.12+ 与 npm** 的环境中构建：
+```mermaid
+flowchart LR
+    A[自然语言需求] --> B[解释与约束]
+    B --> C[SQLite 知识检索]
+    C --> D[候选规划与 Beam 搜索]
+    D --> E[受限算法代码生成]
+    E --> F[AST / 接口 / 指标 / 稳定性验证]
+    F -->|失败且仍有预算| G[错误审查与有限修复]
+    G --> E
+    F --> H[候选比较与报告]
+    H --> I[能力版本、制品、失败经验回写]
+    I --> C
+```
 
-~~~bash
-cd /root/algorithm-capability-factory
-./scripts/build_web.sh
-~~~
-
-脚本在 `web/` 执行 `npm ci` 和 `npm run build`，会先进行 TypeScript 检查再构建静态页面。仓库不提交 `web/node_modules/` 或 `web/dist/`；更新前端源码后应重新构建。
-
-在两个终端分别运行：
-
-~~~bash
-cd /root/algorithm-capability-factory
-./scripts/start_api.sh
-~~~
-
-~~~bash
-cd /root/algorithm-capability-factory
-./scripts/start_ui.sh
-~~~
-
-两个脚本会自动定位仓库和项目虚拟环境，因此不依赖当前终端位于哪个目录，也不会误用系统 `base` Python。首次使用仍需先按快速开始安装依赖。`start_ui.sh` 发现尚无前端构建时也会调用构建脚本；它默认启动 Vue 工作台网关。
-
-- 工作台：`http://127.0.0.1:8501/app/`；API 也直接提供同一界面：`http://127.0.0.1:8000/app/`。访问两个端口的根路径会跳转到工作台。
-- 六个页面：工作台概览、创建算法任务、单次运行与验证报告、知识探索、运行历史、模型与环境。Hash 路由可直接分享，例如 `/app/#/knowledge`。
-- 任务页以需求输入为中心，提供两个公开数据场景、推理后端与可折叠高级设置；报告先展示结论和候选比较，中间事件、规划、修复、资源及原始 JSON 按需展开。
-- 图谱支持拖拽、缩放、图例筛选、节点详情、1–2 跳聚焦、来源与验证路径，以及将能力用于新任务。
-- 自动生成的 OpenAPI 文档：`http://127.0.0.1:8000/docs`。
-- 主要接口：提交、运行状态/事件/时间线、候选指标、资源、制品/报告、取消、能力列表、`GET /capabilities/{capability_id}` 与 `GET /graph/explore`；原始 `GET /graph` 保留。
-- UI 只通过 HTTP 访问后端，不执行生成代码、不读取模型凭证、不直接嵌入模型 HTML。
-- 页面中的“推理后端”支持 DeepSeek V4.1 API、本地 14B OpenAI 兼容接口和 Mock。本地选项只提交 `provider=local_http`，浏览器不会保存或传递 DeepSeek 密钥；`GET /config` 与 `GET /inference/profiles` 会显示四卡静态计划及 `planned_not_deployed` 状态。
-
-界面交互参考了 [fenghuozhuan](https://github.com/bcxc-dd/fenghuozhuan) 的图谱浏览与报告交互，按本项目真实数据协议独立实现，没有复制参考仓库的私有图片、数据或业务代码。设计映射、页面入口与验收步骤见 [交互工作台与参考设计](docs/12_交互工作台与参考设计.md)。如需旧版 Streamlit，单独运行 `./scripts/start_legacy_ui.sh`，并避免与默认工作台占用同一端口。
-
-~~~bash
-curl --noproxy '*' -sS http://127.0.0.1:8000/runs \
-  -H 'Content-Type: application/json' \
-  -d '{"description":"构建银行营销响应预测，禁止 duration。","dataset_id":"bank","provider":"mock","max_candidates":2,"max_repairs":2,"use_graph":true,"search":"compare","inject_failure":false}'
-~~~
-
-用返回的运行 ID 请求 `GET /runs/{run_id}` 和 `GET /runs/{run_id}/report`。当前是本机单用户原型，公网鉴权、租户隔离与生产部署不属于已交付能力。
+每一步都写入结构化事件和事实字段；事件是工作流审计记录，不是隐藏思维链。工作流由同一个 LLM 按不同角色合约完成，文档不会把它包装成多个独立训练模型。
 
 ## 系统架构与模块
 
-~~~mermaid
-flowchart LR
-  U[CLI / FastAPI / Vue 工作台] --> W[有预算的工作流]
-  W --> I[需求解释]
-  I --> K[(SQLite 来源与能力图)]
-  K --> P[规划与候选搜索]
-  P --> C[代码生成]
-  C --> A[受限 AST 构造检查]
-  A --> X[资源限制子进程]
-  X --> V[可信验证器]
-  V --> R[错误审查与有限修复]
-  R --> C
-  V --> H[比较与报告]
-  H --> K
-  I --> L[DeepSeek API / 明确标记的 Mock]
-  P --> L
-  C --> L
-  R --> L
-~~~
+| 层 | 实现 | 选择理由 |
+| --- | --- | --- |
+| Agent 编排 | Python 显式状态机、Pydantic 合约 | 状态、预算、错误和终止条件可测试 |
+| LLM | DeepSeek HTTP Provider、Mock Provider、本地 HTTP Provider | 真实 API 可用；Mock 便于离线复现；本地路线可替换 |
+| 知识库 | SQLite + 属性图表 | 单机可复现，节点/关系/版本/来源可审计 |
+| 检索 | 词项匹配 + 有界图扩展，最多两跳 | 结果可解释，能展示证据路径；不虚称为向量检索 |
+| 算法执行 | 受限 AST 构造器 + 资源限制子进程 | 模型不能直接执行任意 Python 文本 |
+| 验证 | scikit-learn 固定协议、AP/Dummy、接口和资源检查 | 算法候选使用统一分母和验证集 |
+| 服务 | FastAPI + CLI | 同一套后端同时服务命令行、API 和 Web |
+| 前端 | Vue 3 + TypeScript + D3 + Lucide | 报告、图谱和交互状态可清楚分层 |
 
-| 模块 | 职责 |
-|---|---|
-| [contracts.py](src/capability_factory/contracts.py) | 任务、计划、代码、审查和预算的 Pydantic 合约 |
-| [providers.py](src/capability_factory/providers.py)、[prompts.py](src/capability_factory/prompts.py) | API/Mock、角色提示、用量和响应记录 |
-| [workflow.py](src/capability_factory/workflow.py) | 状态、检索、比较、Beam 扩展、修复和回写 |
-| [ingestion.py](src/capability_factory/ingestion.py)、[knowledge.py](src/capability_factory/knowledge.py) | 来源摄取、源码 AST 抽取、能力版本和图检索 |
-| [datasets.py](src/capability_factory/datasets.py)、[metrics.py](src/capability_factory/metrics.py) | 哈希/切分/标签协议、独立指标计算 |
-| [execution/](src/capability_factory/execution) | 白名单构造、训练预测、接口/稳定性/资源检查 |
-| [reporting.py](src/capability_factory/reporting.py) | JSON、HTML、Markdown 报告与转义 |
-| [api.py](src/capability_factory/api.py)、[cli.py](src/capability_factory/cli.py) | 队列、CLI 与 HTTP 接口 |
-| [web/](web)、[webui.py](src/capability_factory/webui.py) | Vue 页面、D3 图谱、静态文件服务与同源网关 |
-| [graph_presentation.py](src/capability_factory/graph_presentation.py) | 有界图谱浏览、能力版本与实际验证证据展示 |
-| [ui/](ui) | 可选旧版 Streamlit 界面 |
+执行器不是完整 Docker、虚拟机或操作系统级沙箱；它只接受受支持的算法构造语言。公网部署前仍需认证、租户隔离和更强的沙箱。
 
-显式 Python 状态机便于复核决策、错误和预算。Pydantic 约束角色输出；SQLite 便于本地复现；D3 提供可选中、拖拽和缩放的关系浏览；scikit-learn 使算法训练可在 CPU 执行；FastAPI 与 Vue 分离后端执行和交互展示。无需大框架隐藏状态转移。
+## 示例数据与任务
 
-解释器、规划器、代码生成器、审查器和结果整理器使用独立合约与多次调用；摄取阶段另外使用抽取器。这是同一模型承担多角色，不能称作多个独立训练的模型，也不展示隐藏思维链。
+| 场景 | 公开数据 | 关键约束 | 主指标 |
+| --- | --- | --- | --- |
+| 银行营销响应（主场景） | UCI Bank Marketing | 只用通话前特征，禁止 `duration`；固定 60/20/20 切分 | Average Precision |
+| SMS 垃圾信息分类（迁移场景） | UCI SMS Spam Collection | 文本规范化、分组去重、训练/验证/测试隔离 | Average Precision，并报告 F1 |
 
-## 知识图谱与版本
+数据下载、来源、许可、行数和 SHA256 见 [数据与知识来源](docs/02_数据与知识来源.md)、[数据审计](docs/research/data_audit.json) 和 [来源索引](docs/SOURCES.md)。封存测试集不参与候选选择；生成候选只观察验证集。
 
-实际 schema 为 [knowledge/runtime_schema.sql](knowledge/runtime_schema.sql)，运行表使用 `cf_` 前缀；早期 [schema 草案](schemas/knowledge_schema.sql) 仅保留为设计资料。详细说明见 [知识库 README](knowledge/README.md)。
+## 知识图谱 schema
 
-节点涵盖来源、能力、任务、算法、转换、数据、环境、验证运行、制品与失败经验；关系包括 `USES`、`REQUIRES`、`DERIVED_FROM`、`EVALUATES`、`REPAIRS`、`AVOIDED_BY` 和 `SUPERSEDES`。能力记录包含输入输出、条件、指标、依赖、来源定位及版本。
+实际运行 schema 位于 [knowledge/runtime_schema.sql](knowledge/runtime_schema.sql)，使用 `cf_` 表前缀。主要节点包括：
 
-摄取读取固定 UCI 文档、项目协议及实际安装的 scikit-learn 源码，保存哈希、行号、函数与依赖信息；不递归扫描任意工作区，也不是任意远程仓库爬取器。人工种子、LLM 抽取和运行验证分别标记，有出处不等于已运行验证。
+- `Source`：URI、revision、许可证、内容哈希、文件/函数/行号定位。
+- `Capability`：输入输出、适用条件、指标、依赖、状态和不可变版本。
+- `TaskType`、`Algorithm`、`Transform`、`DatasetVersion`、`Environment`：能力适用范围和执行依赖。
+- `ValidationRun`、`Artifact`、`FailureExperience`：运行状态、代码哈希、指标、失败指纹和修复关系。
 
-检索先按任务和状态过滤，再做中英文词项匹配和最多两跳图扩展，保留文本分数、图加分与证据路径。`--no-use-graph` 可做消融；不是训练后的语义向量检索。
+主要关系包括 `DERIVED_FROM`、`USES`、`REQUIRES`、`EVALUATES`、`REPAIRS`、`AVOIDED_BY`、`SUPERSEDES`。来源关系表示可追溯性，不自动等价于算法已验证；验证证据必须沿真实运行路径查看。
 
-~~~bash
+```bash
 python -m capability_factory export-graph --output artifacts/graph.json
-~~~
+```
 
-## 数据、代码接口与验证
+schema、节点示例和版本语义见 [系统架构与接口](docs/03_系统架构与接口.md)、[知识库 README](knowledge/README.md) 和 [前端/报告说明](docs/11_前端与报告说明.md)。
 
-| 任务 | 数据 | 固定协议 |
-|---|---|---|
-| 银行营销响应 | UCI Bank Marketing，41,188 行 | 原始顺序 60/20/20，只用通话前白名单特征，禁 duration |
-| 短信垃圾信息分类 | UCI SMS Spam Collection，原始 5,574 行 | 规范化文本分组、冲突标签排除、组去重后分层 60/20/20 |
+## 验证报告样例与公开证据
 
-下载、出处、许可与 SHA256 见 [数据审计](docs/research/data_audit.json)、[来源索引](docs/SOURCES.md) 和 [数据协议](docs/02_数据与知识来源.md)。最终测试部分不提供给候选代码，不用于开发搜索评分。
+报告同时提供 JSON、Markdown 和 HTML：
 
-生成器只实现 `build_pipeline(task_spec)`，返回具有 fit/predict_proba 接口的获准 Pipeline。以下是首次真实银行运行代码的节选，完整版本和哈希以制品为准：
+- JSON：机器审计、接口集成和完整事实结构。
+- Markdown：代码审查、答辩和版本控制友好。
+- HTML：阅读候选比较、检查、资源、修复和来源。
 
-~~~python
+报告首屏先显示运行结论、候选指标、基线和选择依据；计划、检索详情、修复链、代码和完整 JSON 默认折叠。`status`（工作流是否完成）和 `quality_status`（指标是否超过建议基线）分开表达；缺少检查或指标不会被显示为通过。
+
+脱敏公开样例位于：
+
+- [示例总览](examples/README.md)：每个证据包的运行方式、报告字段、导出规则和复核边界。
+- [bank_repair](examples/evidence/bank_repair/)：银行任务、明确标记故障注入和有限修复。
+- [bank_beam](examples/evidence/bank_beam/)：有界候选搜索及多候选对照。
+- [sms_transfer](examples/evidence/sms_transfer/)：文本分类迁移示例。
+- [knowledge_extraction.json](examples/evidence/knowledge_extraction.json)：能力抽取结果。
+
+每个样例的复现命令、报告字段和脱敏导出规则见 [examples/README.md](examples/README.md)。每个样例的 `manifest.json` 记录源报告哈希、模式、状态、文件哈希和省略内容。样例目录名不能替代报告中的真实 `mode`、`status` 和指标检查。
+
+## 生成算法代码示例
+
+生成器输出受限的 `build_pipeline(task_spec)`，而不是任意 Python 程序。下面是公开 `bank_beam` 样例中被选中的逻辑回归候选节选；完整代码、验证 JSON 和 SHA256 位于 [bank_logistic_default](examples/evidence/bank_beam/candidates/bank_logistic_default/)。
+
+```python
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
 def build_pipeline(task_spec):
-    numeric = Pipeline([
-        ('impute', SimpleImputer(strategy='median')),
-        ('scale', StandardScaler()),
-    ])
-    categorical = Pipeline([
-        ('encode', OneHotEncoder(handle_unknown='ignore')),
-    ])
+    numeric = Pipeline([("impute", SimpleImputer(strategy="median")),
+                        ("scale", StandardScaler())])
+    categorical = OneHotEncoder(handle_unknown="ignore")
     prepare = ColumnTransformer([
-        ('numeric', numeric, task_spec['numeric_features']),
-        ('categorical', categorical, task_spec['categorical_features']),
+        ("numeric", numeric, task_spec["numeric_features"]),
+        ("categorical", categorical, task_spec["categorical_features"]),
     ])
-    model = LogisticRegression(
-        max_iter=1000, class_weight='balanced', random_state=task_spec['seed'])
-    return Pipeline([('prepare', prepare), ('model', model)])
-~~~
+    model = LogisticRegression(max_iter=1000, random_state=task_spec["seed"])
+    return Pipeline([("prepare", prepare), ("model", model)])
+```
 
-可信代码负责固定切分、训练调度、概率列与行号对齐、有限值/区间、正类映射、边界检查及指标计算。主指标 AP 明确定义为 average_precision；辅助报告 ROC-AUC、F1、前 10% 名单表现、资源与代码哈希。缺失指标不补零，工作流完成与质量门槛分别记录。
+可信执行器负责训练、预测、正类概率映射、行号对齐和指标计算；模型生成的字符串不会直接 `exec`。这段代码只说明交付接口，不代表脱离固定 `TaskSpec` 后可以运行任意数据。
 
-## 真实运行与验收证据
+## 验证结果与报告样例
 
-首次真实银行修复运行 ID：**13edb7649f0d41bba608251b6079e4d1**。
+以下数值直接读取公开 `report.json`，均为 `validation_only`，`sealed_test_scored=false`；它们是历史运行事实，不是最终测试集成绩或 SLA：
 
-- DeepSeek API 调用 11 次，两个候选中一个通过、一个失败；不是全部候选成功。
-- 通过候选验证 AP 0.180759，同协议常数 AP 0.110706，F1@0.5 为 0.228819。
-- 首个候选注入了明确标记的接口故障，通过一次自动修复；不能当作自然错误修复率。
-- 记录耗时 50.957 秒，属于该次环境实测，不是延迟承诺；最终测试未评分。
-- 真实抽取得到 9 张通过来源检查的 LLM 能力卡，不等于 9 张能力都已运行验证。
+| 样例 | mode/status | 候选 | 选中方案 | AP | 其他观测 |
+| --- | --- | ---: | --- | ---: | --- |
+| `bank_beam` | real / passed | 6 | `bank_logistic_default` | 0.182877 | Lift@10%=2.093790 |
+| `bank_repair` | real / passed | 2 | `bank_logreg_balanced` | 0.180759 | Lift@10%=1.984167；含标记故障修复 |
+| `sms_transfer` | real / passed | 2 | `sms_nb_tfidf_default` | 0.959834 | F1@0.5=0.914729；Lift@10%=8.0 |
 
-以上为特定历史运行事实。最终代码回归、测试统计与完整证据索引以 `docs/research/execution_validation.json` 为准。早期 [CPU 人工基线](docs/research/baseline_results.json) 不能包装成 Agent 实测。
+报告中 `candidate.status=passed` 只代表执行和强制检查通过，`quality_status` 另行表示验证集 AP 与类别占比基线的关系。完整 JSON、Markdown、HTML 和候选制品从 [examples/README.md](examples/README.md) 进入。
 
-本地制品位于 `artifacts/runs/{run_id}/`，包含 LLM 请求/响应、候选各次代码/验证、进度与报告，默认不入 Git。公开提交的脱敏样例为 [bank_repair](examples/evidence/bank_repair/)、[bank_beam](examples/evidence/bank_beam/) 和 [sms_transfer](examples/evidence/sms_transfer/)。**是否已生成、状态与运行 ID 以实际文件和证据索引为准，不能因目录名称推定成功。**
+## 能力知识图谱示例
 
-优先演示 [bank_beam/report.html](examples/evidence/bank_beam/report.html)：该历史运行保留六个候选的代码、验证与资源对照；[bank_repair](examples/evidence/bank_repair/) 补充一次注入故障修复，早期运行的限制见其 report.json；[sms_transfer](examples/evidence/sms_transfer/) 展示文本任务迁移。每个 bundle 的 manifest.json 记录源报告 SHA256、模式、状态、文件哈希和省略内容。
+图谱中的能力版本、来源和验证运行通过真实关系连接。下面是脱敏后的最小结构示意，字段名称对应运行 schema：
 
-~~~bash
-python -m capability_factory report 13edb7649f0d41bba608251b6079e4d1 \
-  --format html --output artifacts/bank-repair-report.html
-python -m capability_factory run \
-  --description '构建短信垃圾信息分类，比较两套 TF-IDF 概率分类管道并报告验证结果。' \
-  --dataset sms --provider deepseek --max-candidates 2 --max-repairs 2
-python -m capability_factory run \
-  --description '搜索银行营销响应预测方案，遵守通话前特征协议。' \
-  --dataset bank --provider deepseek --search beam --max-candidates 6 --max-repairs 2
-~~~
+```json
+{
+  "node": {
+    "id": "capability:bank-precontact-policy:v1",
+    "kind": "Capability",
+    "input_schema": {"dataset": "bank", "features": "pre_contact_whitelist"},
+    "output_schema": {"score": "probability", "positive_class": "yes"},
+    "preconditions": ["duration must be excluded"],
+    "metrics": ["average_precision", "lift_at_10pct"],
+    "evidence": ["source:bank-task-protocol"]
+  },
+  "edges": [
+    {"relation": "USES", "target": "algorithm:LogisticRegression"},
+    {"relation": "DERIVED_FROM", "target": "source:bank-task-protocol"},
+    {"relation": "EVALUATES", "target": "run:..."}
+  ]
+}
+```
 
-新克隆仓库不含本机 SQLite 历史，不能直接用旧运行 ID 重建报告；可阅读脱敏样例，或重新运行并使用新的 ID。
+完整字段约束、版本语义和 SQL 表见 [系统架构与接口](docs/03_系统架构与接口.md) 和 [knowledge/runtime_schema.sql](knowledge/runtime_schema.sql)。
 
-## 测试与实验
+## 笔试要求对照
 
-~~~bash
-python -m pytest tests ui -q
-python -m ruff check src scripts tests ui
-python scripts/run_experiments.py --provider mock --suite smoke --repeats 1 --dry-run
-python scripts/run_experiments.py --provider mock --suite smoke --repeats 1 \
-  --profiles A,B,C,D --output artifacts/experiments/mock-smoke
-~~~
+| 评分要求 | 代码/文档证据 |
+| --- | --- |
+| LLM 理解、抽取、生成、修复 | [providers.py](src/capability_factory/providers.py)、[prompts.py](src/capability_factory/prompts.py)、[workflow.py](src/capability_factory/workflow.py) |
+| 行业场景与公开数据 | [datasets.py](src/capability_factory/datasets.py)、[数据协议](docs/02_数据与知识来源.md) |
+| 知识库/知识图谱 | [knowledge.py](src/capability_factory/knowledge.py)、[runtime_schema.sql](knowledge/runtime_schema.sql) |
+| 自然语言到可运行代码 | [workflow.py](src/capability_factory/workflow.py)、[execution/compiler.py](src/capability_factory/execution/compiler.py) |
+| 统一验证 | [execution/runner.py](src/capability_factory/execution/runner.py)、[metrics.py](src/capability_factory/metrics.py) |
+| API/CLI/Web | [api.py](src/capability_factory/api.py)、[cli.py](src/capability_factory/cli.py)、[web/](web) |
+| 多候选、修复、Beam、插件 | [workflow.py](src/capability_factory/workflow.py)、[plugins.py](src/capability_factory/plugins.py)、[插件指南](docs/10_插件扩展指南.md) |
+| 自动报告和回写 | [reporting.py](src/capability_factory/reporting.py)、[knowledge.py](src/capability_factory/knowledge.py) |
+| 真实验收边界 | [实现与验收对照](docs/08_实现与验收对照.md)、[后端验证索引](docs/research/execution_validation.json)、[前端验证索引](docs/research/frontend_validation.json) |
 
-前端构建与浏览器交互检查：
+## 仓库结构
 
-~~~bash
-./scripts/build_web.sh
+```text
+src/capability_factory/   Python 核心：workflow、knowledge、execution、API、CLI
+web/                      Vue 工作台源码和 Playwright 测试
+ui/                       可选旧版 Streamlit 界面
+configs/                  数据任务和验证协议
+knowledge/                SQLite schema、种子能力和图谱说明
+examples/evidence/        脱敏报告、代码和抽取结果
+scripts/                  数据校验、实验、构建和启动脚本
+tests/                    Python 单元/接口/集成测试
+docs/                     架构、数据、演示、验收、部署和验证记录
+artifacts/                本地运行产物，默认不提交
+```
+
+## 测试、格式和持续集成
+
+Python：
+
+```bash
+.venv/bin/pytest -q tests ui
+.venv/bin/ruff check src scripts tests ui
+.venv/bin/python -m compileall -q src scripts ui
+```
+
+Web：
+
+```bash
 cd web
-npx playwright install chromium
+npm ci
+npm run format:check
+npm run build
 npm run test:e2e
-~~~
+```
 
-浏览器测试通过固定 HTTP 响应验证任务提交、报告、异常状态及图谱交互，不调用付费模型。GitHub Actions 的 [frontend.yml](.github/workflows/frontend.yml) 安装 Chromium、构建并运行这些检查；测试成功不代表真实 LLM、GPU 或 Docker 已通过部署测试。
+浏览器测试使用 HTTP 夹具，不调用付费模型；它验证 UI 状态、报告折叠、图谱交互和错误恢复。GitHub Actions 对 CPU 回归和 Web 交互分别执行同样的可复现检查。当前机器的完整结果和限制写在 [frontend_validation.json](docs/research/frontend_validation.json)，不要手工复制测试数量作为长期承诺。
 
-运行器支持 mock/deepseek、smoke/full、配置与任务 ID 筛选；真实实验须显式选择 deepseek。smoke 每轮 8 次系统 run，full 每轮 48 次，三轮完整矩阵为 144 次。**存在运行器不代表这些实验已经完成。** 实际完成数量、失败分母、预算口径与结果以输出文件为准。
+## 文档地图
 
-测试涵盖数据契约、AST/参数限制、预测指标、资源执行、知识版本、API、编排、报告及 UI。旧版 Streamlit AppTest 与新版 Playwright 都明确区分模拟 HTTP 和真实后端验收。测试总数和执行时间交由自动验证索引记录，不在 README 手工填写通过数量。
+- [文档总览](docs/README.md)：按读者和任务选择入口。
+- [使用与演示](docs/07_使用与演示指南.md)：安装、CLI、API、Web 和答辩流程。
+- [系统架构与接口](docs/03_系统架构与接口.md)：Agent 合约、状态机、图谱和接口。
+- [数据与知识来源](docs/02_数据与知识来源.md)：公开数据、切分、防泄漏和来源。
+- [实现与验收对照](docs/08_实现与验收对照.md)：原题逐项映射和证据边界。
+- [前端与报告说明](docs/11_前端与报告说明.md)：报告层次、JSON 折叠和图谱证据。
+- [交互工作台与参考设计](docs/12_交互工作台与参考设计.md)：界面交互与截图验收。
+- [算力与六卡兼容](docs/05_算力预算与六卡兼容.md)：1–6 张 RTX 4090D 的规划边界。
+- [部署说明](deploy/README.md)：Vue 网关、容器模板和本地模型接入边界。
+- [变更记录](CHANGELOG.md)、[贡献指南](CONTRIBUTING.md)、[安全说明](SECURITY.md)。
 
-## 安全边界、挑战与扩展
+## 挑战与解决方案
 
-| 挑战 | 当前处理 | 边界 |
-|---|---|---|
-| 不受信代码 | AST 白名单构造，不用 exec/eval 执行模型文本，资源限制进程 | 信任 sklearn/native 依赖；无 OS 文件/网络命名空间隔离 |
-| 泄漏与虚假指标 | 固定特征/切分、评估器持有验证标签、预测与哈希校验 | 不是对任意数据源的自动泄漏发现系统 |
-| 格式错误、失败与费用 | 结构合约、有限重试/修复、预算、用量和事件 | 网络依赖；超时请求账单仍以提供商为准 |
-| 经验可信度 | 保留失败、代码版本、验证状态及来源 | 图检索/多角色效果仍需更多独立任务实验 |
-| 未来多卡 | Provider 边界、1–6 卡 profiles 和静态检查 | 无本地权重部署，无多卡吞吐/OOM/故障切换实测 |
+| 挑战 | 当前方案 | 仍需注意 |
+| --- | --- | --- |
+| 通话时长造成标签泄漏 | 固定 pre-contact 特征白名单和 `duration` 禁用检查 | 只对已支持的银行协议负责 |
+| LLM 代码不可直接信任 | 受限 AST 构造器、可信 evaluator、资源限制子进程 | 尚非 OS 级沙箱 |
+| API 费用和网络失败 | Mock 离线模式、Provider 明示、预算/超时/不确定提交保护 | 真实 API 账单以服务商为准 |
+| 图谱关系噪声 | 词项检索 + 有界 1/2 跳路径和来源哈希 | 尚非向量检索或企业级图数据库 |
+| 本地 14B/多卡落地 | OpenAI 兼容 Provider 和静态 profiles | 尚未下载权重、部署或测吞吐 |
 
-后续优先完成更大规模同预算消融与最终冻结测试，扩展更多受信任务/指标，增加 OS 沙箱和需要的认证/队列，再接入单卡/六卡本地推理并重新测量。当前不宣称任意插件热加载、任意行业数据或 MCTS。
+## 后续扩展方向
 
-以下只生成未来规划，不下载模型、不启动推理、不改变 GPU 配置：
+以下方向标记为 planned，不能当作当前完成项：
 
-~~~bash
-python scripts/plan_inference.py --profile single_gpu --available-gpus 1
-python scripts/plan_inference.py --profile six_gpu
-python scripts/plan_inference.py --profile six_gpu_replicas
-python scripts/plan_inference.py --profile six_gpu_quality
-~~~
+1. **更强隔离**：接入专用执行节点、容器强化或 microVM，并验证网络/凭证/文件边界。
+2. **更严格评测**：建立能力抽取 gold、图检索消融、经验复用实验和固定预算的多轮重复。
+3. **本地模型部署**：先完成单卡 Qwen 14B 结构化输出验收，再扩展四卡/六卡并记录 OOM、吞吐和回收。
+4. **服务化能力**：增加认证、租户隔离、持久队列、审计保留策略和 PostgreSQL 存储后端。
+5. **任务插件**：在不改变 Agent 状态机的前提下增加时间序列、异常检测和推荐任务。
 
-## 文档与提交
+## 当前边界
 
-- [07 使用与演示指南](docs/07_使用与演示指南.md)：完整命令、界面、报告解释和答辩流程。
-- [11 前端与报告说明](docs/11_前端与报告说明.md)：结论层、证据层、原始 JSON 和 property graph 的展示边界。
-- [12 交互工作台与参考设计](docs/12_交互工作台与参考设计.md)：参考实现、六个页面、图谱交互与可执行验收。
-- [08 实现与验收对照](docs/08_实现与验收对照.md)：原题逐项映射、证据入口与真实剩余工作。
-- [01 实施总方案](docs/01_项目实施总方案.md)、[03 架构设计](docs/03_系统架构与接口.md)、[04 实验设计](docs/04_评测实验与演示.md)：设计与实验路线，未来项不自动算已实现。
-- [05 六卡兼容](docs/05_算力预算与六卡兼容.md)：后续部署、硬件预算及待实测内容。
-- [06 原始开发清单](docs/06_开发清单与验收矩阵.md)：早期计划；实际状态优先看 08 与证据。
+- 默认路线是 DeepSeek API；本地 Qwen2.5-Coder-14B AWQ、vLLM、四卡/六卡配置目前只是兼容框架和静态规划。
+- API、Mock、历史回放和本地模型状态严格区分；Mock 结果不是真实 LLM 质量。
+- 只支持固定的银行表格任务和 SMS 文本任务，不接受任意上传数据或任意 Python 代码。
+- 当前服务是本机单用户原型，没有公网鉴权、租户隔离、持久队列或完整 OS 沙箱。
+- 任何性能、成本、修复率或跨任务提升都必须来自对应实验报告，不能从代码入口推导。
 
-项目远程仓库为 [dengdeng55525/algorithm-capability-factory](https://github.com/dengdeng55525/algorithm-capability-factory)，按所有者要求设为私有；访问需要相应权限。可用 `git log --oneline` 检查提交，`git status -sb` 检查本地同步状态。提交只纳入审核后的样例，不上传 .env、凭证、私有数据库或完整运行日志。数据及第三方源码归属见来源索引，项目代码许可证由所有者确定。
+## 贡献、反馈与许可证
+
+贡献流程、提交约定和本地检查见 [CONTRIBUTING.md](CONTRIBUTING.md)。安全边界和敏感信息处理见 [SECURITY.md](SECURITY.md)。
+
+项目目前用于笔试原型和内部评审，许可证待仓库所有者选择；在补充许可证前，请不要把代码当作已授权的开源软件分发。
