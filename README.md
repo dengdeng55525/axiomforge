@@ -282,17 +282,67 @@ def build_pipeline(task_spec):
 ## 仓库结构
 
 ```text
-src/capability_factory/   Python 核心：workflow、knowledge、execution、API、CLI
-web/                      Vue 工作台源码和 Playwright 测试
-ui/                       可选旧版 Streamlit 界面
-configs/                  数据任务和验证协议
-knowledge/                SQLite schema、种子能力和图谱说明
-examples/evidence/        脱敏报告、代码和抽取结果
-scripts/                  数据校验、实验、构建和启动脚本
-tests/                    Python 单元/接口/集成测试
-docs/                     架构、数据、演示、验收、部署和验证记录
-artifacts/                本地运行产物，默认不提交
+algorithm-capability-factory/
+├── src/capability_factory/       后端核心包（一次运行的主要执行路径）
+│   ├── cli.py                    命令行入口：init/run/serve/report
+│   ├── api.py                    FastAPI：提交任务、查询状态、报告和图谱
+│   ├── workflow.py               Agent 状态机：解释、检索、规划、生成、修复、比较、回写
+│   ├── providers.py              DeepSeek、Mock、本地 OpenAI 兼容 HTTP Provider
+│   ├── contracts.py              LLM 和 API 的 Pydantic 结构化合约
+│   ├── prompts.py                interpreter/planner/coder/reviewer/curator 提示模板
+│   ├── knowledge.py               SQLite 能力知识库、词项检索和图扩展
+│   ├── datasets.py                UCI 数据校验、固定切分和 worker 数据准备
+│   ├── metrics.py                 主指标、基线和预测接口检查
+│   ├── reporting.py               JSON/Markdown/HTML 报告生成
+│   └── execution/                 生成代码的受限编译、子进程执行和资源检查
+│       ├── compiler.py
+│       ├── runner.py
+│       └── worker.py
+├── web/                            Vue 3 工作台、报告折叠、图谱和 Playwright 测试
+│   └── src/{views,components,services,stores}/
+├── ui/                             可选旧版 Streamlit 界面
+├── configs/                        数据任务、验证策略和四卡本地推理配置
+├── knowledge/                      SQLite schema、种子能力卡和图谱说明
+├── data/                           公开数据缓存（原始数据不提交）
+├── examples/evidence/              脱敏报告、代码、知识抽取和验证样例
+├── scripts/                        下载/审计数据、启动服务、构建前端、导出图谱
+├── tests/                          单元、API、集成和回归测试
+├── docs/                           架构、数据、演示、验收、部署和验证记录
+├── artifacts/                      本地运行产物：每个 run 一个可审计目录（默认不提交）
+└── README.md                       项目入口、复现步骤和评分要求对照
 ```
+
+这棵树是“职责地图”，本身不会参与运行。它的作用是让评审者和使用者能快速回答三个问题：某个题面要求由哪段代码实现、出现问题应该去哪里排查、增加新 Provider/任务/指标时应该放在哪里。运行时只沿着后端核心包执行，`web/` 通过 API 读取状态，`artifacts/runs/<run_id>/` 保存一次运行的事实证据。
+
+### 一次运行如何对应到代码
+
+| 运行阶段 | 入口和关键函数 | 可查看的产物 |
+| --- | --- | --- |
+| 1. 提交需求 | `cli.py::run` 或 `api.py::RunManager.launch` | `request`、`run_id`、队列状态 |
+| 2. 创建运行 | `workflow.py::Workflow.run` | `report.json`、`progress.json` |
+| 3. 调用模型 | `workflow.py::ask` → `providers.py::HTTPProvider.generate` | `llm/*.request.json`、`llm/*.response.json`、`usage.records` |
+| 4. 准备数据 | `datasets.py::prepare_dataset` | `dataset/manifest.json`、worker 训练/验证文件 |
+| 5. 检索能力 | `knowledge.py::KnowledgeStore.search` | `evidence`、`KNOWLEDGE_RETRIEVED` 事件 |
+| 6. 规划与搜索 | `workflow.py::make_plans`、`execute_plan`、`BEAM_EXPANDED` | `candidates[*].plan`、`search_tree` |
+| 7. 生成代码 | `prompts.py` + `contracts.py::GeneratedCode` | `candidates/<id>/attempt_*/model.py` |
+| 8. 独立验证 | `execution/compiler.py::analyze_code` → `execution/runner.py::validate_candidate` → `metrics.py` | `verification.json`、检查项、指标、资源 |
+| 9. 修复重试 | `workflow.py` 中 reviewer/repair_coder 分支 | `repairs`、`attempt_1/...`、失败经验 |
+| 10. 比较和沉淀 | `workflow.py` 的排序/curator + `reporting.py::write_report` + `knowledge.py::save_run/record_experience` | JSON/Markdown/HTML、SQLite 图谱、`RECORDED` 事件 |
+
+因此，报告里的事件不是“凭空生成的一群 JSON”：它们是上述函数每次完成一个边界动作时写入的审计记录；HTML/Markdown 是同一份结构化事实的适合人阅读的投影。
+
+### 真实 DeepSeek 运行的阅读方法
+
+真实 API 运行完成后，先从 `report.json` 确认 `provider=deepseek`、`mode=real` 和 `status=passed`，再按 `events[].sequence` 阅读事件。`usage.records` 只保存模型、端点、耗时、token 数和哈希，不保存 API Key。推荐用下面的命令查看一条运行：
+
+```bash
+RUN_ID=替换成页面显示的运行编号
+cat artifacts/runs/$RUN_ID/report.md
+python -m capability_factory report "$RUN_ID" --format html --output "artifacts/$RUN_ID.html"
+find "artifacts/runs/$RUN_ID" -maxdepth 3 -type f | sort
+```
+
+`interpreter` 只负责把自然语言变成任务约束，`planner` 负责候选算法方案，`coder`/`repair_coder` 返回受限构造器代码，真正的拟合、预测和指标由本地 `runner.py` 完成；所以 DeepSeek 负责“理解和提出实现”，可信验证器负责“决定是否通过”。
 
 ## 测试、格式和持续集成
 
