@@ -34,25 +34,35 @@ cd /root/algorithm-capability-factory
 
 通过 SSH 访问服务器时，可以转发 8000 或 8501 到本地。默认只监听回环地址。当前是本机单用户原型，公网多人使用所需的身份认证、TLS、任务归属与配额不属于当前交付范围。
 
-## 本地 14B / 四卡 4090D 接入计划
+## 本地 14B / 四卡 4090D 接入
 
-本地模型使用 OpenAI 兼容 HTTP Provider。默认静态方案 `four_gpu_14b` 为四张卡各保留一个 `Qwen/Qwen2.5-Coder-14B-Instruct-AWQ` 副本，端口 8100–8103。GPU 分组、固定 revision、量化和未来启动参数位于 [inference_profiles.json](../configs/inference_profiles.json)。
+本地模型使用 OpenAI 兼容 HTTP Provider。默认方案 `four_gpu_14b` 为四张卡各启动一个 `Qwen/Qwen2.5-Coder-14B-Instruct-AWQ` 副本，端口 8100–8103。GPU 分组、固定 revision、量化和 served model name 位于 [inference_profiles.json](../configs/inference_profiles.json)。
 
 ~~~bash
 .venv/bin/python scripts/plan_inference.py --profile four_gpu_14b --available-gpus 4
 ~~~
 
-该命令校验静态设备分配并打印未来 vLLM 命令，不启动服务，不证明当前机器已部署。现有 Provider 对每次运行连接一个配置端点；四个服务的负载均衡、跨副本角色调度与性能测量属于后续部署工作。
+该命令校验设备分配并打印 vLLM 命令，不下载权重。要在已准备好的 GPU 主机启动四个副本，可运行：
 
-独立部署后，将项目 `.env` 配置为实际服务。规划脚本给 8100 服务指定的模型别名为 `coder_a`，请求必须使用该服务别名而非自动假定模型仓库名称：
+~~~bash
+LOCAL_LLM_PROFILE=four_gpu_14b \
+  LOCAL_LLM_AVAILABLE_GPUS=4 \
+  ./scripts/start_local_vllm.sh
+~~~
+
+启动脚本由部署者管理 vLLM 子进程；AlgoForge 仍只通过 HTTP 调用。四个服务的轮询、健康检查、并发和故障摘除由 local_http Provider 负责，性能测量仍需在目标机器单独完成。
+
+独立部署后，将项目 `.env` 配置为实际服务。规划脚本给四个服务指定共享的模型别名为 `coder14`，请求必须使用该服务别名而非自动假定模型仓库名称：
 
 ~~~dotenv
 LOCAL_LLM_BASE_URL=http://127.0.0.1:8100/v1
-LOCAL_LLM_MODEL=coder_a
+LOCAL_LLM_ENDPOINTS=http://127.0.0.1:8100/v1,http://127.0.0.1:8101/v1,http://127.0.0.1:8102/v1,http://127.0.0.1:8103/v1
+LOCAL_LLM_MODEL=coder14
 LOCAL_LLM_PROFILE=four_gpu_14b
+LOCAL_LLM_API_KEY=
 ~~~
 
-如果自行使用不同 `--served-model-name`，应同步修改 `LOCAL_LLM_MODEL`。重启 API 后，可用 `RunRequest(provider="local_http")` 或工作台中的本地模型选项提交任务。配置页展示静态计划和未实测状态，不探测 GPU、不下载权重；DeepSeek 密钥不会发送到本地端点。
+如果自行使用不同 `--served-model-name`，应同步修改 `LOCAL_LLM_MODEL`。重启 API 后，可用 `RunRequest(provider="local_http")` 或工作台中的本地模型选项提交任务。配置页展示 profile、端点池和执行边界；DeepSeek 密钥不会发送到本地端点。
 
 ## 可选应用容器
 

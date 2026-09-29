@@ -8,8 +8,8 @@
   "json_parse_check": "passed",
   "data_archive_sha256_recheck": "passed",
   "single_gpu_plan": "static checks passed",
-  "six_gpu_plan": "static checks passed; three TP=2 endpoints",
   "gpu_inference": "not run",
   "agent_end_to_end": "not implemented",
-  "final_test_model_metrics": "not computed"
+  "final_test_model_metrics": "not computed",
+  "four_gpu_plan": "static checks passed; four independent 14B endpoints"
 }

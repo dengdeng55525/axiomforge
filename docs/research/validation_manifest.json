@@ -38,7 +38,7 @@
   ],
   "limitations": [
     "No paid DeepSeek call was made during this validation.",
-    "Local 14B serving, four/six GPU throughput and OOM recovery were not benchmarked.",
+    "Local 14B serving, four GPU throughput and OOM recovery were not benchmarked.",
     "Docker and OS-level sandbox deployment were not executed.",
     "preparation_checks.json is an early preparation snapshot, not final validation."
   ],

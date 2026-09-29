@@ -20,36 +20,37 @@ def test_all_profiles_have_valid_static_plans(profile):
     assert plan["status"] == "static_plan_only_runtime_untested"
 
 
-def test_six_gpu_profile_has_three_two_card_groups():
-    plan = MODULE.build_plan(CONFIG, "six_gpu", available_gpus=6)
-    assert len(plan["endpoints"]) == 3
+def test_four_gpu_profile_has_four_single_card_groups():
+    plan = MODULE.build_plan(CONFIG, "four_gpu_14b", available_gpus=4)
+    assert len(plan["endpoints"]) == 4
     assert [entry["environment"]["CUDA_VISIBLE_DEVICES"] for entry in plan["endpoints"]] == [
-        "0,1",
-        "2,3",
-        "4,5",
+        "0",
+        "1",
+        "2",
+        "3",
     ]
 
 
 def test_gpu_overlap_rejected():
     config = copy.deepcopy(CONFIG)
-    config["profiles"]["six_gpu"]["groups"][1]["gpu_ids"] = [0, 1]
+    config["profiles"]["four_gpu_14b"]["groups"][1]["gpu_ids"] = [0]
     with pytest.raises(ValueError, match="overlap"):
-        MODULE.build_plan(config, "six_gpu")
+        MODULE.build_plan(config, "four_gpu_14b")
 
 
-def test_tp_six_is_rejected_for_40_attention_heads():
+def test_tp_three_is_rejected_for_40_attention_heads():
     config = copy.deepcopy(CONFIG)
-    group = config["profiles"]["six_gpu"]["groups"][0]
-    group["gpu_ids"] = list(range(6))
-    group["tensor_parallel_size"] = 6
-    config["profiles"]["six_gpu"]["groups"] = [group]
+    group = config["profiles"]["four_gpu_14b"]["groups"][0]
+    group["gpu_ids"] = [0, 1, 2]
+    group["tensor_parallel_size"] = 3
+    config["profiles"]["four_gpu_14b"]["groups"] = [group]
     with pytest.raises(ValueError, match="divisible"):
-        MODULE.build_plan(config, "six_gpu")
+        MODULE.build_plan(config, "four_gpu_14b")
 
 
 def test_insufficient_devices_rejected():
     with pytest.raises(ValueError, match="more GPUs"):
-        MODULE.build_plan(CONFIG, "six_gpu", available_gpus=1)
+        MODULE.build_plan(CONFIG, "four_gpu_14b", available_gpus=1)
 
 
 def test_four_gpu_14b_profile_is_four_single_gpu_replicas():
@@ -64,6 +65,6 @@ def test_four_gpu_14b_profile_is_four_single_gpu_replicas():
 def test_local_runtime_plan_is_explicitly_not_deployed():
     runtime = CONFIG["local_runtime"]
     assert runtime["default_profile"] == "four_gpu_14b"
-    assert runtime["status"] == "planned_not_deployed"
+    assert runtime["status"] == "operator_managed"
     assert runtime["weights_downloaded_by_algoforge"] is False
     assert runtime["process_started_by_algoforge"] is False

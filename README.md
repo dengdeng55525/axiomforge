@@ -21,7 +21,7 @@ AlgoForge 是面向 LLM Agent 笔试场景的小型可复现原型。它以**银
 - **可审计知识图谱**：SQLite 持久化来源、能力、算法、数据、环境、验证运行、制品和失败经验。
 - **可复现验证**：固定数据切分、主指标 AP、Dummy 基线、接口/功能/稳定性/资源检查，缺失值不填零。
 - **多候选和有限搜索**：比较候选方案，并提供有界 Beam Search、修复预算和失败分母。
-- **三种推理后端**：DeepSeek API、确定性 Mock、本地 OpenAI 兼容 HTTP 接口。当前不把本地 14B 或多卡吞吐写成已完成事实。
+- **三种推理后端**：DeepSeek API、确定性 Mock、本地 OpenAI 兼容 HTTP 接口。四卡 14B 启动脚本和端点池已提供；实际 GPU 吞吐仍以目标机器验证报告为准。
 
 ![工作台概览](docs/images/workbench-overview.png)
 
@@ -177,9 +177,11 @@ flowchart LR
 
 ```bash
 python -m capability_factory export-graph --output artifacts/graph.json
+# 可选：导出为 Gephi、yEd、NetworkX 等工具可读取的 GraphML
+python scripts/export_graphml.py --output artifacts/graph.graphml
 ```
 
-schema、节点示例和版本语义见 [系统架构与接口](docs/03_系统架构与接口.md)、[知识库 README](knowledge/README.md) 和 [前端/报告说明](docs/11_前端与报告说明.md)。
+JSON 是 API/前端事实接口，GraphML 是离线交换格式；两者都从 SQLite 权威图谱生成，不维护第二份手工图数据。schema、节点示例和版本语义见 [系统架构与接口](docs/03_系统架构与接口.md)、[知识库 README](knowledge/README.md) 和 [前端/报告说明](docs/11_前端与报告说明.md)。
 
 ## 验证报告样例与公开证据
 
@@ -323,7 +325,7 @@ npm run test:e2e
 - [实现与验收对照](docs/08_实现与验收对照.md)：原题逐项映射和证据边界。
 - [前端与报告说明](docs/11_前端与报告说明.md)：报告层次、JSON 折叠和图谱证据。
 - [交互工作台与参考设计](docs/12_交互工作台与参考设计.md)：界面交互与截图验收。
-- [算力与六卡兼容](docs/05_算力预算与六卡兼容.md)：1–6 张 RTX 4090D 的规划边界。
+- [算力与四卡兼容](docs/05_算力预算与四卡兼容.md)：1–4 张 RTX 4090D 的规划边界。
 - [部署说明](deploy/README.md)：Vue 网关、容器模板和本地模型接入边界。
 - [变更记录](CHANGELOG.md)、[贡献指南](CONTRIBUTING.md)、[安全说明](SECURITY.md)和 [第三方声明](NOTICE)。
 
@@ -343,13 +345,13 @@ npm run test:e2e
 
 1. **更强隔离**：接入专用执行节点、容器强化或 microVM，并验证网络/凭证/文件边界。
 2. **更严格评测**：建立能力抽取 gold、图检索消融、经验复用实验和固定预算的多轮重复。
-3. **本地模型部署**：先完成单卡 Qwen 14B 结构化输出验收，再扩展四卡/六卡并记录 OOM、吞吐和回收。
+3. **本地模型部署**：先完成单卡 Qwen 14B 结构化输出验收，再扩展四卡并记录 OOM、吞吐和回收。
 4. **服务化能力**：增加认证、租户隔离、持久队列、审计保留策略和 PostgreSQL 存储后端。
 5. **任务插件**：在不改变 Agent 状态机的前提下增加时间序列、异常检测和推荐任务。
 
 ## 当前边界
 
-- 默认路线是 DeepSeek API；本地 Qwen2.5-Coder-14B AWQ、vLLM、四卡/六卡配置目前只是兼容框架和静态规划。
+- 默认路线是 DeepSeek API；本地 Qwen2.5-Coder-14B AWQ、vLLM、四卡配置目前只是兼容框架和静态规划。
 - API、Mock、历史回放和本地模型状态严格区分；Mock 结果不是真实 LLM 质量。
 - 只支持固定的银行表格任务和 SMS 文本任务，不接受任意上传数据或任意 Python 代码。
 - 当前服务是本机单用户原型，没有公网鉴权、租户隔离、持久队列或完整 OS 沙箱。
