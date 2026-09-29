@@ -266,7 +266,7 @@ test("capability library can search, show empty state and link a real capability
   await page.locator(".capability-card").click();
   await expect(page.getByRole("link", { name: "用于新任务" })).toHaveAttribute(
     "href",
-    "#/workbench?capability=bank-policy",
+    "#/workbench?capability=bank-policy&version=2",
   );
   await page
     .getByRole("searchbox", { name: "搜索算法能力" })
