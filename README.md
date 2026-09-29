@@ -140,6 +140,34 @@ flowchart LR
 
 每一步都写入结构化事件和事实字段；事件是工作流审计记录，不是隐藏思维链。工作流由同一个 LLM 按不同角色合约完成，文档不会把它包装成多个独立训练模型。
 
+## Agent 角色与职责
+
+AlgoForge 使用“单模型、多角色、显式状态机”的编排方式。DeepSeek、本地 OpenAI 兼容模型和 Mock 都实现同一套 Provider 接口；运行时可以让同一个模型先后承担不同角色。角色不是拥有独立权限的多个模型，每个角色都有固定提示词、输入字段和 Pydantic 输出合约，真正的代码执行和指标计算由本地验证器完成。
+
+| Agent 角色 | 代码位置 | 职责 | 结构化输出 |
+| --- | --- | --- | --- |
+| `interpreter` 需求解释 | [prompts.py](src/capability_factory/prompts.py) `INTERPRETER`、[workflow.py](src/capability_factory/workflow.py) `ask` | 将自然语言需求转换成目标、特征约束、假设、警告和资源预算；不能修改数据协议 | `TaskInterpretation` |
+| `planner` 方案规划 | `PLANNER`、[workflow.py](src/capability_factory/workflow.py) `make_plans` | 根据任务协议和知识证据设计候选算法、变体、理由和父子关系；负责 Beam Search 的候选扩展 | `PlanSet` / `CandidatePlan` |
+| `coder` 代码生成 | `CODER`、[workflow.py](src/capability_factory/workflow.py) `execute_plan` | 按候选方案生成一个受限 sklearn Pipeline 构造程序；不能读数据、访问网络或执行任意 Python | `GeneratedCode` |
+| `reviewer` 错误审查 | `REVIEWER`、[workflow.py](src/capability_factory/workflow.py) 修复分支 | 阅读验证器的实际错误，给出诊断、具体修复方式和是否可修复；不能修改验证器或评估协议 | `Review` |
+| `repair_coder` 代码修复 | `CODER` + `previous_code`/`review`、[workflow.py](src/capability_factory/workflow.py) 修复分支 | 根据 reviewer 建议生成下一次代码，受 `max_repairs` 限制后重新验证 | `GeneratedCode` |
+| `curator` 结果总结 | `CURATOR`、[workflow.py](src/capability_factory/workflow.py) 候选比较分支 | 汇总本地验证器已经计算的候选结果，说明选择依据、失败候选和限制；不能编造指标 | `Explanation` |
+| `extractor` 能力抽取 | `EXTRACTOR`、[prompts.py](src/capability_factory/prompts.py) | 初始化或更新知识库时，从批准的文档/代码片段抽取带来源的能力卡片；不能声称未经验证的能力已经通过 | 能力卡片集合 |
+
+一次完整运行的角色顺序是：
+
+```text
+interpreter → 知识检索 → planner → coder → 本地验证器
+                                      ↓ 失败
+                             reviewer → repair_coder → 本地验证器
+                                      ↓ 通过
+                         Beam 扩展与候选比较 → curator → 报告和知识回写
+```
+
+下面这些模块不是 LLM Agent，而是确定性控制和裁判代码：`KnowledgeStore.search` 负责词项/图关系检索；`execution/compiler.py` 负责受限 AST 检查；`execution/runner.py` 负责子进程运行、接口检查和资源限制；`metrics.py` 负责在可信主进程计算指标。这样可以把“模型提出方案”和“系统判定是否通过”分开审计。
+
+角色的完整提示词和输出合约见 [prompts.py](src/capability_factory/prompts.py) 与 [contracts.py](src/capability_factory/contracts.py)。每次模型请求的角色、请求/响应文件、耗时和 token 统计会保存到 `artifacts/runs/<run_id>/llm/` 与报告的 `usage.records` 中，便于复盘真实 API 调用。
+
 ## 系统架构与模块
 
 | 层 | 实现 | 选择理由 |
