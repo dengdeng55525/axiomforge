@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import re
 import threading
 import time
 import uuid
@@ -51,6 +52,24 @@ def write_json(path: Path, data):
 
 class Cancelled(RuntimeError):
     pass
+
+
+_EXPLICIT_BUDGET_PATTERN = re.compile(
+    r"(?:\d+\s*(?:秒|分鐘|分钟|分|s|sec(?:ond)?s?|m|min(?:ute)?s?)|"
+    r"(?:预算|時限|时限|超时|耗时|运行时间|执行时间|budget|timeout|deadline|within).{0,24}"
+    r"(?:秒|分鐘|分钟|分|s|sec(?:ond)?s?|m|min(?:ute)?s?))",
+    flags=re.IGNORECASE,
+)
+
+
+def has_explicit_run_budget(description: str) -> bool:
+    """Only let a user-declared duration tighten the host run deadline.
+
+    The interpreter is allowed to normalize a duration, but it must not be
+    able to invent a short budget from an otherwise ordinary request.
+    """
+
+    return bool(_EXPLICIT_BUDGET_PATTERN.search(description))
 
 
 class Workflow:
@@ -269,8 +288,19 @@ class Workflow:
                                                    assumptions=["单次生成消融：采用冻结任务策略与固定算法计划，未调用解释/规划角色。"])
             report["interpretation"] = interpretation.model_dump()
             if interpretation.requested_run_seconds is not None:
-                deadline = min(deadline, started + interpretation.requested_run_seconds)
-                checkpoint()
+                if has_explicit_run_budget(request.description):
+                    deadline = min(deadline, started + interpretation.requested_run_seconds)
+                    checkpoint()
+                else:
+                    warning = (
+                        "解释器返回了原始需求未声明的运行预算，已忽略该预算并保留表单设置；"
+                        f"requested_run_seconds={interpretation.requested_run_seconds}。"
+                    )
+                    report["warnings"].append(warning)
+                    event("INTERPRETER_BUDGET_IGNORED", {
+                        "requested_run_seconds": interpretation.requested_run_seconds,
+                        "reason": "no_explicit_budget_in_user_description",
+                    })
             report["warnings"].extend(interpretation.warnings + interpretation.incompatible_requests)
             event("SPEC_VALIDATED", {"task_type": dataset["task_type"], "assumptions": interpretation.assumptions})
             evidence = self.store.search(request.description, dataset["task_type"], limit=6, use_graph=request.use_graph) if request.use_retrieval else []
@@ -306,7 +336,19 @@ class Workflow:
                                                           variant=option["variant"], rationale="离线Beam扩展测试",
                                                           evidence_ids=parent["plan"]["evidence_ids"], parent_id=parent["candidate_id"]))
                 else:
-                    expanded = make_plans(child_count, evidence, parents) if child_count else []
+                    try:
+                        expanded = make_plans(child_count, evidence, parents) if child_count else []
+                    except ResponseContractError as error:
+                        # Beam expansion is an optional search bonus. Keep the
+                        # already verified parents when a local model emits an
+                        # invalid child plan after retries.
+                        expanded = []
+                        warning = f"Beam 扩展已跳过，保留已验证候选：{error}"
+                        report["warnings"].append(warning)
+                        event("BEAM_SKIPPED", {
+                            "requested_children": child_count,
+                            "reason": str(error),
+                        })
                 event("BEAM_EXPANDED", {"beam_width": 2, "parents": [item["candidate_id"] for item in parents], "children": len(expanded)})
                 for plan in expanded:
                     execute_plan(plan, dataset)

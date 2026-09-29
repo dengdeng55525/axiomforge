@@ -12,8 +12,10 @@ INTERPRETER = COMMON + """
 Role: task interpreter. Interpret the Chinese request against immutable task_spec.
 Return {"objective":string,"constraints":[string],"assumptions":[string],
 "warnings":[string],"incompatible_requests":[string],"requested_run_seconds":integer|null}.
-If the user specifies a whole-run wall-clock budget (for example two minutes), translate it
-to requested_run_seconds (120). This can only tighten the host budget, never expand it.
+If the user explicitly specifies a whole-run wall-clock budget in the description (for example
+two minutes), translate it to requested_run_seconds (120). Otherwise return null; never infer a
+budget from the task complexity or invent a short deadline. This can only tighten the host
+budget, never expand it.
 If a requested budget is below 10 seconds, record it as incompatible and use 10 seconds.
 If duration or other unavailable information is requested, explain why it cannot be used.
 Do not promise unseen client separation when no client ID exists. Do not change task_spec."""
