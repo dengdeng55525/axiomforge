@@ -93,7 +93,9 @@ const commands = computed(
             p.id === "local_http"
               ? p.status === "planned_not_deployed"
                 ? "未部署（规划）"
-                : "接入待验证"
+                : p.status === "operator_managed"
+                  ? "已接入，待启动"
+                  : "接入待验证"
               : p.available
                 ? "已配置"
                 : "未配置"
@@ -105,7 +107,7 @@ const commands = computed(
           p.id === "deepseek"
             ? "通过真实 API 完成理解、规划、生成和修复。"
             : p.id === "local_http"
-              ? "预留 OpenAI 兼容接口，支持后续部署本地 14B 模型。"
+              ? "已接入 OpenAI 兼容接口；按四卡启动脚本启动本地 14B 服务后即可调用。"
               : "固定规则生成候选，用于离线复现与工程测试。"
         }}
       </p>
@@ -137,7 +139,11 @@ const commands = computed(
           <Cpu :size="20" /><b>GPU {{ n - 1 }}</b
           ><small>服务端口 {{ 8100 + n - 1 }}</small
           ><span class="badge warning">{{
-            localPlan.status === "planned_not_deployed" ? "规划配置" : "已配置"
+            localPlan.status === "planned_not_deployed"
+              ? "规划配置"
+              : localPlan.status === "operator_managed"
+                ? "可启动"
+                : "已配置"
           }}</span>
         </div>
       </div>
