@@ -1,0 +1,5 @@
+# Optional GPU runtime for the local_http provider.
+# Keep this file separate from requirements.txt so CPU/CI installs stay small.
+vllm==0.29.0
+# Required when HTTP(S)_PROXY/ALL_PROXY uses a socks5:// URL.
+socksio==1.0.0

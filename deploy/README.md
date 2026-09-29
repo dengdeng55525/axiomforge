@@ -45,10 +45,17 @@ cd /root/algorithm-capability-factory
 该命令校验设备分配并打印 vLLM 命令，不下载权重。要在已准备好的 GPU 主机启动四个副本，可运行：
 
 ~~~bash
+# 只需首次执行；vLLM 安装到项目 .venv，不影响系统 Python。
+./scripts/install_local_vllm.sh
+
 LOCAL_LLM_PROFILE=four_gpu_14b \
   LOCAL_LLM_AVAILABLE_GPUS=4 \
   ./scripts/start_local_vllm.sh
 ~~~
+
+启动脚本会自动使用 `.venv/bin/vllm`，所以不需要手动激活虚拟环境。模型首次启动会下载
+约 10 GB 权重并写入 Hugging Face 缓存；若本机可直连 Hugging Face，可清除代理变量，若
+使用 `socks5://` 代理，安装脚本会同时安装 `socksio`。
 
 启动脚本由部署者管理 vLLM 子进程；AlgoForge 仍只通过 HTTP 调用。`local_http` Provider 负责端点轮询和失败重试，`scripts/check_local_llm.py` 负责主动健康检查；并发上限、熔断和故障摘除策略需在目标机器按实际部署验证，性能测量也单独记录。
 
