@@ -125,7 +125,8 @@ python -m capability_factory run \
 ## 端到端闭环
 
 ```mermaid
-flowchart LR
+%%{init: {"themeVariables": {"fontSize": "16px"}, "flowchart": {"nodeSpacing": 32, "rankSpacing": 42, "padding": 14}}}%%
+flowchart TD
     A[自然语言需求] --> B[解释与约束]
     B --> C[SQLite 知识检索]
     C --> D[候选规划与 Beam 搜索]
