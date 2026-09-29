@@ -35,8 +35,16 @@ onMounted(load);
 const providers = computed<Json[]>(
   () => config.value?.providers?.providers || [],
 );
-const commands =
-  "LOCAL_LLM_BASE_URL=http://127.0.0.1:8100/v1\nLOCAL_LLM_MODEL=coder_a\nLOCAL_LLM_PROFILE=four_gpu_14b";
+const localPlan = computed<Json>(
+  () =>
+    profiles.value?.active_local ||
+    providers.value.find((p) => p.id === "local_http")?.model_plan ||
+    {},
+);
+const commands = computed(
+  () =>
+    `LOCAL_LLM_BASE_URL=${localPlan.value.base_url || "http://127.0.0.1:8100/v1"}\nLOCAL_LLM_MODEL=${localPlan.value.served_model || "coder_a"}\nLOCAL_LLM_PROFILE=${localPlan.value.profile || "four_gpu_14b"}`,
+);
 </script>
 <template>
   <div class="page-heading">
@@ -83,7 +91,9 @@ const commands =
           ]"
           >{{
             p.id === "local_http"
-              ? "接入待验证"
+              ? p.status === "planned_not_deployed"
+                ? "未部署（规划）"
+                : "接入待验证"
               : p.available
                 ? "已配置"
                 : "未配置"
@@ -123,10 +133,12 @@ const commands =
         4090D，每卡一个量化模型服务副本。单卡先运行，随后按配置扩展；模型权重与推理服务由部署者管理。
       </p>
       <div class="gpu-grid">
-        <div v-for="n in 4" :key="n">
+        <div v-for="n in Number(localPlan.gpu_count || 4)" :key="n">
           <Cpu :size="20" /><b>GPU {{ n - 1 }}</b
           ><small>服务端口 {{ 8100 + n - 1 }}</small
-          ><span class="badge warning">规划配置</span>
+          ><span class="badge warning">{{
+            localPlan.status === "planned_not_deployed" ? "规划配置" : "已配置"
+          }}</span>
         </div>
       </div>
       <details>
