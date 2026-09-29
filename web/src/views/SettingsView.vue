@@ -157,13 +157,9 @@ const commands =
             <b>统一验证与预算</b>
             <p>
               候选最多
-              {{
-                config?.limits?.max_candidates?.max ?? "—"
-              }}
+              {{ config?.limits?.max_candidates?.max ?? "—" }}
               个，每候选最多修复
-              {{
-                config?.limits?.max_repairs?.max ?? "—"
-              }}
+              {{ config?.limits?.max_repairs?.max ?? "—" }}
               次。缺失的观测不会填零或判为通过。
             </p>
           </div>
