@@ -97,6 +97,9 @@ test("Enter edits text and double submit cannot create duplicate task", async ({
   await prompt.press("Enter");
   await expect(prompt).toHaveValue(/\n$/);
   expect(submitted).toBe(0);
+  await expect(
+    page.getByRole("button", { name: "开始构建与验证" }),
+  ).toBeEnabled();
   await page.getByRole("button", { name: "开始构建与验证" }).click();
   await prompt.press("Control+Enter");
   await expect(page.getByRole("alert")).toContainText("队列已满");
