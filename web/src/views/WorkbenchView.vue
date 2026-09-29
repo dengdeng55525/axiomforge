@@ -173,7 +173,10 @@ onMounted(async () => {
           8000,
         );
     } else if (route.query.dataset) {
-      applyExample(dataset.value);
+      // Apply a deep link while startup controls are locked. The public
+      // click handler remains guarded so user edits cannot race this load.
+      dataset.value = dataset.value === "sms" ? "sms" : "bank";
+      description.value = defaults[dataset.value];
     } else {
       try {
         const draft = JSON.parse(
