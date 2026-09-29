@@ -40,6 +40,14 @@ def test_four_gpu_profile_derives_four_local_endpoints(tmp_path):
     ]
 
 
+def test_local_profile_metadata_redacts_unsafe_endpoints(tmp_path):
+    settings = Settings(root=tmp_path, local_base_url="http://user:secret@127.0.0.1:8100/v1?token=hidden")
+    metadata = local_profile_metadata(settings)
+    assert metadata["base_url"] is None
+    assert metadata["base_urls"] == []
+    assert metadata["configured"] is False
+
+
 def test_api_exposes_sanitized_local_profile_for_visual_console(tmp_path):
     (tmp_path / "configs").symlink_to(ROOT / "configs", target_is_directory=True)
     app = create_app(Settings(root=tmp_path, api_key=SecretStr("fixture")))

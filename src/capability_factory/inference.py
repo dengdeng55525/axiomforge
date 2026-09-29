@@ -7,6 +7,7 @@ downloads model weights, probes a GPU, or starts a serving process.
 
 import json
 from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 
 
 def load_inference_profiles(root: Path | str) -> dict:
@@ -22,6 +23,24 @@ def load_inference_profiles(root: Path | str) -> dict:
     return value
 
 
+def _safe_endpoint(value: str) -> str | None:
+    """Return a display-safe endpoint without credentials or query material."""
+
+    try:
+        parsed = urlsplit(str(value))
+        if parsed.scheme not in {"http", "https"} or not parsed.hostname:
+            return None
+        if parsed.username or parsed.password or parsed.query or parsed.fragment:
+            return None
+        hostname = parsed.hostname
+        if ":" in hostname and not hostname.startswith("["):
+            hostname = f"[{hostname}]"
+        netloc = hostname + (f":{parsed.port}" if parsed.port else "")
+        return urlunsplit((parsed.scheme, netloc, parsed.path.rstrip("/"), "", ""))
+    except (TypeError, ValueError):
+        return None
+
+
 def local_profile_metadata(settings) -> dict:
     """Return safe profile metadata suitable for ``/health`` and UI cards."""
 
@@ -29,12 +48,15 @@ def local_profile_metadata(settings) -> dict:
     profile_name = settings.local_profile
     profile = config.get("profiles", {}).get(profile_name)
     runtime = config.get("local_runtime", {})
+    raw_endpoints = list(getattr(settings, "local_endpoints", [settings.local_base_url]))
+    endpoints = [value for value in (_safe_endpoint(item) for item in raw_endpoints) if value]
     if not isinstance(profile, dict):
         return {
             "profile": profile_name,
             "status": "configuration_error",
-            "configured": bool(settings.local_base_url),
-            "base_url": settings.local_base_url,
+            "configured": bool(endpoints),
+            "base_url": endpoints[0] if endpoints else None,
+            "base_urls": endpoints,
             "model": settings.local_model,
             "error": "selected profile is absent from configs/inference_profiles.json",
         }
@@ -49,10 +71,10 @@ def local_profile_metadata(settings) -> dict:
     return {
         "profile": profile_name,
         "status": runtime.get("status", "planned_not_deployed"),
-        "configured": bool(settings.local_base_url),
+        "configured": bool(endpoints),
         "deployed": False,
-        "base_url": settings.local_base_url,
-        "base_urls": list(getattr(settings, "local_endpoints", [settings.local_base_url])),
+        "base_url": endpoints[0] if endpoints else None,
+        "base_urls": endpoints,
         "served_model": settings.local_model,
         "model_ids": model_ids,
         "gpu_count": profile.get("gpu_count"),
