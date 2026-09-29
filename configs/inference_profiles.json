@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1.0",
   "status": "operator_managed_vllm",
-  "default_max_model_len": 8192,
+  "default_max_model_len": 16384,
   "default_max_num_seqs": 2,
   "default_gpu_memory_utilization": 0.85,
   "models": {
@@ -130,6 +130,8 @@
     "requires_independent_deployment": true,
     "weights_downloaded_by_algoforge": false,
     "process_started_by_algoforge": false,
+    "enforce_eager": true,
+    "flashinfer_sampler": false,
     "notes": "Start four replicas with scripts/start_local_vllm.sh; validate CUDA, driver, vLLM and model license before serving.",
     "endpoint_pool_env": "LOCAL_LLM_ENDPOINTS"
   }

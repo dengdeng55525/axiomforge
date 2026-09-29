@@ -68,6 +68,8 @@ def build_plan(config, profile_name, available_gpus=None):
         ]
         if model["quantization"]:
             argv.extend(["--quantization", model["quantization"]])
+        if config.get("local_runtime", {}).get("enforce_eager", False):
+            argv.append("--enforce-eager")
         endpoints.append(
             {
                 "name": group["name"],
@@ -95,6 +97,7 @@ def build_plan(config, profile_name, available_gpus=None):
         ],
         "endpoint_pool_env": "LOCAL_LLM_ENDPOINTS=" + ",".join(item["base_url"] for item in endpoints),
         "served_model_name": endpoints[0]["served_model_name"] if endpoints else None,
+        "enforce_eager": bool(config.get("local_runtime", {}).get("enforce_eager", False)),
     }
 
 

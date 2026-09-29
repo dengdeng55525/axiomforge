@@ -60,6 +60,9 @@ def test_four_gpu_14b_profile_is_four_single_gpu_replicas():
     assert [item["environment"]["CUDA_VISIBLE_DEVICES"] for item in plan["endpoints"]] == ["0", "1", "2", "3"]
     assert {item["model_id"] for item in plan["endpoints"]} == {"Qwen/Qwen2.5-Coder-14B-Instruct-AWQ"}
     assert all(item["argv"][item["argv"].index("--tensor-parallel-size") + 1] == "1" for item in plan["endpoints"])
+    assert plan["enforce_eager"] is True
+    assert all("--enforce-eager" in item["argv"] for item in plan["endpoints"])
+    assert CONFIG["local_runtime"]["flashinfer_sampler"] is False
 
 
 def test_local_runtime_plan_is_explicitly_not_deployed():

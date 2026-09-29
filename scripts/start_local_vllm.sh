@@ -41,6 +41,14 @@ if [[ ! -x "${VLLM_BIN}" ]]; then
 fi
 
 cd "${ROOT_DIR}"
+export ALGOFORGE_VLLM_COMPAT="${ALGOFORGE_VLLM_COMPAT:-1}"
+export VLLM_USE_FLASHINFER_SAMPLER="${VLLM_USE_FLASHINFER_SAMPLER:-0}"
+export PATH="${ROOT_DIR}/.venv/bin${PATH:+:${PATH}}"
+if [[ -n "${PYTHONPATH:-}" ]]; then
+  export PYTHONPATH="${ROOT_DIR}/compat:${PYTHONPATH}"
+else
+  export PYTHONPATH="${ROOT_DIR}/compat"
+fi
 exec "${ROOT_DIR}/.venv/bin/python" "${ROOT_DIR}/scripts/serve_local_vllm.py" \
   --profile "${PROFILE}" \
   --available-gpus "${AVAILABLE_GPUS}" \
