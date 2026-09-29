@@ -88,6 +88,23 @@ def test_local_provider_never_receives_deepseek_key(monkeypatch, settings):
     assert "Authorization" not in captured["headers"]
 
 
+def test_local_provider_round_robins_four_replicas(monkeypatch, settings):
+    urls = [
+        "http://127.0.0.1:8100/v1",
+        "http://127.0.0.1:8101/v1",
+        "http://127.0.0.1:8102/v1",
+        "http://127.0.0.1:8103/v1",
+    ]
+    settings = settings.model_copy(update={"local_base_urls": ",".join(urls), "local_model": "coder14"})
+    calls = []
+    monkeypatch.setattr(httpx, "post", lambda url, **kwargs: calls.append(url) or response())
+    provider = HTTPProvider(settings, mode="local_http")
+    provider.generate("coder", "JSON", {})
+    provider.generate("coder", "JSON", {})
+    assert calls == [urls[0] + "/chat/completions", urls[1] + "/chat/completions"]
+    assert provider.metadata()["base_urls"] == urls
+
+
 def test_retry_never_sends_request_after_absolute_deadline(monkeypatch, settings):
     clock = [100.0]
     calls = []

@@ -65,10 +65,11 @@ def test_visual_configuration_has_api_and_future_local_14b_without_secrets(tmp_p
         by_id = {item["id"]: item for item in payload["providers"]}
         assert by_id["deepseek"]["available"] is True
         assert by_id["deepseek"]["endpoint"] == "https://api.deepseek.com/v1"
-        assert by_id["local_http"]["status"] == "planned_not_deployed"
+        assert by_id["local_http"]["status"] == "operator_managed"
         assert by_id["local_http"]["available"] is False
         assert by_id["local_http"]["model_plan"]["gpu_count"] == 4
         assert by_id["local_http"]["model_plan"]["model_family"].endswith("14B-Instruct-AWQ")
+        assert by_id["local_http"]["endpoint_count"] == 0
         assert "fixture-secret" not in providers.text
         assert "password" not in providers.text
         health = client.get("/health")

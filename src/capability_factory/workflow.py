@@ -243,6 +243,10 @@ class Workflow:
 
         try:
             provider = MockProvider(event) if request.provider == "mock" else HTTPProvider(self.settings.model_copy(deep=True), request.provider, event)
+            report["provider_metadata"] = (
+                {"provider": "mock", "model": provider.model, "deployment": "deterministic_mock"}
+                if request.provider == "mock" else provider.metadata()
+            )
             if isinstance(provider, HTTPProvider):
                 provider.deadline = deadline
                 provider.checkpoint = checkpoint

@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_local_profile_metadata_describes_static_four_gpu_plan():
     metadata = local_profile_metadata(Settings(root=ROOT, api_key=SecretStr("fixture")))
     assert metadata["profile"] == "four_gpu_14b"
-    assert metadata["status"] == "planned_not_deployed"
+    assert metadata["status"] == "operator_managed"
     assert metadata["deployed"] is False
     assert metadata["gpu_count"] == 4
     assert metadata["endpoint_count"] == 4
@@ -30,6 +30,16 @@ def test_settings_reads_local_profile_without_exporting_secret(tmp_path, monkeyp
     assert settings.api_key.get_secret_value() == "fixture-secret"
 
 
+def test_four_gpu_profile_derives_four_local_endpoints(tmp_path):
+    settings = Settings(root=tmp_path)
+    assert settings.local_endpoints == [
+        "http://127.0.0.1:8100/v1",
+        "http://127.0.0.1:8101/v1",
+        "http://127.0.0.1:8102/v1",
+        "http://127.0.0.1:8103/v1",
+    ]
+
+
 def test_api_exposes_sanitized_local_profile_for_visual_console(tmp_path):
     (tmp_path / "configs").symlink_to(ROOT / "configs", target_is_directory=True)
     app = create_app(Settings(root=tmp_path, api_key=SecretStr("fixture")))
@@ -39,5 +49,5 @@ def test_api_exposes_sanitized_local_profile_for_visual_console(tmp_path):
         body = response.json()
         assert body["active_local"]["profile"] == "four_gpu_14b"
         assert body["active_local"]["deployed"] is False
-        assert body["local_runtime"]["status"] == "planned_not_deployed"
+        assert body["local_runtime"]["status"] == "operator_managed"
         assert "fixture" not in response.text

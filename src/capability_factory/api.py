@@ -100,7 +100,9 @@ def _provider_catalog(settings: Settings) -> dict:
     """
     key_configured = bool(settings.api_key.get_secret_value())
     remote_endpoint = _safe_endpoint(settings.base_url)
-    local_endpoint = _safe_endpoint(settings.local_base_url)
+    local_endpoints = [_safe_endpoint(value) for value in settings.local_endpoints]
+    local_endpoints = [value for value in local_endpoints if value]
+    local_endpoint = local_endpoints[0] if local_endpoints else None
     return {
         "schema_version": "1.0",
         "default_provider": "deepseek",
@@ -124,9 +126,9 @@ def _provider_catalog(settings: Settings) -> dict:
                 "kind": "local_openai_compatible",
                 "model": settings.local_model,
                 "endpoint": local_endpoint,
-                "configured": local_endpoint is not None,
+                "configured": bool(local_endpoints),
                 "available": False,
-                "status": "planned_not_deployed",
+                "status": "operator_managed",
                 "requires_api_key": False,
                 "local_model_deployed": False,
                 "model_plan": {
@@ -138,6 +140,8 @@ def _provider_catalog(settings: Settings) -> dict:
                     "ports": [8100, 8101, 8102, 8103],
                     "weights_managed_by_algoforge": False,
                 },
+                "endpoints": local_endpoints,
+                "endpoint_count": len(local_endpoints),
                 "capabilities": ["structured_json", "multi_role", "beam_search"],
             },
             {
@@ -160,9 +164,12 @@ def _provider_catalog(settings: Settings) -> dict:
 def _safe_local_profile(settings: Settings) -> dict:
     """Sanitize the static local profile before exposing it over HTTP."""
     profile = dict(local_profile_metadata(settings))
-    safe_url = _safe_endpoint(settings.local_base_url)
-    profile["base_url"] = safe_url
-    profile["configured"] = safe_url is not None
+    safe_urls = [_safe_endpoint(value) for value in settings.local_endpoints]
+    safe_urls = [value for value in safe_urls if value]
+    profile["base_urls"] = safe_urls
+    profile["base_url"] = safe_urls[0] if safe_urls else None
+    profile["endpoint_count"] = len(safe_urls)
+    profile["configured"] = bool(safe_urls)
     return profile
 
 

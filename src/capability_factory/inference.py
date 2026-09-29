@@ -52,6 +52,7 @@ def local_profile_metadata(settings) -> dict:
         "configured": bool(settings.local_base_url),
         "deployed": False,
         "base_url": settings.local_base_url,
+        "base_urls": list(getattr(settings, "local_endpoints", [settings.local_base_url])),
         "served_model": settings.local_model,
         "model_ids": model_ids,
         "gpu_count": profile.get("gpu_count"),
@@ -64,4 +65,3 @@ def local_profile_metadata(settings) -> dict:
         "health_path": runtime.get("health_path", "/health"),
         "chat_path": runtime.get("chat_path", "/v1/chat/completions"),
     }
-
