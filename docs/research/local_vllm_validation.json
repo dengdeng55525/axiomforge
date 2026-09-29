@@ -41,6 +41,14 @@
     "ap_improvement_over_dummy": 0.07217087373781331,
     "report_path": "artifacts/runs/44f6efbebbe1400e9889bf7ce3f4e9c9/report.json"
   },
+  "beam_contract_regression": {
+    "run_id": "8105bac46ba2440e904aa223443b40ac",
+    "status": "passed",
+    "candidates_verified": 2,
+    "selected_candidate_id": "logistic_default",
+    "beam_invalid_child_policy": "skipped_invalid_extension_and_kept_verified_parents",
+    "wall_seconds": 36.377
+  },
   "limitations": [
     "This is a startup and functional smoke, not a throughput or latency benchmark.",
     "OOM recovery, endpoint eviction and sustained concurrent load still require a deployment-specific test.",
