@@ -26,8 +26,11 @@
     "ports": [8100, 8101, 8102, 8103],
     "planner_command": ".venv/bin/python scripts/plan_inference.py --profile four_gpu_14b --available-gpus 4",
     "launcher_dry_run": "passed",
-    "gpu_runtime": "not measured in this CPU environment",
-    "provider": "local_http with LOCAL_LLM_ENDPOINTS round robin and retry"
+    "gpu_runtime": "validated on four NVIDIA GeForce RTX 4090 D cards; see local_vllm_validation.json",
+    "provider": "local_http with LOCAL_LLM_ENDPOINTS round robin and retry",
+    "health_smoke": "four replicas returned HTTP 200",
+    "chat_smoke": "four replicas returned finish_reason=stop",
+    "workflow_smoke": "run 44f6efbebbe1400e9889bf7ce3f4e9c9 passed"
   },
   "remote_ci": {
     "cpu": "https://github.com/dengdeng55525/algorithm-capability-factory/actions/runs/36585115966",
@@ -49,7 +52,7 @@
   ],
   "limitations": [
     "No paid DeepSeek call was made during this validation.",
-    "Local 14B serving, four GPU throughput and OOM recovery were not benchmarked.",
+    "Local 14B serving is functionally smoke-tested; four GPU throughput and OOM recovery were not benchmarked.",
     "Docker and OS-level sandbox deployment were not executed.",
     "preparation_checks.json is an early preparation snapshot, not final validation."
   ],

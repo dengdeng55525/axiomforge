@@ -53,9 +53,16 @@ LOCAL_LLM_PROFILE=four_gpu_14b \
   ./scripts/start_local_vllm.sh
 ~~~
 
-启动脚本会自动使用 `.venv/bin/vllm`，所以不需要手动激活虚拟环境。模型首次启动会下载
+启动脚本会自动使用 `.venv/bin/vllm`，所以不需要手动激活虚拟环境。安装脚本同时安装
+`socksio` 和 `ninja`，分别用于 SOCKS 代理和 FlashInfer/扩展构建。模型首次启动会下载
 约 10 GB 权重并写入 Hugging Face 缓存；若本机可直连 Hugging Face，可清除代理变量，若
-使用 `socks5://` 代理，安装脚本会同时安装 `socksio`。
+使用 `socks5://` 代理，保留代理即可。
+
+当前主机的系统 CUDA 工具链为 11.8，而 vLLM 0.29.0 的 FlashInfer wheel 可能尝试使用
+更高版本的 `nvcc` 参数，因此启动器默认设置 `VLLM_USE_FLASHINFER_SAMPLER=0`，并用
+`--enforce-eager` 关闭不稳定的编译/图预热。Qwen AWQ 推理仍在 GPU 上运行；升级 CUDA
+工具链后可设置 `VLLM_USE_FLASHINFER_SAMPLER=1` 做单独性能验收。启动器自带的
+`compat/sitecustomize.py` 只跳过非 Qwen 模型的 MiniMax 预热导入，不修改模型权重。
 
 启动脚本由部署者管理 vLLM 子进程；AlgoForge 仍只通过 HTTP 调用。`local_http` Provider 负责端点轮询和失败重试，`scripts/check_local_llm.py` 负责主动健康检查；并发上限、熔断和故障摘除策略需在目标机器按实际部署验证，性能测量也单独记录。
 

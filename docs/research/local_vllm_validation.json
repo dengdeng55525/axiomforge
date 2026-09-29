@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "validated_at_utc": "2026-09-29T17:56:58Z",
+  "scope": "local vLLM 14B single-card and four-replica smoke",
+  "host": {
+    "gpu_count": 4,
+    "gpu_name": "NVIDIA GeForce RTX 4090 D",
+    "gpu_memory_mib": 24564,
+    "driver": "580.178.04",
+    "system_cuda_toolkit": "11.8",
+    "torch": "2.13.0+cu130",
+    "vllm": "0.29.0"
+  },
+  "model": {
+    "model_id": "Qwen/Qwen2.5-Coder-14B-Instruct-AWQ",
+    "revision": "eb3172f06a6d6b3a15f08947b0668d782e4d2d2c",
+    "served_model_name": "coder14",
+    "quantization": "awq"
+  },
+  "launcher": {
+    "command": "LOCAL_LLM_PROFILE=four_gpu_14b LOCAL_LLM_AVAILABLE_GPUS=4 ./scripts/start_local_vllm.sh",
+    "max_model_len": 16384,
+    "max_num_seqs": 2,
+    "enforce_eager": true,
+    "vllm_use_flashinfer_sampler": false,
+    "compat_shim": "compat/sitecustomize.py"
+  },
+  "replicas": [
+    {"gpu": 0, "port": 8100, "health_http": 200, "chat_finish_reason": "stop"},
+    {"gpu": 1, "port": 8101, "health_http": 200, "chat_finish_reason": "stop"},
+    {"gpu": 2, "port": 8102, "health_http": 200, "chat_finish_reason": "stop"},
+    {"gpu": 3, "port": 8103, "health_http": 200, "chat_finish_reason": "stop"}
+  ],
+  "algoforge_local_http_run": {
+    "run_id": "44f6efbebbe1400e9889bf7ce3f4e9c9",
+    "dataset": "bank",
+    "status": "passed",
+    "calls": 4,
+    "selected_candidate_id": "logistic_default",
+    "average_precision": 0.18287735589367637,
+    "ap_improvement_over_dummy": 0.07217087373781331,
+    "report_path": "artifacts/runs/44f6efbebbe1400e9889bf7ce3f4e9c9/report.json"
+  },
+  "limitations": [
+    "This is a startup and functional smoke, not a throughput or latency benchmark.",
+    "OOM recovery, endpoint eviction and sustained concurrent load still require a deployment-specific test.",
+    "Eager mode and native sampling are compatibility defaults for this CUDA/vLLM combination; benchmark FlashInfer only after upgrading the CUDA toolkit."
+  ]
+}

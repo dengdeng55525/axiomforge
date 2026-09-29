@@ -10,5 +10,6 @@
 | [preparation_checks.json](preparation_checks.json) | 历史快照 | 早期准备状态，当前实现以主验证索引为准 |
 | [data_audit.json](data_audit.json) | 数据事实 | 来源、哈希、行数和切分协议 |
 | [deepseek_model_discovery.json](deepseek_model_discovery.json) | 模型发现记录 | 产品名称和实际 API ID 的映射 |
+| [local_vllm_validation.json](local_vllm_validation.json) | 本地 GPU smoke | 四张 RTX 4090D、四个 14B 端点和一次 local_http 闭环 |
 
 验证索引记录的是命令、版本、结果和限制；它不承诺未来运行仍然得到相同模型输出，也不把 Mock 结果当作真实 LLM 效果。
