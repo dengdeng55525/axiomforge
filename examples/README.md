@@ -2,7 +2,7 @@
 
 这个目录保存可以直接阅读、下载和复核的示例输入与历史运行证据。它把「自然语言需求 → 能力检索 → 候选代码 → 自动验证 → 修复/比较 → 知识回写」拆成可定位的文件，适合答辩时逐步展示，也适合作为 API、CLI 和前端的固定夹具。
 
-示例包来自项目自己的脱敏导出工具，保留原始运行的模式、状态、候选、每次尝试、指标和 SHA-256；数据集、预测明细、原始 LLM 请求/响应、日志、凭据和私有 SQLite 库被明确省略。`manifest.json` 中的 `source_report_sha256` 用于确认它是某次历史运行的导出，而不是重新标注的回放。目录名不能代替报告中的 `mode`、`provider` 和 `status`，阅读时以报告字段为准。
+示例包来自项目自己的脱敏导出工具，保留原始运行的模式、状态、候选、每次尝试、指标和 SHA-256；数据集、预测明细、原始 LLM 请求/响应、日志、凭据和本地 SQLite 库被明确省略。`manifest.json` 中的 `source_report_sha256` 用于确认它是某次历史运行的导出，而不是重新标注的回放。目录名不能代替报告中的 `mode`、`provider` 和 `status`，阅读时以报告字段为准。
 
 `source_report` 可能指向被 `.gitignore` 排除的本机 `artifacts/runs/`，因此新克隆仓库中找不到它是预期行为；公开 bundle 自身已经包含复核所需的报告、候选代码、验证记录和文件哈希。
 
@@ -99,4 +99,4 @@ python scripts/export_evidence.py \
 
 ## 与知识图谱和前端的关系
 
-运行验证后，图谱中的 `ValidationRun`、`Artifact`、`Capability` 和 `FailureExperience` 节点会通过 `EVALUATES`、`IMPLEMENTS`、`REPAIRS` 等关系关联。前端知识探索页使用这些真实关系显示来源和验证路径；示例 bundle 不包含私有数据库，因此只能用于静态报告和代码证据复核。完整 schema 见 [`knowledge/README.md`](../knowledge/README.md) 与 [`runtime_schema.sql`](../knowledge/runtime_schema.sql)，交互流程见 [`docs/07_使用与演示指南.md`](../docs/07_使用与演示指南.md)。
+运行验证后，图谱中的 `ValidationRun`、`Artifact`、`Capability` 和 `FailureExperience` 节点会通过 `EVALUATES`、`IMPLEMENTS`、`REPAIRS` 等关系关联。前端知识探索页使用这些真实关系显示来源和验证路径；示例 bundle 不包含本地数据库，因此只能用于静态报告和代码证据复核。完整 schema 见 [`knowledge/README.md`](../knowledge/README.md) 与 [`runtime_schema.sql`](../knowledge/runtime_schema.sql)，交互流程见 [`docs/07_使用与演示指南.md`](../docs/07_使用与演示指南.md)。

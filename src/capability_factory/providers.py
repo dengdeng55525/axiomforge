@@ -55,7 +55,7 @@ class HTTPProvider:
         if mode == "deepseek" and (parsed.scheme != "https" or parsed.hostname != "api.deepseek.com"):
             raise ProviderError("DeepSeek credentials can only be sent to the official HTTPS host")
         if mode == "deepseek" and not settings.api_key.get_secret_value():
-            raise ProviderError("DEEPSEEK_API_KEY is missing; configure a private .env or environment")
+            raise ProviderError("DEEPSEEK_API_KEY is missing; configure an uncommitted .env or environment")
 
     def metadata(self) -> dict:
         """Return UI-safe connection metadata without credentials or prompts."""

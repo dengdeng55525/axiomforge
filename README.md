@@ -6,7 +6,7 @@ AlgoForge 是面向 LLM Agent 笔试场景的小型可复现原型。它以**银
 
 [![CPU verification](https://github.com/dengdeng55525/algorithm-capability-factory/actions/workflows/ci.yml/badge.svg)](https://github.com/dengdeng55525/algorithm-capability-factory/actions/workflows/ci.yml) [![Web verification](https://github.com/dengdeng55525/algorithm-capability-factory/actions/workflows/frontend.yml/badge.svg)](https://github.com/dengdeng55525/algorithm-capability-factory/actions/workflows/frontend.yml)
 
-当前仓库为私有仓库；文档按成熟开源项目的方式组织，但仓库当前仍为私有，项目尚未声明开源许可证，若要公开发布请先补充许可证和第三方 NOTICE。
+仓库按成熟开源项目的方式组织，代码采用 MIT 许可证；第三方数据、模型和源码仍遵循各自许可证与使用条款，详见 [NOTICE](NOTICE)。
 
 ## 项目背景与目标
 
@@ -325,7 +325,7 @@ npm run test:e2e
 - [交互工作台与参考设计](docs/12_交互工作台与参考设计.md)：界面交互与截图验收。
 - [算力与六卡兼容](docs/05_算力预算与六卡兼容.md)：1–6 张 RTX 4090D 的规划边界。
 - [部署说明](deploy/README.md)：Vue 网关、容器模板和本地模型接入边界。
-- [变更记录](CHANGELOG.md)、[贡献指南](CONTRIBUTING.md)、[安全说明](SECURITY.md)。
+- [变更记录](CHANGELOG.md)、[贡献指南](CONTRIBUTING.md)、[安全说明](SECURITY.md)和 [第三方声明](NOTICE)。
 
 ## 挑战与解决方案
 
@@ -359,4 +359,4 @@ npm run test:e2e
 
 贡献流程、提交约定和本地检查见 [CONTRIBUTING.md](CONTRIBUTING.md)。安全边界和敏感信息处理见 [SECURITY.md](SECURITY.md)。
 
-项目目前用于笔试原型和内部评审，许可证待仓库所有者选择；在补充许可证前，请不要把代码当作已授权的开源软件分发。
+项目目前是可复现的笔试原型，代码按 MIT 许可证分发；第三方数据、模型和源码不因本项目许可证获得额外授权。

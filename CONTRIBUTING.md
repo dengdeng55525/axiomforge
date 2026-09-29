@@ -13,7 +13,7 @@ python scripts/verify_data.py
 cd web && npm ci
 ```
 
-不要提交 `.env`、API Key、私有 SQLite、完整运行日志、未脱敏模型请求响应或本机生成的 `artifacts/`。
+不要提交 `.env`、API Key、本地 SQLite、完整运行日志、未脱敏模型请求响应或本机生成的 `artifacts/`。
 
 ## 修改前先确定边界
 

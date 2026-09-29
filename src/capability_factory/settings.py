@@ -1,4 +1,4 @@
-"""Load private provider settings without exporting credentials to child workers."""
+"""Load provider settings without exporting credentials to child workers."""
 
 import os
 from pathlib import Path

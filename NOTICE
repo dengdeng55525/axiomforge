@@ -1,0 +1,10 @@
+AlgoForge is distributed under the MIT License; see [LICENSE](LICENSE).
+
+Third-party data, model weights, APIs and source excerpts retain their own terms:
+
+- UCI Bank Marketing and SMS Spam Collection data are provided by their respective UCI dataset terms and citations. See `docs/02_数据与知识来源.md` and `docs/SOURCES.md`.
+- scikit-learn, NumPy, pandas, FastAPI, Vue, D3, Lucide and other dependencies remain under their own licenses.
+- DeepSeek, Qwen and vLLM names, services and model weights are not distributed by this repository and remain subject to their providers' terms.
+- Screenshots and reference interaction ideas from third-party projects are documented; no third-party private assets or business code are included.
+
+Before redistributing data, model outputs or generated artifacts, review the applicable upstream terms.
