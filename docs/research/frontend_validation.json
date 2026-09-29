@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "validated_at_utc": "2026-09-29",
+  "scope": "Vue workbench, FastAPI UI gateway, graph explorer and readable reports",
+  "frontend": {
+    "build_command": "cd web && npm run build",
+    "build_status": "passed",
+    "browser_command": "cd web && npm run test:e2e",
+    "browser_tests_passed": 19,
+    "browser_tests_failed": 0,
+    "coverage": [
+      "workbench scenario and budget submission",
+      "duplicate-submit and Chinese input behavior",
+      "history filtering and error states",
+      "responsive navigation and keyboard focus",
+      "graph filtering, focus, bounded payload and evidence links",
+      "report metrics, folded intermediate states, exports, cancel and polling"
+    ],
+    "screenshots": [
+      "docs/images/workbench-overview.png",
+      "docs/images/workbench-graph.png",
+      "docs/images/workbench-report.png"
+    ]
+  },
+  "python": {
+    "command": ".venv/bin/pytest -q tests ui",
+    "tests_passed": 358,
+    "tests_failed": 0,
+    "warnings": 2,
+    "lint_command": ".venv/bin/ruff check src scripts tests ui",
+    "lint_status": "passed",
+    "compileall_status": "passed"
+  },
+  "real_local_smoke": {
+    "api_port": 18080,
+    "ui_port": 18501,
+    "provider": "mock",
+    "run_id": "cb4b86e9449f429887455adff3c55e0d",
+    "run_status": "passed",
+    "page_errors": [],
+    "report_json_status": 200,
+    "report_markdown_status": 200,
+    "report_html_status": 200,
+    "artifact_index_status": 200,
+    "graph_explore_status": 200,
+    "mobile_or_desktop_horizontal_overflow": false
+  },
+  "limits": [
+    "No paid DeepSeek request was made in this validation.",
+    "Local 14B serving and four-GPU throughput were not claimed or benchmarked.",
+    "Docker image build was not executed in this environment."
+  ]
+}

@@ -2,7 +2,7 @@
 
 AlgoForge 将中文算法需求转成受控的 scikit-learn 管道代码，执行统一验证，依据错误进行有限修复，再把代码、指标、来源和失败经验写回知识库。主场景是**银行营销响应预测**，短信垃圾信息分类用于展示跨场景复用。项目对应 [LLM Agent 笔试原题](docs/source/exam.txt)。
 
-当前已经有 Python 工作流、DeepSeek API、SQLite 知识图谱、CLI、FastAPI、Streamlit 和自动报告。此次 [模型发现记录](docs/research/deepseek_model_discovery.json) 将 **DeepSeek-V4.1-Flash** 对应到 API ID **deepseek-flash**。真实、mock 与历史记录明确区分，不把模拟输出当作真实模型成绩。
+当前已经有 Python 工作流、DeepSeek API、SQLite 知识图谱、CLI、FastAPI、Vue 交互工作台和自动报告。Streamlit 保留为可选旧版界面。此次 [模型发现记录](docs/research/deepseek_model_discovery.json) 将 **DeepSeek-V4.1-Flash** 对应到 API ID **deepseek-flash**。真实、mock 与历史记录明确区分，不把模拟输出当作真实模型成绩。
 
 **当前默认使用云端 API，没有部署本地大模型。** 本地 14B 接入框架已经搭好：
 `four_gpu_14b` 为四个 Qwen2.5-Coder-14B AWQ 单卡副本（GPU 0–3、端口 8100–8103），
@@ -52,6 +52,15 @@ python -m capability_factory run \
 
 ## API 与中文界面
 
+中文工作台使用 Vue 3、TypeScript、Vite、D3 与 `@lucide/vue`。首次克隆后，在已安装 **Node.js 22.12+ 与 npm** 的环境中构建：
+
+~~~bash
+cd /root/algorithm-capability-factory
+./scripts/build_web.sh
+~~~
+
+脚本在 `web/` 执行 `npm ci` 和 `npm run build`，会先进行 TypeScript 检查再构建静态页面。仓库不提交 `web/node_modules/` 或 `web/dist/`；更新前端源码后应重新构建。
+
 在两个终端分别运行：
 
 ~~~bash
@@ -64,13 +73,18 @@ cd /root/algorithm-capability-factory
 ./scripts/start_ui.sh
 ~~~
 
-两个脚本会自动定位仓库和项目虚拟环境，因此不依赖当前终端位于哪个目录，也不会误用系统 `base` Python。首次使用仍需先按快速开始安装依赖。
+两个脚本会自动定位仓库和项目虚拟环境，因此不依赖当前终端位于哪个目录，也不会误用系统 `base` Python。首次使用仍需先按快速开始安装依赖。`start_ui.sh` 发现尚无前端构建时也会调用构建脚本；它默认启动 Vue 工作台网关。
 
-- 工作台：`http://127.0.0.1:8501`；四个视图为任务与监控、代码与报告、知识图谱、历史与资源。
+- 工作台：`http://127.0.0.1:8501/app/`；API 也直接提供同一界面：`http://127.0.0.1:8000/app/`。访问两个端口的根路径会跳转到工作台。
+- 六个页面：工作台概览、创建算法任务、单次运行与验证报告、知识探索、运行历史、模型与环境。Hash 路由可直接分享，例如 `/app/#/knowledge`。
+- 任务页以需求输入为中心，提供两个公开数据场景、推理后端与可折叠高级设置；报告先展示结论和候选比较，中间事件、规划、修复、资源及原始 JSON 按需展开。
+- 图谱支持拖拽、缩放、图例筛选、节点详情、1–2 跳聚焦、来源与验证路径，以及将能力用于新任务。
 - 自动生成的 OpenAPI 文档：`http://127.0.0.1:8000/docs`。
-- 主要接口：提交、运行状态/事件/时间线、候选指标、资源、制品/报告、取消、能力列表与图导出。
+- 主要接口：提交、运行状态/事件/时间线、候选指标、资源、制品/报告、取消、能力列表、`GET /capabilities/{capability_id}` 与 `GET /graph/explore`；原始 `GET /graph` 保留。
 - UI 只通过 HTTP 访问后端，不执行生成代码、不读取模型凭证、不直接嵌入模型 HTML。
-- 页面中的“LLM 来源”支持 DeepSeek V4.1 API、本地 14B OpenAI 兼容接口和 Mock。本地选项只提交 `provider=local_http`，浏览器不会保存或传递 DeepSeek 密钥；`GET /config` 与 `GET /inference/profiles` 会显示四卡静态计划及 `planned_not_deployed` 状态。
+- 页面中的“推理后端”支持 DeepSeek V4.1 API、本地 14B OpenAI 兼容接口和 Mock。本地选项只提交 `provider=local_http`，浏览器不会保存或传递 DeepSeek 密钥；`GET /config` 与 `GET /inference/profiles` 会显示四卡静态计划及 `planned_not_deployed` 状态。
+
+界面交互参考了 [fenghuozhuan](https://github.com/bcxc-dd/fenghuozhuan) 的图谱浏览与报告交互，按本项目真实数据协议独立实现，没有复制参考仓库的私有图片、数据或业务代码。设计映射、页面入口与验收步骤见 [交互工作台与参考设计](docs/12_交互工作台与参考设计.md)。如需旧版 Streamlit，单独运行 `./scripts/start_legacy_ui.sh`，并避免与默认工作台占用同一端口。
 
 ~~~bash
 curl --noproxy '*' -sS http://127.0.0.1:8000/runs \
@@ -84,7 +98,7 @@ curl --noproxy '*' -sS http://127.0.0.1:8000/runs \
 
 ~~~mermaid
 flowchart LR
-  U[CLI / FastAPI / Streamlit] --> W[有预算的工作流]
+  U[CLI / FastAPI / Vue 工作台] --> W[有预算的工作流]
   W --> I[需求解释]
   I --> K[(SQLite 来源与能力图)]
   K --> P[规划与候选搜索]
@@ -111,9 +125,12 @@ flowchart LR
 | [datasets.py](src/capability_factory/datasets.py)、[metrics.py](src/capability_factory/metrics.py) | 哈希/切分/标签协议、独立指标计算 |
 | [execution/](src/capability_factory/execution) | 白名单构造、训练预测、接口/稳定性/资源检查 |
 | [reporting.py](src/capability_factory/reporting.py) | JSON、HTML、Markdown 报告与转义 |
-| [api.py](src/capability_factory/api.py)、[cli.py](src/capability_factory/cli.py)、[ui/](ui) | 队列、CLI、HTTP 与薄界面 |
+| [api.py](src/capability_factory/api.py)、[cli.py](src/capability_factory/cli.py) | 队列、CLI 与 HTTP 接口 |
+| [web/](web)、[webui.py](src/capability_factory/webui.py) | Vue 页面、D3 图谱、静态文件服务与同源网关 |
+| [graph_presentation.py](src/capability_factory/graph_presentation.py) | 有界图谱浏览、能力版本与实际验证证据展示 |
+| [ui/](ui) | 可选旧版 Streamlit 界面 |
 
-显式 Python 状态机便于复核决策、错误和预算。Pydantic 约束角色输出；SQLite 便于本地复现；NetworkX/Plotly 展示关系；scikit-learn 使算法训练可在 CPU 执行；FastAPI/Streamlit 分离后端与展示。无需大框架隐藏状态转移。
+显式 Python 状态机便于复核决策、错误和预算。Pydantic 约束角色输出；SQLite 便于本地复现；D3 提供可选中、拖拽和缩放的关系浏览；scikit-learn 使算法训练可在 CPU 执行；FastAPI 与 Vue 分离后端执行和交互展示。无需大框架隐藏状态转移。
 
 解释器、规划器、代码生成器、审查器和结果整理器使用独立合约与多次调用；摄取阶段另外使用抽取器。这是同一模型承担多角色，不能称作多个独立训练的模型，也不展示隐藏思维链。
 
@@ -201,9 +218,20 @@ python scripts/run_experiments.py --provider mock --suite smoke --repeats 1 \
   --profiles A,B,C,D --output artifacts/experiments/mock-smoke
 ~~~
 
+前端构建与浏览器交互检查：
+
+~~~bash
+./scripts/build_web.sh
+cd web
+npx playwright install chromium
+npm run test:e2e
+~~~
+
+浏览器测试通过固定 HTTP 响应验证任务提交、报告、异常状态及图谱交互，不调用付费模型。GitHub Actions 的 [frontend.yml](.github/workflows/frontend.yml) 安装 Chromium、构建并运行这些检查；测试成功不代表真实 LLM、GPU 或 Docker 已通过部署测试。
+
 运行器支持 mock/deepseek、smoke/full、配置与任务 ID 筛选；真实实验须显式选择 deepseek。smoke 每轮 8 次系统 run，full 每轮 48 次，三轮完整矩阵为 144 次。**存在运行器不代表这些实验已经完成。** 实际完成数量、失败分母、预算口径与结果以输出文件为准。
 
-测试涵盖数据契约、AST/参数限制、预测指标、资源执行、知识版本、API、编排、报告及 UI。UI AppTest 使用模拟 HTTP，不能替代真实 E2E。测试总数和执行时间交由自动验证索引记录，不在 README 手工填写通过数量。
+测试涵盖数据契约、AST/参数限制、预测指标、资源执行、知识版本、API、编排、报告及 UI。旧版 Streamlit AppTest 与新版 Playwright 都明确区分模拟 HTTP 和真实后端验收。测试总数和执行时间交由自动验证索引记录，不在 README 手工填写通过数量。
 
 ## 安全边界、挑战与扩展
 
@@ -230,9 +258,10 @@ python scripts/plan_inference.py --profile six_gpu_quality
 
 - [07 使用与演示指南](docs/07_使用与演示指南.md)：完整命令、界面、报告解释和答辩流程。
 - [11 前端与报告说明](docs/11_前端与报告说明.md)：结论层、证据层、原始 JSON 和 property graph 的展示边界。
+- [12 交互工作台与参考设计](docs/12_交互工作台与参考设计.md)：参考实现、六个页面、图谱交互与可执行验收。
 - [08 实现与验收对照](docs/08_实现与验收对照.md)：原题逐项映射、证据入口与真实剩余工作。
 - [01 实施总方案](docs/01_项目实施总方案.md)、[03 架构设计](docs/03_系统架构与接口.md)、[04 实验设计](docs/04_评测实验与演示.md)：设计与实验路线，未来项不自动算已实现。
 - [05 六卡兼容](docs/05_算力预算与六卡兼容.md)：后续部署、硬件预算及待实测内容。
 - [06 原始开发清单](docs/06_开发清单与验收矩阵.md)：早期计划；实际状态优先看 08 与证据。
 
-本地 Git 已启用，可用 `git log --oneline` 检查提交。**尚未替用户发布 GitHub 仓库，公开提交仍需用户上传/推送。** 发布前只纳入审核后的公开样例，不上传 .env、凭证、私有数据库或完整运行日志。数据及第三方源码归属见来源索引，项目代码许可证由所有者确定。
+项目远程仓库为 [dengdeng55525/algorithm-capability-factory](https://github.com/dengdeng55525/algorithm-capability-factory)，按所有者要求设为私有；访问需要相应权限。可用 `git log --oneline` 检查提交，`git status -sb` 检查本地同步状态。提交只纳入审核后的样例，不上传 .env、凭证、私有数据库或完整运行日志。数据及第三方源码归属见来源索引，项目代码许可证由所有者确定。

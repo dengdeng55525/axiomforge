@@ -18,3 +18,10 @@ artifacts/*
 .coverage
 coverage.xml
 htmlcov/
+
+# Frontend dependencies and generated local browser evidence
+web/node_modules/
+web/dist/
+web/test-results/
+web/playwright-report/
+web/.vite/
