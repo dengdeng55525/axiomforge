@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1.0",
-  "status": "design_only_inference_not_tested",
+  "status": "operator_managed_vllm",
   "default_max_model_len": 8192,
   "default_max_num_seqs": 2,
   "default_gpu_memory_utilization": 0.85,
@@ -70,172 +70,6 @@
         }
       ]
     },
-    "two_gpu": {
-      "gpu_count": 2,
-      "recommended_host_ram_gib": 64,
-      "groups": [
-        {
-          "name": "coder_a",
-          "gpu_ids": [
-            0,
-            1
-          ],
-          "tensor_parallel_size": 2,
-          "model": "coder32_awq",
-          "port": 8100
-        }
-      ]
-    },
-    "four_gpu": {
-      "gpu_count": 4,
-      "recommended_host_ram_gib": 128,
-      "groups": [
-        {
-          "name": "coder_a",
-          "gpu_ids": [
-            0,
-            1,
-            2,
-            3
-          ],
-          "tensor_parallel_size": 4,
-          "model": "coder32_bf16",
-          "port": 8100
-        }
-      ]
-    },
-    "six_gpu": {
-      "gpu_count": 6,
-      "recommended_host_ram_gib": 128,
-      "groups": [
-        {
-          "name": "coder_a",
-          "gpu_ids": [
-            0,
-            1
-          ],
-          "tensor_parallel_size": 2,
-          "model": "coder32_awq",
-          "port": 8100
-        },
-        {
-          "name": "coder_b",
-          "gpu_ids": [
-            2,
-            3
-          ],
-          "tensor_parallel_size": 2,
-          "model": "coder32_awq",
-          "port": 8101
-        },
-        {
-          "name": "coder_c",
-          "gpu_ids": [
-            4,
-            5
-          ],
-          "tensor_parallel_size": 2,
-          "model": "coder32_awq",
-          "port": 8102
-        }
-      ]
-    },
-    "six_gpu_replicas": {
-      "gpu_count": 6,
-      "recommended_host_ram_gib": 128,
-      "groups": [
-        {
-          "name": "coder_a",
-          "gpu_ids": [
-            0
-          ],
-          "tensor_parallel_size": 1,
-          "model": "coder14_awq",
-          "port": 8100
-        },
-        {
-          "name": "coder_b",
-          "gpu_ids": [
-            1
-          ],
-          "tensor_parallel_size": 1,
-          "model": "coder14_awq",
-          "port": 8101
-        },
-        {
-          "name": "coder_c",
-          "gpu_ids": [
-            2
-          ],
-          "tensor_parallel_size": 1,
-          "model": "coder14_awq",
-          "port": 8102
-        },
-        {
-          "name": "coder_d",
-          "gpu_ids": [
-            3
-          ],
-          "tensor_parallel_size": 1,
-          "model": "coder14_awq",
-          "port": 8103
-        },
-        {
-          "name": "coder_e",
-          "gpu_ids": [
-            4
-          ],
-          "tensor_parallel_size": 1,
-          "model": "coder14_awq",
-          "port": 8104
-        },
-        {
-          "name": "coder_f",
-          "gpu_ids": [
-            5
-          ],
-          "tensor_parallel_size": 1,
-          "model": "coder14_awq",
-          "port": 8105
-        }
-      ]
-    },
-    "six_gpu_quality": {
-      "gpu_count": 6,
-      "recommended_host_ram_gib": 128,
-      "groups": [
-        {
-          "name": "main_coder",
-          "gpu_ids": [
-            0,
-            1,
-            2,
-            3
-          ],
-          "tensor_parallel_size": 4,
-          "model": "coder32_bf16",
-          "port": 8100
-        },
-        {
-          "name": "helper_a",
-          "gpu_ids": [
-            4
-          ],
-          "tensor_parallel_size": 1,
-          "model": "coder7_awq",
-          "port": 8101
-        },
-        {
-          "name": "helper_b",
-          "gpu_ids": [
-            5
-          ],
-          "tensor_parallel_size": 1,
-          "model": "coder7_awq",
-          "port": 8102
-        }
-      ]
-    },
     "four_gpu_14b": {
       "gpu_count": 4,
       "recommended_host_ram_gib": 64,
@@ -247,7 +81,8 @@
           ],
           "tensor_parallel_size": 1,
           "model": "coder14_awq",
-          "port": 8100
+          "port": 8100,
+          "served_model_name": "coder14"
         },
         {
           "name": "coder_b",
@@ -256,7 +91,8 @@
           ],
           "tensor_parallel_size": 1,
           "model": "coder14_awq",
-          "port": 8101
+          "port": 8101,
+          "served_model_name": "coder14"
         },
         {
           "name": "coder_c",
@@ -265,7 +101,8 @@
           ],
           "tensor_parallel_size": 1,
           "model": "coder14_awq",
-          "port": 8102
+          "port": 8102,
+          "served_model_name": "coder14"
         },
         {
           "name": "coder_d",
@@ -274,13 +111,14 @@
           ],
           "tensor_parallel_size": 1,
           "model": "coder14_awq",
-          "port": 8103
+          "port": 8103,
+          "served_model_name": "coder14"
         }
       ]
     }
   },
   "local_runtime": {
-    "status": "planned_not_deployed",
+    "status": "operator_managed",
     "serving_stack": "vllm_openai_compatible",
     "transport": "openai_compatible_http",
     "default_profile": "four_gpu_14b",
@@ -290,6 +128,7 @@
     "requires_independent_deployment": true,
     "weights_downloaded_by_algoforge": false,
     "process_started_by_algoforge": false,
-    "notes": "Static plan only. Validate CUDA, driver, vLLM and model license before serving."
+    "notes": "Start four replicas with scripts/start_local_vllm.sh; validate CUDA, driver, vLLM and model license before serving.",
+    "endpoint_pool_env": "LOCAL_LLM_ENDPOINTS"
   }
 }

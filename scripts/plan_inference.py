@@ -38,6 +38,9 @@ def build_plan(config, profile_name, available_gpus=None):
         used_devices.update(devices)
         used_ports.add(group["port"])
         used_names.add(group["name"])
+        served_model_name = group.get("served_model_name", group["name"])
+        if not isinstance(served_model_name, str) or not served_model_name.strip():
+            raise ValueError("served_model_name must be a non-empty string")
         argv = [
             "vllm",
             "serve",
@@ -47,7 +50,7 @@ def build_plan(config, profile_name, available_gpus=None):
             "--tokenizer-revision",
             revision,
             "--served-model-name",
-            group["name"],
+            served_model_name,
             "--host",
             "127.0.0.1",
             "--port",
@@ -68,6 +71,7 @@ def build_plan(config, profile_name, available_gpus=None):
         endpoints.append(
             {
                 "name": group["name"],
+                "served_model_name": served_model_name,
                 "environment": {"CUDA_VISIBLE_DEVICES": ",".join(map(str, devices))},
                 "argv": argv,
                 "base_url": f"http://127.0.0.1:{group['port']}/v1",
@@ -89,6 +93,8 @@ def build_plan(config, profile_name, available_gpus=None):
             "measure host RAM and topology",
             "run real GPU smoke and load tests",
         ],
+        "endpoint_pool_env": "LOCAL_LLM_ENDPOINTS=" + ",".join(item["base_url"] for item in endpoints),
+        "served_model_name": endpoints[0]["served_model_name"] if endpoints else None,
     }
 
 

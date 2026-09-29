@@ -48,14 +48,22 @@ class HTTPProvider:
         self.deadline = None
         self.checkpoint = None
         self.model = settings.model if mode == "deepseek" else settings.local_model
-        self.base_url = (settings.base_url if mode == "deepseek" else settings.local_base_url).rstrip("/")
-        parsed = urlparse(self.base_url)
-        if parsed.username or parsed.password or parsed.query or parsed.fragment:
-            raise ProviderError("Provider URL must not contain credentials, query, or fragment")
-        if mode == "deepseek" and (parsed.scheme != "https" or parsed.hostname != "api.deepseek.com"):
-            raise ProviderError("DeepSeek credentials can only be sent to the official HTTPS host")
+        self.base_urls = ([settings.base_url.rstrip("/")] if mode == "deepseek" else settings.local_endpoints)
+        if not self.base_urls or any(not value for value in self.base_urls):
+            raise ProviderError("Provider URL is empty")
+        self._endpoint_index = 0
+        for endpoint in self.base_urls:
+            parsed = urlparse(endpoint)
+            if parsed.scheme not in {"http", "https"} or not parsed.hostname:
+                raise ProviderError("Provider URL must use HTTP(S) and include a host")
+            if parsed.username or parsed.password or parsed.query or parsed.fragment:
+                raise ProviderError("Provider URL must not contain credentials, query, or fragment")
+            if mode == "deepseek" and (parsed.scheme != "https" or parsed.hostname != "api.deepseek.com"):
+                raise ProviderError("DeepSeek credentials can only be sent to the official HTTPS host")
         if mode == "deepseek" and not settings.api_key.get_secret_value():
             raise ProviderError("DEEPSEEK_API_KEY is missing; configure an uncommitted .env or environment")
+        if mode == "local_http" and len(self.base_urls) > 1 and not settings.local_model:
+            raise ProviderError("LOCAL_LLM_MODEL is required when using a local endpoint pool")
 
     def metadata(self) -> dict:
         """Return UI-safe connection metadata without credentials or prompts."""
@@ -63,8 +71,9 @@ class HTTPProvider:
         return {
             "provider": self.mode,
             "model": self.model,
-            "base_url": self.base_url,
-            "authorization": "bearer" if self.mode == "deepseek" else "none",
+            "base_url": self.base_urls[0],
+            "base_urls": list(self.base_urls),
+            "authorization": "bearer" if self.mode == "deepseek" or self.settings.local_api_key.get_secret_value() else "none",
             "local_profile": self.settings.local_profile if self.mode == "local_http" else None,
             "deployment": "official_api" if self.mode == "deepseek" else "external_local_http",
         }
@@ -95,6 +104,8 @@ class HTTPProvider:
         headers = {"Content-Type": "application/json", "User-Agent": "AlgoForge/0.1"}
         if self.mode == "deepseek":
             headers["Authorization"] = "Bearer " + self.settings.api_key.get_secret_value()
+        elif self.settings.local_api_key.get_secret_value():
+            headers["Authorization"] = "Bearer " + self.settings.local_api_key.get_secret_value()
         prompt_hash = hashlib.sha256(json.dumps(messages, ensure_ascii=False).encode()).hexdigest()
         for attempt in range(2):
             if self.checkpoint:
@@ -109,8 +120,13 @@ class HTTPProvider:
                 raise BudgetExceeded("LLM call budget exhausted during retry")
             self.usage.calls += 1
             started = time.monotonic()
+            endpoint = self.base_urls[self._endpoint_index % len(self.base_urls)]
+            # Advance before issuing the request so a failed replica moves to
+            # the next one and concurrent provider instances naturally share
+            # the pool without requiring a central load balancer.
+            self._endpoint_index = (self._endpoint_index + 1) % len(self.base_urls)
             try:
-                response = httpx.post(self.base_url + "/chat/completions", headers=headers, json=body,
+                response = httpx.post(endpoint + "/chat/completions", headers=headers, json=body,
                                       timeout=timeout, follow_redirects=False, trust_env=False)
             except httpx.TransportError as error:
                 if attempt == 0:
@@ -135,6 +151,7 @@ class HTTPProvider:
                 if not isinstance(content, str):
                     raise ResponseContractError("Provider response content must be a string")
                 record = {"role": role, "requested_model": self.model, "returned_model": remote.get("model"),
+                          "endpoint": endpoint,
                           "response_id": remote.get("id"), "system_fingerprint": remote.get("system_fingerprint"),
                           "prompt_sha256": prompt_hash, "response_sha256": hashlib.sha256(content.encode()).hexdigest(),
                           "input_tokens": input_count, "output_tokens": output_count,

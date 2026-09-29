@@ -13,7 +13,13 @@ class Settings(BaseModel):
     base_url: str = "https://api.deepseek.com"
     model: str = "deepseek-flash"
     local_base_url: str = "http://127.0.0.1:8100/v1"
-    local_model: str = "coder_a"
+    # Optional comma-separated pool of OpenAI-compatible local endpoints.  A
+    # single endpoint remains the default for backwards compatibility; when
+    # four 4090D replicas are running set LOCAL_LLM_BASE_URLS to all four
+    # URLs and the provider will spread requests across them.
+    local_base_urls: str = ""
+    local_api_key: SecretStr = Field(default=SecretStr(""), repr=False)
+    local_model: str = "coder14"
     # Static deployment plan selected for an independently managed local server.
     # This setting never downloads weights or starts a process.
     local_profile: str = "four_gpu_14b"
@@ -30,6 +36,25 @@ class Settings(BaseModel):
     def runs_dir(self) -> Path:
         return self.root / "artifacts" / "runs"
 
+    @property
+    def local_endpoints(self) -> list[str]:
+        """Return the configured local endpoint pool in deterministic order."""
+
+        values = [item.strip().rstrip("/") for item in self.local_base_urls.split(",") if item.strip()]
+        if not values:
+            base = self.local_base_url.rstrip("/")
+            # The four-card profile is four independent 14B replicas.  Make
+            # that pool usable out of the box while retaining a custom
+            # single-endpoint URL for development and one-card machines.
+            if self.local_profile == "four_gpu_14b" and base.endswith(":8100/v1"):
+                host_prefix = base[: -len(":8100/v1")]
+                values = [host_prefix + f":{port}/v1" for port in range(8100, 8104)]
+            else:
+                values = [base]
+        # Keep the first occurrence only; duplicate replicas would skew the
+        # round-robin scheduler and usually indicate a typo in .env.
+        return list(dict.fromkeys(values))
+
 
 def load_settings(root: Path | str | None = None) -> Settings:
     project = Path(root or os.environ.get("ALGOFORGE_ROOT") or Path(__file__).resolve().parents[2]).resolve()
@@ -44,6 +69,8 @@ def load_settings(root: Path | str | None = None) -> Settings:
         base_url=value("DEEPSEEK_BASE_URL", "https://api.deepseek.com"),
         model=value("DEEPSEEK_MODEL", "deepseek-flash"),
         local_base_url=value("LOCAL_LLM_BASE_URL", "http://127.0.0.1:8100/v1"),
-        local_model=value("LOCAL_LLM_MODEL", "coder_a"),
+        local_base_urls=value("LOCAL_LLM_ENDPOINTS", value("LOCAL_LLM_BASE_URLS", "")),
+        local_api_key=SecretStr(value("LOCAL_LLM_API_KEY", "")),
+        local_model=value("LOCAL_LLM_MODEL", "coder14"),
         local_profile=value("LOCAL_LLM_PROFILE", "four_gpu_14b"),
     )
