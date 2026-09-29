@@ -17,11 +17,14 @@ def main() -> int:
     args = parser.parse_args()
     settings = load_settings(Path(__file__).resolve().parents[1])
     rows = []
+    headers = {}
+    if settings.local_api_key.get_secret_value():
+        headers["Authorization"] = "Bearer " + settings.local_api_key.get_secret_value()
     for endpoint in settings.local_endpoints:
         row = {"endpoint": endpoint, "healthy": False}
         try:
-            response = httpx.get(endpoint.removesuffix("/v1") + "/health", timeout=args.timeout,
-                                 follow_redirects=False, trust_env=False)
+            response = httpx.get(endpoint.removesuffix("/v1") + "/health", headers=headers,
+                                 timeout=args.timeout, follow_redirects=False, trust_env=False)
             row["health_status"] = response.status_code
             row["healthy"] = response.status_code == 200
             try:
