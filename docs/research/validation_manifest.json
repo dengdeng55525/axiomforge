@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "purpose": "Single index for the latest repository validation evidence",
-  "code_validation_commit": "241e4e0d7480d469357f1f7d5457b018f287af1e",
+  "code_validation_commit": "352df392067158d0583d08ec645c218528c21a66",
   "validated_at_utc": "2026-09-29",
   "backend": {
     "command": ".venv/bin/pytest -q tests ui",
@@ -18,9 +18,20 @@
     "browser_failed": 0,
     "evidence": "frontend_validation.json"
   },
+  "local_inference": {
+    "profile": "four_gpu_14b",
+    "model": "Qwen/Qwen2.5-Coder-14B-Instruct-AWQ",
+    "replicas": 4,
+    "served_model_name": "coder14",
+    "ports": [8100, 8101, 8102, 8103],
+    "planner_command": ".venv/bin/python scripts/plan_inference.py --profile four_gpu_14b --available-gpus 4",
+    "launcher_dry_run": "passed",
+    "gpu_runtime": "not measured in this CPU environment",
+    "provider": "local_http with LOCAL_LLM_ENDPOINTS round robin and retry"
+  },
   "remote_ci": {
-    "cpu": "https://github.com/dengdeng55525/algorithm-capability-factory/actions/runs/36577284924",
-    "web": "https://github.com/dengdeng55525/algorithm-capability-factory/actions/runs/36577284989",
+    "cpu": "https://github.com/dengdeng55525/algorithm-capability-factory/actions/runs/36584427798",
+    "web": "https://github.com/dengdeng55525/algorithm-capability-factory/actions/runs/36584427771",
     "status": "success"
   },
   "real_local_smoke": {
@@ -42,5 +53,5 @@
     "Docker and OS-level sandbox deployment were not executed.",
     "preparation_checks.json is an early preparation snapshot, not final validation."
   ],
-  "documentation_commit": "241e4e0d7480d469357f1f7d5457b018f287af1e"
+  "documentation_commit": "352df392067158d0583d08ec645c218528c21a66"
 }
