@@ -6,14 +6,21 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 from urllib.parse import urlsplit, urlunsplit
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import HTMLResponse, PlainTextResponse
 
 from capability_factory.contracts import RunRequest
+from capability_factory.graph_presentation import (
+    capability_detail,
+    explore_graph,
+    quality_label,
+    summarize_checks,
+)
 from capability_factory.inference import load_inference_profiles, local_profile_metadata
 from capability_factory.knowledge import KnowledgeStore
 from capability_factory.reporting import render_html, render_markdown
 from capability_factory.settings import Settings, load_settings
+from capability_factory.webui import mount_workbench
 from capability_factory.workflow import Workflow, now
 
 
@@ -219,7 +226,10 @@ def _metric_summary(report: dict) -> dict:
             "parent_id": candidate.get("parent_id") or plan.get("parent_id"),
             "status": candidate.get("status"),
             "quality_status": candidate.get("quality_status"),
+            "quality_label": quality_label(candidate.get("quality_status")),
             "metrics": metrics,
+            "checks": summarize_checks(candidate.get("checks"))["items"],
+            "checks_summary": summarize_checks(candidate.get("checks")),
         })
     scored = [(row["candidate_id"], row["metrics"].get("average_precision")) for row in rows
               if isinstance(row["metrics"].get("average_precision"), (int, float))]
@@ -417,6 +427,9 @@ def create_app(settings: Settings | None = None):
         metric_report = _metric_summary(report)
         resource_report = _resource_summary(report)
         all_events = report.get("events") if isinstance(report.get("events"), list) else []
+        selected = next((candidate for candidate in metric_report["candidates"]
+                         if candidate["candidate_id"] == report.get("selected_candidate_id")), {})
+        quality = report.get("quality_status") or selected.get("quality_status")
         return {
             "run_id": report.get("run_id"),
             "status": report.get("status"),
@@ -428,12 +441,20 @@ def create_app(settings: Settings | None = None):
             "created_at": report.get("created_at"),
             "finished_at": report.get("finished_at"),
             "selected_candidate_id": report.get("selected_candidate_id"),
-            "quality_status": report.get("quality_status"),
+            "quality_status": quality,
+            "quality_label": quality_label(quality),
             "candidate_count": metric_report["candidate_count"],
             "event_count": len(all_events),
             "metrics": metric_report,
             "resources": resource_report,
             "warnings": report.get("warnings", []),
+            "validation": {
+                "selected_candidate_id": report.get("selected_candidate_id"),
+                "checks": selected.get("checks_summary", summarize_checks(None)),
+                "quality_status": quality,
+                "quality_label": quality_label(quality),
+                "quality_gate_note": "AP 基线比较为验证集建议性门槛，不代表生产就绪或封存测试集成绩。",
+            },
         }
 
     @app.get("/runs/{run_id}/report.html", response_class=HTMLResponse)
@@ -482,8 +503,43 @@ def create_app(settings: Settings | None = None):
     def capabilities():
         return {"capabilities": manager.store.list_capabilities()}
 
+    @app.get("/capabilities/{capability_id}")
+    def capability(capability_id: str, version: int | None = Query(None, ge=1)):
+        """Inspect the latest or a specific immutable capability version."""
+        try:
+            return capability_detail(manager.store, capability_id, version)
+        except KeyError:
+            raise HTTPException(404, "Unknown capability or version") from None
+
+    @app.get("/graph/explore")
+    def graph_explore(
+        focus: str | None = Query(None, max_length=512),
+        hops: int = Query(1, ge=1, le=2),
+        kinds: str = Query("", max_length=512),
+        relations: str = Query("", max_length=1024),
+        q: str = Query("", max_length=200),
+        limit: int = Query(120, ge=1, le=500),
+        edge_limit: int = Query(300, ge=0, le=1500),
+    ):
+        """Bounded graph overview or neighborhood with auditable evidence.
+
+        Kinds and relations accept comma-separated exact values. Relationships
+        constrain traversal; kind/text filters constrain display, preserving an
+        existing focus node. The legacy unfiltered /graph endpoint is unchanged.
+        """
+        try:
+            return explore_graph(
+                manager.store, focus=focus or None, hops=hops,
+                kinds=[value.strip() for value in kinds.split(",") if value.strip()],
+                relations=[value.strip() for value in relations.split(",") if value.strip()],
+                query=q, limit=limit, edge_limit=edge_limit,
+            )
+        except KeyError:
+            raise HTTPException(404, "Unknown graph focus node") from None
+
     @app.get("/graph")
     def graph():
         return manager.store.graph()
 
+    mount_workbench(app, settings.root)
     return app

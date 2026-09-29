@@ -17,7 +17,7 @@ services:
     build:
       context: ..
       dockerfile: deploy/Dockerfile
-    command: ["streamlit", "run", "ui/app.py", "--server.address", "0.0.0.0", "--server.port", "8501", "--server.headless", "true"]
+    command: ["uvicorn", "capability_factory.webui:create_ui_app", "--factory", "--host", "0.0.0.0", "--port", "8501"]
     environment:
       ALGOFORGE_API_URL: http://api:8000
     ports: ["127.0.0.1:8501:8501"]
