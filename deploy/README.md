@@ -50,7 +50,7 @@ LOCAL_LLM_PROFILE=four_gpu_14b \
   ./scripts/start_local_vllm.sh
 ~~~
 
-启动脚本由部署者管理 vLLM 子进程；AlgoForge 仍只通过 HTTP 调用。四个服务的轮询、健康检查、并发和故障摘除由 local_http Provider 负责，性能测量仍需在目标机器单独完成。
+启动脚本由部署者管理 vLLM 子进程；AlgoForge 仍只通过 HTTP 调用。`local_http` Provider 负责端点轮询和失败重试，`scripts/check_local_llm.py` 负责主动健康检查；并发上限、熔断和故障摘除策略需在目标机器按实际部署验证，性能测量也单独记录。
 
 独立部署后，将项目 `.env` 配置为实际服务。规划脚本给四个服务指定共享的模型别名为 `coder14`，请求必须使用该服务别名而非自动假定模型仓库名称：
 
