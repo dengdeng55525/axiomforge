@@ -10,7 +10,7 @@ AlgoForge 是面向 LLM Agent 笔试场景的小型可复现原型。它以**银
 
 ## 项目背景与目标
 
-真实团队的算法能力通常分散在需求文档、历史代码、实验记录和专家经验里。AlgoForge 的目标不是让 LLM 任意执行代码，而是把这些能力转成有来源的结构化知识，再在固定数据协议和受限执行器中复刻、验证并沉淀。这样可以同时回答“为什么选这个算法”“代码是否能运行”“指标是否真实”“失败经验是否可复用”。
+真实团队的算法能力通常分散在需求文档、历史代码、实验记录和专家经验里。AlgoForge 将这些能力转成有来源的结构化知识，再按照固定数据协议和受限执行器完成复刻、验证与沉淀。系统为算法选择依据、代码可运行性、指标事实和失败经验复用提供统一证据。
 
 本原型面向题面要求的可复核闭环，主场景只选择一个具体业务问题：银行客户是否订购定期存款。SMS 分类用于证明相同编排和报告接口可以迁移到文本任务。
 
@@ -29,7 +29,7 @@ AlgoForge 是面向 LLM Agent 笔试场景的小型可复现原型。它以**银
 
 ![验证报告](docs/images/workbench-report.png)
 
-截图只是界面证据；真实指标、运行状态和代码哈希以运行报告为准。
+截图用于展示界面；真实指标、运行状态和代码哈希统一读取运行报告。
 
 ## 60 秒离线体验
 
@@ -60,7 +60,7 @@ python -m capability_factory report RUN_ID --format markdown --output artifacts/
 python -m capability_factory report RUN_ID --format html --output artifacts/demo-report.html
 ```
 
-Mock 代表语言模型响应采用确定性规则，仍会执行真实的数据处理和算法验证；它不能作为真实 LLM 生成质量结论。
+Mock 使用确定性规则生成语言模型响应，同时执行真实的数据处理和算法验证；真实 LLM 生成质量请查看 `mode=real` 的运行报告。
 
 ## 启动 Web 工作台
 
@@ -94,7 +94,7 @@ Mock 代表语言模型响应采用确定性规则，仍会执行真实的数据
 | 运行历史 | `/app/#/history` | 搜索、过滤和复用历史任务 |
 | 模型与环境 | `/app/#/settings` | 查看 API、本地 14B 规划和执行边界 |
 
-`start_ui.sh` 和 `start_api.sh` 会从脚本位置定位项目根目录，不依赖当前 shell 所在目录，也不会误用系统 `base` Python。旧版 Streamlit 入口保留在 `scripts/start_legacy_ui.sh`，默认 Vue 工作台是交付入口。
+`start_ui.sh` 和 `start_api.sh` 从脚本位置定位项目根目录，并使用项目配置的 Python 环境。旧版 Streamlit 入口保留在 `scripts/start_legacy_ui.sh`，默认 Vue 工作台是交付入口。
 
 ## 使用 DeepSeek API
 
@@ -120,7 +120,7 @@ python -m capability_factory run \
   --description '预测银行定期存款订购，禁止通话后特征，按验证集 AP 选择方案并保留来源和修复证据。'
 ```
 
-`doctor --check-api` 只能证明端点可访问；完整 `run` 才能证明生成、验证和回写链路成功。真实 API 调用可能产生费用，浏览器不会读取或保存 API Key。
+`doctor --check-api` 用于检查端点连通性；完整 `run` 提供生成、验证和回写链路的运行证据。真实 API 调用可能产生费用，API Key 仅由服务端环境读取。
 
 ## 端到端闭环
 
@@ -139,21 +139,21 @@ flowchart TD
     I --> C
 ```
 
-每一步都写入结构化事件和事实字段；事件是工作流审计记录，不是隐藏思维链。工作流由同一个 LLM 按不同角色合约完成，文档不会把它包装成多个独立训练模型。
+每一步都写入结构化事件和事实字段，形成可追溯的工作流记录。工作流使用同一个 LLM 按不同角色合约完成，每个角色拥有独立的提示词、输入和输出结构。
 
 ## Agent 角色与职责
 
-AlgoForge 使用“单模型、多角色、显式状态机”的编排方式。DeepSeek、本地 OpenAI 兼容模型和 Mock 都实现同一套 Provider 接口；运行时可以让同一个模型先后承担不同角色。角色不是拥有独立权限的多个模型，每个角色都有固定提示词、输入字段和 Pydantic 输出合约，真正的代码执行和指标计算由本地验证器完成。
+AlgoForge 使用“单模型、多角色、显式状态机”的编排方式。DeepSeek、本地 OpenAI 兼容模型和 Mock 都实现同一套 Provider 接口；运行时由同一个模型先后承担不同角色。每个角色都有固定提示词、输入字段和 Pydantic 输出合约，代码执行和指标计算由本地验证器完成。
 
 | Agent 角色 | 代码位置 | 职责 | 结构化输出 |
 | --- | --- | --- | --- |
-| `interpreter` 需求解释 | [prompts.py](src/capability_factory/prompts.py) `INTERPRETER`、[workflow.py](src/capability_factory/workflow.py) `ask` | 将自然语言需求转换成目标、特征约束、假设、警告和资源预算；不能修改数据协议 | `TaskInterpretation` |
+| `interpreter` 需求解释 | [prompts.py](src/capability_factory/prompts.py) `INTERPRETER`、[workflow.py](src/capability_factory/workflow.py) `ask` | 将自然语言需求转换成目标、特征约束、假设、警告和资源预算；数据协议保持由系统配置管理 | `TaskInterpretation` |
 | `planner` 方案规划 | `PLANNER`、[workflow.py](src/capability_factory/workflow.py) `make_plans` | 根据任务协议和知识证据设计候选算法、变体、理由和父子关系；负责 Beam Search 的候选扩展 | `PlanSet` / `CandidatePlan` |
-| `coder` 代码生成 | `CODER`、[workflow.py](src/capability_factory/workflow.py) `execute_plan` | 按候选方案生成一个受限 sklearn Pipeline 构造程序；不能读数据、访问网络或执行任意 Python | `GeneratedCode` |
-| `reviewer` 错误审查 | `REVIEWER`、[workflow.py](src/capability_factory/workflow.py) 修复分支 | 阅读验证器的实际错误，给出诊断、具体修复方式和是否可修复；不能修改验证器或评估协议 | `Review` |
+| `coder` 代码生成 | `CODER`、[workflow.py](src/capability_factory/workflow.py) `execute_plan` | 按候选方案生成受限 sklearn Pipeline 构造程序；代码访问范围固定为允许的构造器 | `GeneratedCode` |
+| `reviewer` 错误审查 | `REVIEWER`、[workflow.py](src/capability_factory/workflow.py) 修复分支 | 阅读验证器的实际错误，给出诊断、具体修复方式和是否可修复；验证器与评估协议由系统管理 | `Review` |
 | `repair_coder` 代码修复 | `CODER` + `previous_code`/`review`、[workflow.py](src/capability_factory/workflow.py) 修复分支 | 根据 reviewer 建议生成下一次代码，受 `max_repairs` 限制后重新验证 | `GeneratedCode` |
-| `curator` 结果总结 | `CURATOR`、[workflow.py](src/capability_factory/workflow.py) 候选比较分支 | 汇总本地验证器已经计算的候选结果，说明选择依据、失败候选和限制；不能编造指标 | `Explanation` |
-| `extractor` 能力抽取 | `EXTRACTOR`、[prompts.py](src/capability_factory/prompts.py) | 初始化或更新知识库时，从批准的文档/代码片段抽取带来源的能力卡片；不能声称未经验证的能力已经通过 | 能力卡片集合 |
+| `curator` 结果总结 | `CURATOR`、[workflow.py](src/capability_factory/workflow.py) 候选比较分支 | 汇总本地验证器已经计算的候选结果，说明选择依据、失败候选和限制；指标全部引用验证器结果 | `Explanation` |
+| `extractor` 能力抽取 | `EXTRACTOR`、[prompts.py](src/capability_factory/prompts.py) | 初始化或更新知识库时，从批准的文档/代码片段抽取带来源的能力卡片；能力状态沿验证流程更新 | 能力卡片集合 |
 
 一次完整运行的角色顺序是：
 
@@ -165,7 +165,7 @@ interpreter → 知识检索 → planner → coder → 本地验证器
                          Beam 扩展与候选比较 → curator → 报告和知识回写
 ```
 
-下面这些模块不是 LLM Agent，而是确定性控制和裁判代码：`KnowledgeStore.search` 负责词项/图关系检索；`execution/compiler.py` 负责受限 AST 检查；`execution/runner.py` 负责子进程运行、接口检查和资源限制；`metrics.py` 负责在可信主进程计算指标。这样可以把“模型提出方案”和“系统判定是否通过”分开审计。
+确定性控制和验证模块包括：`KnowledgeStore.search` 负责词项/图关系检索；`execution/compiler.py` 负责受限 AST 检查；`execution/runner.py` 负责子进程运行、接口检查和资源限制；`metrics.py` 负责在可信主进程计算指标。模型提出方案，系统依据独立验证结果判定是否通过。
 
 角色的完整提示词和输出合约见 [prompts.py](src/capability_factory/prompts.py) 与 [contracts.py](src/capability_factory/contracts.py)。每次模型请求的角色、请求/响应文件、耗时和 token 统计会保存到 `artifacts/runs/<run_id>/llm/` 与报告的 `usage.records` 中，便于复盘真实 API 调用。
 
@@ -177,12 +177,12 @@ interpreter → 知识检索 → planner → coder → 本地验证器
 | LLM | DeepSeek HTTP Provider、Mock Provider、本地 HTTP Provider | 真实 API 可用；Mock 便于离线复现；本地路线可替换 |
 | 知识库 | SQLite + 属性图表 | 单机可复现，节点/关系/版本/来源可审计 |
 | 检索 | 词项匹配 + 有界图扩展，最多两跳 | 结果可解释，能展示证据路径；不虚称为向量检索 |
-| 算法执行 | 受限 AST 构造器 + 资源限制子进程 | 模型不能直接执行任意 Python 文本 |
+| 算法执行 | 受限 AST 构造器 + 资源限制子进程 | 执行范围限定为允许的算法构造语言 |
 | 验证 | scikit-learn 固定协议、AP/Dummy、接口和资源检查 | 算法候选使用统一分母和验证集 |
 | 服务 | FastAPI + CLI | 同一套后端同时服务命令行、API 和 Web |
 | 前端 | Vue 3 + TypeScript + D3 + Lucide | 报告、图谱和交互状态可清楚分层 |
 
-执行器不是完整 Docker、虚拟机或操作系统级沙箱；它只接受受支持的算法构造语言。公网部署前仍需认证、租户隔离和更强的沙箱。
+执行器采用受限 AST 构造语言和资源限制子进程。公网部署需要补充认证、租户隔离和强化运行时。
 
 ## 示例数据与任务
 
@@ -220,7 +220,7 @@ JSON 是 API/前端事实接口，GraphML 是离线交换格式；两者都从 S
 - Markdown：代码审查、答辩和版本控制友好。
 - HTML：阅读候选比较、检查、资源、修复和来源。
 
-报告首屏先显示运行结论、候选指标、基线和选择依据；计划、检索详情、修复链、代码和完整 JSON 默认折叠。`status`（工作流是否完成）和 `quality_status`（指标是否超过建议基线）分开表达；缺少检查或指标不会被显示为通过。
+报告首屏先显示运行结论、候选指标、基线和选择依据；计划、检索详情、修复链、代码和完整 JSON 默认折叠。`status` 表示工作流是否完成，`quality_status` 表示指标与建议基线的关系；缺少检查或指标的项目会标记为待评估。
 
 脱敏公开样例位于：
 
@@ -230,11 +230,11 @@ JSON 是 API/前端事实接口，GraphML 是离线交换格式；两者都从 S
 - [sms_transfer](examples/evidence/sms_transfer/)：文本分类迁移示例。
 - [knowledge_extraction.json](examples/evidence/knowledge_extraction.json)：能力抽取结果。
 
-每个样例的复现命令、报告字段和脱敏导出规则见 [examples/README.md](examples/README.md)。每个样例的 `manifest.json` 记录源报告哈希、模式、状态、文件哈希和省略内容。样例目录名不能替代报告中的真实 `mode`、`status` 和指标检查。
+每个样例的复现命令、报告字段和脱敏导出规则见 [examples/README.md](examples/README.md)。每个样例的 `manifest.json` 记录源报告哈希、模式、状态、文件哈希和省略内容；最终判断以报告中的 `mode`、`status` 和指标检查为准。
 
 ## 生成算法代码示例
 
-生成器输出受限的 `build_pipeline(task_spec)`，而不是任意 Python 程序。下面是公开 `bank_beam` 样例中被选中的逻辑回归候选节选；完整代码、验证 JSON 和 SHA256 位于 [bank_logistic_default](examples/evidence/bank_beam/candidates/bank_logistic_default/)。
+生成器输出受限的 `build_pipeline(task_spec)` 构造程序。下面是公开 `bank_beam` 样例中被选中的逻辑回归候选节选；完整代码、验证 JSON 和 SHA256 位于 [bank_logistic_default](examples/evidence/bank_beam/candidates/bank_logistic_default/)。
 
 ```python
 from sklearn.compose import ColumnTransformer
@@ -255,11 +255,11 @@ def build_pipeline(task_spec):
     return Pipeline([("prepare", prepare), ("model", model)])
 ```
 
-可信执行器负责训练、预测、正类概率映射、行号对齐和指标计算；模型生成的字符串不会直接 `exec`。这段代码只说明交付接口，不代表脱离固定 `TaskSpec` 后可以运行任意数据。
+可信执行器负责训练、预测、正类概率映射、行号对齐和指标计算；生成代码先经过构造器解析，再进入受限 worker。示例代码遵循固定 `TaskSpec` 交付接口。
 
 ## 验证结果与报告样例
 
-以下数值直接读取公开 `report.json`，均为 `validation_only`，`sealed_test_scored=false`；它们是历史运行事实，不是最终测试集成绩或 SLA：
+以下数值直接读取公开 `report.json`，均为 `validation_only`，`sealed_test_scored=false`；它们记录对应历史运行的验证结果，最终测试与 SLA 需要独立评估：
 
 | 样例 | mode/status | 候选 | 选中方案 | AP | 其他观测 |
 | --- | --- | ---: | --- | ---: | --- |
@@ -341,7 +341,7 @@ algorithm-capability-factory/
 └── README.md                       项目入口、复现步骤和评分要求对照
 ```
 
-这棵树是“职责地图”，本身不会参与运行。它的作用是让评审者和使用者能快速回答三个问题：某个题面要求由哪段代码实现、出现问题应该去哪里排查、增加新 Provider/任务/指标时应该放在哪里。运行时只沿着后端核心包执行，`web/` 通过 API 读取状态，`artifacts/runs/<run_id>/` 保存一次运行的事实证据。
+这棵树是“职责地图”，用于定位题面要求对应的代码、排查问题和扩展 Provider/任务/指标。运行时沿着后端核心包执行，`web/` 通过 API 读取状态，`artifacts/runs/<run_id>/` 保存一次运行的事实证据。
 
 ### 一次运行如何对应到代码
 
@@ -358,7 +358,7 @@ algorithm-capability-factory/
 | 9. 修复重试 | `workflow.py` 中 reviewer/repair_coder 分支 | `repairs`、`attempt_1/...`、失败经验 |
 | 10. 比较和沉淀 | `workflow.py` 的排序/curator + `reporting.py::write_report` + `knowledge.py::save_run/record_experience` | JSON/Markdown/HTML、SQLite 图谱、`RECORDED` 事件 |
 
-因此，报告里的事件不是“凭空生成的一群 JSON”：它们是上述函数每次完成一个边界动作时写入的审计记录；HTML/Markdown 是同一份结构化事实的适合人阅读的投影。
+报告里的事件由上述函数在每次完成边界动作时写入；HTML/Markdown 将同一份结构化事实转换为适合阅读的展示形式。
 
 ### 真实 DeepSeek 运行的阅读方法
 
@@ -413,14 +413,14 @@ npm run test:e2e
 | 挑战 | 当前方案 | 仍需注意 |
 | --- | --- | --- |
 | 通话时长造成标签泄漏 | 固定 pre-contact 特征白名单和 `duration` 禁用检查 | 只对已支持的银行协议负责 |
-| LLM 代码不可直接信任 | 受限 AST 构造器、可信 evaluator、资源限制子进程 | 尚非 OS 级沙箱 |
+| LLM 代码执行边界 | 受限 AST 构造器、可信 evaluator、资源限制子进程 | 当前运行时采用进程级资源限制；专用执行节点、容器强化或 microVM 属于后续部署项 |
 | API 费用和网络失败 | Mock 离线模式、Provider 明示、预算/超时/不确定提交保护 | 真实 API 账单以服务商为准 |
-| 图谱关系噪声 | 词项检索 + 有界 1/2 跳路径和来源哈希 | 尚非向量检索或企业级图数据库 |
-| 本地 14B/多卡落地 | OpenAI 兼容 Provider 和静态 profiles | 尚未下载权重、部署或测吞吐 |
+| 图谱关系噪声 | 词项检索 + 有界 1/2 跳路径和来源哈希 | 当前使用 SQLite 与 NetworkX；向量检索和企业级图数据库属于后续扩展 |
+| 本地 14B/多卡落地 | OpenAI 兼容 Provider 和静态 profiles | 当前保留接入配置，权重部署与吞吐测试列入目标机器验收 |
 
 ## 后续扩展方向
 
-以下方向标记为 planned，不能当作当前完成项：
+以下方向标记为 planned，属于后续开发项：
 
 1. **更强隔离**：接入专用执行节点、容器强化或 microVM，并验证网络/凭证/文件边界。
 2. **更严格评测**：建立能力抽取 gold、图检索消融、经验复用实验和固定预算的多轮重复。
@@ -430,11 +430,11 @@ npm run test:e2e
 
 ## 当前边界
 
-- 默认路线是 DeepSeek API；本地 Qwen2.5-Coder-14B AWQ、vLLM、四卡配置目前只是兼容框架和静态规划。
-- API、Mock、历史回放和本地模型状态严格区分；Mock 结果不是真实 LLM 质量。
-- 只支持固定的银行表格任务和 SMS 文本任务，不接受任意上传数据或任意 Python 代码。
+- 默认路线是 DeepSeek API；本地 Qwen2.5-Coder-14B AWQ、vLLM、四卡配置当前提供兼容框架和部署规划。
+- API、Mock、历史回放和本地模型状态严格区分；Mock 结果用于流程验证，真实 LLM 质量查看对应的 `mode=real` 报告。
+- 当前任务协议覆盖银行表格任务和 SMS 文本任务；数据集扩展需要新增任务协议，代码扩展需要通过受限构造器。
 - 当前服务是本机单用户原型，没有公网鉴权、租户隔离、持久队列或完整 OS 沙箱。
-- 任何性能、成本、修复率或跨任务提升都必须来自对应实验报告，不能从代码入口推导。
+- 性能、成本、修复率和跨任务提升统一以对应实验报告为准，代码入口只描述实现路径。
 
 ## 贡献、反馈与许可证
 

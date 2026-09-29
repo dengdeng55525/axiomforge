@@ -246,7 +246,7 @@ def render_stage_timeline(run: dict[str, Any], events: list[dict[str, Any]]) -> 
 
 def render_candidate_cards(candidates: list[dict[str, Any]], selected_id: str | None = None) -> None:
     if not candidates:
-        st.info("候选尚未生成，验证完成后会在这里显示对比卡片。")
+        st.info("当前暂无候选，验证完成后会在这里显示对比卡片。")
         return
     columns = st.columns(min(3, len(candidates)))
     for index, candidate in enumerate(candidates):
@@ -385,7 +385,7 @@ def render_human_report(run: dict[str, Any], summary: dict[str, Any] | None = No
         else:
             st.warning("交付建议：当前结果只适合作为失败复盘或继续修复的输入，不能作为生产模型结论。")
     elif not candidates:
-        st.caption("候选尚未生成。")
+        st.caption("当前暂无候选。")
 
     st.markdown("#### 候选对比")
     if candidates:
@@ -682,7 +682,7 @@ def draw_graph(nodes: list[dict[str, Any]], edges: list[dict[str, Any]]) -> None
 
 def knowledge_view() -> None:
     st.subheader("🧠 能力知识库与图谱")
-    st.caption("这里展示的是可追溯 property graph：能力、算法、数据、指标、来源、验证运行和失败经验是节点，USES / REQUIRES / EVALUATED_ON 等是有语义的关系。图不是装饰性连线。")
+    st.caption("这里展示可追溯 property graph：能力、算法、数据、指标、来源、验证运行和失败经验是节点，USES / REQUIRES / EVALUATED_ON 等关系携带明确语义。")
     try:
         payload = api("GET", "/capabilities")
         capabilities = records(payload.get("capabilities")) if isinstance(payload, dict) else []
@@ -815,7 +815,7 @@ def main() -> None:
                 if health.get("local_model_deployed"):
                     st.success("本地模型已连接")
                 else:
-                    st.info("本地 14B 接口尚未部署，选择 local_http 后可直接接入兼容服务。")
+                    st.info("当前本地 14B 接口状态为未部署；选择 local_http 后可接入兼容服务。")
             except RuntimeError as exc:
                 st.error(str(exc))
         with st.form("load_run"):

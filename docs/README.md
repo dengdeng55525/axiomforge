@@ -37,7 +37,7 @@
 - [data_audit.json](research/data_audit.json)：公开数据来源、哈希和切分事实。
 - [deepseek_model_discovery.json](research/deepseek_model_discovery.json)：模型名称与 API ID 的发现记录。
 - [code_source_audit.json](research/code_source_audit.json)：源码来源和许可审查。
-- [host_resources.json](research/host_resources.json)：机器资源观察，不等于性能承诺。
+- [host_resources.json](research/host_resources.json)：机器资源观察；性能结论以目标环境实测为准。
 
 ## 如何判断“已完成”
 

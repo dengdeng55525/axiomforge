@@ -26,8 +26,7 @@
       --database artifacts/knowledge.sqlite3 \
       --output artifacts/graph.graphml
 
-GraphML 是图谱交换副本，SQLite 仍是运行时事实源；导出脚本不会凭空补充能力、指标
-或验证状态。
+GraphML 是图谱交换副本，SQLite 仍是运行时事实源；导出脚本完整保留能力、指标和验证状态。
 
 initialize 可重复执行；SQLite 使用外键、WAL、短事务、30 秒 busy timeout。运行表使用 cf_ 前缀，不更改原有 schemas/knowledge_schema.sql 的设计测试。
 
@@ -35,10 +34,10 @@ initialize 可重复执行；SQLite 使用外键、WAL、短事务、30 秒 busy
 
 - UCI Bank 官方字段说明：duration、pdays、y、unknown。
 - UCI SMS README：标签与格式说明；不向抽取器传入示例短信、手机号或全量数据。
-- 当前安装的 scikit-learn：13 个 Python 类/函数，以 distribution metadata 定位，再由 ast.parse 读取。不会 import 或执行被摄取的源码。
+- 当前安装的 scikit-learn：13 个 Python 类/函数，以 distribution metadata 定位，再由 ast.parse 读取。源码仅做静态解析，摄取流程不执行源码。
 - 本项目数据协议：字段白名单、划分、防泄漏和经验准入。这些明确标为 original-project-notes，不冒称行业数据来源。
 - 只读取固定来源清单；不递归扫描工作区，不读取环境配置或凭据。
-- source locator 保存绝对本地路径、精确行区间，代码额外保存类/函数名、签名、导入和公开方法；本地文件哈希和源码版本决定证据身份。换机器后重新摄取可以生成新版本而不覆盖旧记录。
+- source locator 保存绝对本地路径、精确行区间，代码额外保存类/函数名、签名、导入和公开方法；本地文件哈希和源码版本决定证据身份。换机器后重新摄取可以生成新版本，旧记录持续保留。
 
 ## 接入 LLM 抽取
 
@@ -47,12 +46,12 @@ initialize 可重复执行；SQLite 使用外键、WAL、短事务、30 秒 busy
 一张最小候选卡包含 capability_id、name、summary、task_types 和 source_ids。source_ids 必须引用传入 source 中的真实 source_id。task_types 只允许 tabular_binary_classification 或 text_binary_classification；可附带 preconditions、dependencies、tags、uses、related、confidence、input_schema、output_schema。
 
 - LLM 卡统一标记 origin=llm_extracted、status=extracted。
-- 不接受虚构出处，不接受 LLM 覆盖人工种子 ID，不根据模型自己填写的 verified 字段授予验证状态。
+- 来源必须来自受控来源清单；人工种子 ID 保持稳定；verified 状态由验证运行授予。
 - 格式不合法的卡进入 summary.issues，其余合法卡继续入库。
-- 外部抽取器超时或失败会被明确记录；人工种子仍可使用，但 llm_extracted_cards=0，不能宣称 LLM 抽取成功。
+- 外部抽取器超时或失败会被明确记录；人工种子仍可使用，`llm_extracted_cards=0` 表示本次抽取没有产生有效卡片。
 - 同一能力内容变化会生成新整数版本与 SUPERSEDES 关系；相同内容去重。
 
-## 图检索为什么不是装饰
+## 图检索的作用
 
 先按 task_type 和知识状态过滤，使用中英文词项计算文本分数，再从前三个命中出发沿 USES、REQUIRES、AVOIDED_BY 最多两跳扩展。相关能力得到可审计的图加分。公用 Python/sklearn 环境依赖不参与加分，避免所有能力被共同依赖错误地视为相关。
 
@@ -60,20 +59,20 @@ initialize 可重复执行；SQLite 使用外键、WAL、短事务、30 秒 busy
 
 ## 运行、制品与经验回写
 
-- save_run 保存当前完整报告，并将不同内容追加到 cf_run_revisions；失败、取消和中间状态不会因后续成功而消失。
+- save_run 保存当前完整报告，并将不同内容追加到 cf_run_revisions；失败、取消和中间状态持续保留在修订历史中。
 - add_event 用短写事务分配单调序号，跨线程不重复；显式 event_id 可幂等重放。
 - candidate.attempts 的每一次代码哈希、路径、状态、错误和指标单独保存为制品，修复链有 REPAIRS 关系，计划引用有 IMPLEMENTS 关系。
-- record_experience(..., validated=False) 永久保存 proposed 经验，但不会让它进入可信修复卡检索。
+- record_experience(..., validated=False) 永久保存 proposed 经验；可信修复卡检索只使用 validated 经验。
 - validated=True 要求已保存成功运行，或者报告中存在匹配该修复的成功候选。先 save_run，再回写经验。证据保存 run_id 和当时报告哈希。
 - 已验证修复生成 verified 能力卡、DERIVED_FROM 与 AVOIDED_BY 关系。不同修复建议保留不同指纹，不静默覆盖冲突经验。
 
-当前数据库记录的是服务端验证器提供的证据；数据库本身不会重新运行算法，也不会证明外部调用者提供的报告真实。生产部署应限制只有受信任的服务进程能写数据库。
+当前数据库记录服务端验证器提供的证据；算法重跑由验证器负责，外部报告需要通过服务端写入流程进入数据库。生产部署限制只有受信任的服务进程能写数据库。
 
 ## 抽取标注与评测
 
-extraction_gold.json 包含 38 条人工参考断言，统计单位是字段/关系，不是 38 个独立能力。每条都绑定 source_key；同一来源可支持多条断言。
+extraction_gold.json 包含 38 条人工参考断言，统计单位是字段/关系，共计 38 条参考断言。每条都绑定 source_key；同一来源可支持多条断言。
 
-evaluate_assertions 位于 ingestion.py，计算规范化 subject/predicate/object/source_key 四元组的精确匹配 precision、recall、F1，返回假阳性、漏召回和出处键有效率。没有预测时 precision=None，不能伪造 100%。该评测是结构化抽取一致性，不能代替人工语义核验。真实评测时应只给模型原始来源与输出 schema，不能把 gold 答案放进提示词。当前提供的是标注集和评测工具，并不意味着已经完成真实模型抽取评测。
+evaluate_assertions 位于 ingestion.py，计算规范化 subject/predicate/object/source_key 四元组的精确匹配 precision、recall、F1，返回假阳性、漏召回和出处键有效率。没有预测时 precision=None。该评测衡量结构化抽取一致性，人工语义核验单独进行。真实评测时向模型提供原始来源与输出 schema，gold 答案保留在评测端。当前提供标注集和评测工具，真实模型抽取评测按独立运行记录。
 
 ## 验证
 

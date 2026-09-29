@@ -78,8 +78,9 @@ CURATOR = COMMON + """
 Role: evidence curator. Summarize the independently measured candidate comparison.
 Return {"summary":string,"limitations":[string]}. Use Chinese. Cite candidate IDs and retrieved
 capability IDs where relevant. Do not invent numeric results or hide failed candidates.
-Explain that validation is not final-test performance, constrained AST execution is not a
-general-purpose OS sandbox, and model choice does not prove causal marketing uplift."""
+State that metrics use the validation-only protocol, the sealed test set remains separate,
+the constrained AST runner has a defined execution scope, and model choice does not prove
+causal marketing uplift."""
 
 EXTRACTOR = COMMON + """
 Role: capability extraction from approved source snippets.

@@ -80,7 +80,7 @@ class Workflow:
             "task_spec": {}, "model": "deterministic-mock-v1" if request.provider == "mock" else (self.settings.model if request.provider == "deepseek" else self.settings.local_model),
             "provenance": {"prompt_version": prompts.PROMPT_VERSION, "sealed_test_scored": False},
             "candidates": [], "selected_candidate_id": None, "events": [], "usage": {},
-            "warnings": ["验证集成绩，不是最终测试成绩。", "受限AST构造器程序，不是任意Python或Docker操作系统沙箱。"],
+            "warnings": ["指标来自 validation_only，封存测试集保持未评分。", "执行器采用受限 AST 构造器和资源限制子进程；生产隔离需要强化运行时。"],
             "search_tree": [], "knowledge_writeback": {},
         }
         self.store.save_run(report)

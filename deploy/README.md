@@ -1,6 +1,6 @@
 # API / Web 部署
 
-默认界面是 Vue 工作台，FastAPI 提供 API 与静态页面；可选 8501 同源网关保留单独的界面端口。Dockerfile / compose.yaml 提供应用容器配置，**当前没有宣称镜像构建或容器部署已验收**。所有启动方式均不会下载或启动本地大模型。
+默认界面是 Vue 工作台，FastAPI 提供 API 与静态页面；可选 8501 同源网关保留单独的界面端口。Dockerfile / compose.yaml 提供应用容器配置，镜像构建和容器部署需要在目标环境完成验收。所有启动方式默认连接外部模型端点，模型权重按本地部署流程单独管理。
 
 ## 本机启动
 
@@ -22,7 +22,7 @@ cd /root/algorithm-capability-factory
 工作台为 `http://127.0.0.1:8501/app/`，API 也直接提供 `http://127.0.0.1:8000/app/`；接口文档是 `http://127.0.0.1:8000/docs`。根路径会跳转到 `/app/`。8501 网关只转发支持的 API 路由，不单独创建执行队列或读取模型凭证。
 
 脚本自动定位仓库并使用 `.venv`，不依赖激活 Conda base。
-`build_web.sh` 执行 `npm ci` 和 `npm run build`；`node_modules/` 与 `dist/` 不进入 Git。新克隆环境先构建，前端源码更新后重新构建。若 API 启动时缺少构建目录，`/app/` 返回明确提示；构建后重启服务以挂载页面。`start_ui.sh` 会在构建缺失时调用构建脚本，但不会替用户安装 Node.js。
+`build_web.sh` 执行 `npm ci` 和 `npm run build`；`node_modules/` 与 `dist/` 保持在 Git 忽略范围。新克隆环境先构建，前端源码更新后重新构建。若 API 启动时缺少构建目录，`/app/` 返回明确提示；构建后重启服务以挂载页面。`start_ui.sh` 会在构建缺失时调用构建脚本，Node.js 由目标环境提供。
 
 | 环境变量 | 默认值 | 含义 |
 | --- | --- | --- |
@@ -36,7 +36,7 @@ cd /root/algorithm-capability-factory
 
 ## 本地 14B / 四卡 4090D 接入
 
-本地模型使用 OpenAI 兼容 HTTP Provider。默认方案 `four_gpu_14b` 为四张卡各启动一个 `Qwen/Qwen2.5-Coder-14B-Instruct-AWQ` 副本，端口 8100–8103。GPU 分组、固定 revision、量化和 served model name 位于 [inference_profiles.json](../configs/inference_profiles.json)。
+本地模型使用 OpenAI 兼容 HTTP Provider。默认方案 `four_gpu_14b` 为四张卡各启动一个 `Qwen/Qwen2.5-Coder-14B-Instruct-AWQ` 副本，端口 8100–8103，16K 总上下文。GPU 分组、固定 revision、量化和 served model name 位于 [inference_profiles.json](../configs/inference_profiles.json)。
 
 ~~~bash
 .venv/bin/python scripts/plan_inference.py --profile four_gpu_14b --available-gpus 4
@@ -69,7 +69,7 @@ LOCAL_LLM_PROFILE=four_gpu_14b
 LOCAL_LLM_API_KEY=
 ~~~
 
-如果自行使用不同 `--served-model-name`，应同步修改 `LOCAL_LLM_MODEL`。重启 API 后，可用 `RunRequest(provider="local_http")` 或工作台中的本地模型选项提交任务。配置页展示 profile、端点池和执行边界；DeepSeek 密钥不会发送到本地端点。
+如果自行使用不同 `--served-model-name`，应同步修改 `LOCAL_LLM_MODEL`。重启 API 后，可用 `RunRequest(provider="local_http")` 或工作台中的本地模型选项提交任务。配置页展示 profile、端点池和执行边界；DeepSeek 密钥仅由 API 服务读取。
 
 ## 可选应用容器
 
@@ -83,6 +83,6 @@ docker compose -f deploy/compose.yaml build
 docker compose -f deploy/compose.yaml up -d
 ~~~
 
-API 容器读取本地 `.env`；UI 容器只设置 `ALGOFORGE_API_URL=http://api:8000`，不接收 DeepSeek 密钥。公开原始数据只读挂载，运行结果保存到命名 volume。API 总额度 4 CPU / 6 GiB，受限 worker 默认 2 CPU / 2 GiB；这些是配置上限，不是吞吐或内存实测。
+API 容器读取本地 `.env`；UI 容器只设置 `ALGOFORGE_API_URL=http://api:8000`，DeepSeek 密钥由 API 容器管理。公开原始数据以只读方式挂载，运行结果保存到命名 volume。API 总额度 4 CPU / 6 GiB，受限 worker 默认 2 CPU / 2 GiB；这些数值属于配置上限，吞吐和内存表现需要在目标环境实测。
 
-镜像使用非 root 用户，不等同于为每个候选提供独立操作系统沙箱；生成代码仍通过 AST 构造器检查和资源受限子进程运行。详细边界见 [worker 说明](worker/README.md)。容器部署需要在目标环境实际构建、启动和验证后再验收。
+镜像使用非 root 用户。生成代码经过 AST 构造器检查并在资源受限子进程中运行；每候选独立操作系统隔离需要更强的执行节点。详细边界见 [worker 说明](worker/README.md)。容器部署应在目标环境完成构建、启动和验证。

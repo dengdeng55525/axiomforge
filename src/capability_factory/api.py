@@ -460,7 +460,7 @@ def create_app(settings: Settings | None = None):
                 "checks": selected.get("checks_summary", summarize_checks(None)),
                 "quality_status": quality,
                 "quality_label": quality_label(quality),
-                "quality_gate_note": "AP 基线比较为验证集建议性门槛，不代表生产就绪或封存测试集成绩。",
+                "quality_gate_note": "AP 基线比较属于验证集建议性门槛；生产就绪与封存测试集成绩需要独立评估。",
             },
         }
 

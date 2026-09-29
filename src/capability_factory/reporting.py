@@ -18,8 +18,8 @@ MODE_LABELS = {
     "deepseek": "真实 LLM · DeepSeek API",
     "real": "真实 LLM 调用",
     "api": "真实 LLM · 外部 API",
-    "mock": "模拟 LLM · 不代表真实模型成绩",
-    "replay": "历史回放 · 非当前实时执行",
+    "mock": "模拟 LLM · 流程验证模式",
+    "replay": "历史回放 · 固定记录",
 }
 
 _CSS = """
@@ -151,8 +151,7 @@ def render_html(report: dict[str, Any]) -> str:
             "模型与版本": data.get("model"),
             "选中候选": data.get("selected_candidate_id"),
         }),
-        '<p class="muted">指标仅来自提供的验证记录。未记录表示缺失，不能视为零或通过。'
-        '运行结束不等同于质量、安全及泛化全部达标。</p></section>',
+        '<p class="muted">指标仅来自提供的验证记录。未记录项目显示为缺失，质量、安全和泛化能力分别查看对应检查与评估结果。</p></section>',
         "<section><h2>需求与约束</h2>",
         f"<p>{_escape(data.get('description'))}</p>",
         _pre(data.get("task_spec")),
@@ -161,7 +160,7 @@ def render_html(report: dict[str, Any]) -> str:
         "</section><section><h2>验证结果与候选比较</h2>",
         _candidate_table(candidates, data.get("selected_candidate_id")),
         '<p class="muted">仅同一任务、切分和预算下的指标适合直接比较。AP 指 average precision；'
-        '验证集选择成绩不能当作最终测试成绩。请结合 provenance 确认评测口径。</p>',
+        '候选选择依据验证集结果，最终测试集结果请结合 provenance 单独查看。</p>',
     ]
     for value in candidates:
         item = _mapping(value)
@@ -191,7 +190,7 @@ def render_html(report: dict[str, Any]) -> str:
              '</section><section class="warning"><h2>警告与局限</h2>',
              _pre(data.get("warnings")),
              '<p class="muted">mock 仅验证流程；replay 仅呈现历史记录。'
-             '多卡配置兼容不等于多卡部署已实测。数据和算法结论应以实际制品与验证证据为准。</p>',
+             '多卡配置提供接入规划；多卡部署结论以目标环境实测制品与验证证据为准。</p>',
              "</section><section><h2>事件与复现证据</h2>", _pre(data.get("events")),
              "</section><section><details><summary>完整原始报告</summary>",
              _pre(data), "</details></section>",

@@ -28,13 +28,13 @@ QUALITY_LABELS = {
     "above_prevalence": "验证集 AP 高于类别占比基线",
     "baseline_or_worse": "验证集 AP 未超过类别占比基线",
     "below_prevalence": "验证集 AP 未超过类别占比基线",
-    "not_evaluated": "尚未评估质量",
+    "not_evaluated": "待评估质量",
 }
 
 
 def quality_label(status: Any) -> str:
     """Translate only known states, keeping unknown persisted states visible."""
-    return QUALITY_LABELS.get(status, str(status) if status else "尚未评估质量")
+    return QUALITY_LABELS.get(status, str(status) if status else "待评估质量")
 
 
 def summarize_checks(value: Any) -> dict[str, Any]:
@@ -153,7 +153,7 @@ def _evidence(store: KnowledgeStore, focus: str, graph: dict, limit: int = 20) -
     }
     result["truncated"] = any(counts[key] > len(result[key]) for key in groups.values())
     result["scope"] = "stored_provenance_paths_up_to_two_hops"
-    result["interpretation"] = "关联证据不等同于能力已通过语义验证；请结合路径、运行模式、检查项与指标判断。"
+    result["interpretation"] = "关联证据需要结合路径、运行模式、检查项与指标，综合判断能力验证状态。"
     return result
 
 
