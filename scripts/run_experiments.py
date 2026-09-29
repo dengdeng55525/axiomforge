@@ -126,7 +126,7 @@ def build_plan(
 ) -> dict:
     from capability_factory.contracts import RunRequest
 
-    if provider not in {"mock", "deepseek"} or suite not in {"smoke", "full"}:
+    if provider not in {"mock", "deepseek", "local_http"} or suite not in {"smoke", "full"}:
         raise ValueError("Unsupported provider or suite")
     if type(repeats) is not int or not 1 <= repeats <= 100:
         raise ValueError("repeats must be an integer between 1 and 100")
@@ -511,7 +511,7 @@ def main(argv=None) -> int:
     from capability_factory.settings import load_settings
 
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--provider", choices=["mock", "deepseek"], default="mock")
+    parser.add_argument("--provider", choices=["mock", "deepseek", "local_http"], default="mock")
     parser.add_argument("--suite", choices=["smoke", "full"], default="smoke")
     parser.add_argument("--repeats", type=int, default=1)
     parser.add_argument("--output", type=Path)

@@ -28,14 +28,14 @@ def output(value):
 
 
 @app.command()
-def init(provider: Annotated[str, typer.Option(help="mock seeds only; deepseek performs real extraction")] = "mock"):
-    """Initialize knowledge and optionally extract capabilities using the real API."""
+def init(provider: Annotated[str, typer.Option(help="mock seeds only; deepseek or local_http performs real extraction")] = "mock"):
+    """Initialize knowledge and optionally extract capabilities with the selected provider."""
     settings = load_settings()
     store = KnowledgeStore(settings.db_path)
     store.initialize()
-    if provider not in {"mock", "deepseek"}:
-        raise typer.BadParameter("provider must be mock or deepseek")
-    remote = HTTPProvider(settings) if provider == "deepseek" else None
+    if provider not in {"mock", "deepseek", "local_http"}:
+        raise typer.BadParameter("provider must be mock, deepseek or local_http")
+    remote = HTTPProvider(settings, mode=provider) if provider in {"deepseek", "local_http"} else None
     extraction = {}
 
     def extractor(sources):
@@ -53,7 +53,7 @@ def init(provider: Annotated[str, typer.Option(help="mock seeds only; deepseek p
         summary["mode"] = "real_extraction" if remote and remote.usage.records else "manual_seed_ingestion"
         if remote:
             summary["usage"] = remote.usage.as_dict()
-            destination = settings.root / "artifacts" / "ingestion" / "deepseek_extraction.json"
+            destination = settings.root / "artifacts" / "ingestion" / f"{provider}_extraction.json"
             write_json(destination, {"created_at": now(), "summary": summary, **extraction})
             summary["extraction_artifact"] = str(destination)
         output({key: value for key, value in summary.items() if key not in {"sources", "source_manifest", "cards", "capabilities"}})
