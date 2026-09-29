@@ -1,0 +1,33 @@
+{
+  "name": "algoforge-workbench",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "playwright test",
+    "test:e2e": "playwright test",
+    "format:check": "prettier --check src tests *.ts index.html"
+  },
+  "dependencies": {
+    "vue": "^3.5.0",
+    "vue-router": "^4.5.0",
+    "d3": "^7.9.0",
+    "@lucide/vue": "^1.48.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.0",
+    "@types/d3": "^7.4.3",
+    "@types/node": "^22.0.0",
+    "@playwright/test": "^1.55.0",
+    "typescript": "~5.9.2",
+    "vite": "^7.1.0",
+    "vue-tsc": "^3.0.0",
+    "prettier": "^3.6.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
