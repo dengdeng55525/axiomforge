@@ -43,7 +43,7 @@ const localPlan = computed<Json>(
 );
 const commands = computed(
   () =>
-    `LOCAL_LLM_BASE_URL=${localPlan.value.base_url || "http://127.0.0.1:8100/v1"}\nLOCAL_LLM_MODEL=${localPlan.value.served_model || "coder_a"}\nLOCAL_LLM_PROFILE=${localPlan.value.profile || "four_gpu_14b"}`,
+    `LOCAL_LLM_BASE_URL=${localPlan.value.base_url || "http://127.0.0.1:8100/v1"}\nLOCAL_LLM_ENDPOINTS=${(localPlan.value.base_urls || []).join(",") || "http://127.0.0.1:8100/v1,http://127.0.0.1:8101/v1,http://127.0.0.1:8102/v1,http://127.0.0.1:8103/v1"}\nLOCAL_LLM_MODEL=${localPlan.value.served_model || "coder14"}\nLOCAL_LLM_PROFILE=${localPlan.value.profile || "four_gpu_14b"}`,
 );
 </script>
 <template>
@@ -121,7 +121,17 @@ const commands = computed(
             (p.id === "mock" ? "无需网络请求" : "未配置或地址无效")
           }}
         </dd>
+        <template v-if="p.id === 'local_http'">
+          <dt>端点池</dt>
+          <dd>{{ p.endpoint_count || 0 }} 个（8100–8103）</dd>
+        </template>
       </dl>
+      <RouterLink
+        class="btn btn-small provider-use"
+        :to="{ path: '/workbench', query: { provider: p.id } }"
+      >
+        <ArrowUpRight :size="14" />使用此后端
+      </RouterLink>
       <p v-if="p.id === 'local_http'" class="small-note">
         配置存在不等于推理服务已启动。此页面未执行连通性或 GPU 吞吐测试。
       </p>
@@ -251,6 +261,11 @@ const commands = computed(
 .backend-card .small-note {
   font-size: 10px;
   color: #ac975f;
+}
+.provider-use {
+  width: 100%;
+  margin-top: 1px;
+  color: var(--primary-dark);
 }
 .settings-lower {
   margin-top: 24px;

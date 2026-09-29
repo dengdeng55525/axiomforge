@@ -21,7 +21,12 @@ const config = {
   providers: {
     providers: [
       { id: "deepseek", available: true, model: "test-model" },
-      { id: "local_http", available: false },
+      {
+        id: "local_http",
+        available: false,
+        configured: true,
+        endpoint_count: 4,
+      },
       { id: "mock", available: true },
     ],
   },
@@ -80,6 +85,28 @@ test("scenario examples, dataset synchronization and budget validation preserve 
     max_seconds: 120,
   });
   expect(requests[0].description).toContain("短信垃圾");
+});
+test("provider switch selects the local four GPU endpoint pool without CLI flags", async ({
+  page,
+}) => {
+  await setup(page);
+  const requests: any[] = [];
+  await page.route("**/runs", (r) => {
+    requests.push(r.request().postDataJSON());
+    return r.fulfill({
+      status: 202,
+      json: { run_id: "l".repeat(32), status: "queued" },
+    });
+  });
+  await page.goto("#/workbench?provider=local_http");
+  await page.getByRole("button", { name: "银行营销预测" }).click();
+  await expect(page.getByRole("radio", { name: /本地大模型/ })).toBeChecked();
+  await page.getByRole("button", { name: "开始构建与验证" }).click();
+  await expect(page).toHaveURL(/#\/runs\//);
+  expect(requests[0]).toMatchObject({
+    provider: "local_http",
+    dataset_id: "bank",
+  });
 });
 test("Enter edits text and double submit cannot create duplicate task", async ({
   page,

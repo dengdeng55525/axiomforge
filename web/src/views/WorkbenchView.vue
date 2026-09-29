@@ -38,7 +38,11 @@ const defaults: Record<string, string> = {
   sms: "构建短信垃圾信息分类能力。比较 TF-IDF 与逻辑回归、朴素贝叶斯方案，保持训练、验证、测试隔离，报告 AP、F1 及接口稳定性检查结果。",
 };
 const dataset = ref(route.query.dataset === "sms" ? "sms" : "bank"),
-  provider = ref("deepseek"),
+  provider = ref(
+    route.query.provider === "local_http" || route.query.provider === "mock"
+      ? String(route.query.provider)
+      : "deepseek",
+  ),
   description = ref(""),
   maxCandidates = ref(2),
   maxRepairs = ref(2),
@@ -88,6 +92,16 @@ const providerTips: Record<string, string> = {
   local_http: "14B · OpenAI 兼容 HTTP 服务",
   mock: "离线验证工程流程，不代表 LLM 效果",
 };
+const providerStatus = (item: Json) => {
+  if (item.id === "local_http") {
+    return item.configured
+      ? `四卡端点池 · ${item.endpoint_count || 0} 个`
+      : "未配置本地端点";
+  }
+  if (item.id === "deepseek")
+    return item.available ? "已配置，可调用" : "需配置 API Key";
+  return "无需网络请求";
+};
 function applyExample(id: string) {
   if (seedLoading.value || submitting.value || ambiguousSubmit.value) return;
   dataset.value = id;
@@ -130,6 +144,16 @@ async function load() {
   }
 }
 onMounted(async () => {
+  if (!route.query.provider) {
+    try {
+      const saved = localStorage.getItem("algoforge-provider");
+      if (saved === "deepseek" || saved === "local_http" || saved === "mock") {
+        provider.value = saved;
+      }
+    } catch {
+      /* Browser storage can be disabled. */
+    }
+  }
   await load();
   if (disposed) return;
   try {
@@ -195,6 +219,13 @@ onMounted(async () => {
     if (!disposed) error.value = errorText(e);
   } finally {
     if (!disposed) seedLoading.value = false;
+  }
+});
+watch(provider, (value) => {
+  try {
+    localStorage.setItem("algoforge-provider", value);
+  } catch {
+    /* Browser storage can be disabled. */
   }
 });
 onBeforeUnmount(() => {
@@ -392,13 +423,7 @@ function keyboard(event: KeyboardEvent) {
                 "
                 :size="19" /><b>{{ providerNames[p.id] || p.label }}</b
               ><small>{{ providerTips[p.id] }}</small
-              ><span class="provider-status">{{
-                p.id === "local_http"
-                  ? "接入待验证"
-                  : p.available
-                    ? "可用"
-                    : "未配置凭证"
-              }}</span
+              ><span class="provider-status">{{ providerStatus(p) }}</span
               ><Check
                 v-if="provider === p.id"
                 :size="14"
@@ -410,8 +435,8 @@ function keyboard(event: KeyboardEvent) {
             结果。
           </p>
           <p v-if="provider === 'local_http'" class="provider-note">
-            需先启动本地 14B
-            推理服务并配置后端。此处不下载权重；连接或响应异常会显示在运行报告中。
+            已选择本地四卡模型。服务启动后，点击下方按钮即可提交；页面不会下载权重，
+            连接或响应异常会显示在运行报告中。
           </p>
           <details>
             <summary>
