@@ -9,15 +9,34 @@ set -Eeuo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROFILE="${LOCAL_LLM_PROFILE:-four_gpu_14b}"
 AVAILABLE_GPUS="${LOCAL_LLM_AVAILABLE_GPUS:-4}"
-VLLM_BIN="${VLLM_BIN:-vllm}"
+# Prefer the project virtual environment even when the operator did not run
+# `source .venv/bin/activate`.  VLLM_BIN remains an escape hatch for a system
+# installation or a container-provided executable.
+VLLM_BIN="${VLLM_BIN:-${ROOT_DIR}/.venv/bin/vllm}"
 
 if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
   exec "${ROOT_DIR}/.venv/bin/python" "${ROOT_DIR}/scripts/serve_local_vllm.py" --help
 fi
 
-if ! command -v "${VLLM_BIN}" >/dev/null 2>&1; then
-  echo "未找到 vLLM 可执行文件：${VLLM_BIN}" >&2
-  echo "请在 GPU 环境安装与 CUDA/驱动匹配的 vllm，或设置 VLLM_BIN 指向 vllm。" >&2
+if [[ "${VLLM_BIN}" == */* ]]; then
+  if [[ ! -x "${VLLM_BIN}" ]]; then
+    echo "未找到 vLLM 可执行文件：${VLLM_BIN}" >&2
+    echo "请在项目 .venv 中安装 vLLM，或设置 VLLM_BIN 指向可执行文件。" >&2
+    exit 1
+  fi
+else
+  RESOLVED_VLLM_BIN="$(command -v "${VLLM_BIN}" || true)"
+  if [[ -z "${RESOLVED_VLLM_BIN}" ]]; then
+    echo "未找到 vLLM 可执行文件：${VLLM_BIN}" >&2
+    echo "请在项目 .venv 中安装 vLLM，或设置 VLLM_BIN 指向可执行文件。" >&2
+    exit 1
+  fi
+  VLLM_BIN="${RESOLVED_VLLM_BIN}"
+fi
+
+if [[ ! -x "${VLLM_BIN}" ]]; then
+  echo "vLLM 路径不可执行：${VLLM_BIN}" >&2
+  echo "请检查 .venv/bin/vllm 权限，或设置 VLLM_BIN 指向可执行文件。" >&2
   exit 1
 fi
 
@@ -25,4 +44,5 @@ cd "${ROOT_DIR}"
 exec "${ROOT_DIR}/.venv/bin/python" "${ROOT_DIR}/scripts/serve_local_vllm.py" \
   --profile "${PROFILE}" \
   --available-gpus "${AVAILABLE_GPUS}" \
-  --vllm-bin "${VLLM_BIN}"
+  --vllm-bin "${VLLM_BIN}" \
+  "$@"
