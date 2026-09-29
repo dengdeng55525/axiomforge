@@ -6,7 +6,7 @@
     "build_command": "cd web && npm run build",
     "build_status": "passed",
     "browser_command": "cd web && npm run test:e2e",
-    "browser_tests_passed": 19,
+    "browser_tests_passed": 23,
     "browser_tests_failed": 0,
     "coverage": [
       "workbench scenario and budget submission",
@@ -14,7 +14,8 @@
       "history filtering and error states",
       "responsive navigation and keyboard focus",
       "graph filtering, focus, bounded payload and evidence links",
-      "report metrics, folded intermediate states, exports, cancel and polling"
+      "report metrics, folded intermediate states, exports, cancel and polling",
+      "startup race locks, uncertain POST handling and capability version deep links"
     ],
     "screenshots": [
       "docs/images/workbench-overview.png",
