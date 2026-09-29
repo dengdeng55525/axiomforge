@@ -18,6 +18,17 @@
     )
     graph = store.graph()
 
+若需要把图谱交给通用图工具复核，可在不启动 API、也不读取 LLM 密钥的情况下导出
+标准 GraphML。节点和边的嵌套属性会以确定性 JSON 字符串保留，原始图 ID 也会写入
+`original_id` 字段：
+
+    .venv/bin/python scripts/export_graphml.py \
+      --database artifacts/knowledge.sqlite3 \
+      --output artifacts/graph.graphml
+
+GraphML 是图谱交换副本，SQLite 仍是运行时事实源；导出脚本不会凭空补充能力、指标
+或验证状态。
+
 initialize 可重复执行；SQLite 使用外键、WAL、短事务、30 秒 busy timeout。运行表使用 cf_ 前缀，不更改原有 schemas/knowledge_schema.sql 的设计测试。
 
 ## 真实来源与边界
