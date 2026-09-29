@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "purpose": "Single index for the latest repository validation evidence",
-  "code_validation_commit": "d1a15b02e566afed31388c4b914d322c9aef64e6",
+  "code_validation_commit": "241e4e0d7480d469357f1f7d5457b018f287af1e",
   "validated_at_utc": "2026-09-29",
   "backend": {
     "command": ".venv/bin/pytest -q tests ui",
@@ -19,8 +19,8 @@
     "evidence": "frontend_validation.json"
   },
   "remote_ci": {
-    "cpu": "https://github.com/dengdeng55525/algorithm-capability-factory/actions/runs/36572423361",
-    "web": "https://github.com/dengdeng55525/algorithm-capability-factory/actions/runs/36572423396",
+    "cpu": "https://github.com/dengdeng55525/algorithm-capability-factory/actions/runs/36577284924",
+    "web": "https://github.com/dengdeng55525/algorithm-capability-factory/actions/runs/36577284989",
     "status": "success"
   },
   "real_local_smoke": {
@@ -42,5 +42,5 @@
     "Docker and OS-level sandbox deployment were not executed.",
     "preparation_checks.json is an early preparation snapshot, not final validation."
   ],
-  "documentation_commit": "19c6d6a570e3283c1b807bd5cf13fad4aebfc76b"
+  "documentation_commit": "241e4e0d7480d469357f1f7d5457b018f287af1e"
 }
