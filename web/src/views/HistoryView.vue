@@ -44,7 +44,9 @@ const filtered = computed(() =>
       (dataset.value === "all" || r.dataset_id === dataset.value) &&
       (status.value === "all" || r.status === status.value) &&
       (mode.value === "all" ||
-        (mode.value === "mock" ? r.mode === "mock" : r.mode !== "mock")) &&
+        (mode.value === "real"
+          ? r.mode !== "mock" && r.provider !== "mock"
+          : r.provider === mode.value || r.mode === mode.value)) &&
       `${r.description} ${r.run_id} ${r.model}`
         .toLowerCase()
         .includes(query.value.toLowerCase()),
@@ -98,6 +100,9 @@ function reset() {
       ><select v-model="mode" aria-label="筛选执行方式">
         <option value="all">全部执行方式</option>
         <option value="real">非 Mock 运行</option>
+        <option value="deepseek">DeepSeek API</option>
+        <option value="openai">OpenAI Responses API</option>
+        <option value="local_http">本地模型</option>
         <option value="mock">Mock 演示</option></select
       ><button class="btn btn-ghost btn-small" @click="reset">重置筛选</button>
     </div>

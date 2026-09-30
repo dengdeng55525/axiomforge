@@ -138,6 +138,32 @@ async function openReport(page: Page, identity: string) {
   ).toBeVisible();
 }
 
+for (const [deployment, label] of [
+  ["official_api", "OpenAI 官方 API · Responses"],
+  ["openai_compatible_api", "OpenAI 兼容服务 · Responses"],
+  [undefined, "OpenAI Responses API"],
+] as const) {
+  test(`report preserves Responses provider identity: ${deployment || "legacy metadata"}`, async ({
+    page,
+  }) => {
+    await intercept(page);
+    const fixture = {
+      ...structuredClone(passed),
+      run_id: "responses-report",
+      mode: "real",
+      provider: "openai",
+      provider_metadata: { deployment },
+    };
+    await page.route(
+      new RegExp("/runs/responses-report(?:/report)?$"),
+      (route) => route.fulfill({ json: fixture }),
+    );
+    await openReport(page, "responses-report");
+    await expect(page.locator(".mode-badge")).toHaveText(label);
+    await expect(page.locator("details[open]")).toHaveCount(0);
+  });
+}
+
 test("resource tradeoffs show measured costs and keep audit details folded", async ({
   page,
 }) => {

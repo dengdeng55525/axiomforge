@@ -22,6 +22,17 @@ const config = {
     providers: [
       { id: "deepseek", available: true, model: "test-model" },
       {
+        id: "openai",
+        label: "OpenAI / Responses API",
+        available: true,
+        configured: true,
+        requires_api_key: true,
+        kind: "openai_compatible_responses",
+        deployment: "openai_compatible_api",
+        endpoint: "https://responses.example.test/v1",
+        model: "gpt-5.5",
+      },
+      {
         id: "local_http",
         available: false,
         configured: true,
@@ -98,6 +109,17 @@ test("provider switch selects the local four GPU endpoint pool without CLI flags
       json: { run_id: "l".repeat(32), status: "queued" },
     });
   });
+  await page.route("**/runs/" + "l".repeat(32), (route) =>
+    route.fulfill({
+      json: {
+        run_id: "l".repeat(32),
+        status: "queued",
+        provider: "local_http",
+        candidates: [],
+        events: [],
+      },
+    }),
+  );
   await page.goto("#/workbench?provider=local_http");
   await page.getByRole("button", { name: "银行营销预测" }).click();
   await expect(page.getByRole("radio", { name: /本地大模型/ })).toBeChecked();
@@ -107,6 +129,234 @@ test("provider switch selects the local four GPU endpoint pool without CLI flags
     provider: "local_http",
     dataset_id: "bank",
   });
+});
+
+test("Responses provider persists and submits only the configured provider identity", async ({
+  page,
+}) => {
+  await setup(page);
+  const requests: any[] = [];
+  const runId = "e".repeat(32);
+  await page.route("**/runs", (route) => {
+    requests.push(route.request().postDataJSON());
+    return route.fulfill({
+      status: 202,
+      json: { run_id: runId, status: "queued" },
+    });
+  });
+  await page.route("**/runs/" + runId, (route) =>
+    route.fulfill({
+      json: {
+        run_id: runId,
+        status: "queued",
+        provider: "openai",
+        mode: "real",
+        candidates: [],
+        events: [],
+      },
+    }),
+  );
+  await page.goto("#/workbench?dataset=bank");
+  await page.getByRole("radio", { name: /OpenAI \/ Responses API/ }).check();
+  await expect(page.locator(".provider-option.selected")).toContainText(
+    "OpenAI 兼容服务",
+  );
+  await page.reload();
+  await expect(
+    page.getByRole("radio", { name: /OpenAI \/ Responses API/ }),
+  ).toBeChecked();
+  await page.getByRole("button", { name: "开始构建与验证" }).click();
+  await expect(page).toHaveURL(new RegExp("#/runs/" + runId));
+  expect(requests).toHaveLength(1);
+  expect(requests[0]).toMatchObject({
+    provider: "openai",
+    dataset_id: "bank",
+    max_seconds: 900,
+  });
+  for (const field of [
+    "api_key",
+    "base_url",
+    "endpoint",
+    "model",
+    "deployment",
+  ])
+    expect(requests[0]).not.toHaveProperty(field);
+  expect(await page.evaluate(() => Object.keys(localStorage))).toEqual([
+    "algoforge-provider",
+  ]);
+});
+
+test("unconfigured Responses provider keeps submission disabled", async ({
+  page,
+}) => {
+  await setup(page);
+  const unavailable = structuredClone(config);
+  const provider = unavailable.providers.providers.find(
+    (entry) => entry.id === "openai",
+  )!;
+  provider.available = false;
+  provider.configured = false;
+  await page.route("**/config", (route) =>
+    route.fulfill({ json: unavailable }),
+  );
+  await page.goto("#/workbench?dataset=bank&provider=openai");
+  await expect(
+    page.getByRole("radio", { name: /OpenAI \/ Responses API/ }),
+  ).toBeChecked();
+  await expect(page.locator(".provider-option.selected")).toContainText(
+    "需配置 API Key",
+  );
+  await expect(
+    page.getByRole("button", { name: "开始构建与验证" }),
+  ).toBeDisabled();
+  await expect(page.locator("input[type=password]")).toHaveCount(0);
+});
+
+test("retry restores Responses provider and the original run constraints", async ({
+  page,
+}) => {
+  await setup(page);
+  await page.route("**/runs/previous-responses", (route) =>
+    route.fulfill({
+      json: {
+        run_id: "previous-responses",
+        provider: "openai",
+        dataset_id: "sms",
+        description: "复用短信分类任务的 Responses 后端与预算配置。",
+        request: {
+          provider: "openai",
+          max_seconds: 180,
+          max_candidates: 4,
+          max_repairs: 1,
+          search: "beam",
+        },
+      },
+    }),
+  );
+  let submitted: Record<string, unknown> | undefined;
+  await page.route("**/runs/retried-responses", (route) =>
+    route.fulfill({
+      json: {
+        run_id: "retried-responses",
+        status: "queued",
+        provider: "openai",
+        mode: "real",
+        candidates: [],
+        events: [],
+      },
+    }),
+  );
+  await page.route("**/runs", (route) => {
+    submitted = route.request().postDataJSON();
+    return route.fulfill({
+      status: 202,
+      json: { run_id: "retried-responses", status: "queued" },
+    });
+  });
+  await page.goto("#/workbench?from=previous-responses");
+  await expect(
+    page.getByRole("radio", { name: /OpenAI \/ Responses API/ }),
+  ).toBeChecked();
+  await expect(page.getByLabel("你的能力需求")).toHaveValue(/复用短信分类/);
+  await page.getByRole("button", { name: "开始构建与验证" }).click();
+  await expect(page).toHaveURL(new RegExp("#/runs/retried-responses"));
+  expect(submitted).toMatchObject({
+    provider: "openai",
+    dataset_id: "sms",
+    max_seconds: 180,
+    max_candidates: 4,
+    max_repairs: 1,
+    search: "beam",
+  });
+});
+
+for (const [deployment, label] of [
+  ["official_api", "OpenAI 官方 API"],
+  ["openai_compatible_api", "OpenAI 兼容服务"],
+]) {
+  test(`model settings distinguish SDK and service deployment: ${deployment}`, async ({
+    page,
+  }) => {
+    await setup(page);
+    const catalog = structuredClone(config);
+    catalog.providers.providers.find(
+      (entry) => entry.id === "openai",
+    )!.deployment = deployment;
+    await page.route("**/config", (route) => route.fulfill({ json: catalog }));
+    await page.goto("#/settings");
+    const card = page.locator(".backend-card").filter({
+      has: page.getByRole("heading", {
+        name: "OpenAI / Responses API",
+        exact: true,
+      }),
+    });
+    await expect(card).toContainText(label);
+    await expect(card).toContainText("OpenAI 官方 Python SDK · Responses API");
+    await expect(card).toContainText("gpt-5.5");
+    await card.getByRole("link", { name: "使用此后端" }).click();
+    await expect(
+      page.getByRole("radio", { name: /OpenAI \/ Responses API/ }),
+    ).toBeChecked();
+  });
+}
+
+test("history identifies and filters Responses runs alongside local and DeepSeek", async ({
+  page,
+}) => {
+  await setup(page);
+  await page.route("**/runs/responses-history", (route) =>
+    route.fulfill({
+      json: {
+        run_id: "responses-history",
+        provider: "openai",
+        dataset_id: "bank",
+        description: "Responses 分类验证",
+      },
+    }),
+  );
+  await page.route("**/runs", (route) =>
+    route.fulfill({
+      json: {
+        runs: [
+          {
+            run_id: "responses-history",
+            provider: "openai",
+            mode: "real",
+            status: "failed",
+            description: "Responses 分类验证",
+            provider_metadata: { deployment: "openai_compatible_api" },
+          },
+          {
+            run_id: "local-history",
+            provider: "local_http",
+            mode: "real",
+            status: "passed",
+            description: "本地分类验证",
+          },
+          {
+            run_id: "deepseek-history",
+            provider: "deepseek",
+            mode: "real",
+            status: "passed",
+            description: "DeepSeek 分类验证",
+          },
+        ],
+      },
+    }),
+  );
+  await page.goto("#/history");
+  await expect(page.locator("tbody")).toContainText(
+    "OpenAI 兼容服务 · Responses",
+  );
+  await page.getByLabel("筛选执行方式").selectOption("openai");
+  await expect(page.locator("tbody tr")).toHaveCount(1);
+  await expect(
+    page.getByRole("link", { name: "Responses 分类验证" }),
+  ).toBeVisible();
+  await page.getByRole("link", { name: "复用需求" }).click();
+  await expect(page).toHaveURL(
+    (url) => url.hash === "#/workbench?from=responses-history",
+  );
 });
 test("Enter edits text and double submit cannot create duplicate task", async ({
   page,

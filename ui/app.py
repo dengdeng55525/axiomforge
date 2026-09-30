@@ -20,6 +20,8 @@ API_URL = os.environ.get("ALGOFORGE_API_URL", "http://127.0.0.1:8000").rstrip("/
 TERMINAL = {"completed", "passed", "failed", "cancelled", "error", "succeeded"}
 MODE_LABELS = {
     "deepseek": "真实 LLM / DeepSeek API",
+    "openai": "OpenAI / Responses API",
+    "local_http": "本地 14B / HTTP 服务",
     "real": "真实 LLM 调用",
     "api": "真实 LLM / API",
     "mock": "模拟 LLM / 仅验证工程流程",
@@ -27,6 +29,7 @@ MODE_LABELS = {
 }
 PROVIDER_LABELS = {
     "deepseek": "DeepSeek V4.1 API",
+    "openai": "OpenAI / Responses API",
     "local_http": "本地 14B · OpenAI 兼容接口",
     "mock": "Mock · 离线演示",
 }
@@ -177,6 +180,20 @@ def mode_label(value: Any) -> str:
     if value is None:
         return "模式未记录：不推断真实调用"
     return MODE_LABELS.get(str(value).lower(), f"未识别模式：{value}")
+
+
+def run_mode_label(run: dict[str, Any]) -> str:
+    """Keep provider identity and service deployment visible in reports."""
+    if run.get("mode") in {"mock", "replay"}:
+        return mode_label(run["mode"])
+    if run.get("provider") == "openai":
+        deployment = (run.get("provider_metadata") or {}).get("deployment")
+        if deployment == "official_api":
+            return "OpenAI 官方 API · Responses"
+        if deployment == "openai_compatible_api":
+            return "OpenAI 兼容服务 · Responses"
+        return PROVIDER_LABELS["openai"]
+    return PROVIDER_LABELS.get(str(run.get("provider")), mode_label(run.get("mode")))
 
 
 def api(method: str, path: str, body: dict[str, Any] | None = None, raw: bool = False) -> Any:
@@ -424,7 +441,7 @@ def render_human_report(run: dict[str, Any], summary: dict[str, Any] | None = No
 
 
 def show_identity(run: dict[str, Any]) -> None:
-    st.info(mode_label(run.get("mode")))
+    st.info(run_mode_label(run))
     columns = st.columns(5)
     columns[0].metric("状态", display(run.get("status")))
     columns[1].metric("质量门槛", display(run.get("quality_status")))
@@ -511,7 +528,7 @@ def submission_view() -> None:
         description = st.text_area("中文能力需求", value=DEFAULTS[dataset],
                                    height=130, key=f"description_{dataset}")
         col1, col2, col3 = st.columns(3)
-        provider = col1.selectbox("LLM 来源", ["deepseek", "local_http", "mock"],
+        provider = col1.selectbox("LLM 来源", ["deepseek", "openai", "local_http", "mock"],
                                   format_func=lambda value: PROVIDER_LABELS[value])
         search = col2.selectbox("候选搜索", ["compare", "beam"],
                                 format_func=lambda value: "并列候选比较" if value == "compare"
@@ -528,6 +545,8 @@ def submission_view() -> None:
             st.caption("故障注入结果应与自然错误分开统计。候选数是上限，失败或预算耗尽可能提前停止。")
             if provider == "local_http":
                 st.info("本地 14B 使用 OpenAI 兼容 HTTP 接口。当前服务会读取 LOCAL_LLM_BASE_URL；界面只提交 provider，不接触模型密钥。")
+            if provider == "openai":
+                st.info("服务端通过 OpenAI 官方 Python SDK 调用 Responses 接口；实际 API 服务方、模型和凭证由后端配置，界面仅提交 provider。")
         submitted = st.form_submit_button("提交并开始验证", type="primary")
     if submitted:
         if not description.strip():
@@ -569,7 +588,7 @@ def report_view() -> None:
     run = get_run(run_id)
     if run is None:
         return
-    st.caption(f"{mode_label(run.get('mode'))} · 模型：{display(run.get('model'))} · 运行 ID：{run_id}")
+    st.caption(f"{run_mode_label(run)} · 模型：{display(run.get('model'))} · 运行 ID：{run_id}")
     try:
         summary = api("GET", run_path(run_id) + "/summary")
     except RuntimeError:
@@ -760,7 +779,7 @@ def history_view() -> None:
     summary = []
     for item in selected:
         summary.append({"run_id": item.get("run_id"), "status": item.get("status"),
-                        "mode": item.get("mode"), "dataset_id": item.get("dataset_id"),
+                        "mode": run_mode_label(item), "dataset_id": item.get("dataset_id"),
                         "created_at": item.get("created_at"), "model": display(item.get("model"))})
     st.dataframe(summary, use_container_width=True, hide_index=True)
     if not selected:
@@ -823,7 +842,7 @@ def main() -> None:
             if st.form_submit_button("打开运行") and run_id.strip():
                 st.session_state["active_run"] = run_id.strip()
         st.divider()
-        st.markdown("<div class='info-card'><b>推理后端</b><span>DeepSeek V4.1 API / 本地 14B HTTP</span></div>", unsafe_allow_html=True)
+        st.markdown("<div class='info-card'><b>推理后端</b><span>DeepSeek API / OpenAI Responses API / 本地 14B HTTP / Mock</span></div>", unsafe_allow_html=True)
         st.markdown("<div class='info-card'><b>4× RTX 4090D 路线</b><span>张量并行或服务副本 · 仅展示配置，不虚构实测</span></div>", unsafe_allow_html=True)
         with st.expander("本地 14B 接入说明"):
             st.code("LOCAL_LLM_BASE_URL=http://127.0.0.1:8001/v1\nLOCAL_LLM_MODEL=your-14b-model\n# provider: local_http", language="bash")

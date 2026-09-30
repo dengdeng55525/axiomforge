@@ -1,3 +1,5 @@
+import { apiDeploymentLabel } from "./providers";
+
 export type Json = Record<string, any>;
 export const statuses: Record<string, string> = {
   passed: "验证通过",
@@ -27,9 +29,15 @@ export const modeLabel = (run: Json) =>
       ? "历史回放"
       : run.provider === "local_http"
         ? "本地模型"
-        : run.mode === "real" || run.mode === "deepseek"
-          ? "真实 API"
-          : "模式未记录";
+        : run.provider === "openai" || run.mode === "openai"
+          ? run.provider_metadata?.deployment
+            ? `${apiDeploymentLabel(run.provider_metadata.deployment)} · Responses`
+            : "OpenAI Responses API"
+          : run.provider === "deepseek" || run.mode === "deepseek"
+            ? "DeepSeek API"
+            : run.mode === "real"
+              ? "真实 API"
+              : "模式未记录";
 export const metric = (value: unknown, digits = 4) =>
   typeof value === "number" && Number.isFinite(value)
     ? value.toFixed(digits)

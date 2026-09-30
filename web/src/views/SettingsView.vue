@@ -13,6 +13,7 @@ import {
 } from "@lucide/vue";
 import { api } from "../lib/api";
 import { errorText, type Json } from "../lib/format";
+import { apiDeploymentLabel } from "../lib/providers";
 const config = ref<Json | null>(null),
   profiles = ref<Json | null>(null),
   loading = ref(true),
@@ -70,7 +71,7 @@ const commands = computed(
       <span class="backend-icon"
         ><component
           :is="
-            p.id === 'deepseek'
+            p.id === 'deepseek' || p.id === 'openai'
               ? Bot
               : p.id === 'local_http'
                 ? Cpu
@@ -106,12 +107,20 @@ const commands = computed(
         {{
           p.id === "deepseek"
             ? "通过真实 API 完成理解、规划、生成和修复。"
-            : p.id === "local_http"
-              ? "已接入 OpenAI 兼容接口；按四卡启动脚本启动本地 14B 服务后即可调用。"
-              : "固定规则生成候选，用于离线复现与工程测试。"
+            : p.id === "openai"
+              ? "通过 OpenAI 官方 Python SDK 调用 Responses 接口，完成需求理解、方案规划、代码生成与修复。"
+              : p.id === "local_http"
+                ? "已接入 OpenAI 兼容接口；按四卡启动脚本启动本地 14B 服务后即可调用。"
+                : "固定规则生成候选，用于离线复现与工程测试。"
         }}
       </p>
       <dl>
+        <template v-if="p.id === 'openai'">
+          <dt>API 服务类型</dt>
+          <dd>{{ apiDeploymentLabel(p.deployment) }}</dd>
+          <dt>客户端与协议</dt>
+          <dd>OpenAI 官方 Python SDK · Responses API</dd>
+        </template>
         <dt>模型</dt>
         <dd>{{ p.model || "未记录" }}</dd>
         <dt>服务地址</dt>
@@ -132,6 +141,10 @@ const commands = computed(
       >
         <ArrowUpRight :size="14" />使用此后端
       </RouterLink>
+      <p v-if="p.id === 'openai'" class="small-note">
+        SDK 由 OpenAI 发布；服务类型由后端 deployment
+        标识。兼容服务的模型供给与请求处理由所配置的服务方负责。
+      </p>
       <p v-if="p.id === 'local_http'" class="small-note">
         配置存在不等于推理服务已启动。此页面未执行连通性或 GPU 吞吐测试。
       </p>
@@ -215,7 +228,7 @@ const commands = computed(
 <style scoped>
 .backend-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
 }
 .backend-card {

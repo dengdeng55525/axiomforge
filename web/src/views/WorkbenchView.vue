@@ -24,6 +24,14 @@ import {
 } from "@lucide/vue";
 import { ApiError, api } from "../lib/api";
 import { errorText, type Json } from "../lib/format";
+import {
+  isProviderId,
+  providerNames,
+  providerStatus,
+  providerTip,
+  type ProviderId,
+  type ProviderEntry,
+} from "../lib/providers";
 const route = useRoute(),
   router = useRouter(),
   config = ref<Json | null>(null),
@@ -38,10 +46,8 @@ const defaults: Record<string, string> = {
   sms: "构建短信垃圾信息分类能力。比较 TF-IDF 与逻辑回归、朴素贝叶斯方案，保持训练、验证、测试隔离，报告 AP、F1 及接口稳定性检查结果。",
 };
 const dataset = ref(route.query.dataset === "sms" ? "sms" : "bank"),
-  provider = ref(
-    route.query.provider === "local_http" || route.query.provider === "mock"
-      ? String(route.query.provider)
-      : "deepseek",
+  provider = ref<ProviderId>(
+    isProviderId(route.query.provider) ? route.query.provider : "deepseek",
   ),
   description = ref(""),
   maxCandidates = ref(2),
@@ -59,8 +65,10 @@ const dataset = ref(route.query.dataset === "sms" ? "sms" : "bank"),
 const data = computed(() =>
   config.value?.datasets?.find((d: Json) => d.id === dataset.value),
 );
-const providers = computed<Json[]>(
-  () => config.value?.providers?.providers || [],
+const providers = computed<ProviderEntry[]>(() =>
+  (config.value?.providers?.providers || []).filter((p: Json) =>
+    isProviderId(p.id),
+  ),
 );
 const selectedProvider = computed(() =>
   providers.value.find((p) => p.id === provider.value),
@@ -78,30 +86,10 @@ const valid = computed(
     Number(maxSeconds.value) <= 1800 &&
     data.value?.available === true &&
     !!selectedProvider.value &&
-    (provider.value !== "deepseek" ||
+    (!["deepseek", "openai"].includes(provider.value) ||
       selectedProvider.value.available === true) &&
     !ambiguousSubmit.value,
 );
-const providerNames: Record<string, string> = {
-  deepseek: "DeepSeek API",
-  local_http: "本地大模型",
-  mock: "Mock 演示",
-};
-const providerTips: Record<string, string> = {
-  deepseek: "使用已配置的云端 LLM 接口",
-  local_http: "14B · OpenAI 兼容 HTTP 服务",
-  mock: "离线验证工程流程，不代表 LLM 效果",
-};
-const providerStatus = (item: Json) => {
-  if (item.id === "local_http") {
-    return item.configured
-      ? `四卡端点池 · ${item.endpoint_count || 0} 个`
-      : "未配置本地端点";
-  }
-  if (item.id === "deepseek")
-    return item.available ? "已配置，可调用" : "需配置 API Key";
-  return "无需网络请求";
-};
 function applyExample(id: string) {
   if (seedLoading.value || submitting.value || ambiguousSubmit.value) return;
   dataset.value = id;
@@ -147,7 +135,7 @@ onMounted(async () => {
   if (!route.query.provider) {
     try {
       const saved = localStorage.getItem("algoforge-provider");
-      if (saved === "deepseek" || saved === "local_http" || saved === "mock") {
+      if (isProviderId(saved)) {
         provider.value = saved;
       }
     } catch {
@@ -164,7 +152,10 @@ onMounted(async () => {
       const req = previous.request || {};
       description.value = previous.description || "";
       dataset.value = previous.dataset_id || "bank";
-      provider.value = req.provider || previous.provider || "deepseek";
+      const previousProvider = req.provider || previous.provider;
+      provider.value = isProviderId(previousProvider)
+        ? previousProvider
+        : "deepseek";
       maxCandidates.value = req.max_candidates ?? 2;
       maxRepairs.value = req.max_repairs ?? 2;
       useGraph.value = req.use_graph ?? true;
@@ -415,14 +406,14 @@ function keyboard(event: KeyboardEvent) {
                   submitting || seedLoading || ambiguousSubmit
                 " /><component
                 :is="
-                  p.id === 'deepseek'
+                  p.id === 'deepseek' || p.id === 'openai'
                     ? Bot
                     : p.id === 'local_http'
                       ? Cpu
                       : FlaskConical
                 "
                 :size="19" /><b>{{ providerNames[p.id] || p.label }}</b
-              ><small>{{ providerTips[p.id] }}</small
+              ><small>{{ providerTip(p) }}</small
               ><span class="provider-status">{{ providerStatus(p) }}</span
               ><Check
                 v-if="provider === p.id"
@@ -430,6 +421,10 @@ function keyboard(event: KeyboardEvent) {
                 class="provider-check"
             /></label>
           </div>
+          <p v-if="provider === 'openai'" class="provider-note">
+            通过服务端 OpenAI 官方 Python SDK 调用 Responses 接口。API
+            服务方以连接设置为准，模型、地址与凭证均由服务端管理。
+          </p>
           <p v-if="provider === 'mock'" class="provider-note">
             Mock 会实际执行算法验证，但生成流程来自固定规则，不计作真实 LLM
             结果。
@@ -717,7 +712,7 @@ function keyboard(event: KeyboardEvent) {
 }
 .provider-options {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 .provider-option {
