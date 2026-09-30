@@ -923,6 +923,68 @@ onBeforeUnmount(() => {
         </template>
       </section>
 
+      <section v-if="report.optimization" class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">QUALITY & RESOURCES</p>
+            <h2>质量与资源权衡</h2>
+            <p class="muted">
+              同一次验证中，比较 AP、训练耗时和峰值内存，查看哪些候选值得保留。
+            </p>
+          </div>
+          <span class="badge"
+            >{{
+              list(report.optimization.frontier_candidate_ids).length
+            }}
+            个前沿候选</span
+          >
+        </div>
+        <p class="muted">
+          Pareto 前沿表示没有其他候选同时做到 AP
+          不低、耗时和内存不高，并至少一项更优。原有 AP 优先选择规则保持不变。
+        </p>
+        <div class="table-scroll">
+          <table>
+            <caption class="sr-only">
+              已验证候选的质量与资源观测
+            </caption>
+            <thead>
+              <tr>
+                <th>候选</th>
+                <th>AP ↑</th>
+                <th>训练耗时 ↓</th>
+                <th>峰值 RSS ↓</th>
+                <th>权衡结果</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="item in arr(report.optimization.candidates)"
+                :key="item.candidate_id"
+              >
+                <th scope="row">{{ item.candidate_id }}</th>
+                <td>{{ metric(item.average_precision) }}</td>
+                <td>{{ metric(item.fit_seconds, 3) }} s</td>
+                <td>{{ metric(item.peak_rss_mib, 1) }} MiB</td>
+                <td>{{ item.pareto_optimal ? "前沿候选" : "存在更优权衡" }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="muted">
+          单次测量不代表稳定加速；RSS
+          不含模型服务显存。缺失测量或验证失败的候选不参与前沿计算。
+        </p>
+        <details class="disclosure">
+          <summary>
+            <GitBranch :size="18" />父子方案变化与排除原因<ChevronRight
+              :size="16"
+            />
+          </summary>
+          <pre>{{ pretty(report.optimization) }}</pre>
+        </details>
+      </section>
+
       <section v-if="inspected" class="panel candidate-detail">
         <div class="section-heading">
           <div>

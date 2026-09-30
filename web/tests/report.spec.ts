@@ -138,6 +138,60 @@ async function openReport(page: Page, identity: string) {
   ).toBeVisible();
 }
 
+test("resource tradeoffs show measured costs and keep audit details folded", async ({
+  page,
+}) => {
+  await intercept(page);
+  const fixture = structuredClone(passed);
+  fixture.run_id = "pareto";
+  fixture.optimization = {
+    analysis_version: "pareto-observations-v1",
+    frontier_candidate_ids: ["fixture_quality", "fixture_fast"],
+    candidates: [
+      {
+        candidate_id: "fixture_quality",
+        average_precision: 0.9,
+        fit_seconds: 2,
+        peak_rss_mib: 200,
+        pareto_optimal: true,
+      },
+      {
+        candidate_id: "fixture_fast",
+        average_precision: 0.8,
+        fit_seconds: 1,
+        peak_rss_mib: 100,
+        pareto_optimal: true,
+      },
+    ],
+    excluded: [
+      {
+        candidate_id: "fixture_missing",
+        reason: "missing_or_invalid_measurements",
+      },
+    ],
+  };
+  await page.route(/\/runs\/pareto(?:\/report)?$/, (route) =>
+    route.fulfill({ json: fixture }),
+  );
+  await openReport(page, "pareto");
+  const panel = page
+    .locator("section")
+    .filter({
+      has: page.getByRole("heading", { name: "质量与资源权衡", exact: true }),
+    });
+  await expect(panel).toContainText("200.0 MiB");
+  await expect(panel).toContainText("单次测量不代表稳定加速");
+  await expect(panel.locator("details[open]")).toHaveCount(0);
+  await panel.locator("summary").click();
+  await expect(panel.locator("pre")).toContainText("fixture_missing");
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth + 1,
+    ),
+  ).toBe(true);
+});
+
 test("readable report preserves real metrics, all candidates and folded evidence", async ({
   page,
 }) => {
