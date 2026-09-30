@@ -34,6 +34,19 @@ cd /root/algorithm-capability-factory
 
 通过 SSH 访问服务器时，可以转发 8000 或 8501 到本地。默认只监听回环地址。当前是本机单用户原型，公网多人使用所需的身份认证、TLS、任务归属与配额不属于当前交付范围。
 
+## 模型后端配置
+
+工作台支持 `openai`、`deepseek`、`local_http` 和 `mock` 四种 Provider。API 服务从后端环境或项目 `.env` 读取凭证与端点，模板见 [.env.example](../.env.example)，配置后可在创建任务页切换。
+
+| Provider | 核心配置 | 用途 |
+| --- | --- | --- |
+| `openai` | `OPENAI_API_KEY`、`OPENAI_BASE_URL`、`OPENAI_MODEL` | 通过官方 OpenAI Python SDK 调用官方服务或兼容网关的 Responses API |
+| `deepseek` | `DEEPSEEK_API_KEY`、`DEEPSEEK_BASE_URL`、`DEEPSEEK_MODEL` | DeepSeek 云端模型调用 |
+| `local_http` | `LOCAL_LLM_BASE_URL` / `LOCAL_LLM_ENDPOINTS`、`LOCAL_LLM_MODEL` | 本地 vLLM 单端点或副本池 |
+| `mock` | 无模型凭证 | 确定性模型响应与真实 CPU 算法验证 |
+
+OpenAI 路线默认直连。需要临时 HTTP(S) 出站代理时，将 `OPENAI_PROXY_URL=...` 放在本次启动命令之前，作用域限定为当前应用进程，退出后失效。客户端使用 `trust_env=False`；代理配置按服务端密钥类型处理，元数据展示 `proxy_configured` 布尔值。完整参数、模型目录检查与临时命令示例见 [技术选型与框架集成](../docs/14_技术选型与框架集成.md)。
+
 ## 本地 14B / 四卡 4090D 接入
 
 本地模型使用 OpenAI 兼容 HTTP Provider。默认方案 `four_gpu_14b` 为四张卡各启动一个 `Qwen/Qwen2.5-Coder-14B-Instruct-AWQ` 副本，端口 8100–8103，16K 总上下文。GPU 分组、固定 revision、量化和 served model name 位于 [inference_profiles.json](../configs/inference_profiles.json)。
@@ -55,8 +68,8 @@ LOCAL_LLM_PROFILE=four_gpu_14b \
 
 启动脚本会自动使用 `.venv/bin/vllm`，所以不需要手动激活虚拟环境。安装脚本同时安装
 `socksio` 和 `ninja`，分别用于 SOCKS 代理和 FlashInfer/扩展构建。模型首次启动会下载
-约 10 GB 权重并写入 Hugging Face 缓存；若本机可直连 Hugging Face，可清除代理变量，若
-使用 `socks5://` 代理，保留代理即可。
+约 10 GB 权重并写入 Hugging Face 缓存。直连与临时代理的网络选项均限定在本次启动命令
+及其应用进程，命令示例见 [四卡部署指南](../docs/05_算力预算与四卡兼容.md)。
 
 当前主机的系统 CUDA 工具链为 11.8，而 vLLM 0.29.0 的 FlashInfer wheel 可能尝试使用
 更高版本的 `nvcc` 参数，因此启动器默认设置 `VLLM_USE_FLASHINFER_SAMPLER=0`，并用

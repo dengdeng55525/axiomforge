@@ -17,11 +17,12 @@ AlgoForge 是基于 LLM Agent 的算法能力工厂，面向行业算法的复�
 ## 你可以先看到什么
 
 - **Vue 工作台**：需求输入、运行监控、候选比较、折叠式验证报告、知识图谱和运行历史。
-- **统一 Agent 工作流**：解释器 → 检索器 → 规划器 → 代码生成器 → 验证器 → 审查/修复器 → 回写器。
+- **LangChain Agent 工作流**：结构化角色链与只读图检索工具连接解释器 → 检索器 → 规划器 → 代码生成器 → 验证器 → 审查/修复器 → 回写器。
 - **可审计知识图谱**：SQLite 持久化来源、能力、算法、数据、环境、验证运行、制品和失败经验。
 - **可复现验证**：固定数据切分、主指标 AP、Dummy 基线、接口/功能/稳定性/资源检查，缺失值不填零。
+- **现代 Agent 观测台**：记录角色与工具 span、调用预算、token 用量和终态事件；运行报告支持按事件游标只读回放，不泄露未来步骤或隐式推理。
 - **多候选和有限搜索**：比较候选方案，并提供有界 Beam Search、修复预算和失败分母。
-- **三种推理后端**：DeepSeek API、确定性 Mock、本地 OpenAI 兼容 HTTP 接口。支持前端切换 API / 本地模型，配套 1 卡与 4 卡 14B 启动配置和端点池。
+- **四种推理后端**：OpenAI Responses API、DeepSeek API、本地 OpenAI 兼容 HTTP 接口、确定性 Mock。支持前端切换 API / 本地模型，配套 1 卡与 4 卡 14B 启动配置和端点池。
 
 ![工作台概览](docs/images/workbench-overview.png)
 
@@ -96,7 +97,42 @@ Mock 使用确定性规则生成语言模型响应，同时执行真实的数据
 
 `start_ui.sh` 和 `start_api.sh` 从脚本位置定位项目根目录，并使用项目配置的 Python 环境。旧版 Streamlit 入口保留在 `scripts/start_legacy_ui.sh`，默认 Vue 工作台是交付入口。
 
-## 使用 DeepSeek API
+## API 与本地模型
+
+| 前端选项 | CLI / API 的 Provider | 配置位置 |
+| --- | --- | --- |
+| OpenAI API / 兼容 Responses 网关 | `openai` | 服务端 `OPENAI_*` 环境变量 |
+| DeepSeek API | `deepseek` | 服务端 `DEEPSEEK_*` 环境变量 |
+| 本地大模型 | `local_http` | `LOCAL_LLM_*` 环境变量、[1 卡 / 4 卡部署配置](configs/inference_profiles.json) |
+| Mock 工程验证 | `mock` | 无需模型凭证 |
+
+### OpenAI Responses API
+
+项目使用官方 OpenAI Python SDK 调用 Responses API。将以下配置加入项目根目录未入 Git 的 `.env`：
+
+```dotenv
+OPENAI_API_KEY=your-server-api-key
+OPENAI_BASE_URL=https://api.openai.com/v1
+OPENAI_MODEL=gpt-5.5
+OPENAI_STREAM=true
+```
+
+使用兼容 Responses 网关时，填入部署者指定的 HTTPS 基础地址，例如 `https://your-gateway.example/v1`；模型 ID 按所选服务实际开放的模型填写。报告依据实际端点区分官方服务与兼容网关，并记录请求模型和返回模型。需要临时出站代理时，仅向目标命令或应用进程传入 `OPENAI_PROXY_URL`，进程退出后失效；默认留空直连。用法见 [框架集成指南](docs/14_技术选型与框架集成.md)，配置模板见 [.env.example](.env.example)。
+
+OpenAI Provider 默认通过 SSE 接收流式响应，在收到已完成的终态响应、核验用量并通过 JSON 与 Pydantic 合约校验后交给后续阶段。中间推理片段和增量文本不保存或执行；接收事件时检查取消与全局时限。`OPENAI_STREAM=false` 可切换为非流式调用，这一参数只调整项目或当前进程中的模型调用方式。报告的 `provider_metadata.stream` 记录传输模式，`usage.records` 同时记录请求输出额度与实际用量；兼容网关超出请求额度时留下 `output_limit_exceeded` 标记，全局 token 预算按实际用量累计。
+
+```bash
+python -m capability_factory doctor --provider openai --check-api
+python -m capability_factory init --provider mock
+python -m capability_factory run \
+  --dataset bank --provider openai --search compare \
+  --max-candidates 2 --max-repairs 2 \
+  --description '预测银行定期存款订购，仅使用通话前特征，比较候选并保存验证、修复与知识来源。'
+```
+
+初始化命令导入离线能力与公开来源，运行命令通过真实 Responses API 完成角色调用。`doctor --provider openai --check-api` 检查模型目录访问；`init --provider openai` 可进一步使用模型从批准的来源片段抽取能力卡。服务端配置完成后，也可直接在创建任务页面选择 OpenAI，无需逐次输入命令。完整参数与工具协作说明见 [技术选型与框架集成](docs/14_技术选型与框架集成.md)。
+
+### DeepSeek API
 
 凭证只放在服务端环境或未入 Git 的 `.env`：
 
@@ -139,11 +175,11 @@ flowchart TD
     I --> C
 ```
 
-每一步都写入结构化事件和事实字段，形成可追溯的工作流记录。工作流使用同一个 LLM 按不同角色合约完成，每个角色拥有独立的提示词、输入和输出结构。
+每一步都写入结构化事件和事实字段，形成可追溯的工作流记录。LangChain 角色链连接结构化交接，Workflow 控制阶段、预算与修复；一次运行使用选定的 LLM，每个角色拥有独立的提示词、输入和输出结构。
 
 ## Agent 角色与职责
 
-AlgoForge 使用“单模型、多角色、显式状态机”的编排方式。DeepSeek、本地 OpenAI 兼容模型和 Mock 都实现同一套 Provider 接口；运行时由同一个模型先后承担不同角色。每个角色都有固定提示词、输入字段和 Pydantic 输出合约，代码执行和指标计算由本地验证器完成。
+AlgoForge 使用“LangChain 结构化角色链 + 显式状态机”的编排方式。OpenAI Responses、DeepSeek、本地 OpenAI 兼容模型和 Mock 实现同一套 Provider 接口；一次运行由选定的模型先后承担不同角色。LangChain Core 的 `RunnableSequence` 串联角色调用与 Pydantic 合约校验，`StructuredTool` 将带类型约束的只读知识检索接入工作流。每个角色拥有固定提示词和独立输入输出，代码执行和指标计算由本地验证器完成。
 
 | Agent 角色 | 代码位置 | 职责 | 结构化输出 |
 | --- | --- | --- | --- |
@@ -167,22 +203,42 @@ interpreter → 知识检索 → planner → coder → 本地验证器
 
 确定性控制和验证模块包括：`KnowledgeStore.search` 负责词项/图关系检索；`execution/compiler.py` 负责受限 AST 检查；`execution/runner.py` 负责子进程运行、接口检查和资源限制；`metrics.py` 负责在可信主进程计算指标。模型提出方案，系统依据独立验证结果判定是否通过。
 
-角色的完整提示词和输出合约见 [prompts.py](src/capability_factory/prompts.py) 与 [contracts.py](src/capability_factory/contracts.py)。每次模型请求的角色、请求/响应文件、耗时和 token 统计会保存到 `artifacts/runs/<run_id>/llm/` 与报告的 `usage.records` 中，便于复盘真实 API 调用。
+角色链的实际实现见 [agent_runtime.py](src/capability_factory/agent_runtime.py)：`invoke_provider → persist_response → validate_contract`；只读图检索通过 `search_capabilities` 工具执行。框架版本、角色链、检索工具和关闭外部追踪的配置写入 `provenance.agent_runtime`。角色的完整提示词和输出合约见 [prompts.py](src/capability_factory/prompts.py) 与 [contracts.py](src/capability_factory/contracts.py)。每次模型请求的角色、请求/响应文件、耗时和 token 统计会保存到 `artifacts/runs/<run_id>/llm/` 与报告的 `usage.records` 中，便于复盘真实 API 调用。
 
 ## 系统架构与模块
 
 | 层 | 实现 | 选择理由 |
 | --- | --- | --- |
-| Agent 编排 | Python 显式状态机、Pydantic 合约 | 状态、预算、错误和终止条件可测试 |
-| LLM | DeepSeek HTTP Provider、Mock Provider、本地 HTTP Provider | 真实 API 可用；Mock 便于离线复现；本地路线可替换 |
+| Agent 编排 | LangChain Core Runnable / StructuredTool、显式状态机、Pydantic 合约 | 角色链与检索工具可组合，状态、预算、错误和终止条件可测试 |
+| LLM | OpenAI SDK Responses、DeepSeek HTTP、本地 HTTP、Mock | 云端与本地共用角色合约；Mock 支撑离线工程验证 |
 | 知识库 | SQLite + 属性图表 | 单机可复现，节点/关系/版本/来源可审计 |
 | 检索 | 词项匹配 + 有界图扩展，最多两跳 | 结合文本相关性与图关系，提供可解释的知识证据路径 |
 | 算法执行 | 受限 AST 构造器 + 资源限制子进程 | 执行范围限定为允许的算法构造语言 |
 | 验证 | scikit-learn 固定协议、AP/Dummy、接口和资源检查 | 算法候选使用统一分母和验证集 |
 | 服务 | FastAPI + CLI | 同一套后端同时服务命令行、API 和 Web |
+| Agent 观测 | 本地事件投影 + Vue AgentTracePanel | 角色、工具、预算和事件回放统一展示；投影只读、可脱敏、可测试 |
 | 前端 | Vue 3 + TypeScript + D3 + Lucide | 报告、图谱和交互状态可清楚分层 |
 
 执行器采用受限 AST 构造语言和资源限制子进程。公网部署需要补充认证、租户隔离和强化运行时。
+
+## 工具选型与集成理由
+
+项目以 **LangChain Core + OpenAI Python SDK + SQLite + NetworkX + FastAPI** 组织 Agent、模型、知识和服务，以 **Vue 3 + D3** 提供交互工作台，并保留 **Streamlit + Plotly** 实验入口。每个工具都有明确职责，角色合约、算法验证和运行证据贯穿整个流程。
+
+| 工具 | 具体职责 | 选择理由与实现入口 |
+| --- | --- | --- |
+| **LangChain Core** | 用 `RunnableSequence` 连接角色请求、Provider 调用和 Pydantic 结果校验；用 `StructuredTool` 包装只读知识图谱检索 | 复用标准 Runnable 与工具 schema，保留可测试的预算、修复和终止策略；[LangChain 运行层](src/capability_factory/agent_runtime.py)、[工作流](src/capability_factory/workflow.py)、[集成说明](docs/14_技术选型与框架集成.md) |
+| **OpenAI Python SDK / Responses API** | `provider=openai`，访问部署者配置的 OpenAI 官方服务或兼容 Responses 网关 | 官方 SDK 统一请求与响应解析，Provider 保存模型、用量和响应审计记录；凭证由服务端环境管理；[Provider 层](src/capability_factory/providers.py) |
+| **DeepSeek API** | 云端理解、规划、生成、审查与修复 | 提供可独立切换的 API 路线，与 OpenAI、本地模型共用角色合约和验证器；[Provider 层](src/capability_factory/providers.py) |
+| **Qwen2.5-Coder-14B AWQ + vLLM** | 本地代码模型服务、单卡部署与 4 卡独立副本端点池 | 通过 OpenAI 兼容 HTTP 接口复用工作流，支持本地推理与云端 API 切换；[四卡配置](configs/inference_profiles.json)、[部署说明](deploy/README.md) |
+| **SQLite** | 来源、能力版本、节点、关系、运行、制品与失败经验的事务持久化 | 单机启动便捷，内容哈希、外键和不可变版本提供可复核的知识基础；[知识库](src/capability_factory/knowledge.py)、[schema](knowledge/runtime_schema.sql) |
+| **NetworkX** | 在 Streamlit 入口中将图谱快照转为有向图并计算布局 | 适合 Python 数据科学环境的图展示；图检索由 `KnowledgeStore.search` 完成，GraphML 供图工具交换；[兼容图视图](ui/app.py)、[GraphML 导出](src/capability_factory/graph_export.py) |
+| **FastAPI + Pydantic + Typer** | API、结构化输入输出、OpenAPI 文档与 CLI | API、CLI、Web 共用后端服务和同一份验证合约，便于自动测试与接口集成；[API](src/capability_factory/api.py)、[合约](src/capability_factory/contracts.py)、[CLI](src/capability_factory/cli.py) |
+| **Streamlit + Plotly** | Python 实验界面、报告读取与图谱展示 | 数据科学环境安装后即可运行；与主工作台共享 FastAPI 数据接口；[Streamlit 入口](ui/app.py)、[启动脚本](scripts/start_legacy_ui.sh) |
+| **Vue 3 + TypeScript + D3 + Lucide** | 任务创建、实时运行状态、候选比较、折叠报告与交互图谱 | 明确区分结论、证据和中间态，统一组件、路由与图标语义；[Web 源码](web)、[界面设计](docs/12_交互工作台与参考设计.md) |
+| **scikit-learn + pandas + NumPy** | 可组合算法 Pipeline、固定数据协议与可信指标评估 | 银行表格任务和 SMS 文本任务共用验证框架，模型方案可直接比较；[算法插件](src/capability_factory/plugins.py)、[验证器](src/capability_factory/execution/runner.py) |
+
+技术选型同时评估 **LlamaIndex、AutoGen、CrewAI、Neo4j** 的适用场景：文档规模化索引、多 Agent 对话、角色任务编排和服务化图存储。当前选型集中于 LangChain Core 的角色链、SQLite 的证据持久化与已有图检索协议，形成一套职责清晰的执行链路。逐项比较、配置参数和复核步骤见 [技术选型与框架集成](docs/14_技术选型与框架集成.md)。
 
 ## 示例数据与任务
 
@@ -266,33 +322,37 @@ def build_pipeline(task_spec):
 | `bank_beam` | real / passed | 6 | `bank_logistic_default` | 0.182877 | Lift@10%=2.093790 |
 | `bank_repair` | real / passed | 2 | `bank_logreg_balanced` | 0.180759 | Lift@10%=1.984167；含标记故障修复 |
 | `sms_transfer` | real / passed | 2 | `sms_nb_tfidf_default` | 0.959834 | F1@0.5=0.914729；Lift@10%=8.0 |
+| [`sms_openai_langchain`](examples/evidence/sms_openai_langchain/) | real / passed | 2 | `sms_tfidf_nb_default` | 0.959834 | gpt-5.5 Responses；5 calls；29,902 输入 / 2,921 输出 token；6 张能力卡 |
 
 报告中 `candidate.status=passed` 只代表执行和强制检查通过，`quality_status` 另行表示验证集 AP 与类别占比基线的关系。完整 JSON、Markdown、HTML 和候选制品从 [examples/README.md](examples/README.md) 进入。
 
+### 现代 Agent 观测与只读回放
+
+运行报告还提供 `agent_trace`：它把解释器、规划器、代码生成器、审查/修复器、总结器和只读知识工具映射成可读 span，并汇总调用次数、输入/输出/缓存 token、时间预算和已发生的能力证据。报告页的 **Agent 观测台** 默认显示摘要，时序、预算和事件详情按需折叠；拖动事件游标会请求 `GET /runs/{run_id}/agent-trace?through_sequence=N`，投影严格限制在 `N` 之前的事实。
+
+该设计适合答辩和研发复盘：老师可以沿 sequence 看到每一次角色交接、工具返回和合约拒绝，工程人员可以定位预算耗尽、工具失败或代码修复边界。它不会重新执行模型，也不会将 prompt、响应正文、生成代码或隐式推理复制到观测投影。字段协议与复核命令见 [Agent 观测与回放](docs/15_Agent观测与回放.md)。
+
 ## 能力知识图谱示例
 
-图谱中的能力版本、来源和验证运行通过真实关系连接。下面是脱敏后的最小结构示意，字段名称对应运行 schema：
+图谱中的能力版本、来源和验证运行通过真实关系连接。下面按 `KnowledgeStore.graph()` 的导出格式展示最小结构，ID 与标签用于说明关系方向：
 
 ```json
 {
-  "node": {
-    "id": "capability:bank-precontact-policy:v1",
-    "kind": "Capability",
-    "input_schema": {"dataset": "bank", "features": "pre_contact_whitelist"},
-    "output_schema": {"score": "probability", "positive_class": "yes"},
-    "preconditions": ["duration must be excluded"],
-    "metrics": ["average_precision", "lift_at_10pct"],
-    "evidence": ["source:bank-task-protocol"]
-  },
+  "nodes": [
+    {"id": "capability:bank-precontact-policy:v1", "kind": "Capability", "label": "通话前特征约束", "properties": {"capability_id": "bank-precontact-policy", "version": 1, "status": "extracted", "origin": "manual_seed"}},
+    {"id": "source:bank-task-protocol", "kind": "Source", "label": "银行任务协议", "properties": {}},
+    {"id": "artifact:example-model", "kind": "Artifact", "label": "model.py", "properties": {}},
+    {"id": "run:example", "kind": "ValidationRun", "label": "示例运行", "properties": {}}
+  ],
   "edges": [
-    {"relation": "USES", "target": "algorithm:LogisticRegression"},
-    {"relation": "DERIVED_FROM", "target": "source:bank-task-protocol"},
-    {"relation": "EVALUATES", "target": "run:..."}
+    {"id": "edge-source", "source": "capability:bank-precontact-policy:v1", "target": "source:bank-task-protocol", "relation": "DERIVED_FROM", "properties": {}},
+    {"id": "edge-implementation", "source": "artifact:example-model", "target": "capability:bank-precontact-policy:v1", "relation": "IMPLEMENTS", "properties": {}},
+    {"id": "edge-evaluation", "source": "run:example", "target": "artifact:example-model", "relation": "EVALUATES", "properties": {}}
   ]
 }
 ```
 
-完整字段约束、版本语义和 SQL 表见 [系统架构与接口](docs/03_系统架构与接口.md) 和 [knowledge/runtime_schema.sql](knowledge/runtime_schema.sql)。
+能力卡的输入输出、适用条件、依赖与来源保存在 `cf_capability_versions.card_json`，由能力详情接口返回；图节点保留能力 ID、版本与状态。完整字段约束、版本语义和 SQL 表见 [系统架构与接口](docs/03_系统架构与接口.md) 和 [knowledge/runtime_schema.sql](knowledge/runtime_schema.sql)。
 
 ## 创新设计与题目加分项
 
@@ -302,7 +362,7 @@ AlgoForge 将**证据驱动的 Agent 协作、有界方案搜索、失败经验�
 
 | 题目评价标准 | 创新机制与工程价值 | 实现与演示证据 |
 | --- | --- | --- |
-| **是否提出有创造性的 Agent 协作机制** | 采用“结构化交接 + 独立验证反馈”的多角色协作：Planner 提交带知识引用的方案，Coder 按合约生成代码，Reviewer 根据执行错误指导 Repair Coder，Curator 汇总实测结果。显式状态机统一管理角色上下文、预算与终止条件，使每次决策和修复都可追踪。 | [角色与合约](src/capability_factory/prompts.py)、[工作流](src/capability_factory/workflow.py)、[真实修复记录](docs/research/budget_beam_validation.json) |
+| **是否提出有创造性的 Agent 协作机制** | 采用“LangChain 角色链 + 结构化交接 + 独立验证反馈”的多角色协作：Planner 提交带知识引用的方案，Coder 按合约生成代码，Reviewer 根据执行错误指导 Repair Coder，Curator 汇总实测结果。显式状态机统一管理角色上下文、预算与终止条件，使每次决策和修复都可追踪。 | [角色链与工具](src/capability_factory/agent_runtime.py)、[角色合约](src/capability_factory/prompts.py)、[工作流](src/capability_factory/workflow.py)、[真实修复记录](docs/research/budget_beam_validation.json) |
 | **是否有效利用知识图谱增强代码生成和验证** | 将来源、能力、任务、算法、依赖、验证运行与失败经验连接起来，通过词项检索和最多两跳图扩展提供生成依据。规划阶段校验知识引用，执行阶段按固定任务协议独立验证，结果与制品回写图谱，形成从来源到验证结论的证据路径。 | [知识检索与回写](src/capability_factory/knowledge.py)、[图谱 schema](knowledge/runtime_schema.sql)、[知识探索界面](web/src/views/KnowledgeView.vue) |
 | **是否设计了合理的搜索、优化或自修复策略** | 有界 Beam Search 在合法算法变体中扩展候选，按全局唯一标识去重并保存父子关系与剪枝记录；Reviewer 与 Repair Coder 根据真实错误多轮修复。候选统一比较验证 AP，并展示训练时间、峰值内存的 Pareto 前沿，帮助解释质量与资源取舍。 | [搜索实现](src/capability_factory/search.py)、[资源分析](src/capability_factory/optimization.py)、[搜索与修复实测](docs/research/budget_beam_validation.json) |
 | **是否能将失败经验沉淀为可复用知识** | 将失败指纹、错误诊断、适用任务、修复前后代码哈希和验证结果保存为可关联的经验与运行证据。对应修复通过后将经验标记为 validated，供后续任务检索；能力内容变更形成新版本并通过 SUPERSEDES 保留历史。 | [经验与版本管理](src/capability_factory/knowledge.py)、[知识库回归测试](tests/test_knowledge_runtime.py)、[自然错误修复证据](docs/research/budget_beam_validation.json) |
@@ -313,7 +373,7 @@ AlgoForge 将**证据驱动的 Agent 协作、有界方案搜索、失败经验�
 | 题目加分项 | 系统中的具体实现 | 代码与可复核证据 |
 | --- | --- | --- |
 | 图搜索 / Beam Search | 两跳知识检索、有界 Beam 扩展、全局唯一算法变体、父子关系和剪枝；候选规模匹配合法搜索空间 | [搜索实现](src/capability_factory/search.py)、[真实扩展与修复记录](docs/research/budget_beam_validation.json) |
-| 多智能体协作 | 解释、规划、生成、审查、修复、总结角色分别调用 LLM，通过结构化产物交接；状态机统一控制预算 | [角色合约](src/capability_factory/prompts.py)、[工作流](src/capability_factory/workflow.py) |
+| 多智能体协作 | LangChain 角色链连接解释、规划、生成、审查、修复与总结；StructuredTool 提供图检索，状态机统一控制预算 | [角色运行层](src/capability_factory/agent_runtime.py)、[角色合约](src/capability_factory/prompts.py)、[工作流](src/capability_factory/workflow.py) |
 | 真实代码仓库抽取 | 从指定 Git commit 的 Python blob 抽取函数、类、方法、签名、注解、文档字符串和导入依赖，生成能力卡片 | [仓库抽取器](src/capability_factory/repository.py)、[真实仓库样例](examples/evidence/innovation/repository.json) |
 | 代码安全与受限执行 | AST 构造器白名单、参数与接口检查、独立进程、CPU/内存/时间限制、取消回收 | [执行器](src/capability_factory/execution/runner.py)、[对抗测试](tests/test_execution_adversarial.py)、[执行安全范围](SECURITY.md) |
 | 失败分析与经验复用 | 根据真实错误诊断和修复，再执行同一验证器；已验证经验与成功修复绑定，供后续图检索使用 | [知识回写](src/capability_factory/knowledge.py)、[自然错误修复证据](docs/research/budget_beam_validation.json) |
@@ -348,6 +408,8 @@ AlgoForge 将**证据驱动的 Agent 协作、有界方案搜索、失败经验�
 | API/CLI/Web | [api.py](src/capability_factory/api.py)、[cli.py](src/capability_factory/cli.py)、[web/](web) |
 | 多候选、修复、Beam、插件 | [workflow.py](src/capability_factory/workflow.py)、[plugins.py](src/capability_factory/plugins.py)、[插件指南](docs/10_插件扩展指南.md) |
 | 自动报告和回写 | [reporting.py](src/capability_factory/reporting.py)、[knowledge.py](src/capability_factory/knowledge.py) |
+| Agent 观测与安全回放 | [observability.py](src/capability_factory/observability.py)、[观测协议](docs/15_Agent观测与回放.md)、[AgentTracePanel.vue](web/src/components/AgentTracePanel.vue) |
+| 工具选择与集成理由 | [技术选型与框架集成](docs/14_技术选型与框架集成.md)、[依赖定义](pyproject.toml) |
 | 验收与运行证据 | [实现与验收对照](docs/08_实现与验收对照.md)、[后端验证索引](docs/research/execution_validation.json)、[前端验证索引](docs/research/frontend_validation.json) |
 
 ## 仓库结构
@@ -358,7 +420,9 @@ algorithm-capability-factory/
 │   ├── cli.py                    命令行入口：init/run/serve/report
 │   ├── api.py                    FastAPI：提交任务、查询状态、报告和图谱
 │   ├── workflow.py               Agent 状态机：解释、检索、规划、生成、修复、比较、回写
-│   ├── providers.py              DeepSeek、Mock、本地 OpenAI 兼容 HTTP Provider
+│   ├── agent_runtime.py          LangChain 角色链、结构化只读检索工具与本地审计
+│   ├── observability.py          Agent/Tool span、预算摘要和游标回放投影
+│   ├── providers.py              OpenAI SDK Responses、DeepSeek、本地 HTTP 和 Mock
 │   ├── contracts.py              LLM 和 API 的 Pydantic 结构化合约
 │   ├── prompts.py                interpreter/planner/coder/reviewer/curator 提示模板
 │   ├── knowledge.py               SQLite 能力知识库、词项检索和图扩展
@@ -369,7 +433,7 @@ algorithm-capability-factory/
 │       ├── compiler.py
 │       ├── runner.py
 │       └── worker.py
-├── web/                            Vue 3 工作台、报告折叠、图谱和 Playwright 测试
+├── web/                            Vue 3 工作台、报告折叠、图谱、Agent 观测和 Playwright 测试
 │   └── src/{views,components,services,stores}/
 ├── ui/                             可选旧版 Streamlit 界面
 ├── configs/                        数据任务、验证策略和四卡本地推理配置
@@ -391,14 +455,15 @@ algorithm-capability-factory/
 | --- | --- | --- |
 | 1. 提交需求 | `cli.py::run` 或 `api.py::RunManager.launch` | `request`、`run_id`、队列状态 |
 | 2. 创建运行 | `workflow.py::Workflow.run` | `report.json`、`progress.json` |
-| 3. 调用模型 | `workflow.py::ask` → `providers.py::HTTPProvider.generate` | `llm/*.request.json`、`llm/*.response.json`、`usage.records` |
+| 3. 调用模型 | `workflow.py::ask` → `agent_runtime.py::invoke_role` → 对应 `Provider.generate` | `llm/*.request.json`、`llm/*.response.json`、`usage.records`、`provenance.agent_runtime` |
 | 4. 准备数据 | `datasets.py::prepare_dataset` | `dataset/manifest.json`、worker 训练/验证文件 |
-| 5. 检索能力 | `knowledge.py::KnowledgeStore.search` | `evidence`、`KNOWLEDGE_RETRIEVED` 事件 |
+| 5. 检索能力 | `agent_runtime.py::retrieve_capabilities` → `search_capabilities` → `KnowledgeStore.search` | `evidence`、`KNOWLEDGE_RETRIEVED` 事件与工具名 |
 | 6. 规划与搜索 | `workflow.py::make_plans`、`execute_plan`、`BEAM_EXPANDED` | `candidates[*].plan`、`search_tree` |
 | 7. 生成代码 | `prompts.py` + `contracts.py::GeneratedCode` | `candidates/<id>/attempt_*/model.py` |
 | 8. 独立验证 | `execution/compiler.py::analyze_code` → `execution/runner.py::validate_candidate` → `metrics.py` | `verification.json`、检查项、指标、资源 |
 | 9. 修复重试 | `workflow.py` 中 reviewer/repair_coder 分支 | `repairs`、`attempt_1/...`、失败经验 |
 | 10. 比较和沉淀 | `workflow.py` 的排序/curator + `reporting.py::write_report` + `knowledge.py::save_run/record_experience` | JSON/Markdown/HTML、SQLite 图谱、`RECORDED` 事件 |
+| 11. 观测与回放 | `observability.py::build_agent_trace` + `api.py::agent_trace` + `AgentTracePanel.vue` | `agent_trace`、span、预算摘要、游标事件投影 |
 
 报告里的事件由上述函数在每次完成边界动作时写入；HTML/Markdown 将同一份结构化事实转换为适合阅读的展示形式。
 
@@ -435,6 +500,8 @@ npm run build
 npm run test:e2e
 ```
 
+LangChain 角色链与只读工具通过 [运行层测试](tests/test_agent_runtime.py) 验证，OpenAI SDK Responses 的响应、预算和鉴权处理通过 [Provider 测试](tests/test_openai_provider.py) 验证。
+
 浏览器测试使用 HTTP 夹具，不调用付费模型；它验证 UI 状态、报告折叠、图谱交互和错误恢复。GitHub Actions 对 CPU 回归和 Web 交互分别执行同样的可复现检查。页面顶部的 CI 徽章显示 main 分支检查状态；[CI 回归记录](docs/research/ci_budget_validation.json) 保存预算精度修复和远程检查证据，功能实测见 [增强验收记录](docs/research/innovation_validation.json) 与 [前端验证索引](docs/research/frontend_validation.json)。
 
 ## 文档地图
@@ -442,6 +509,8 @@ npm run test:e2e
 - [文档总览](docs/README.md)：按读者和任务选择入口。
 - [使用与演示](docs/07_使用与演示指南.md)：安装、CLI、API、Web 和答辩流程。
 - [系统架构与接口](docs/03_系统架构与接口.md)：Agent 合约、状态机、图谱和接口。
+- [技术选型与框架集成](docs/14_技术选型与框架集成.md)：LangChain、OpenAI SDK、图存储与服务工具的职责、理由和使用方式。
+- [Agent 观测与回放](docs/15_Agent观测与回放.md)：角色 span、工具事件、预算可见性、游标回放和敏感字段边界。
 - [数据与知识来源](docs/02_数据与知识来源.md)：公开数据、切分、防泄漏和来源。
 - [实现与验收对照](docs/08_实现与验收对照.md)：原题逐项映射和验收证据。
 - [创新点与加分项演示](docs/13_创新点与加分项演示.md)：五项创新评分依据、十项加分能力与演示命令。
@@ -458,6 +527,7 @@ npm run test:e2e
 | 通话时长造成标签泄漏 | 固定 pre-contact 特征白名单，校验 duration 禁用和数据划分 | 数据协议、特征检查与数据哈希审计 |
 | LLM 生成代码的执行安全 | 受限 AST 构造器、可信 evaluator、资源限制子进程 | 构造器校验、对抗用例、超时和取消回收测试 |
 | API 成本与运行中断 | 显式 Provider、总预算、调用超时、取消与不确定提交保护 | 预算与异常路径回归、运行事件、调用用量报告 |
+| Agent 状态难以解释 | 角色/工具生命周期事件、预算投影和游标回放 | [Agent 观测与回放](docs/15_Agent观测与回放.md)、`tests/test_observability.py`、前端观测面板 |
 | 知识来源与关系质量 | SQLite 属性图、词项检索、有界两跳扩展、来源哈希 | 能力引用校验、知识路径展示、版本与回写测试 |
 | 本地 14B 与多卡接入 | OpenAI 兼容 Provider、前端后端切换、1 卡 / 4 副本配置与端点池 | [本地部署实测](docs/research/local_vllm_validation.json)、[本地短信闭环](examples/evidence/sms_local_resources/report.json) |
 

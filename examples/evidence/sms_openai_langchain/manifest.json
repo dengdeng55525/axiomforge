@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0",
+  "source_report": "artifacts/runs/660682f3cf324bf1938b78c70f2fce8c/report.json",
+  "source_report_sha256": "1437eb513204f71be74162e45fd821f727898a7c0cbf3d59020d9b34ea6d1c9e",
+  "exported_at": "2026-09-30T16:59:22.345660+00:00",
+  "note": "Portable historical evidence export. Original mode, statuses, failed attempts, metrics, usage records, and content hashes are preserved. Project-root absolute paths in JSON are made repository-relative. Datasets, predictions, raw LLM requests/responses, worker logs, credentials, and the private database are omitted. This is not a new execution or a replay-mode relabel. Real gpt-5.5 Responses API through an operator-configured compatible service, using LangChain role chains and typed capability retrieval. Two SMS candidates are independently validated; the sealed test set is unscored. Reported token usage is preserved, including any upstream excess over a requested per-call limit.",
+  "omitted": [
+    "datasets",
+    "predictions",
+    "raw_llm_payloads",
+    "worker_logs",
+    "credentials",
+    "database"
+  ],
+  "run_id": "660682f3cf324bf1938b78c70f2fce8c",
+  "name": "sms_openai_langchain",
+  "mode": "real",
+  "status": "passed",
+  "candidate_count": 2,
+  "attempt_count": 2,
+  "files": [
+    {
+      "path": "candidates/sms_tfidf_logistic_default/attempt_0/metadata.json",
+      "sha256": "1e55ce558f33e92b1b269bdd4c34797dad4ba9e76be7abbc5fad73b445716aeb",
+      "bytes": 5625
+    },
+    {
+      "path": "candidates/sms_tfidf_logistic_default/attempt_0/model.py",
+      "sha256": "bc7d91b43c429a096367830f391b0f80f4003ece9a0c2605d8e40a974e4c0405",
+      "bytes": 378
+    },
+    {
+      "path": "candidates/sms_tfidf_logistic_default/attempt_0/verification.json",
+      "sha256": "579a9464b37b1abbed84a4e2930c62b8a666969e2af9c6985494f4630ddb37e3",
+      "bytes": 5468
+    },
+    {
+      "path": "candidates/sms_tfidf_logistic_default/metadata.json",
+      "sha256": "3800053703ecbe32e1834dd4607c2ab4ffe3c3d87f1979a0b2fe45c7112b1d59",
+      "bytes": 11833
+    },
+    {
+      "path": "candidates/sms_tfidf_logistic_default/model.py",
+      "sha256": "bc7d91b43c429a096367830f391b0f80f4003ece9a0c2605d8e40a974e4c0405",
+      "bytes": 378
+    },
+    {
+      "path": "candidates/sms_tfidf_logistic_default/verification.json",
+      "sha256": "579a9464b37b1abbed84a4e2930c62b8a666969e2af9c6985494f4630ddb37e3",
+      "bytes": 5468
+    },
+    {
+      "path": "candidates/sms_tfidf_nb_default/attempt_0/metadata.json",
+      "sha256": "320f0faa2323d6a9aa503f32539fbe6683b0dbfeb7c9c8fe237411143dd61a5c",
+      "bytes": 5463
+    },
+    {
+      "path": "candidates/sms_tfidf_nb_default/attempt_0/model.py",
+      "sha256": "54cbd5421bb1f5f5057e24b805659985a27534d986a481847c631835b70391e1",
+      "bytes": 333
+    },
+    {
+      "path": "candidates/sms_tfidf_nb_default/attempt_0/verification.json",
+      "sha256": "1dcff24b3fd3f31c9f26547a028a622b8d3219a38b0e899fbccc49def27120fa",
+      "bytes": 5326
+    },
+    {
+      "path": "candidates/sms_tfidf_nb_default/metadata.json",
+      "sha256": "1504e87e0baa30cc32c8f43afbb78059626d221171d323a55809d8a0fdb8449c",
+      "bytes": 11585
+    },
+    {
+      "path": "candidates/sms_tfidf_nb_default/model.py",
+      "sha256": "54cbd5421bb1f5f5057e24b805659985a27534d986a481847c631835b70391e1",
+      "bytes": 333
+    },
+    {
+      "path": "candidates/sms_tfidf_nb_default/verification.json",
+      "sha256": "1dcff24b3fd3f31c9f26547a028a622b8d3219a38b0e899fbccc49def27120fa",
+      "bytes": 5326
+    },
+    {
+      "path": "report.html",
+      "sha256": "4bee795ff4e7bd7ceec9ef6752c522d9e5f55a8b5f3e08325897c90035e5d2af",
+      "bytes": 168520
+    },
+    {
+      "path": "report.json",
+      "sha256": "cbc96bdf6725801f656d4ef914069d476c2617a21908dc36039a4dc65bfa9c6a",
+      "bytes": 86458
+    },
+    {
+      "path": "report.md",
+      "sha256": "49b63ae7c2e570b35e48c49ec59947169d8bd7c56ef839a28e46e631230c98f0",
+      "bytes": 86672
+    }
+  ]
+}
