@@ -2,47 +2,17 @@
 
 > 将自然语言算法需求变成**有来源、有验证、有版本**的可运行算法能力。
 
-AlgoForge 是面向 LLM Agent 笔试场景的小型可复现原型。它以**银行营销响应预测**为主场景，以 **SMS 垃圾信息分类**验证跨任务迁移，完整演示：能力理解、知识检索、方案规划、代码生成、自动验证、有限修复和知识回写。
+AlgoForge 是基于 LLM Agent 的算法能力工厂，面向行业算法的复刻、验证与知识沉淀。它以**银行营销响应预测**为主场景，以 **SMS 垃圾信息分类**展示跨任务迁移，串联能力理解、知识检索、方案规划、代码生成、自动验证、多轮修复和知识回写。
 
-[![CPU verification](https://github.com/dengdeng55525/algorithm-capability-factory/actions/workflows/ci.yml/badge.svg)](https://github.com/dengdeng55525/algorithm-capability-factory/actions/workflows/ci.yml) [![Web verification](https://github.com/dengdeng55525/algorithm-capability-factory/actions/workflows/frontend.yml/badge.svg)](https://github.com/dengdeng55525/algorithm-capability-factory/actions/workflows/frontend.yml)
+[![CPU verification](https://github.com/dengdeng55525/algorithm-capability-factory/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/dengdeng55525/algorithm-capability-factory/actions/workflows/ci.yml) [![Web verification](https://github.com/dengdeng55525/algorithm-capability-factory/actions/workflows/frontend.yml/badge.svg?branch=main)](https://github.com/dengdeng55525/algorithm-capability-factory/actions/workflows/frontend.yml)
 
-仓库按成熟开源项目的方式组织，代码采用 MIT 许可证；第三方数据、模型和源码仍遵循各自许可证与使用条款，详见 [NOTICE](NOTICE)。
+代码采用 MIT 许可证；第三方数据、模型和源码遵循各自许可证与使用条款，详见 [NOTICE](NOTICE)。
 
 ## 项目背景与目标
 
 真实团队的算法能力通常分散在需求文档、历史代码、实验记录和专家经验里。AlgoForge 将这些能力转成有来源的结构化知识，再按照固定数据协议和受限执行器完成复刻、验证与沉淀。系统为算法选择依据、代码可运行性、指标事实和失败经验复用提供统一证据。
 
-本原型面向题面要求的可复核闭环，主场景只选择一个具体业务问题：银行客户是否订购定期存款。SMS 分类用于证明相同编排和报告接口可以迁移到文本任务。
-
-## 创新设计与题目加分项
-
-AlgoForge 的创新集中在**让搜索、修复和能力沉淀都能被独立复核**：模型负责提出方案，确定性合约控制搜索空间，验证器产生事实，知识图保存来源和版本，报告解释质量与资源之间的取舍。
-
-| 题目加分项 | 系统中的具体实现 | 代码与可复核证据 |
-| --- | --- | --- |
-| 图搜索 / Beam Search | 两跳知识检索、有界 Beam 扩展、全局唯一算法变体、父子关系和剪枝；合法空间不足时减少候选数 | [搜索实现](src/capability_factory/search.py)、[真实扩展与修复记录](docs/research/budget_beam_validation.json) |
-| 多智能体协作 | 解释、规划、生成、审查、修复、总结角色通过结构化产物交接；分别调用 LLM，并受状态机和预算约束 | [角色合约](src/capability_factory/prompts.py)、[工作流](src/capability_factory/workflow.py) |
-| 真实代码仓库抽取 | 从指定 Git commit 的 Python blob 抽取函数、类、方法、签名、注解、文档字符串和导入依赖，再生成能力卡片 | [仓库抽取器](src/capability_factory/repository.py)、[真实仓库样例](examples/evidence/innovation/repository.json) |
-| 代码安全与受限执行 | AST 构造器白名单、参数与接口检查、独立进程、CPU/内存/时间限制、取消回收 | [执行器](src/capability_factory/execution/runner.py)、[对抗测试](tests/test_execution_adversarial.py)；目前不提供 OS 命名空间隔离 |
-| 失败分析与经验复用 | Reviewer 使用真实错误诊断，修复后重新验证；只有对应修复实际通过才形成已验证经验，供后续图检索使用 | [知识回写](src/capability_factory/knowledge.py)、[自然错误修复证据](docs/research/budget_beam_validation.json) |
-| 能力版本管理 | 稳定能力 ID、内容哈希去重、递增版本、SUPERSEDES 边、固定 Git 来源与代码哈希 | [版本与仓库回归](tests/test_repository.py)、[知识库测试](tests/test_knowledge_runtime.py) |
-| 自然语言设计依据 | 候选理由、检索引用、代码解释和总结分别保存，界面可沿引用查看来源 | [报告页面](web/src/views/RunView.vue)、[公开银行报告](examples/evidence/bank_beam/report.md) |
-| 跨场景迁移 | 银行表格分类与 SMS 文本分类共用编排、验证、修复和回写；各自保留数据/特征协议 | [双场景协议](src/capability_factory/datasets.py)、[本地 14B 短信实测](examples/evidence/sms_local_resources/report.json) |
-| 自动接口文档 | FastAPI 生成交互文档；export-openapi 命令可离线导出真实路由与 Pydantic 合约 | [导出的 OpenAPI](examples/evidence/innovation/openapi.json)、[CLI](src/capability_factory/cli.py) |
-| 性能优化与资源分析 | 搜索参数变体并比较验证 AP；新增 AP / 训练时间 / 峰值 RSS 的 Pareto 前沿与父子方案变化分析 | [分析实现](src/capability_factory/optimization.py)、[实测资源权衡](examples/evidence/innovation/resource_tradeoffs.json) |
-
-![真实短信任务的质量与资源权衡](docs/images/resource-tradeoffs.png)
-
-上图来自真实本地 14B 短信运行：两个候选均通过，选中候选验证 AP 为 0.9598。两者在质量、耗时和内存之间各有取舍；图中耗时是单次观测，封存测试集未评分。完整代码和检查记录见 [可读报告](examples/evidence/sms_local_resources/report.html)，功能与测试索引见 [增强验收记录](docs/research/innovation_validation.json)。
-
-四个值得演示的设计细节：
-
-- **搜索空间可核验**：模型不能增加候选预算、重复同一算法变体或猜测运行时限；可选扩展反复违反合约会留下跳过记录。
-- **经验与修复证据绑定**：诊断、代码前后哈希、对应尝试结果和适用任务一起入库。未通过的修复保留为未验证经验。
-- **仓库能力可追溯**：抽取固定提交中的源文件，保留行号和 SHA256；工作区未提交改动不影响抽取。同一快照重复导入不会生成重复版本。
-- **质量与成本一起解释**：报告展示 Pareto 前沿，并明确缺失值、排除原因和单次测量限制；仍按验证 AP 选择候选，不把偶然低耗时宣称为稳定加速。
-
-当前多角色使用同一个可选 LLM 串行协作；MCTS、任意 Python 的强隔离沙箱和大规模多租户调度未实现。仓库抽取所得的任务适用性由操作者声明，能力卡初始状态为 extracted，不会仅凭静态分析标为 verified。完整演示步骤、边界和取证方式见 [创新点与加分项演示](docs/13_创新点与加分项演示.md)。
+项目围绕银行客户是否订购定期存款构建完整业务闭环，并通过 SMS 分类展示同一套编排、验证与报告接口在文本任务中的复用。
 
 ## 你可以先看到什么
 
@@ -51,7 +21,7 @@ AlgoForge 的创新集中在**让搜索、修复和能力沉淀都能被独立�
 - **可审计知识图谱**：SQLite 持久化来源、能力、算法、数据、环境、验证运行、制品和失败经验。
 - **可复现验证**：固定数据切分、主指标 AP、Dummy 基线、接口/功能/稳定性/资源检查，缺失值不填零。
 - **多候选和有限搜索**：比较候选方案，并提供有界 Beam Search、修复预算和失败分母。
-- **三种推理后端**：DeepSeek API、确定性 Mock、本地 OpenAI 兼容 HTTP 接口。四卡 14B 启动脚本和端点池已提供；实际 GPU 吞吐仍以目标机器验证报告为准。
+- **三种推理后端**：DeepSeek API、确定性 Mock、本地 OpenAI 兼容 HTTP 接口。支持前端切换 API / 本地模型，配套 1 卡与 4 卡 14B 启动配置和端点池。
 
 ![工作台概览](docs/images/workbench-overview.png)
 
@@ -206,7 +176,7 @@ interpreter → 知识检索 → planner → coder → 本地验证器
 | Agent 编排 | Python 显式状态机、Pydantic 合约 | 状态、预算、错误和终止条件可测试 |
 | LLM | DeepSeek HTTP Provider、Mock Provider、本地 HTTP Provider | 真实 API 可用；Mock 便于离线复现；本地路线可替换 |
 | 知识库 | SQLite + 属性图表 | 单机可复现，节点/关系/版本/来源可审计 |
-| 检索 | 词项匹配 + 有界图扩展，最多两跳 | 结果可解释，能展示证据路径；不虚称为向量检索 |
+| 检索 | 词项匹配 + 有界图扩展，最多两跳 | 结合文本相关性与图关系，提供可解释的知识证据路径 |
 | 算法执行 | 受限 AST 构造器 + 资源限制子进程 | 执行范围限定为允许的算法构造语言 |
 | 验证 | scikit-learn 固定协议、AP/Dummy、接口和资源检查 | 算法候选使用统一分母和验证集 |
 | 服务 | FastAPI + CLI | 同一套后端同时服务命令行、API 和 Web |
@@ -232,7 +202,7 @@ interpreter → 知识检索 → planner → coder → 本地验证器
 - `TaskType`、`Algorithm`、`Transform`、`DatasetVersion`、`Environment`：能力适用范围和执行依赖。
 - `ValidationRun`、`Artifact`、`FailureExperience`：运行状态、代码哈希、指标、失败指纹和修复关系。
 
-主要关系包括 `DERIVED_FROM`、`USES`、`REQUIRES`、`EVALUATES`、`REPAIRS`、`AVOIDED_BY`、`SUPERSEDES`。来源关系表示可追溯性，不自动等价于算法已验证；验证证据必须沿真实运行路径查看。
+主要关系包括 `DERIVED_FROM`、`USES`、`REQUIRES`、`EVALUATES`、`REPAIRS`、`AVOIDED_BY`、`SUPERSEDES`。来源关系记录知识出处，验证关系记录实际执行结论，两类证据通过能力版本和运行节点关联。
 
 ```bash
 python -m capability_factory export-graph --output artifacts/graph.json
@@ -240,7 +210,7 @@ python -m capability_factory export-graph --output artifacts/graph.json
 python scripts/export_graphml.py --output artifacts/graph.graphml
 ```
 
-JSON 是 API/前端事实接口，GraphML 是离线交换格式；两者都从 SQLite 权威图谱生成，不维护第二份手工图数据。schema、节点示例和版本语义见 [系统架构与接口](docs/03_系统架构与接口.md)、[知识库 README](knowledge/README.md) 和 [前端/报告说明](docs/11_前端与报告说明.md)。
+JSON 服务于 API 和前端，GraphML 用于离线交换；两者均从 SQLite 中的统一图谱生成。schema、节点示例和版本语义见 [系统架构与接口](docs/03_系统架构与接口.md)、[知识库 README](knowledge/README.md) 和 [前端/报告说明](docs/11_前端与报告说明.md)。
 
 ## 验证报告样例与公开证据
 
@@ -324,6 +294,48 @@ def build_pipeline(task_spec):
 
 完整字段约束、版本语义和 SQL 表见 [系统架构与接口](docs/03_系统架构与接口.md) 和 [knowledge/runtime_schema.sql](knowledge/runtime_schema.sql)。
 
+## 创新设计与题目加分项
+
+AlgoForge 将**证据驱动的 Agent 协作、有界方案搜索、失败经验复用和质量资源分析**整合为一个可运行闭环。每个设计都对应具体代码、运行记录和验收入口。
+
+### 创新性（15%）
+
+| 题目评价标准 | 创新机制与工程价值 | 实现与演示证据 |
+| --- | --- | --- |
+| **是否提出有创造性的 Agent 协作机制** | 采用“结构化交接 + 独立验证反馈”的多角色协作：Planner 提交带知识引用的方案，Coder 按合约生成代码，Reviewer 根据执行错误指导 Repair Coder，Curator 汇总实测结果。显式状态机统一管理角色上下文、预算与终止条件，使每次决策和修复都可追踪。 | [角色与合约](src/capability_factory/prompts.py)、[工作流](src/capability_factory/workflow.py)、[真实修复记录](docs/research/budget_beam_validation.json) |
+| **是否有效利用知识图谱增强代码生成和验证** | 将来源、能力、任务、算法、依赖、验证运行与失败经验连接起来，通过词项检索和最多两跳图扩展提供生成依据。规划阶段校验知识引用，执行阶段按固定任务协议独立验证，结果与制品回写图谱，形成从来源到验证结论的证据路径。 | [知识检索与回写](src/capability_factory/knowledge.py)、[图谱 schema](knowledge/runtime_schema.sql)、[知识探索界面](web/src/views/KnowledgeView.vue) |
+| **是否设计了合理的搜索、优化或自修复策略** | 有界 Beam Search 在合法算法变体中扩展候选，按全局唯一标识去重并保存父子关系与剪枝记录；Reviewer 与 Repair Coder 根据真实错误多轮修复。候选统一比较验证 AP，并展示训练时间、峰值内存的 Pareto 前沿，帮助解释质量与资源取舍。 | [搜索实现](src/capability_factory/search.py)、[资源分析](src/capability_factory/optimization.py)、[搜索与修复实测](docs/research/budget_beam_validation.json) |
+| **是否能将失败经验沉淀为可复用知识** | 将失败指纹、错误诊断、适用任务、修复前后代码哈希和验证结果保存为可关联的经验与运行证据。对应修复通过后将经验标记为 validated，供后续任务检索；能力内容变更形成新版本并通过 SUPERSEDES 保留历史。 | [经验与版本管理](src/capability_factory/knowledge.py)、[知识库回归测试](tests/test_knowledge_runtime.py)、[自然错误修复证据](docs/research/budget_beam_validation.json) |
+| **是否考虑真实行业落地中的复杂问题** | 银行场景采用通话前特征协议处理标签泄漏，固定数据切分并报告 AP 与类别占比基线；系统统一处理运行预算、取消、接口合约、代码白名单和进程资源限制。前端可切换 API / 本地 14B，提供 1 卡与 4 卡配置，并保留数据、代码和能力版本来源。 | [数据协议](src/capability_factory/datasets.py)、[受限执行器](src/capability_factory/execution/runner.py)、[四卡部署](docs/05_算力预算与四卡兼容.md)、[安全设计](SECURITY.md) |
+
+### 十项加分能力
+
+| 题目加分项 | 系统中的具体实现 | 代码与可复核证据 |
+| --- | --- | --- |
+| 图搜索 / Beam Search | 两跳知识检索、有界 Beam 扩展、全局唯一算法变体、父子关系和剪枝；候选规模匹配合法搜索空间 | [搜索实现](src/capability_factory/search.py)、[真实扩展与修复记录](docs/research/budget_beam_validation.json) |
+| 多智能体协作 | 解释、规划、生成、审查、修复、总结角色分别调用 LLM，通过结构化产物交接；状态机统一控制预算 | [角色合约](src/capability_factory/prompts.py)、[工作流](src/capability_factory/workflow.py) |
+| 真实代码仓库抽取 | 从指定 Git commit 的 Python blob 抽取函数、类、方法、签名、注解、文档字符串和导入依赖，生成能力卡片 | [仓库抽取器](src/capability_factory/repository.py)、[真实仓库样例](examples/evidence/innovation/repository.json) |
+| 代码安全与受限执行 | AST 构造器白名单、参数与接口检查、独立进程、CPU/内存/时间限制、取消回收 | [执行器](src/capability_factory/execution/runner.py)、[对抗测试](tests/test_execution_adversarial.py)、[执行安全范围](SECURITY.md) |
+| 失败分析与经验复用 | 根据真实错误诊断和修复，再执行同一验证器；已验证经验与成功修复绑定，供后续图检索使用 | [知识回写](src/capability_factory/knowledge.py)、[自然错误修复证据](docs/research/budget_beam_validation.json) |
+| 能力版本管理 | 稳定能力 ID、内容哈希去重、递增版本、SUPERSEDES 边、固定 Git 来源与代码哈希 | [版本与仓库回归](tests/test_repository.py)、[知识库测试](tests/test_knowledge_runtime.py) |
+| 自然语言设计依据 | 保存候选理由、检索引用、代码解释和结果总结，界面沿引用展示来源 | [报告页面](web/src/views/RunView.vue)、[银行报告](examples/evidence/bank_beam/report.md) |
+| 跨场景迁移 | 银行表格分类与 SMS 文本分类共用编排、验证、修复和回写，各自采用专门的数据与特征协议 | [双场景协议](src/capability_factory/datasets.py)、[本地 14B 短信实测](examples/evidence/sms_local_resources/report.json) |
+| 自动接口文档 | FastAPI 生成交互文档；export-openapi 可离线导出真实路由与 Pydantic 合约 | [OpenAPI 样例](examples/evidence/innovation/openapi.json)、[CLI](src/capability_factory/cli.py) |
+| 性能优化与资源分析 | 搜索参数变体、比较验证 AP，分析 AP / 训练时间 / 峰值 RSS 的 Pareto 前沿与父子方案变化 | [分析实现](src/capability_factory/optimization.py)、[实测资源权衡](examples/evidence/innovation/resource_tradeoffs.json) |
+
+![真实短信任务的质量与资源权衡](docs/images/resource-tradeoffs.png)
+
+上图来自真实本地 14B 短信运行：两个候选均通过，选中候选验证 AP 为 **0.9598**。报告同时展示各候选的训练时间与峰值内存，便于直接比较质量和资源。此次结果采用验证集、单次资源观测，测试集保持封存。完整代码、检查记录和运行指标见 [可读报告](examples/evidence/sms_local_resources/report.html) 与 [增强验收记录](docs/research/innovation_validation.json)。
+
+### 四个值得演示的设计细节
+
+- **搜索空间可核验**：候选预算、算法变体和运行时限由系统合约控制，合约拒绝、扩展与跳过均保留事件记录。
+- **经验与修复证据绑定**：诊断、代码前后哈希、对应尝试结果和适用任务一起保存，经验状态随实际验证结果更新。
+- **仓库能力可追溯**：抽取固定提交中的源文件，保留行号和 SHA256；同一快照重复导入保持幂等，内容变化生成新版本。
+- **质量与成本一起解释**：候选选择遵循验证 AP 优先规则，Pareto 分析补充资源权衡、缺失测量说明和父子方案变化。
+
+多角色通过同一个可选 LLM 后端串行协作；仓库抽取得到的能力卡从 extracted 状态进入后续验证流程。完整演示命令、测量口径和验收步骤见 [创新点与加分项演示](docs/13_创新点与加分项演示.md)。
+
 ## 笔试要求对照
 
 | 评分要求 | 代码/文档证据 |
@@ -336,7 +348,7 @@ def build_pipeline(task_spec):
 | API/CLI/Web | [api.py](src/capability_factory/api.py)、[cli.py](src/capability_factory/cli.py)、[web/](web) |
 | 多候选、修复、Beam、插件 | [workflow.py](src/capability_factory/workflow.py)、[plugins.py](src/capability_factory/plugins.py)、[插件指南](docs/10_插件扩展指南.md) |
 | 自动报告和回写 | [reporting.py](src/capability_factory/reporting.py)、[knowledge.py](src/capability_factory/knowledge.py) |
-| 真实验收边界 | [实现与验收对照](docs/08_实现与验收对照.md)、[后端验证索引](docs/research/execution_validation.json)、[前端验证索引](docs/research/frontend_validation.json) |
+| 验收与运行证据 | [实现与验收对照](docs/08_实现与验收对照.md)、[后端验证索引](docs/research/execution_validation.json)、[前端验证索引](docs/research/frontend_validation.json) |
 
 ## 仓库结构
 
@@ -423,7 +435,7 @@ npm run build
 npm run test:e2e
 ```
 
-浏览器测试使用 HTTP 夹具，不调用付费模型；它验证 UI 状态、报告折叠、图谱交互和错误恢复。GitHub Actions 对 CPU 回归和 Web 交互分别执行同样的可复现检查。当前机器的完整结果和限制写在 [frontend_validation.json](docs/research/frontend_validation.json)，不要手工复制测试数量作为长期承诺。
+浏览器测试使用 HTTP 夹具，不调用付费模型；它验证 UI 状态、报告折叠、图谱交互和错误恢复。GitHub Actions 对 CPU 回归和 Web 交互分别执行同样的可复现检查。页面顶部的 CI 徽章显示 main 分支检查状态；[CI 回归记录](docs/research/ci_budget_validation.json) 保存预算精度修复和远程检查证据，功能实测见 [增强验收记录](docs/research/innovation_validation.json) 与 [前端验证索引](docs/research/frontend_validation.json)。
 
 ## 文档地图
 
@@ -431,43 +443,41 @@ npm run test:e2e
 - [使用与演示](docs/07_使用与演示指南.md)：安装、CLI、API、Web 和答辩流程。
 - [系统架构与接口](docs/03_系统架构与接口.md)：Agent 合约、状态机、图谱和接口。
 - [数据与知识来源](docs/02_数据与知识来源.md)：公开数据、切分、防泄漏和来源。
-- [实现与验收对照](docs/08_实现与验收对照.md)：原题逐项映射和证据边界。
+- [实现与验收对照](docs/08_实现与验收对照.md)：原题逐项映射和验收证据。
+- [创新点与加分项演示](docs/13_创新点与加分项演示.md)：五项创新评分依据、十项加分能力与演示命令。
 - [前端与报告说明](docs/11_前端与报告说明.md)：报告层次、JSON 折叠和图谱证据。
 - [交互工作台与参考设计](docs/12_交互工作台与参考设计.md)：界面交互与截图验收。
-- [算力与四卡兼容](docs/05_算力预算与四卡兼容.md)：1–4 张 RTX 4090D 的规划边界。
-- [部署说明](deploy/README.md)：Vue 网关、容器模板和本地模型接入边界。
+- [算力与四卡兼容](docs/05_算力预算与四卡兼容.md)：1–4 张 RTX 4090D 的部署配置与资源规划。
+- [部署说明](deploy/README.md)：Vue 网关、容器模板和本地模型接入。
 - [变更记录](CHANGELOG.md)、[贡献指南](CONTRIBUTING.md)、[安全说明](SECURITY.md)和 [第三方声明](NOTICE)。
 
 ## 挑战与解决方案
 
-| 挑战 | 当前方案 | 仍需注意 |
+| 行业与工程挑战 | 实现方案 | 验证方式 |
 | --- | --- | --- |
-| 通话时长造成标签泄漏 | 固定 pre-contact 特征白名单和 `duration` 禁用检查 | 只对已支持的银行协议负责 |
-| LLM 代码执行边界 | 受限 AST 构造器、可信 evaluator、资源限制子进程 | 当前运行时采用进程级资源限制；专用执行节点、容器强化或 microVM 属于后续部署项 |
-| API 费用和网络失败 | Mock 离线模式、Provider 明示、预算/超时/不确定提交保护 | 真实 API 账单以服务商为准 |
-| 图谱关系噪声 | 词项检索 + 有界 1/2 跳路径和来源哈希 | 当前使用 SQLite 与 NetworkX；向量检索和企业级图数据库属于后续扩展 |
-| 本地 14B/多卡落地 | OpenAI 兼容 Provider 和静态 profiles | 当前保留接入配置，权重部署与吞吐测试列入目标机器验收 |
+| 通话时长造成标签泄漏 | 固定 pre-contact 特征白名单，校验 duration 禁用和数据划分 | 数据协议、特征检查与数据哈希审计 |
+| LLM 生成代码的执行安全 | 受限 AST 构造器、可信 evaluator、资源限制子进程 | 构造器校验、对抗用例、超时和取消回收测试 |
+| API 成本与运行中断 | 显式 Provider、总预算、调用超时、取消与不确定提交保护 | 预算与异常路径回归、运行事件、调用用量报告 |
+| 知识来源与关系质量 | SQLite 属性图、词项检索、有界两跳扩展、来源哈希 | 能力引用校验、知识路径展示、版本与回写测试 |
+| 本地 14B 与多卡接入 | OpenAI 兼容 Provider、前端后端切换、1 卡 / 4 副本配置与端点池 | [本地部署实测](docs/research/local_vllm_validation.json)、[本地短信闭环](examples/evidence/sms_local_resources/report.json) |
+
+## 部署与评测范围
+
+- **使用方式**：面向本机受控研发工作空间，提供 API、CLI 和 Web；本地 Qwen2.5-Coder-14B AWQ 通过 vLLM 接入。
+- **执行机制**：算法代码遵循受限构造器语法，在 CPU、内存和时间预算内由独立进程执行；运行权限和网络部署要求见 [安全说明](SECURITY.md)。
+- **任务覆盖**：银行表格分类与 SMS 文本分类采用各自的数据协议，共用 Agent 编排和验证框架；扩展流程见 [插件指南](docs/10_插件扩展指南.md)。
+- **测量口径**：报告区分真实模型、Mock 和历史分析；验证集用于候选比较，封存测试集按独立评估协议使用。模型、数据、耗时、资源和检查结果均保留来源。
 
 ## 后续扩展方向
 
-以下方向标记为 planned，属于后续开发项：
-
-1. **更强隔离**：接入专用执行节点、容器强化或 microVM，并验证网络/凭证/文件边界。
-2. **更严格评测**：建立能力抽取 gold、图检索消融、经验复用实验和固定预算的多轮重复。
-3. **本地模型部署**：Qwen 14B AWQ 已在当前四张 RTX 4090D 上完成单卡和四副本健康/对话 smoke；生产环境仍需按目标主机记录 OOM、吞吐和回收。
+1. **执行隔离**：接入专用执行节点、强化容器或 microVM，完善网络、凭证与文件访问隔离。
+2. **系统性评测**：建立能力抽取标注集、图检索与角色协作消融、经验复用实验和固定预算的重复测量。
+3. **多卡服务优化**：在已有单卡与四副本健康、对话及本地任务验证基础上，开展持续负载、吞吐、OOM 和故障恢复基准。
 4. **服务化能力**：增加认证、租户隔离、持久队列、审计保留策略和 PostgreSQL 存储后端。
-5. **任务插件**：在不改变 Agent 状态机的前提下增加时间序列、异常检测和推荐任务。
-
-## 当前边界
-
-- 默认路线是 DeepSeek API；本地 Qwen2.5-Coder-14B AWQ 通过 vLLM OpenAI 兼容端点接入，四卡 profile 已完成本机四副本 smoke，质量和性能仍应以对应报告为准。
-- API、Mock、历史回放和本地模型状态严格区分；Mock 结果用于流程验证，真实 LLM 质量查看对应的 `mode=real` 报告。
-- 当前任务协议覆盖银行表格任务和 SMS 文本任务；数据集扩展需要新增任务协议，代码扩展需要通过受限构造器。
-- 当前服务是本机单用户原型，没有公网鉴权、租户隔离、持久队列或完整 OS 沙箱。
-- 性能、成本、修复率和跨任务提升统一以对应实验报告为准，代码入口只描述实现路径。
+5. **任务插件**：沿用现有 Agent 状态机，增加时间序列、异常检测和推荐任务的数据与评估协议。
 
 ## 贡献、反馈与许可证
 
 贡献流程、提交约定和本地检查见 [CONTRIBUTING.md](CONTRIBUTING.md)。安全边界和敏感信息处理见 [SECURITY.md](SECURITY.md)。
 
-项目目前是可复现的笔试原型，代码按 MIT 许可证分发；第三方数据、模型和源码不因本项目许可证获得额外授权。
+代码使用与贡献遵循 [MIT 许可证](LICENSE)；第三方材料的来源、许可及使用条件统一记录在 [NOTICE](NOTICE)。
