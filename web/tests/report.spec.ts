@@ -174,11 +174,9 @@ test("resource tradeoffs show measured costs and keep audit details folded", asy
     route.fulfill({ json: fixture }),
   );
   await openReport(page, "pareto");
-  const panel = page
-    .locator("section")
-    .filter({
-      has: page.getByRole("heading", { name: "质量与资源权衡", exact: true }),
-    });
+  const panel = page.locator("section").filter({
+    has: page.getByRole("heading", { name: "质量与资源权衡", exact: true }),
+  });
   await expect(panel).toContainText("200.0 MiB");
   await expect(panel).toContainText("单次测量不代表稳定加速");
   await expect(panel.locator("details[open]")).toHaveCount(0);

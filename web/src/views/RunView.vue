@@ -923,7 +923,7 @@ onBeforeUnmount(() => {
         </template>
       </section>
 
-      <section v-if="report.optimization" class="panel">
+      <section v-if="report.optimization" class="panel resource-analysis">
         <div class="section-heading">
           <div>
             <p class="eyebrow">QUALITY & RESOURCES</p>
@@ -1923,6 +1923,17 @@ onBeforeUnmount(() => {
   display: none;
   font-size: 10px;
   color: #8d99aa;
+}
+.resource-analysis {
+  padding: 28px;
+}
+.resource-analysis > p {
+  margin: 16px 0;
+}
+@media (max-width: 640px) {
+  .resource-analysis {
+    padding: 18px;
+  }
 }
 .table-scroll {
   overflow-x: auto;
