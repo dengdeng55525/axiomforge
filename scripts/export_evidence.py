@@ -47,18 +47,24 @@ def _sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def _scan(value, context: str) -> None:
+def _scan(value, context: str, field_path: tuple[str, ...] = ()) -> None:
     """Fail without echoing credential-like values into the exception or CLI."""
     if isinstance(value, dict):
         for key, item in value.items():
+            # HTTPProvider.metadata records a mode enum here, never an HTTP
+            # Authorization header. All other credential fields and values
+            # remain subject to the normal rejection rules.
+            declared_mode = (context == "report.json" and field_path == ("provider_metadata",)
+                             and key == "authorization" and isinstance(item, str)
+                             and item in {"none", "bearer"})
             if str(key).lower() in SECRET_FIELDS and isinstance(item, str) and item.strip():
-                if item.strip() not in {"[REDACTED]", "<redacted>"}:
+                if item.strip() not in {"[REDACTED]", "<redacted>"} and not declared_mode:
                     raise EvidenceExportError(f"Credential-like field detected in {context}")
-            _scan(str(key), context)
-            _scan(item, context)
+            _scan(str(key), context, field_path)
+            _scan(item, context, (*field_path, str(key)))
     elif isinstance(value, list):
-        for item in value:
-            _scan(item, context)
+        for index, item in enumerate(value):
+            _scan(item, context, (*field_path, str(index)))
     elif isinstance(value, str) and any(pattern.search(value) for pattern in SECRET_PATTERNS):
         raise EvidenceExportError(f"Credential-like content detected in {context}")
 

@@ -154,6 +154,31 @@ def test_source_hash_mismatch_aborts(fixture):
         exporter.export_run(project, RUN_ID, "tampered")
 
 
+@pytest.mark.parametrize("mode", ["none", "bearer"])
+def test_public_provider_authentication_mode_is_not_a_credential(fixture, mode):
+    project, directory, report = fixture
+    report["provider_metadata"] = {"authorization": mode}
+    write_json(directory / "report.json", report)
+    result = exporter.export_run(project, RUN_ID, "metadata")
+    public = json.loads((project / result["directory"] / "report.json").read_text())
+    assert public["provider_metadata"] == {"authorization": mode}
+
+
+@pytest.mark.parametrize("extra", [
+    {"provider_metadata": {"authorization": "Bearer private fixture header"}},
+    {"authorization": "none"},
+    {"provider_metadata": {"api_key": "none"}},
+    {"other": {"provider_metadata": {"authorization": "none"}}},
+])
+def test_auth_mode_exception_is_limited_to_exact_path_and_enum(fixture, extra):
+    project, directory, report = fixture
+    report.update(extra)
+    write_json(directory / "report.json", report)
+    with pytest.raises(exporter.EvidenceExportError):
+        exporter.export_run(project, RUN_ID, "blocked_metadata")
+    assert not (project / "examples/evidence/blocked_metadata").exists()
+
+
 def test_existing_bundle_is_not_overwritten(fixture):
     project, _, _ = fixture
     exporter.export_run(project, RUN_ID, "immutable")
