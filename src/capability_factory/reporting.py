@@ -183,6 +183,19 @@ def render_html(report: dict[str, Any]) -> str:
         }}
         if extra:
             body.append("<details><summary>其他候选事实</summary>" + _pre(extra) + "</details>")
+    optimization = _mapping(data.get("optimization"))
+    if optimization:
+        body += ["</section><section><h2>质量与资源权衡</h2>",
+                 "<p>在已通过验证且测量齐全的候选中，同时比较 AP（越高越好）、训练耗时和峰值 RSS（越低越好）。</p>",
+                 _definition_list({"Pareto 前沿候选": optimization.get("frontier_candidate_ids"),
+                                   "观测次数": optimization.get("measurement_repetitions")}),
+                 '<div class="table-wrap"><table><thead><tr><th>候选</th><th>AP</th><th>训练秒数</th><th>峰值 RSS MiB</th><th>前沿</th></tr></thead><tbody>']
+        for row in _sequence(optimization.get("candidates")):
+            body.append("<tr>" + "".join(f"<td>{_escape(row.get(key))}</td>" for key in
+                        ("candidate_id", "average_precision", "fit_seconds", "peak_rss_mib", "pareto_optimal")) + "</tr>")
+        body += ["</tbody></table></div>",
+                 "<p>单次资源观测不证明稳定加速；候选选择仍以验证 AP 为主。</p>",
+                 "<details><summary>父子方案变化与分析审计</summary>", _pre(optimization), "</details>"]
     body += ["</section><section><h2>资源、调用与耗时</h2>",
              "<h3>LLM 用量</h3>", _pre(data.get("usage")),
              "<h3>计时记录</h3>", _pre(data.get("timing")),

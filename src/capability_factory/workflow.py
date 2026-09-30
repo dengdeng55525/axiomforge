@@ -22,6 +22,7 @@ from capability_factory.contracts import (
     TaskInterpretation,
 )
 from capability_factory.knowledge import KnowledgeStore
+from capability_factory.optimization import analyze_resources
 from capability_factory.providers import (
     BudgetExceeded,
     HTTPProvider,
@@ -419,6 +420,7 @@ class Workflow:
             for item in report["candidates"]:
                 if item["status"] == "running":
                     item["status"] = "cancelled" if report["status"] == "cancelled" else "failed"
+            report["optimization"] = analyze_resources(report)
             report["usage"] = provider.usage.as_dict() if provider else {}
             report["finished_at"] = now()
             report["timing"] = {"wall_seconds": round(time.monotonic() - started, 3), "budget_seconds": deadline - started,

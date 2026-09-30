@@ -308,6 +308,29 @@ class KnowledgeStore:
                                     for source in sources],
                 "extraction_performed": extractor is not None}
 
+    def ingest_repository(self, manifest: dict[str, Any]) -> dict[str, Any]:
+        """Atomically persist a locally extracted repository snapshot as unverified knowledge."""
+        sources = {source["source_id"]: source for source in manifest["sources"]}
+        pending = []
+        for raw in manifest["capabilities"]:
+            if not raw.get("capability_id", "").startswith("repo_"):
+                raise ValueError("Repository capabilities require their own identity namespace")
+            card = self._validate_card(raw, sources)
+            card.update(origin="repository_ast", status="extracted",
+                        extraction_method="pinned-git-blob-ast")
+            pending.append(card)
+        self.initialize()
+        created = 0
+        with self._connection(write=True) as connection:
+            for source in sources.values():
+                self._source(connection, source)
+            for card in pending:
+                _, inserted = self._put_card(connection, card)
+                created += int(inserted)
+        return {"commit": manifest["commit"], "sources": len(sources),
+                "capabilities": len(pending), "new_capability_versions": created,
+                "issues": manifest["issues"]}
+
     @staticmethod
     def _latest(connection: sqlite3.Connection) -> list[dict[str, Any]]:
         rows = connection.execute(

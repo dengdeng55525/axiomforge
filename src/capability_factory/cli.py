@@ -140,6 +140,67 @@ def export_graph(output_path: Annotated[Path, typer.Option("--output")] = Path("
     output({"path": str(output_path), "nodes": len(graph["nodes"]), "edges": len(graph["edges"])})
 
 
+@app.command("ingest-repo")
+def ingest_repo(
+    repository: Path,
+    paths: Annotated[list[str], typer.Option("--path", help="Repeat for each committed Python file")],
+    repository_url: Annotated[str, typer.Option(help="Credential-free HTTPS source repository URL")],
+    license_id: Annotated[str, typer.Option("--license")],
+    task_types: Annotated[list[str], typer.Option("--task-type")],
+    revision: Annotated[str, typer.Option()] = "HEAD",
+    output_path: Annotated[Path, typer.Option("--output")] = Path("artifacts/ingestion/repository.json"),
+):
+    """Extract committed source through AST and version its source-grounded capability cards."""
+    from capability_factory.repository import extract_repository
+
+    try:
+        manifest = extract_repository(repository, paths, repository_url=repository_url,
+                                      license_id=license_id, task_types=task_types, revision=revision)
+        summary = KnowledgeStore(load_settings().db_path).ingest_repository(manifest)
+    except (ValueError, OSError) as error:
+        raise typer.BadParameter(str(error)) from None
+    write_json(output_path, manifest)
+    output({**summary, "manifest": str(output_path), "source_executed": False})
+
+
+@app.command("export-openapi")
+def export_openapi(output_path: Annotated[Path, typer.Option("--output")] = Path("artifacts/openapi.json")):
+    """Generate the live API contract offline without loading credentials or modifying live data."""
+    from tempfile import TemporaryDirectory
+
+    from capability_factory.api import create_app
+    from capability_factory.settings import Settings
+
+    with TemporaryDirectory(prefix="algoforge-openapi-") as temporary:
+        application = create_app(Settings(root=Path(temporary)))
+        try:
+            schema = application.openapi()
+        finally:
+            application.state.manager.close()
+            application.state.manager.store.close()
+    write_json(output_path, schema)
+    output({"path": str(output_path), "openapi": schema["openapi"], "paths": len(schema["paths"])})
+
+
+@app.command("analyze-run")
+def analyze_run(
+    run_id: str,
+    output_path: Annotated[Path | None, typer.Option("--output")] = None,
+):
+    """Compare observed AP, training time and memory with a within-run Pareto frontier."""
+    from capability_factory.optimization import analyze_resources
+
+    store = KnowledgeStore(load_settings().db_path)
+    store.initialize()
+    saved = store.get_run(run_id)
+    if saved is None:
+        raise typer.BadParameter("Unknown run ID")
+    analysis = analyze_resources(saved)
+    if output_path is not None:
+        write_json(output_path, analysis)
+    output(analysis)
+
+
 @app.command()
 def report(run_id: str, format: Annotated[str, typer.Option()] = "html", output_path: Annotated[Path | None, typer.Option("--output")] = None):
     """Regenerate a JSON, HTML or Markdown report from persisted verification facts."""

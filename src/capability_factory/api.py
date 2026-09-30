@@ -18,6 +18,7 @@ from capability_factory.graph_presentation import (
 )
 from capability_factory.inference import load_inference_profiles, local_profile_metadata
 from capability_factory.knowledge import KnowledgeStore
+from capability_factory.optimization import analyze_resources
 from capability_factory.reporting import render_html, render_markdown
 from capability_factory.settings import Settings, load_settings
 from capability_factory.webui import mount_workbench
@@ -312,6 +313,9 @@ def create_app(settings: Settings | None = None):
         report = manager.store.get_run(run_id)
         if report is None:
             raise HTTPException(404, "Unknown run")
+        # Historical reports gain a versioned derived view without rewriting stored facts.
+        if "optimization" not in report:
+            report["optimization"] = analyze_resources(report)
         return report
 
     @app.get("/health")
