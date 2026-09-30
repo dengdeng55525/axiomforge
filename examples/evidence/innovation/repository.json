@@ -1,0 +1,207 @@
+{
+  "schema_version": "1.0",
+  "repository_url": "https://github.com/dengdeng55525/algorithm-capability-factory",
+  "commit": "d6f521db694a99950f2b129be6bef7bf7d9a197d",
+  "license": "MIT",
+  "files": [
+    {
+      "path": "src/capability_factory/metrics.py",
+      "git_blob": "af8f2b5e74871d9682bd4a502c32f4e5e6fe6783",
+      "sha256": "8f5f8c333419bb380551e32bf0abe1c3d7552f948e70e1ca385305ca6e079442",
+      "bytes": 4126
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "repo-src-2f7432b140c477d1e42efbd4",
+      "source_key": "repository:src/capability_factory/metrics.py:PredictionContractError",
+      "uri": "https://github.com/dengdeng55525/algorithm-capability-factory/blob/d6f521db694a99950f2b129be6bef7bf7d9a197d/src/capability_factory/metrics.py#L8",
+      "revision": "d6f521db694a99950f2b129be6bef7bf7d9a197d",
+      "license": "MIT",
+      "content_sha256": "8f5f8c333419bb380551e32bf0abe1c3d7552f948e70e1ca385305ca6e079442",
+      "excerpt_sha256": "4a1d90ea42673825c56decec9b3913d6f541ea6065bf3aad1fe3c27e01fb909f",
+      "locator": {
+        "relative_path": "src/capability_factory/metrics.py",
+        "symbol": "PredictionContractError",
+        "line_start": 8,
+        "line_end": 9,
+        "signature": "class PredictionContractError(ValueError)",
+        "imports": [
+          "from __future__ import annotations",
+          "from capability_factory.plugins import evaluate_metrics",
+          "from sklearn.metrics import average_precision_score, f1_score, roc_auc_score",
+          "import math"
+        ],
+        "parse_mode": "git-blob-ast-only"
+      },
+      "content": "class PredictionContractError(ValueError)\nNo docstring recorded.",
+      "kind": "python_ast"
+    },
+    {
+      "source_id": "repo-src-161878b0b7be7c793326d468",
+      "source_key": "repository:src/capability_factory/metrics.py:validate_predictions",
+      "uri": "https://github.com/dengdeng55525/algorithm-capability-factory/blob/d6f521db694a99950f2b129be6bef7bf7d9a197d/src/capability_factory/metrics.py#L12",
+      "revision": "d6f521db694a99950f2b129be6bef7bf7d9a197d",
+      "license": "MIT",
+      "content_sha256": "8f5f8c333419bb380551e32bf0abe1c3d7552f948e70e1ca385305ca6e079442",
+      "excerpt_sha256": "17ab8a4a2554359859ff6c629195e854d83ebabc83eccbd366a768cad61284ea",
+      "locator": {
+        "relative_path": "src/capability_factory/metrics.py",
+        "symbol": "validate_predictions",
+        "line_start": 12,
+        "line_end": 45,
+        "signature": "validate_predictions(prediction: dict, expected_ids: list[str])",
+        "imports": [
+          "from __future__ import annotations",
+          "from capability_factory.plugins import evaluate_metrics",
+          "from sklearn.metrics import average_precision_score, f1_score, roc_auc_score",
+          "import math"
+        ],
+        "parse_mode": "git-blob-ast-only"
+      },
+      "content": "validate_predictions(prediction: dict, expected_ids: list[str])\nRequire exact row alignment and actual class/probability contract.",
+      "kind": "python_ast"
+    },
+    {
+      "source_id": "repo-src-b8a1b5508c55833d638b8c8c",
+      "source_key": "repository:src/capability_factory/metrics.py:binary_metrics",
+      "uri": "https://github.com/dengdeng55525/algorithm-capability-factory/blob/d6f521db694a99950f2b129be6bef7bf7d9a197d/src/capability_factory/metrics.py#L48",
+      "revision": "d6f521db694a99950f2b129be6bef7bf7d9a197d",
+      "license": "MIT",
+      "content_sha256": "8f5f8c333419bb380551e32bf0abe1c3d7552f948e70e1ca385305ca6e079442",
+      "excerpt_sha256": "6a4ce90e0d4e06a0e1f872e17786a5d99f2948af81bb97b0f6599697e9cef143",
+      "locator": {
+        "relative_path": "src/capability_factory/metrics.py",
+        "symbol": "binary_metrics",
+        "line_start": 48,
+        "line_end": 88,
+        "signature": "binary_metrics(labels: list[int], scores: list[float])",
+        "imports": [
+          "from __future__ import annotations",
+          "from capability_factory.plugins import evaluate_metrics",
+          "from sklearn.metrics import average_precision_score, f1_score, roc_auc_score",
+          "import math"
+        ],
+        "parse_mode": "git-blob-ast-only"
+      },
+      "content": "binary_metrics(labels: list[int], scores: list[float])\nEvaluate fixed 0.5 threshold plus a deterministic top-10% campaign budget.\n\nNo threshold is optimized against these validation labels. All metrics are\nvalidation metrics, not an estimate from the sealed final test.",
+      "kind": "python_ast"
+    }
+  ],
+  "capabilities": [
+    {
+      "capability_id": "repo_16306344c5c491978a6c40fa",
+      "name": "PredictionContractError",
+      "summary": "No docstring recorded.",
+      "task_types": [
+        "tabular_binary_classification",
+        "text_binary_classification"
+      ],
+      "source_ids": [
+        "repo-src-2f7432b140c477d1e42efbd4"
+      ],
+      "dependencies": [
+        "from __future__ import annotations",
+        "from capability_factory.plugins import evaluate_metrics",
+        "from sklearn.metrics import average_precision_score, f1_score, roc_auc_score",
+        "import math"
+      ],
+      "input_schema": {
+        "signature": "class PredictionContractError(ValueError)",
+        "kind": "python_signature"
+      },
+      "output_schema": {
+        "annotation": null,
+        "runtime_verified": false
+      },
+      "preconditions": [
+        "Task applicability and license are operator-declared.",
+        "AST observations do not certify execution or algorithm quality."
+      ],
+      "tags": [
+        "repository",
+        "ast-only"
+      ],
+      "origin": "repository_ast",
+      "status": "extracted",
+      "extraction_method": "pinned-git-blob-ast"
+    },
+    {
+      "capability_id": "repo_00db354767926fd0aea5cede",
+      "name": "validate_predictions",
+      "summary": "Require exact row alignment and actual class/probability contract.",
+      "task_types": [
+        "tabular_binary_classification",
+        "text_binary_classification"
+      ],
+      "source_ids": [
+        "repo-src-161878b0b7be7c793326d468"
+      ],
+      "dependencies": [
+        "from __future__ import annotations",
+        "from capability_factory.plugins import evaluate_metrics",
+        "from sklearn.metrics import average_precision_score, f1_score, roc_auc_score",
+        "import math"
+      ],
+      "input_schema": {
+        "signature": "validate_predictions(prediction: dict, expected_ids: list[str])",
+        "kind": "python_signature"
+      },
+      "output_schema": {
+        "annotation": "list[float]",
+        "runtime_verified": false
+      },
+      "preconditions": [
+        "Task applicability and license are operator-declared.",
+        "AST observations do not certify execution or algorithm quality."
+      ],
+      "tags": [
+        "repository",
+        "ast-only"
+      ],
+      "origin": "repository_ast",
+      "status": "extracted",
+      "extraction_method": "pinned-git-blob-ast"
+    },
+    {
+      "capability_id": "repo_dfccaba1473ea4e3ec0f8bc0",
+      "name": "binary_metrics",
+      "summary": "Evaluate fixed 0.5 threshold plus a deterministic top-10% campaign budget.\n\nNo threshold is optimized against these validation labels. All metrics are\nvalidation metrics, not an estimate from the sealed final test.",
+      "task_types": [
+        "tabular_binary_classification",
+        "text_binary_classification"
+      ],
+      "source_ids": [
+        "repo-src-b8a1b5508c55833d638b8c8c"
+      ],
+      "dependencies": [
+        "from __future__ import annotations",
+        "from capability_factory.plugins import evaluate_metrics",
+        "from sklearn.metrics import average_precision_score, f1_score, roc_auc_score",
+        "import math"
+      ],
+      "input_schema": {
+        "signature": "binary_metrics(labels: list[int], scores: list[float])",
+        "kind": "python_signature"
+      },
+      "output_schema": {
+        "annotation": "dict",
+        "runtime_verified": false
+      },
+      "preconditions": [
+        "Task applicability and license are operator-declared.",
+        "AST observations do not certify execution or algorithm quality."
+      ],
+      "tags": [
+        "repository",
+        "ast-only"
+      ],
+      "origin": "repository_ast",
+      "status": "extracted",
+      "extraction_method": "pinned-git-blob-ast"
+    }
+  ],
+  "issues": [],
+  "source_executed": false,
+  "task_applicability": "operator_declared"
+}

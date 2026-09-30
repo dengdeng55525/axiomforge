@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0",
+  "validated_at_utc": "2026-09-30T06:40:29.024091+00:00",
+  "code_commit": "e3aa86223765aec0ac965b84444c3c30f3b2a83f",
+  "scope": [
+    "pinned Git source extraction and versioned knowledge ingestion",
+    "within-run quality and resource Pareto analysis",
+    "offline OpenAPI contract export",
+    "real local SMS workflow and browser presentation"
+  ],
+  "checks": {
+    "python": {
+      "command": ".venv/bin/pytest -q tests ui --junitxml=artifacts/test-results.xml",
+      "tests": 417,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "warnings": 1,
+      "warning_note": "Existing Starlette/AnyIO deprecation warning."
+    },
+    "web": {
+      "build_command": "node node_modules/vue-tsc/bin/vue-tsc.js --noEmit && node node_modules/vite/bin/vite.js build",
+      "test_command": "node node_modules/@playwright/test/cli.js test --reporter=list",
+      "passed": 25,
+      "failed": 0
+    },
+    "lint": {
+      "command": ".venv/bin/ruff check src scripts tests ui",
+      "status": "passed"
+    }
+  },
+  "repository_extraction": {
+    "repository_url": "https://github.com/dengdeng55525/algorithm-capability-factory",
+    "input_commit": "d6f521db694a99950f2b129be6bef7bf7d9a197d",
+    "input_files": [
+      "src/capability_factory/metrics.py"
+    ],
+    "source_executed": false,
+    "source_count": 3,
+    "capability_count": 3,
+    "initial_new_versions": 3,
+    "repeat_new_versions": 0,
+    "issues": [],
+    "status": "extracted",
+    "task_applicability": "operator_declared"
+  },
+  "local_sms_run": {
+    "run_id": "99066c21c7f64134bcde65a0ef068473",
+    "provider": "local_http",
+    "model": "coder14",
+    "mode": "real",
+    "status": "passed",
+    "timing": {
+      "wall_seconds": 29.624,
+      "budget_seconds": 900.0,
+      "request_ceiling_seconds": 900
+    },
+    "candidates_passed": 2,
+    "selected_candidate_id": "sms_complement_nb",
+    "selected_metrics": {
+      "average_precision": 0.9598341674027927,
+      "roc_auc": 0.9837406749250989,
+      "f1_threshold_0_5": 0.9147286821705426,
+      "precision_at_10pct": 1.0,
+      "recall_at_10pct": 0.8062015503875969,
+      "lift_at_10pct": 8.0,
+      "validation_positive_rate": 0.125,
+      "top_10pct_count": 104,
+      "validation_rows": 1032,
+      "classification_threshold": 0.5,
+      "evaluation_split": "validation_only",
+      "sealed_test_scored": false,
+      "ranking_tie_break": "original_validation_row_order",
+      "dummy_average_precision": 0.125,
+      "ap_improvement_over_dummy": 0.8348341674027927
+    },
+    "optimization_saved": true,
+    "frontier_candidate_ids": [
+      "sms_complement_nb",
+      "sms_logistic_regression"
+    ],
+    "knowledge_writeback_saved": true,
+    "source_report_sha256": "8d561de9e4a178456ded6ae9c76a13787b5f348428a60c8c8f7919e7a44ba495",
+    "public_bundle": "examples/evidence/sms_local_resources",
+    "active_local_replicas": 1
+  },
+  "api_contract": {
+    "openapi": "3.1.0",
+    "path_count": 23,
+    "requires_model_call": false
+  },
+  "live_browser": {
+    "page": "/app/#/runs/99066c21c7f64134bcde65a0ef068473",
+    "page_errors": [],
+    "resource_panel_visible": true,
+    "details_initially_open": 0,
+    "screenshot": "docs/images/resource-tradeoffs.png"
+  },
+  "artifacts": [
+    {
+      "path": "examples/evidence/innovation/repository.json",
+      "sha256": "56eef1e005b470b4bc593973aa401ecdf19f4961da51073f32d96ee7e9fdfc35"
+    },
+    {
+      "path": "examples/evidence/innovation/resource_tradeoffs.json",
+      "sha256": "7948153ff92093531af01643e11360f6fc743209fd796aa928b9977d938eb6de"
+    },
+    {
+      "path": "examples/evidence/innovation/openapi.json",
+      "sha256": "a3da37b8b218e68c76b011aa2e10876ca795f6f073893de946f221a6694cd70b"
+    },
+    {
+      "path": "examples/evidence/sms_local_resources/manifest.json",
+      "sha256": "4051d19a7bc590c34a53455ce7c75eb01f5796871b87bd6c3a761235e830fce3"
+    },
+    {
+      "path": "docs/images/resource-tradeoffs.png",
+      "sha256": "a15fff40f4ae3c8b1937742718ab4dc7d69bc2c421e2ea15de696f7bbc73eef9"
+    }
+  ],
+  "limitations": [
+    "Repository applicability, URL and license are operator declarations; extraction is not runtime verification.",
+    "Resource values are one within-run observation per candidate, not statistically established acceleration.",
+    "Local SMS run used one existing idle GPU endpoint; this enhancement does not re-benchmark the four-GPU profile.",
+    "Safety scope remains constrained AST construction and resource-limited subprocesses, not arbitrary-code OS isolation.",
+    "All algorithm selection uses the validation split; the sealed test split remains unscored."
+  ]
+}

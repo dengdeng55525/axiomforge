@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0",
+  "source_report": "artifacts/runs/99066c21c7f64134bcde65a0ef068473/report.json",
+  "source_report_sha256": "8d561de9e4a178456ded6ae9c76a13787b5f348428a60c8c8f7919e7a44ba495",
+  "exported_at": "2026-09-30T06:35:34.621522+00:00",
+  "note": "Portable historical evidence export. Original mode, statuses, failed attempts, metrics, usage records, and content hashes are preserved. Project-root absolute paths in JSON are made repository-relative. Datasets, predictions, raw LLM requests/responses, worker logs, credentials, and the private database are omitted. This is not a new execution or a replay-mode relabel. Real local Qwen 14B SMS run. Includes measured quality/resource analysis; one observation per candidate, not a throughput benchmark.",
+  "omitted": [
+    "datasets",
+    "predictions",
+    "raw_llm_payloads",
+    "worker_logs",
+    "credentials",
+    "database"
+  ],
+  "run_id": "99066c21c7f64134bcde65a0ef068473",
+  "name": "sms_local_resources",
+  "mode": "real",
+  "status": "passed",
+  "candidate_count": 2,
+  "attempt_count": 2,
+  "files": [
+    {
+      "path": "candidates/sms_complement_nb/attempt_0/metadata.json",
+      "sha256": "ba92dea4620e3a77ff51e8c79c2d01302c1ef73d60588b7bfdaa7538e6cdf777",
+      "bytes": 5466
+    },
+    {
+      "path": "candidates/sms_complement_nb/attempt_0/model.py",
+      "sha256": "e366cd044d0c8cb31e5e5eb729daf9e2b8fe641b74d487ba068e7b16386826ad",
+      "bytes": 332
+    },
+    {
+      "path": "candidates/sms_complement_nb/attempt_0/verification.json",
+      "sha256": "7527defbad6eea346526d408bea4a86b745b1e9251afd1b217b68af295b4e4fc",
+      "bytes": 5314
+    },
+    {
+      "path": "candidates/sms_complement_nb/metadata.json",
+      "sha256": "c1287372593fcfdf9d8264cb44cc362dc5614fd4b080ffcaddd43615e83659ef",
+      "bytes": 11508
+    },
+    {
+      "path": "candidates/sms_complement_nb/model.py",
+      "sha256": "e366cd044d0c8cb31e5e5eb729daf9e2b8fe641b74d487ba068e7b16386826ad",
+      "bytes": 332
+    },
+    {
+      "path": "candidates/sms_complement_nb/verification.json",
+      "sha256": "7527defbad6eea346526d408bea4a86b745b1e9251afd1b217b68af295b4e4fc",
+      "bytes": 5314
+    },
+    {
+      "path": "candidates/sms_logistic_regression/attempt_0/metadata.json",
+      "sha256": "fe5d45fd162160b9207756aee15ff942dd177fe40843db1d11668ec35dd44180",
+      "bytes": 5617
+    },
+    {
+      "path": "candidates/sms_logistic_regression/attempt_0/model.py",
+      "sha256": "2650ff75432df31c90a3012192269c1a89b826086eb096fde7bd4e15973eb265",
+      "bytes": 381
+    },
+    {
+      "path": "candidates/sms_logistic_regression/attempt_0/verification.json",
+      "sha256": "86604d91b6720da09c65f64946701f9c19bc4343690596060f326594e8199779",
+      "bytes": 5445
+    },
+    {
+      "path": "candidates/sms_logistic_regression/metadata.json",
+      "sha256": "66f8a47ff79b5ec6b7992597bf20bc8e518ec3f09cc03ffa28a1ca24856e12c8",
+      "bytes": 11816
+    },
+    {
+      "path": "candidates/sms_logistic_regression/model.py",
+      "sha256": "2650ff75432df31c90a3012192269c1a89b826086eb096fde7bd4e15973eb265",
+      "bytes": 381
+    },
+    {
+      "path": "candidates/sms_logistic_regression/verification.json",
+      "sha256": "86604d91b6720da09c65f64946701f9c19bc4343690596060f326594e8199779",
+      "bytes": 5445
+    },
+    {
+      "path": "report.html",
+      "sha256": "0fb90c40d98e09533bcb46f5edf6a224ac1592906e893770196c0ab24cffb729",
+      "bytes": 160935
+    },
+    {
+      "path": "report.json",
+      "sha256": "415a88ce024cd96c6efb2201d5a3e1b7a034f1826bc4dae986b85e68abd7e9b1",
+      "bytes": 82962
+    },
+    {
+      "path": "report.md",
+      "sha256": "fcd1324ae191cc2e958fcacf4e74ebb5abc17c568d633e6ede2e98b0f674c037",
+      "bytes": 83176
+    }
+  ]
+}

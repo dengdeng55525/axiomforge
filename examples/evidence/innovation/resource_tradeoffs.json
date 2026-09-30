@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0",
+  "analysis_version": "pareto-observations-v1",
+  "run_id": "1e65aa76387d4a0d8dfeb04aba010e12",
+  "scope": "within_run_validation_observations",
+  "objectives": {
+    "average_precision": "maximize",
+    "fit_seconds": "minimize",
+    "peak_rss_mib": "minimize"
+  },
+  "selected_candidate_id": "logistic_regularized",
+  "selection_policy": "validation_ap_desc_then_candidate_wall_seconds_asc",
+  "frontier_candidate_ids": [
+    "logistic_regularized",
+    "logistic_default"
+  ],
+  "candidates": [
+    {
+      "candidate_id": "logistic_regularized",
+      "average_precision": 0.18308639386613196,
+      "fit_seconds": 0.07269688998349011,
+      "peak_rss_mib": 237.93359375,
+      "parent_id": "logistic_default",
+      "predict_seconds": 0.013948490843176842,
+      "dominated_by": [],
+      "pareto_optimal": true
+    },
+    {
+      "candidate_id": "logistic_default",
+      "average_precision": 0.18287735589367637,
+      "fit_seconds": 0.07353137293830514,
+      "peak_rss_mib": 227.875,
+      "parent_id": null,
+      "predict_seconds": 0.013938609044998884,
+      "dominated_by": [],
+      "pareto_optimal": true
+    },
+    {
+      "candidate_id": "logistic_balanced",
+      "average_precision": 0.1807589966629477,
+      "fit_seconds": 0.11364607606083155,
+      "peak_rss_mib": 235.9609375,
+      "parent_id": null,
+      "predict_seconds": 0.014049615012481809,
+      "dominated_by": [
+        "logistic_default"
+      ],
+      "pareto_optimal": false
+    }
+  ],
+  "excluded": [],
+  "parent_child_changes": [
+    {
+      "parent_id": "logistic_default",
+      "candidate_id": "logistic_regularized",
+      "ap_delta": 0.00020903797245558353,
+      "fit_seconds_delta": -0.0008344829548150301,
+      "peak_rss_mib_delta": 10.05859375,
+      "dominates_parent": false
+    }
+  ],
+  "measurement_repetitions": 1,
+  "limitations": [
+    "同次运行的验证集 AP、训练耗时和 worker 峰值 RSS 观测，不能跨任务混排。",
+    "单次耗时受负载与测量噪声影响，不代表稳定加速或统计显著性。",
+    "Pareto 分析提供资源权衡依据，不改变原有 AP 优先选择规则。",
+    "worker RSS 不含 LLM 服务显存；封存测试集没有用于优化。"
+  ]
+}

@@ -14,6 +14,36 @@ AlgoForge 是面向 LLM Agent 笔试场景的小型可复现原型。它以**银
 
 本原型面向题面要求的可复核闭环，主场景只选择一个具体业务问题：银行客户是否订购定期存款。SMS 分类用于证明相同编排和报告接口可以迁移到文本任务。
 
+## 创新设计与题目加分项
+
+AlgoForge 的创新集中在**让搜索、修复和能力沉淀都能被独立复核**：模型负责提出方案，确定性合约控制搜索空间，验证器产生事实，知识图保存来源和版本，报告解释质量与资源之间的取舍。
+
+| 题目加分项 | 系统中的具体实现 | 代码与可复核证据 |
+| --- | --- | --- |
+| 图搜索 / Beam Search | 两跳知识检索、有界 Beam 扩展、全局唯一算法变体、父子关系和剪枝；合法空间不足时减少候选数 | [搜索实现](src/capability_factory/search.py)、[真实扩展与修复记录](docs/research/budget_beam_validation.json) |
+| 多智能体协作 | 解释、规划、生成、审查、修复、总结角色通过结构化产物交接；分别调用 LLM，并受状态机和预算约束 | [角色合约](src/capability_factory/prompts.py)、[工作流](src/capability_factory/workflow.py) |
+| 真实代码仓库抽取 | 从指定 Git commit 的 Python blob 抽取函数、类、方法、签名、注解、文档字符串和导入依赖，再生成能力卡片 | [仓库抽取器](src/capability_factory/repository.py)、[真实仓库样例](examples/evidence/innovation/repository.json) |
+| 代码安全与受限执行 | AST 构造器白名单、参数与接口检查、独立进程、CPU/内存/时间限制、取消回收 | [执行器](src/capability_factory/execution/runner.py)、[对抗测试](tests/test_execution_adversarial.py)；目前不提供 OS 命名空间隔离 |
+| 失败分析与经验复用 | Reviewer 使用真实错误诊断，修复后重新验证；只有对应修复实际通过才形成已验证经验，供后续图检索使用 | [知识回写](src/capability_factory/knowledge.py)、[自然错误修复证据](docs/research/budget_beam_validation.json) |
+| 能力版本管理 | 稳定能力 ID、内容哈希去重、递增版本、SUPERSEDES 边、固定 Git 来源与代码哈希 | [版本与仓库回归](tests/test_repository.py)、[知识库测试](tests/test_knowledge_runtime.py) |
+| 自然语言设计依据 | 候选理由、检索引用、代码解释和总结分别保存，界面可沿引用查看来源 | [报告页面](web/src/views/RunView.vue)、[公开银行报告](examples/evidence/bank_beam/report.md) |
+| 跨场景迁移 | 银行表格分类与 SMS 文本分类共用编排、验证、修复和回写；各自保留数据/特征协议 | [双场景协议](src/capability_factory/datasets.py)、[本地 14B 短信实测](examples/evidence/sms_local_resources/report.json) |
+| 自动接口文档 | FastAPI 生成交互文档；export-openapi 命令可离线导出真实路由与 Pydantic 合约 | [导出的 OpenAPI](examples/evidence/innovation/openapi.json)、[CLI](src/capability_factory/cli.py) |
+| 性能优化与资源分析 | 搜索参数变体并比较验证 AP；新增 AP / 训练时间 / 峰值 RSS 的 Pareto 前沿与父子方案变化分析 | [分析实现](src/capability_factory/optimization.py)、[实测资源权衡](examples/evidence/innovation/resource_tradeoffs.json) |
+
+![真实短信任务的质量与资源权衡](docs/images/resource-tradeoffs.png)
+
+上图来自真实本地 14B 短信运行：两个候选均通过，选中候选验证 AP 为 0.9598。两者在质量、耗时和内存之间各有取舍；图中耗时是单次观测，封存测试集未评分。完整代码和检查记录见 [可读报告](examples/evidence/sms_local_resources/report.html)，功能与测试索引见 [增强验收记录](docs/research/innovation_validation.json)。
+
+四个值得演示的设计细节：
+
+- **搜索空间可核验**：模型不能增加候选预算、重复同一算法变体或猜测运行时限；可选扩展反复违反合约会留下跳过记录。
+- **经验与修复证据绑定**：诊断、代码前后哈希、对应尝试结果和适用任务一起入库。未通过的修复保留为未验证经验。
+- **仓库能力可追溯**：抽取固定提交中的源文件，保留行号和 SHA256；工作区未提交改动不影响抽取。同一快照重复导入不会生成重复版本。
+- **质量与成本一起解释**：报告展示 Pareto 前沿，并明确缺失值、排除原因和单次测量限制；仍按验证 AP 选择候选，不把偶然低耗时宣称为稳定加速。
+
+当前多角色使用同一个可选 LLM 串行协作；MCTS、任意 Python 的强隔离沙箱和大规模多租户调度未实现。仓库抽取所得的任务适用性由操作者声明，能力卡初始状态为 extracted，不会仅凭静态分析标为 verified。完整演示步骤、边界和取证方式见 [创新点与加分项演示](docs/13_创新点与加分项演示.md)。
+
 ## 你可以先看到什么
 
 - **Vue 工作台**：需求输入、运行监控、候选比较、折叠式验证报告、知识图谱和运行历史。

@@ -29,6 +29,7 @@
 - [10 插件扩展指南](10_插件扩展指南.md)：受信指标和模板注册边界。
 - [11 前端与报告说明](11_前端与报告说明.md)：结论、证据、原始 JSON 和图谱展示层。
 - [12 交互工作台与参考设计](12_交互工作台与参考设计.md)：参考交互、页面入口和截图验收。
+- [13 创新点与加分项演示](13_创新点与加分项演示.md)：仓库抽取、版本追踪、搜索修复、Pareto 资源分析和接口导出。
 
 ## 证据目录
 
@@ -36,6 +37,7 @@
 - [frontend_validation.json](research/frontend_validation.json)：前端构建、浏览器测试和本地 UI 联调。
 - [local_vllm_validation.json](research/local_vllm_validation.json)：本地 14B 单卡和四副本启动验证记录。
 - [budget_beam_validation.json](research/budget_beam_validation.json)：运行预算、唯一候选扩展、真实本地模型自动修复、报告和知识回写回归；含 389 项测试及浏览器核对结果。
+- [innovation_validation.json](research/innovation_validation.json)：加分项增强测试、固定提交抽取、资源分析和接口制品索引。
 - [data_audit.json](research/data_audit.json)：公开数据来源、哈希和切分事实。
 - [deepseek_model_discovery.json](research/deepseek_model_discovery.json)：模型名称与 API ID 的发现记录。
 - [code_source_audit.json](research/code_source_audit.json)：源码来源和许可审查。
