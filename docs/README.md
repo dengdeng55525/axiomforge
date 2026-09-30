@@ -34,6 +34,8 @@
 
 - [execution_validation.json](research/execution_validation.json)：后端测试、样例运行和实验索引。
 - [frontend_validation.json](research/frontend_validation.json)：前端构建、浏览器测试和本地 UI 联调。
+- [local_vllm_validation.json](research/local_vllm_validation.json)：本地 14B 单卡和四副本启动验证记录。
+- [budget_beam_validation.json](research/budget_beam_validation.json)：运行预算、唯一候选扩展、真实本地模型自动修复、报告和知识回写回归；含 389 项测试及浏览器核对结果。
 - [data_audit.json](research/data_audit.json)：公开数据来源、哈希和切分事实。
 - [deepseek_model_discovery.json](research/deepseek_model_discovery.json)：模型名称与 API ID 的发现记录。
 - [code_source_audit.json](research/code_source_audit.json)：源码来源和许可审查。

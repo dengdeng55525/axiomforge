@@ -1,0 +1,191 @@
+{
+  "schema_version": "1.0",
+  "validated_at_utc": "2026-09-30T06:14:05.121544+00:00",
+  "source_commit": "45b8aae4478216741c1cb4eefe282da127f1206a",
+  "scope": "Original failing bank request submitted through live FastAPI with a local Qwen 14B endpoint; budget, Beam search, repair, report and knowledge writeback regression.",
+  "execution": {
+    "transport": "POST /runs",
+    "provider": "local_http",
+    "model": "Qwen/Qwen2.5-Coder-14B-Instruct-AWQ",
+    "revision": "eb3172f06a6d6b3a15f08947b0668d782e4d2d2c",
+    "served_model_name": "coder14",
+    "local_profile": "single_gpu_14b",
+    "active_replica_count": 1,
+    "gpu_name": "NVIDIA GeForce RTX 4090",
+    "context_tokens": 16384,
+    "reason": "Used an idle GPU for this regression while another GPU had an unrelated active workload. The four-GPU deployment profile was not changed."
+  },
+  "request": {
+    "description": "预测客户是否订购银行定期存款。仅使用通话前可得特征，禁止使用 duration。比较两个算法候选，按验证集 AP 选择方案，并输出功能检查、来源依据、资源消耗和验证报告。",
+    "dataset_id": "bank",
+    "provider": "local_http",
+    "max_candidates": 6,
+    "max_repairs": 2,
+    "use_graph": true,
+    "use_retrieval": true,
+    "orchestration": "multi_role",
+    "search": "beam",
+    "inject_failure": false,
+    "max_seconds": 900
+  },
+  "result": {
+    "run_id": "1e65aa76387d4a0d8dfeb04aba010e12",
+    "status": "passed",
+    "selected_candidate_id": "logistic_regularized",
+    "timing": {
+      "wall_seconds": 49.966,
+      "budget_seconds": 900.0,
+      "request_ceiling_seconds": 900
+    }
+  },
+  "prompt_version": "algoforge-roles-v3",
+  "candidate_results": [
+    {
+      "candidate_id": "logistic_default",
+      "algorithm": "logistic",
+      "variant": "default",
+      "parent_id": null,
+      "status": "passed",
+      "attempt_statuses": [
+        "passed"
+      ],
+      "code_sha256": "bdf0963819478340329993d79c8f13df4a16a8122362ec08526741671a0794a7",
+      "metrics": {
+        "average_precision": 0.18287735589367637,
+        "roc_auc": 0.6131271073705284,
+        "f1_threshold_0_5": 0.0,
+        "precision_at_10pct": 0.23179611650485438,
+        "recall_at_10pct": 0.20942982456140352,
+        "lift_at_10pct": 2.0937899207971387,
+        "validation_positive_rate": 0.11070648215586307,
+        "top_10pct_count": 824,
+        "validation_rows": 8238,
+        "classification_threshold": 0.5,
+        "evaluation_split": "validation_only",
+        "sealed_test_scored": false,
+        "ranking_tie_break": "original_validation_row_order",
+        "dummy_average_precision": 0.11070648215586307,
+        "ap_improvement_over_dummy": 0.07217087373781331
+      }
+    },
+    {
+      "candidate_id": "logistic_balanced",
+      "algorithm": "logistic",
+      "variant": "balanced",
+      "parent_id": null,
+      "status": "passed",
+      "attempt_statuses": [
+        "passed"
+      ],
+      "code_sha256": "2b09a4a2fc70b67a4cec8229f7d553b7a7f168a8119b6626a38800f9ce5c1eec",
+      "metrics": {
+        "average_precision": 0.1807589966629477,
+        "roc_auc": 0.6093179752719227,
+        "f1_threshold_0_5": 0.22881855710634952,
+        "precision_at_10pct": 0.2196601941747573,
+        "recall_at_10pct": 0.19846491228070176,
+        "lift_at_10pct": 1.9841674118548802,
+        "validation_positive_rate": 0.11070648215586307,
+        "top_10pct_count": 824,
+        "validation_rows": 8238,
+        "classification_threshold": 0.5,
+        "evaluation_split": "validation_only",
+        "sealed_test_scored": false,
+        "ranking_tie_break": "original_validation_row_order",
+        "dummy_average_precision": 0.11070648215586307,
+        "ap_improvement_over_dummy": 0.07005251450708463
+      }
+    },
+    {
+      "candidate_id": "logistic_regularized",
+      "algorithm": "logistic",
+      "variant": "regularized",
+      "parent_id": "logistic_default",
+      "status": "passed",
+      "attempt_statuses": [
+        "failed",
+        "passed"
+      ],
+      "code_sha256": "7d9e46d84847b0f0bb3d2f70d895b6a6714117d9e0e6984d7a3b41c765176c3b",
+      "metrics": {
+        "average_precision": 0.18308639386613196,
+        "roc_auc": 0.6127518816663554,
+        "f1_threshold_0_5": 0.0,
+        "precision_at_10pct": 0.23179611650485438,
+        "recall_at_10pct": 0.20942982456140352,
+        "lift_at_10pct": 2.0937899207971387,
+        "validation_positive_rate": 0.11070648215586307,
+        "top_10pct_count": 824,
+        "validation_rows": 8238,
+        "classification_threshold": 0.5,
+        "evaluation_split": "validation_only",
+        "sealed_test_scored": false,
+        "ranking_tie_break": "original_validation_row_order",
+        "dummy_average_precision": 0.11070648215586307,
+        "ap_improvement_over_dummy": 0.07237991171026889
+      }
+    }
+  ],
+  "beam_events": [
+    {
+      "type": "BEAM_EXPANDED",
+      "data": {
+        "beam_width": 2,
+        "parents": [
+          "logistic_default",
+          "logistic_balanced"
+        ],
+        "children": 1
+      }
+    }
+  ],
+  "llm_calls": 9,
+  "knowledge_writeback": {
+    "run_saved": true,
+    "validated_experiences": 1
+  },
+  "report": {
+    "path": "artifacts/runs/1e65aa76387d4a0d8dfeb04aba010e12/report.json",
+    "sha256": "75d8b82a1bff38e066d898555fa8218c835d0845fa9b83838f74bb85b38f97e2",
+    "sealed_test_scored": false
+  },
+  "checks": {
+    "pytest": {
+      "command": ".venv/bin/pytest -q tests ui --junitxml=artifacts/test-results.xml",
+      "tests": 389,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "warnings": 1,
+      "warning_note": "Starlette TestClient uses a deprecated AnyIO BlockingPortal alias."
+    },
+    "ruff": "ruff check src scripts tests ui: passed",
+    "live_api": {
+      "report_json": 200,
+      "report_html": 200,
+      "report_markdown": 200,
+      "summary": 200,
+      "metrics": 200,
+      "resources": 200,
+      "candidate_download_hashes_verified": 3
+    },
+    "browser": {
+      "engine": "Playwright Chromium",
+      "url_path": "/app/#/runs/1e65aa76387d4a0d8dfeb04aba010e12",
+      "http_status": 200,
+      "page_errors": [],
+      "displayed_ap": "0.1831",
+      "displayed_dummy_ap": "0.1107",
+      "displayed_candidates_passed": "3 / 3",
+      "details_total": 39,
+      "details_open_initially": 0,
+      "screenshot_local": "artifacts/local-report-regression.png"
+    }
+  },
+  "limitations": [
+    "Single-run functional regression, not a four-GPU load or reliability benchmark.",
+    "All reported metrics use the validation split; the sealed test split remains unscored.",
+    "Selected candidate F1 at threshold 0.5 is zero; independent threshold selection and final testing are required before business use.",
+    "The original failed run remains in history; this successful run does not overwrite it."
+  ]
+}
