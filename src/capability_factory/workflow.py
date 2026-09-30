@@ -106,7 +106,9 @@ class Workflow:
         directory = self.settings.runs_dir / run_id
         directory.mkdir(parents=True, exist_ok=False)
         started = time.monotonic()
-        deadline = started + request.max_seconds
+        # Keep the duration as an input value; clock subtraction loses precision.
+        budget_seconds = request.max_seconds
+        deadline = started + budget_seconds
         report = {
             "schema_version": "1.0", "run_id": run_id, "status": "running",
             "mode": "mock" if request.provider == "mock" else "real",
@@ -305,13 +307,14 @@ class Workflow:
             report["interpretation"] = interpretation.model_dump()
             declared_budget = explicit_run_budget_seconds(request.description)
             if declared_budget is not None:
-                deadline = min(deadline, started + declared_budget)
+                budget_seconds = min(budget_seconds, declared_budget)
+                deadline = started + budget_seconds
                 if isinstance(provider, HTTPProvider):
                     provider.deadline = deadline
                 event("RUN_BUDGET_APPLIED", {
                     "source": "explicit_user_description",
                     "declared_seconds": declared_budget,
-                    "effective_seconds": deadline - started,
+                    "effective_seconds": budget_seconds,
                 })
                 checkpoint()
             if (interpretation.requested_run_seconds is not None
@@ -423,7 +426,7 @@ class Workflow:
             report["optimization"] = analyze_resources(report)
             report["usage"] = provider.usage.as_dict() if provider else {}
             report["finished_at"] = now()
-            report["timing"] = {"wall_seconds": round(time.monotonic() - started, 3), "budget_seconds": deadline - started,
+            report["timing"] = {"wall_seconds": round(time.monotonic() - started, 3), "budget_seconds": budget_seconds,
                                 "request_ceiling_seconds": request.max_seconds}
             terminal_status = report["status"]
             report["status"] = "finalizing"

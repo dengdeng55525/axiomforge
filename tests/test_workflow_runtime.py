@@ -163,7 +163,12 @@ def test_curator_failure_does_not_leave_passed_status(settings, monkeypatch):
         ("整个任务最多运行 1800 秒", 1800, 120, 120),
     ],
 )
-def test_deadline_uses_verified_user_budget(settings, monkeypatch, description, model_budget, ceiling, expected):
+@pytest.mark.parametrize(
+    "clock_start", [42.42, 1_000_000.123], ids=["fractional-clock", "long-running-host"],
+)
+def test_deadline_uses_verified_user_budget(settings, monkeypatch, description, model_budget, ceiling, expected, clock_start):
+    # A duration is exact input; subtracting absolute clocks can alter its value.
+    monkeypatch.setattr("capability_factory.workflow.time.monotonic", lambda: clock_start)
     original = MockProvider.generate
 
     def generate(self, role, system, payload, **kwargs):
@@ -181,6 +186,9 @@ def test_deadline_uses_verified_user_budget(settings, monkeypatch, description, 
     assert report["timing"]["budget_seconds"] == expected
     assert report["timing"]["request_ceiling_seconds"] == ceiling
     assert report["interpretation"]["requested_run_seconds"] == model_budget
+    for event in report["events"]:
+        if event["type"] == "RUN_BUDGET_APPLIED":
+            assert event["data"]["effective_seconds"] == expected
     if model_budget == 10:
         assert any(event["type"] == "INTERPRETER_BUDGET_IGNORED" for event in report["events"])
 
