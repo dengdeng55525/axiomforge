@@ -120,6 +120,12 @@ class Workflow:
             "provenance": {"prompt_version": prompts.PROMPT_VERSION, "sealed_test_scored": False,
                            "agent_runtime": runtime_metadata()},
             "candidates": [], "selected_candidate_id": None, "events": [], "usage": {},
+            "resource_budget": {
+                "max_calls": self.settings.max_calls,
+                "max_input_tokens": self.settings.max_input_tokens,
+                "max_output_tokens": self.settings.max_output_tokens,
+                "max_seconds": request.max_seconds,
+            },
             "warnings": ["指标来自 validation_only，封存测试集保持未评分。", "执行器采用受限 AST 构造器和资源限制子进程；生产隔离需要强化运行时。"],
             "search_tree": [], "knowledge_writeback": {},
         }
@@ -150,21 +156,47 @@ class Workflow:
                 checkpoint()
                 if isinstance(provider, (HTTPProvider, OpenAIResponsesProvider)):
                     provider.settings.request_timeout_s = max(1, min(120, deadline - time.monotonic()))
+                span_id = f"agent:{role}:{provider.usage.calls + 1}:{attempt + 1}"
+                span_started = time.monotonic()
+                event("AGENT_STARTED", {
+                    "span_id": span_id, "name": role, "role": role, "attempt": attempt + 1,
+                    "schema": schema.__name__, "candidate_id": payload.get("candidate_id") or payload.get("plan", {}).get("candidate_id"),
+                    "max_tokens": max_tokens, "model": provider.model,
+                })
                 request_number = provider.usage.calls + 1
                 stem = directory / "llm" / f"{request_number:02d}_{role}"
                 write_json(stem.with_suffix(".request.json"), {"role": role, "prompt_version": prompts.PROMPT_VERSION,
                                                               "system": system, "payload": payload})
                 try:
-                    return invoke_role(
+                    result = invoke_role(
                         provider, role, system, payload, schema, max_tokens, checkpoint,
                         lambda data: write_json(stem.with_suffix(".response.json"), data),
                     )
+                    event("AGENT_COMPLETED", {
+                        "span_id": span_id, "name": role, "role": role, "attempt": attempt + 1,
+                        "schema": schema.__name__, "candidate_id": payload.get("candidate_id") or payload.get("plan", {}).get("candidate_id"),
+                        "result_keys": sorted(result.model_dump().keys()), "model": provider.model,
+                        "duration_seconds": round(time.monotonic() - span_started, 3),
+                    })
+                    return result
                 except (ValidationError, ResponseContractError) as error:
+                    event("AGENT_REJECTED", {
+                        "span_id": span_id, "name": role, "role": role, "attempt": attempt + 1,
+                        "schema": schema.__name__, "candidate_id": payload.get("candidate_id") or payload.get("plan", {}).get("candidate_id"),
+                        "error_type": type(error).__name__, "duration_seconds": round(time.monotonic() - span_started, 3),
+                    })
                     event("RESPONSE_SCHEMA_REJECTED", {"role": role, "error": type(error).__name__})
                     if attempt:
                         raise ResponseContractError(f"{role} violated its structured output contract twice") from None
                     payload = {**payload, "format_correction": "Return exactly the requested keys and types; previous output failed schema validation.",
                                "required_schema": schema.model_json_schema()}
+                except Exception as error:
+                    event("AGENT_FAILED", {
+                        "span_id": span_id, "name": role, "role": role, "attempt": attempt + 1,
+                        "schema": schema.__name__, "candidate_id": payload.get("candidate_id") or payload.get("plan", {}).get("candidate_id"),
+                        "error_type": type(error).__name__, "duration_seconds": round(time.monotonic() - span_started, 3),
+                    })
+                    raise
             raise ProviderError("Unreachable response parser state")
 
         def make_plans(count, evidence, parents=None):
@@ -338,10 +370,27 @@ class Workflow:
                 })
             report["warnings"].extend(interpretation.warnings + interpretation.incompatible_requests)
             event("SPEC_VALIDATED", {"task_type": dataset["task_type"], "assumptions": interpretation.assumptions})
-            evidence = retrieve_capabilities(
-                self.store, checkpoint, query=request.description, task_type=dataset["task_type"],
-                limit=6, use_graph=request.use_graph,
-            ) if request.use_retrieval else []
+            retrieval_span = "tool:search_capabilities:1"
+            if request.use_retrieval:
+                retrieval_started = time.monotonic()
+                event("TOOL_STARTED", {"span_id": retrieval_span, "name": "search_capabilities",
+                                        "role": "retrieval", "schema": "CapabilitySearchInput"})
+                try:
+                    evidence = retrieve_capabilities(
+                        self.store, checkpoint, query=request.description, task_type=dataset["task_type"],
+                        limit=6, use_graph=request.use_graph,
+                    )
+                    event("TOOL_COMPLETED", {"span_id": retrieval_span, "name": "search_capabilities",
+                                              "role": "retrieval", "returned_count": len(evidence),
+                                              "capability_ids": [item.get("capability_id", item.get("id")) for item in evidence],
+                                              "duration_seconds": round(time.monotonic() - retrieval_started, 3)})
+                except Exception as error:
+                    event("TOOL_FAILED", {"span_id": retrieval_span, "name": "search_capabilities",
+                                           "role": "retrieval", "error_type": type(error).__name__,
+                                           "duration_seconds": round(time.monotonic() - retrieval_started, 3)})
+                    raise
+            else:
+                evidence = []
             report["evidence"] = evidence
             event("KNOWLEDGE_RETRIEVED", {"count": len(evidence), "use_graph": request.use_graph,
                                           "tool": "search_capabilities" if request.use_retrieval else None,
@@ -453,6 +502,7 @@ class Workflow:
                 report["knowledge_writeback"] = {"run_saved": True, "experiences": memories}
                 event("RECORDED", {"intended_status": terminal_status, "experiences": len(memories)})
                 report["status"] = terminal_status
+                event("RUN_FINISHED", {"status": terminal_status, "event_count": len(report["events"])})
                 report["report_paths"] = write_report(report, directory)
                 self.store.save_run(report)
                 write_json(directory / "progress.json", report)

@@ -27,6 +27,7 @@ import {
   XCircle,
 } from "@lucide/vue";
 import { api, download } from "../lib/api";
+import AgentTracePanel from "../components/AgentTracePanel.vue";
 import {
   type Json,
   dateTime,
@@ -289,8 +290,16 @@ const stages = computed(() => {
   const types = new Set(
     events.value.map((item) => item.event_type || item.type),
   );
-  const hasRole = (role: string) =>
-    events.value.some((item) => item.data?.role === role);
+  const hasRoleCompleted = (role: string) =>
+    events.value.some(
+      (item) =>
+        item.data?.role === role &&
+        [
+          "AGENT_COMPLETED",
+          "LLM_RESPONSE",
+          "VALIDATING",
+        ].includes(item.event_type || item.type),
+    );
   return [
     { title: "理解需求", done: types.has("SPEC_VALIDATED"), disabled: false },
     {
@@ -307,7 +316,7 @@ const stages = computed(() => {
     },
     {
       title: "生成代码",
-      done: types.has("VALIDATING") || hasRole("coder"),
+      done: types.has("VALIDATING") || hasRoleCompleted("coder"),
       disabled: false,
     },
     { title: "自动验证", done: types.has("VERIFIED"), disabled: false },
@@ -348,6 +357,14 @@ const eventNames: Record<string, string> = {
   FAILURE_INJECTED: "注入演示故障",
   PLAN_REJECTED: "计划被校验拒绝",
   RESPONSE_SCHEMA_REJECTED: "模型响应格式未通过",
+  AGENT_STARTED: "Agent 开始",
+  AGENT_COMPLETED: "Agent 完成",
+  AGENT_REJECTED: "Agent 输出被拒绝",
+  AGENT_FAILED: "Agent 执行失败",
+  TOOL_STARTED: "工具开始",
+  TOOL_COMPLETED: "工具完成",
+  TOOL_FAILED: "工具失败",
+  RUN_FINISHED: "运行结束",
 };
 const roleNames: Record<string, string> = {
   interpreter: "需求理解",
@@ -725,6 +742,7 @@ onBeforeUnmount(() => {
           ><small>功能与接口通过 ≠ 生产就绪</small>
         </article>
       </div>
+      <AgentTracePanel :report="report" :run-id="runId" />
       <p class="evaluation-note">
         <CircleAlert :size="15" />{{
           report.provenance?.sealed_test_scored === false ||

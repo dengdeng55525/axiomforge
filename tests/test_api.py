@@ -49,6 +49,41 @@ def test_artifact_path_cannot_escape_run_directory(tmp_path):
         assert client.get("/capabilities").status_code == 200
 
 
+def test_agent_trace_endpoint_is_cursor_bounded_and_read_only(tmp_path):
+    app = create_app(Settings(root=tmp_path))
+    run_id = "b" * 32
+    app.state.manager.store.save_run({
+        "run_id": run_id,
+        "status": "passed",
+        "mode": "mock",
+        "request": {"max_seconds": 60},
+        "resource_budget": {"max_calls": 4, "max_input_tokens": 100, "max_output_tokens": 100, "max_seconds": 60},
+        "provenance": {"agent_runtime": {"framework": "fixture", "version": "1"}},
+        "usage": {"calls": 2, "input_tokens": 20, "output_tokens": 10},
+        "events": [
+            {"sequence": 0, "event_type": "AGENT_STARTED", "created_at": "2026-09-30T00:00:00+00:00",
+             "data": {"span_id": "agent:planner:1:1", "name": "planner", "role": "planner", "schema": "PlanSet"}},
+            {"sequence": 1, "event_type": "AGENT_COMPLETED", "created_at": "2026-09-30T00:00:01+00:00",
+             "data": {"span_id": "agent:planner:1:1", "name": "planner", "role": "planner", "result_keys": ["candidates"]}},
+            {"sequence": 2, "event_type": "KNOWLEDGE_RETRIEVED", "created_at": "2026-09-30T00:00:02+00:00",
+             "data": {"capability_ids": ["cap-public"]}},
+            {"sequence": 3, "event_type": "LLM_RESPONSE", "created_at": "2026-09-30T00:00:03+00:00",
+             "data": {"role": "planner", "input_tokens": 20, "output_tokens": 10}},
+        ],
+        "evidence": [{"capability_id": "future-secret-card"}],
+    })
+    with TestClient(app) as client:
+        full = client.get(f"/runs/{run_id}/agent-trace")
+        replay = client.get(f"/runs/{run_id}/agent-trace?through_sequence=1")
+        assert full.status_code == replay.status_code == 200
+        assert full.json()["framework"] == {"name": "fixture", "version": "1"}
+        assert replay.json()["is_replay"] is True
+        assert replay.json()["evidence"]["capability_ids"] == []
+        assert replay.json()["budget"]["input_tokens"] is None
+        assert "future-secret-card" not in replay.text
+        assert client.get(f"/runs/{run_id}/agent-trace?through_sequence=99").status_code == 400
+
+
 def test_visual_configuration_has_api_and_future_local_14b_without_secrets(tmp_path):
     settings = Settings(
         root=tmp_path,

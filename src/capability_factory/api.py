@@ -19,6 +19,7 @@ from capability_factory.graph_presentation import (
 )
 from capability_factory.inference import load_inference_profiles, local_profile_metadata
 from capability_factory.knowledge import KnowledgeStore
+from capability_factory.observability import build_agent_trace
 from capability_factory.optimization import analyze_resources
 from capability_factory.providers import OpenAIResponsesProvider, ProviderError
 from capability_factory.reporting import render_html, render_markdown
@@ -357,6 +358,7 @@ def create_app(settings: Settings | None = None):
         # Historical reports gain a versioned derived view without rewriting stored facts.
         if "optimization" not in report:
             report["optimization"] = analyze_resources(report)
+        report["agent_trace"] = build_agent_trace(report)
         return report
 
     @app.get("/health")
@@ -460,6 +462,14 @@ def create_app(settings: Settings | None = None):
             })
         return {"run_id": run_id, "status": report.get("status"), "events": compact,
                 "event_count": len(compact), "last_event": compact[-1] if compact else None}
+
+    @app.get("/runs/{run_id}/agent-trace")
+    def agent_trace(run_id: str, through_sequence: int | None = Query(default=None, ge=0)):
+        """Return a safe Agent/tool trace or a cursor-bounded replay projection."""
+        try:
+            return build_agent_trace(report_for(run_id), through_sequence=through_sequence)
+        except ValueError as error:
+            raise HTTPException(status_code=400, detail=str(error)) from None
 
     @app.get("/runs/{run_id}/report")
     def report_json(run_id: str):
