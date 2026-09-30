@@ -151,3 +151,103 @@ def test_curator_failure_does_not_leave_passed_status(settings, monkeypatch):
     report = Workflow(settings).run(RunRequest(description="总结服务失败不能标记完整闭环成功", provider="mock", max_candidates=1))
     assert report["status"] == "failed"
     assert report["candidates"][0]["status"] == "passed"
+
+
+@pytest.mark.parametrize(
+    "description,model_budget,ceiling,expected",
+    [
+        ("比较两个算法并输出验证报告", 10, 900, 900),
+        ("Compare 2 models and return a report", 10, 900, 900),
+        ("整个任务最多运行 120 秒", 10, 900, 120),
+        ("整个任务最多运行 120 秒", None, 900, 120),
+        ("整个任务最多运行 1800 秒", 1800, 120, 120),
+    ],
+)
+def test_deadline_uses_verified_user_budget(settings, monkeypatch, description, model_budget, ceiling, expected):
+    original = MockProvider.generate
+
+    def generate(self, role, system, payload, **kwargs):
+        result = original(self, role, system, payload, **kwargs)
+        if role == "interpreter":
+            result["requested_run_seconds"] = model_budget
+        return result
+
+    monkeypatch.setattr(MockProvider, "generate", generate)
+    monkeypatch.setattr("capability_factory.execution.validate_candidate", lambda *args, **kwargs: {"status": "passed", "metrics": {"average_precision": 0.5}})
+    report = Workflow(settings).run(RunRequest(
+        description=description, provider="mock", max_candidates=1, max_seconds=ceiling,
+    ))
+    assert report["status"] == "passed", report.get("failure_reason")
+    assert report["timing"]["budget_seconds"] == expected
+    assert report["timing"]["request_ceiling_seconds"] == ceiling
+    assert report["interpretation"]["requested_run_seconds"] == model_budget
+    if model_budget == 10:
+        assert any(event["type"] == "INTERPRETER_BUDGET_IGNORED" for event in report["events"])
+
+
+@pytest.mark.parametrize("provider_mode", ["mock", "local_http"])
+def test_same_algorithm_parents_expand_one_unique_child(settings, monkeypatch, provider_mode):
+    from capability_factory.contracts import CandidatePlan
+    from capability_factory.providers import HTTPProvider
+
+    original = MockProvider.generate
+    requested_counts = []
+
+    def generate(self, role, system, payload, **kwargs):
+        result = original(self, role, system, payload, **kwargs)
+        if role == "planner":
+            requested_counts.append(payload["count"])
+            if payload.get("parent_candidates"):
+                result = {"candidates": [CandidatePlan(
+                    candidate_id="child", algorithm="logistic", variant="regularized",
+                    parent_id="parent_default", rationale="fixture unique expansion",
+                ).model_dump()]}
+            else:
+                result = {"candidates": [CandidatePlan(
+                    candidate_id=f"parent_{variant}", algorithm="logistic", variant=variant,
+                    rationale="fixture shared algorithm",
+                ).model_dump() for variant in ["default", "balanced"]]}
+        return result
+
+    monkeypatch.setattr(MockProvider, "generate", generate)
+    # Exercise the HTTP planning path without network calls or claimed live metrics.
+    monkeypatch.setattr(HTTPProvider, "generate", generate)
+    monkeypatch.setattr("capability_factory.execution.validate_candidate", lambda *args, **kwargs: {"status": "passed", "metrics": {"average_precision": 0.5}})
+    report = Workflow(settings).run(RunRequest(
+        description="比较逻辑回归默认与平衡方案，再进行 Beam 搜索",
+        provider=provider_mode, max_candidates=6, search="beam",
+    ))
+    assert report["status"] == "passed", report.get("failure_reason")
+    assert len(report["candidates"]) == 3
+    assert len({(item["plan"]["algorithm"], item["plan"]["variant"]) for item in report["candidates"]}) == 3
+    assert report["candidates"][-1]["plan"]["variant"] == "regularized"
+    assert not any(event["type"] == "BEAM_SKIPPED" for event in report["events"])
+    if provider_mode == "local_http":
+        assert requested_counts == [2, 1]
+
+
+@pytest.mark.parametrize("malformation", ["schema", "semantics"])
+def test_invalid_optional_beam_plan_preserves_verified_parents(settings, monkeypatch, malformation):
+    from capability_factory.providers import HTTPProvider
+
+    original = MockProvider.generate
+
+    def generate(self, role, system, payload, **kwargs):
+        result = original(self, role, system, payload, **kwargs)
+        if role == "planner" and payload.get("parent_candidates"):
+            if malformation == "schema":
+                return {"candidates": []}
+            for plan in result["candidates"]:
+                plan["variant"] = "invented_variant"
+        return result
+
+    monkeypatch.setattr(HTTPProvider, "generate", generate)
+    monkeypatch.setattr("capability_factory.execution.validate_candidate", lambda *args, **kwargs: {"status": "passed", "metrics": {"average_precision": 0.5}})
+    report = Workflow(settings).run(RunRequest(
+        description="无效的可选扩展必须保留已验证父候选",
+        provider="local_http", max_candidates=6, search="beam",
+    ))
+    assert report["status"] == "passed", report.get("failure_reason")
+    assert len(report["candidates"]) == 2
+    assert any(event["type"] == "BEAM_SKIPPED" for event in report["events"])
+    assert report["knowledge_writeback"]["run_saved"] is True

@@ -5,7 +5,12 @@ import pytest
 from capability_factory.contracts import CandidatePlan
 from capability_factory.execution import reference_code
 from capability_factory.providers import ResponseContractError
-from capability_factory.search import constructor_fingerprint, expansion_options, validate_plans
+from capability_factory.search import (
+    constructor_fingerprint,
+    expansion_capacity,
+    expansion_options,
+    validate_plans,
+)
 
 
 def plan(name, algorithm="logistic", variant="default", parent=None):
@@ -45,3 +50,22 @@ def test_constructor_fingerprint_ignores_comments_and_step_names():
     assert constructor_fingerprint(source, spec) == constructor_fingerprint(renamed, spec)
     changed = reference_code(spec["task_type"], "logistic", "regularized")
     assert constructor_fingerprint(source, spec) != constructor_fingerprint(changed, spec)
+
+
+@pytest.mark.parametrize(
+    "algorithms,variants,expected",
+    [
+        (["logistic", "logistic"], ["default", "balanced"], 1),
+        (["forest", "forest"], ["default", "balanced"], 2),
+        (["forest"], ["default"], 2),
+        (["logistic", "forest"], ["default", "default"], 4),
+        (["dummy"], ["default"], 0),
+        ([], [], 0),
+    ],
+)
+def test_expansion_capacity_counts_unique_feasible_children(algorithms, variants, expected):
+    parents = [
+        {"candidate_id": f"p{index}", "plan": plan(f"p{index}", algorithm, variant).model_dump()}
+        for index, (algorithm, variant) in enumerate(zip(algorithms, variants))
+    ]
+    assert expansion_capacity(expansion_options(parents, parents)) == expected

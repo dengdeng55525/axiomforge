@@ -33,6 +33,7 @@ from capability_factory.reporting import write_report
 from capability_factory.search import (
     check_variant,
     constructor_fingerprint,
+    expansion_capacity,
     expansion_options,
     validate_plans,
 )
@@ -55,21 +56,35 @@ class Cancelled(RuntimeError):
 
 
 _EXPLICIT_BUDGET_PATTERN = re.compile(
-    r"(?:\d+\s*(?:秒|分鐘|分钟|分|s|sec(?:ond)?s?|m|min(?:ute)?s?)|"
-    r"(?:预算|時限|时限|超时|耗时|运行时间|执行时间|budget|timeout|deadline|within).{0,24}"
-    r"(?:秒|分鐘|分钟|分|s|sec(?:ond)?s?|m|min(?:ute)?s?))",
+    r"(?:"
+    r"(?:运行时间|执行时间|运行预算|时间预算|超时时间|预算|时限|超时)\s*[为是:=：]?\s*"
+    r"(?:(?:不超过|最多|至多|限制为|限于|小于|控制在)\s*)?"
+    r"|(?:整个任务|整个流程|全流程|任务|运行|执行)\s*"
+    r"(?:(?:最多|至多|必须|应|在|运行|执行|不超过|限定|限制|完成于)\s*){0,4}"
+    r"|\b(?:run budget|time budget|wall[- ]clock budget|timeout)\s*(?:(?:of|is|at|to)\s*)?[:=]?\s*"
+    r"|\b(?:run|task|workflow|execution)\s+(?:(?:must|should|finish|complete)\s+)*"
+    r"(?:within|under|at most|up to|for)\s+"
+    r")(?P<value>[0-9]{1,6}(?:\.[0-9]{1,3})?)\s*"
+    r"(?P<unit>minutes?\b|mins?\b|seconds?\b|secs?\b|[ms]\b|分钟|分鐘|秒)",
     flags=re.IGNORECASE,
 )
 
 
-def has_explicit_run_budget(description: str) -> bool:
-    """Only let a user-declared duration tighten the host run deadline.
+def explicit_run_budget_seconds(description: str) -> float | None:
+    """Read numeric whole-run limits independently of model-generated values.
 
-    The interpreter is allowed to normalize a duration, but it must not be
-    able to invent a short budget from an otherwise ordinary request.
+    Only supported, explicit run-budget phrases tighten the form's ceiling.
+    Dataset durations and model counts are not run budgets. Ambiguous wording
+    stays descriptive; users can always set max_seconds in the form/API.
+    The ten-second floor matches the request contract.
     """
 
-    return bool(_EXPLICIT_BUDGET_PATTERN.search(description))
+    limits = []
+    for match in _EXPLICIT_BUDGET_PATTERN.finditer(description):
+        unit = match["unit"].lower()
+        multiplier = 60 if unit.startswith("m") or unit in {"分钟", "分鐘"} else 1
+        limits.append(max(10, float(match["value"]) * multiplier))
+    return min(limits) if limits else None
 
 
 class Workflow:
@@ -141,7 +156,7 @@ class Workflow:
                 except (ValidationError, ResponseContractError) as error:
                     event("RESPONSE_SCHEMA_REJECTED", {"role": role, "error": type(error).__name__})
                     if attempt:
-                        raise ProviderError(f"{role} violated its structured output contract twice") from None
+                        raise ResponseContractError(f"{role} violated its structured output contract twice") from None
                     payload = {**payload, "format_correction": "Return exactly the requested keys and types; previous output failed schema validation.",
                                "required_schema": schema.model_json_schema()}
             raise ProviderError("Unreachable response parser state")
@@ -287,20 +302,28 @@ class Workflow:
                 interpretation = TaskInterpretation(objective=request.description,
                                                    assumptions=["单次生成消融：采用冻结任务策略与固定算法计划，未调用解释/规划角色。"])
             report["interpretation"] = interpretation.model_dump()
-            if interpretation.requested_run_seconds is not None:
-                if has_explicit_run_budget(request.description):
-                    deadline = min(deadline, started + interpretation.requested_run_seconds)
-                    checkpoint()
-                else:
-                    warning = (
-                        "解释器返回了原始需求未声明的运行预算，已忽略该预算并保留表单设置；"
-                        f"requested_run_seconds={interpretation.requested_run_seconds}。"
-                    )
-                    report["warnings"].append(warning)
-                    event("INTERPRETER_BUDGET_IGNORED", {
-                        "requested_run_seconds": interpretation.requested_run_seconds,
-                        "reason": "no_explicit_budget_in_user_description",
-                    })
+            declared_budget = explicit_run_budget_seconds(request.description)
+            if declared_budget is not None:
+                deadline = min(deadline, started + declared_budget)
+                if isinstance(provider, HTTPProvider):
+                    provider.deadline = deadline
+                event("RUN_BUDGET_APPLIED", {
+                    "source": "explicit_user_description",
+                    "declared_seconds": declared_budget,
+                    "effective_seconds": deadline - started,
+                })
+                checkpoint()
+            if (interpretation.requested_run_seconds is not None
+                    and interpretation.requested_run_seconds != declared_budget):
+                report["warnings"].append(
+                    "解释器返回的运行预算与可核验的用户预算不一致，已忽略该模型值；"
+                    "实际预算以表单上限和明确的数字时限为准。"
+                )
+                event("INTERPRETER_BUDGET_IGNORED", {
+                    "requested_run_seconds": interpretation.requested_run_seconds,
+                    "declared_seconds": declared_budget,
+                    "reason": "no_explicit_budget_in_user_description" if declared_budget is None else "budget_value_mismatch",
+                })
             report["warnings"].extend(interpretation.warnings + interpretation.incompatible_requests)
             event("SPEC_VALIDATED", {"task_type": dataset["task_type"], "assumptions": interpretation.assumptions})
             evidence = self.store.search(request.description, dataset["task_type"], limit=6, use_graph=request.use_graph) if request.use_retrieval else []
@@ -323,18 +346,24 @@ class Workflow:
                              key=lambda item: item["metrics"].get("average_precision", -1), reverse=True)[:2]
             if request.orchestration == "multi_role" and request.search == "beam" and remaining > 0 and parents:
                 options = expansion_options(parents, report["candidates"])
-                child_count = min(remaining, sum(min(2, sum(option["parent_id"] == parent["candidate_id"] for option in options)) for parent in parents))
+                child_count = min(remaining, expansion_capacity(options))
                 if request.provider == "mock":
                     from capability_factory.contracts import CandidatePlan
 
                     expanded = []
+                    signatures = set()
                     for parent in parents:
                         for option in [option for option in options if option["parent_id"] == parent["candidate_id"]][:2]:
                             if len(expanded) >= child_count:
                                 break
+                            signature = (option["algorithm"], option["variant"])
+                            if signature in signatures:
+                                continue
+                            signatures.add(signature)
                             expanded.append(CandidatePlan(candidate_id=f"b{len(expanded) + 1}", algorithm=parent["plan"]["algorithm"],
                                                           variant=option["variant"], rationale="离线Beam扩展测试",
                                                           evidence_ids=parent["plan"]["evidence_ids"], parent_id=parent["candidate_id"]))
+                    validate_plans(expanded, child_count, request.dataset_id, evidence, report["candidates"], parents)
                 else:
                     try:
                         expanded = make_plans(child_count, evidence, parents) if child_count else []

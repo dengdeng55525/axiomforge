@@ -156,6 +156,23 @@ def expansion_options(parents, existing):
     return options
 
 
+def expansion_capacity(options):
+    """Count feasible unique children, respecting each parent's two-child limit.
+
+    Parents of the same algorithm share the same unused variants. Summing
+    options per parent would double-count those variants and ask the planner
+    for a set of children that cannot pass the uniqueness contract.
+    """
+    algorithms = {option["algorithm"] for option in options}
+    return sum(
+        min(
+            len({option["variant"] for option in options if option["algorithm"] == algorithm}),
+            2 * len({option["parent_id"] for option in options if option["algorithm"] == algorithm}),
+        )
+        for algorithm in algorithms
+    )
+
+
 def validate_plans(plans, count, dataset_id, evidence, existing, parents=None):
     if len(plans) != count:
         raise ResponseContractError("Planner candidate count does not match remaining budget")
