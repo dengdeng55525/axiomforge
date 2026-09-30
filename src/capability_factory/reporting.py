@@ -101,6 +101,12 @@ def _mode(report: Mapping[str, Any]) -> str:
     mode = report.get("mode")
     if mode is None:
         return "模式未记录 · 不推断真实调用"
+    if mode == "real" and report.get("provider") == "openai":
+        deployment = _mapping(report.get("provider_metadata")).get("deployment")
+        service = {"official_api": "OpenAI 官方 API", "openai_compatible_api": "OpenAI 兼容服务"}.get(
+            deployment, "OpenAI Responses API",
+        )
+        return f"真实 LLM · {service} · Responses"
     return MODE_LABELS.get(str(mode).lower(), f"未识别模式：{mode}")
 
 

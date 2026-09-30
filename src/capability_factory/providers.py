@@ -2,10 +2,11 @@
 
 import hashlib
 import json
+import math
 import time
 from dataclasses import dataclass, field
 from typing import Callable
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 import httpx
 
@@ -178,6 +179,331 @@ class HTTPProvider:
             remaining = self.deadline - time.monotonic()
             if remaining <= 0:
                 raise BudgetExceeded("Run wall-clock budget exhausted during retry")
+            delay = min(delay, remaining)
+        time.sleep(delay)
+        if self.checkpoint:
+            self.checkpoint()
+
+
+class OpenAIResponsesProvider:
+    """Bounded Responses calls through the official OpenAI Python SDK.
+
+    Deployment configuration owns the HTTPS endpoint and its credential. Every
+    role call is stateless, explicitly disables remote response storage, and
+    records only JSON content hashes and usage metadata. Provider failures keep
+    their own terminal state; retries preserve the requested model and endpoint.
+    """
+
+    def __init__(self, settings: Settings, event_callback: Callable | None = None):
+        self.settings = settings
+        self.mode = "openai"
+        self.model = settings.openai_model
+        self.usage = Usage()
+        self.event_callback = event_callback
+        self.deadline = None
+        self.checkpoint = None
+        self._usage_unavailable = False
+        self.base_url = settings.openai_base_url.rstrip("/")
+        self.base_urls = [self.base_url]
+        try:
+            parsed = urlparse(self.base_url)
+            port = parsed.port
+        except ValueError:
+            raise ProviderError("OpenAI Responses URL is invalid") from None
+        if (parsed.scheme != "https" or not parsed.hostname
+                or any(char.isspace() for char in self.base_url)):
+            raise ProviderError("OpenAI Responses URL must use HTTPS and include a host")
+        if parsed.username or parsed.password or "?" in self.base_url or "#" in self.base_url:
+            raise ProviderError("OpenAI Responses URL must not contain credentials, query, or fragment")
+        secret = settings.openai_api_key.get_secret_value()
+        if not secret:
+            raise ProviderError("OPENAI_API_KEY is missing; configure the server environment or .env")
+        if secret in self.base_url:
+            raise ProviderError("OpenAI Responses URL must not contain a credential")
+        self._proxy_url = settings.openai_proxy_url.get_secret_value()
+        self._proxy_credentials = []
+        if self._proxy_url:
+            try:
+                proxy = urlparse(self._proxy_url)
+                proxy.port
+            except ValueError:
+                raise ProviderError("OpenAI proxy URL is invalid") from None
+            if (proxy.scheme not in {"http", "https"} or not proxy.hostname
+                    or any(char.isspace() for char in self._proxy_url)):
+                raise ProviderError("OpenAI proxy URL must use HTTP(S) and include a host")
+            if "?" in self._proxy_url or "#" in self._proxy_url:
+                raise ProviderError("OpenAI proxy URL must not contain query or fragment")
+            if self._proxy_url in self.base_url:
+                raise ProviderError("OpenAI Responses URL must not contain proxy configuration")
+            self._proxy_credentials = [value for value in (
+                proxy.username, proxy.password, unquote(proxy.username or ""), unquote(proxy.password or ""),
+            ) if value]
+        if not self.model.strip():
+            raise ProviderError("OPENAI_MODEL is required")
+        if settings.openai_reasoning_effort not in {"", "none", "minimal", "low", "medium", "high", "xhigh"}:
+            raise ProviderError("OPENAI_REASONING_EFFORT is invalid")
+        self.deployment = ("official_api" if parsed.hostname == "api.openai.com"
+                           and port in {None, 443} else "openai_compatible_api")
+
+    def metadata(self) -> dict:
+        """Identify the selected deployment without publishing its credential."""
+        return {
+            "provider": self.mode, "model": self._safe_text(self.model),
+            "base_url": self.base_url, "base_urls": list(self.base_urls),
+            "authorization": "bearer", "deployment": self.deployment,
+            "api": "responses", "sdk": "openai", "store": False,
+            "stream": self.settings.openai_stream,
+            "proxy_configured": bool(self._proxy_url),
+            "reasoning_effort": self.settings.openai_reasoning_effort or "model_default",
+        }
+
+    def _safe_text(self, value) -> str | None:
+        if value is None:
+            return None
+        text = str(value)
+        for name in ("api_key", "local_api_key", "openai_api_key", "openai_proxy_url"):
+            secret = getattr(self.settings, name).get_secret_value()
+            if secret:
+                text = text.replace(secret, "[REDACTED]")
+        for secret in self._proxy_credentials:
+            text = text.replace(secret, "[REDACTED]")
+        return text[:512]
+
+    @staticmethod
+    def _token_count(value) -> int:
+        if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+            raise ProviderError("Responses usage must contain nonnegative integer token counts")
+        return value
+
+    def _record_response(self, remote, role: str, prompt_hash: str, started: float,
+                         requested_max_output_tokens: int) -> str:
+        """Account for completed or rejected responses before parsing their JSON."""
+        usage = getattr(remote, "usage", None)
+        status = getattr(remote, "status", None)
+        text_parts = []
+        refusal = False
+        invalid_output = False
+        for item in getattr(remote, "output", None) or []:
+            kind = getattr(item, "type", None)
+            if kind == "reasoning":
+                continue
+            if kind != "message" or getattr(item, "role", None) != "assistant":
+                invalid_output = True
+                continue
+            if getattr(item, "status", None) != "completed":
+                invalid_output = True
+            for block in getattr(item, "content", None) or []:
+                block_kind = getattr(block, "type", None)
+                if block_kind == "refusal":
+                    refusal = True
+                elif block_kind == "output_text" and isinstance(getattr(block, "text", None), str):
+                    text_parts.append(block.text)
+                else:
+                    invalid_output = True
+        content = "".join(text_parts)
+        record = {
+            "role": role, "requested_model": self._safe_text(self.model),
+            "returned_model": self._safe_text(getattr(remote, "model", None)),
+            "endpoint": self.base_url, "response_id": self._safe_text(getattr(remote, "id", None)),
+            "prompt_sha256": prompt_hash,
+            "response_sha256": hashlib.sha256(content.encode()).hexdigest(),
+            "seconds": round(time.monotonic() - started, 3),
+            "finish_reason": self._safe_text(status), "api": "responses",
+            "usage_available": False, "input_tokens": None, "output_tokens": None,
+            "cached_input_tokens": None,
+            "requested_max_output_tokens": requested_max_output_tokens,
+            "output_limit_exceeded": None,
+            "stream": self.settings.openai_stream,
+        }
+        usage_error = None
+        try:
+            if usage is None:
+                raise ProviderError("Responses usage is missing; token budget cannot be verified")
+            input_count = self._token_count(getattr(usage, "input_tokens", None))
+            output_count = self._token_count(getattr(usage, "output_tokens", None))
+            details = getattr(usage, "input_tokens_details", None)
+            cached = self._token_count(getattr(details, "cached_tokens", 0))
+            if cached > input_count:
+                raise ProviderError("Responses cached input usage exceeds total input usage")
+            self.usage.input_tokens += input_count
+            self.usage.output_tokens += output_count
+            self.usage.cached_input_tokens += cached
+            record.update(usage_available=True, input_tokens=input_count,
+                          output_tokens=output_count, cached_input_tokens=cached,
+                          output_limit_exceeded=output_count > requested_max_output_tokens)
+        except ProviderError as error:
+            self._usage_unavailable = True
+            usage_error = error
+        self.usage.records.append(record)
+        if self.event_callback:
+            self.event_callback("LLM_RESPONSE", record)
+        if usage_error:
+            raise usage_error
+        if refusal:
+            raise ProviderError("Responses model declined the requested role output")
+        if status != "completed" or getattr(remote, "error", None) is not None:
+            raise ResponseContractError("Responses output is incomplete or failed; content rejected")
+        if invalid_output or not content or len(content) > 120000:
+            raise ResponseContractError("Responses output must contain completed assistant JSON text")
+        if self.usage.input_tokens > self.settings.max_input_tokens:
+            raise BudgetExceeded("Responses usage exceeded the input-token budget")
+        if self.usage.output_tokens > self.settings.max_output_tokens:
+            raise BudgetExceeded("Responses usage exceeded the output-token budget")
+        return content
+
+    def _consume_stream(self, stream):
+        """Receive one terminal response; discard all intermediate event content."""
+        terminal_types = {"response.completed", "response.incomplete", "response.failed"}
+        with stream:
+            iterator = iter(stream)
+            while True:
+                if self.checkpoint:
+                    self.checkpoint()
+                if self.deadline is not None and time.monotonic() >= self.deadline:
+                    raise BudgetExceeded("Run wall-clock budget exhausted during Responses stream")
+                try:
+                    event = next(iterator)
+                except StopIteration:
+                    break
+                except Exception as error:
+                    # Once a stream has started, the upstream may already have
+                    # billed tokens. Do not retry an interrupted generation.
+                    self._usage_unavailable = True
+                    raise ProviderError(f"Responses stream transport failure: {type(error).__name__}") from None
+                event_type = getattr(event, "type", None)
+                if event_type in terminal_types:
+                    remote = getattr(event, "response", None)
+                    if remote is None:
+                        self._usage_unavailable = True
+                        raise ResponseContractError("Responses terminal stream event has no response")
+                    # Account for terminal usage before the post-call deadline
+                    # check, including a response arriving after cancellation.
+                    return remote
+                if event_type == "error":
+                    self._usage_unavailable = True
+                    raise ProviderError("Responses stream returned an error event")
+                if self.checkpoint:
+                    self.checkpoint()
+                if self.deadline is not None and time.monotonic() >= self.deadline:
+                    raise BudgetExceeded("Run wall-clock budget exhausted during Responses stream")
+        self._usage_unavailable = True
+        raise ResponseContractError("Responses stream ended without a terminal response")
+
+    def generate(self, role, system, payload, max_tokens=4096):
+        """Call Responses with at most one explicit, budgeted transport retry."""
+        if self.checkpoint:
+            self.checkpoint()
+        if self._usage_unavailable:
+            raise BudgetExceeded("Previous Responses usage is unavailable; further calls are blocked")
+        serialized = json.dumps(payload, ensure_ascii=False, sort_keys=True)
+        if len(serialized) > 120000:
+            raise BudgetExceeded("Context exceeds application payload size limit")
+        instructions = system + "\nReturn exactly one JSON object. Never include private reasoning, secrets or markdown fences."
+        # Some Responses gateways require the JSON instruction in input itself.
+        # Keep the payload intact and include the envelope in budget and hashes.
+        input_text = "Task data (JSON):\n" + serialized
+        typed_input = [
+            {"role": "developer", "content": instructions},
+            {"role": "user", "content": input_text},
+        ]
+        prompt_bytes = json.dumps(
+            {"instructions": instructions, "input": typed_input},
+            ensure_ascii=False, sort_keys=True,
+        ).encode("utf-8")
+        input_bound = len(prompt_bytes) + 128
+        if self.usage.input_tokens + input_bound > self.settings.max_input_tokens:
+            raise BudgetExceeded("Request cannot fit remaining conservative input-token budget")
+        remaining = self.settings.max_output_tokens - self.usage.output_tokens
+        if remaining < 256:
+            raise BudgetExceeded("LLM output token budget exhausted")
+        if isinstance(max_tokens, bool) or not isinstance(max_tokens, int) or max_tokens < 1:
+            raise ProviderError("max_tokens must be a positive integer")
+        max_tokens = min(max_tokens, remaining)
+        prompt_hash = hashlib.sha256(prompt_bytes).hexdigest()
+        try:
+            from openai import (
+                APIConnectionError,
+                APIError,
+                APIResponseValidationError,
+                APIStatusError,
+                DefaultHttpxClient,
+                OpenAI,
+            )
+        except ImportError:
+            raise ProviderError("Install the project's OpenAI SDK dependency to use Responses") from None
+        body = {
+            "model": self.model, "instructions": instructions, "input": typed_input,
+            "max_output_tokens": max_tokens, "store": False, "stream": self.settings.openai_stream,
+            "text": {"format": {"type": "json_object"}},
+        }
+        if self.settings.openai_reasoning_effort:
+            body["reasoning"] = {"effort": self.settings.openai_reasoning_effort}
+        for attempt in range(2):
+            if self.checkpoint:
+                self.checkpoint()
+            if self.usage.calls >= self.settings.max_calls:
+                raise BudgetExceeded("LLM call budget exhausted")
+            timeout = self.settings.request_timeout_s
+            if not math.isfinite(timeout) or timeout <= 0:
+                raise ProviderError("Responses request timeout must be finite and positive")
+            if self.deadline is not None:
+                available = self.deadline - time.monotonic()
+                if available <= 0:
+                    raise BudgetExceeded("Run wall-clock budget exhausted before Responses request")
+                timeout = min(timeout, available)
+            self.usage.calls += 1
+            started = time.monotonic()
+            transport_options = {"trust_env": False, "follow_redirects": False, "timeout": timeout}
+            if self._proxy_url:
+                transport_options["proxy"] = self._proxy_url
+            try:
+                # Use the SDK's transport class, which tracks its supported HTTP
+                # library. Nested contexts close it even if SDK setup fails.
+                with DefaultHttpxClient(**transport_options) as transport:
+                    with OpenAI(api_key=self.settings.openai_api_key.get_secret_value(),
+                                base_url=self.base_url, max_retries=0, timeout=timeout,
+                                http_client=transport) as client:
+                        remote = client.responses.create(**body, timeout=timeout)
+                        if self.settings.openai_stream:
+                            remote = self._consume_stream(remote)
+            except APIConnectionError as error:
+                if attempt == 0:
+                    self._retry_pause()
+                    continue
+                raise ProviderError(f"Responses transport failure: {type(error).__name__}") from None
+            except APIStatusError as error:
+                if error.status_code in {429, 500, 502, 503, 504} and attempt == 0:
+                    self._retry_pause()
+                    continue
+                raise ProviderError(f"Responses provider returned HTTP {error.status_code}") from None
+            except APIResponseValidationError:
+                raise ResponseContractError("Responses provider violated its response contract") from None
+            except APIError as error:
+                raise ProviderError(f"Responses SDK failure: {type(error).__name__}") from None
+            except (ValueError, TypeError):
+                raise ProviderError("Responses SDK configuration or request is invalid") from None
+            content = self._record_response(remote, role, prompt_hash, started, max_tokens)
+            if self.checkpoint:
+                self.checkpoint()
+            if self.deadline is not None and time.monotonic() >= self.deadline:
+                raise BudgetExceeded("Run wall-clock budget exhausted after Responses request")
+            try:
+                data = json.loads(content)
+            except (ValueError, TypeError):
+                raise ResponseContractError("Responses provider returned invalid JSON") from None
+            if not isinstance(data, dict):
+                raise ResponseContractError("Responses provider returned a non-object JSON value")
+            return data
+        raise ProviderError("Responses request did not complete")
+
+    def _retry_pause(self):
+        if self.checkpoint:
+            self.checkpoint()
+        delay = 1.0
+        if self.deadline is not None:
+            remaining = self.deadline - time.monotonic()
+            if remaining <= 0:
+                raise BudgetExceeded("Run wall-clock budget exhausted during Responses retry")
             delay = min(delay, remaining)
         time.sleep(delay)
         if self.checkpoint:

@@ -14,7 +14,7 @@ from capability_factory import prompts
 from capability_factory.contracts import RunRequest
 from capability_factory.inference import local_profile_metadata
 from capability_factory.knowledge import KnowledgeStore
-from capability_factory.providers import HTTPProvider, ProviderError
+from capability_factory.providers import HTTPProvider, OpenAIResponsesProvider, ProviderError
 from capability_factory.reporting import write_report
 from capability_factory.settings import load_settings
 from capability_factory.workflow import Workflow, now, write_json
@@ -28,14 +28,19 @@ def output(value):
 
 
 @app.command()
-def init(provider: Annotated[str, typer.Option(help="mock seeds only; deepseek or local_http performs real extraction")] = "mock"):
+def init(provider: Annotated[str, typer.Option(help="mock seeds only; deepseek, openai or local_http performs real extraction")] = "mock"):
     """Initialize knowledge and optionally extract capabilities with the selected provider."""
     settings = load_settings()
     store = KnowledgeStore(settings.db_path)
     store.initialize()
-    if provider not in {"mock", "deepseek", "local_http"}:
-        raise typer.BadParameter("provider must be mock, deepseek or local_http")
-    remote = HTTPProvider(settings, mode=provider) if provider in {"deepseek", "local_http"} else None
+    if provider not in {"mock", "deepseek", "openai", "local_http"}:
+        raise typer.BadParameter("provider must be mock, deepseek, openai or local_http")
+    try:
+        remote = (OpenAIResponsesProvider(settings) if provider == "openai" else
+                  HTTPProvider(settings, mode=provider) if provider in {"deepseek", "local_http"} else None)
+    except ProviderError as error:
+        typer.echo(str(error), err=True)
+        raise typer.Exit(1) from None
     extraction = {}
 
     def extractor(sources):
@@ -105,22 +110,54 @@ def serve(host: Annotated[str, typer.Option()] = "127.0.0.1", port: Annotated[in
 
 
 @app.command()
-def doctor(check_api: Annotated[bool, typer.Option()] = False):
+def doctor(
+    check_api: Annotated[bool, typer.Option()] = False,
+    provider: Annotated[str, typer.Option(help="deepseek or openai model discovery")] = "deepseek",
+):
     """Show prerequisites without exposing credentials; optional authenticated model discovery."""
     settings = load_settings()
-    result = {"root": str(settings.root), "python": sys.version.split()[0], "model": settings.model,
-              "credential_configured": bool(settings.api_key.get_secret_value()),
+    if provider not in {"deepseek", "openai"}:
+        raise typer.BadParameter("doctor --provider accepts deepseek or openai")
+    def public_text(value):
+        text = str(value)
+        for credential in (settings.api_key, settings.openai_api_key, settings.local_api_key, settings.openai_proxy_url):
+            secret = credential.get_secret_value()
+            if secret:
+                text = text.replace(secret, "[REDACTED]")
+        return text[:512]
+
+    selected_model = public_text(settings.openai_model if provider == "openai" else settings.model)
+    selected_key = settings.openai_api_key if provider == "openai" else settings.api_key
+    result = {"root": str(settings.root), "python": sys.version.split()[0], "model": selected_model,
+              "provider": provider,
+              "credential_configured": bool(selected_key.get_secret_value()),
               "executor": "constrained_ast_subprocess", "arbitrary_python_execution": False,
               "docker_available": bool(shutil.which("docker")), "local_model_deployed": False,
               "local_provider": local_profile_metadata(settings),
               "datasets": {name: (settings.root / "data/raw" / name).is_file() for name in ["bank-additional-full.csv", "SMSSpamCollection"]}}
-    if check_api:
+    if check_api and provider == "openai":
+        try:
+            from openai import APIError, DefaultHttpxClient, OpenAI
+
+            profile = OpenAIResponsesProvider(settings).metadata()
+            transport = {"trust_env": False, "follow_redirects": False}
+            if settings.openai_proxy_url.get_secret_value():
+                transport["proxy"] = settings.openai_proxy_url.get_secret_value()
+            with OpenAI(api_key=selected_key.get_secret_value(), base_url=profile["base_url"],
+                        max_retries=0, timeout=20,
+                        http_client=DefaultHttpxClient(**transport)) as client:
+                result["models"] = [{"id": public_text(item.id)} for item in client.models.list().data]
+            result["api_status"] = "authenticated"
+            result["deployment"] = profile["deployment"]
+        except (APIError, ProviderError, ValueError, KeyError, AttributeError):
+            result["api_status"] = "connection_or_response_error"
+    elif check_api:
         # Provider construction validates the destination before any credential is sent.
         HTTPProvider(settings)
         try:
             response = httpx.get(settings.base_url.rstrip("/") + "/models", headers={"Authorization": "Bearer " + settings.api_key.get_secret_value()}, timeout=20, follow_redirects=False, trust_env=False)
             if response.status_code == 200:
-                result["models"] = [{"id": item["id"], "name": item.get("name")} for item in response.json()["data"]]
+                result["models"] = [{"id": public_text(item["id"]), "name": public_text(item["name"]) if item.get("name") else None} for item in response.json()["data"]]
                 result["api_status"] = "authenticated"
             else:
                 result["api_status"] = f"HTTP {response.status_code}"

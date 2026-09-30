@@ -12,6 +12,7 @@ from pathlib import Path
 from pydantic import ValidationError
 
 from capability_factory import prompts
+from capability_factory.agent_runtime import invoke_role, retrieve_capabilities, runtime_metadata
 from capability_factory.contracts import (
     Explanation,
     GeneratedCode,
@@ -27,6 +28,7 @@ from capability_factory.providers import (
     BudgetExceeded,
     HTTPProvider,
     MockProvider,
+    OpenAIResponsesProvider,
     ProviderError,
     ResponseContractError,
 )
@@ -114,8 +116,9 @@ class Workflow:
             "mode": "mock" if request.provider == "mock" else "real",
             "provider": request.provider, "description": request.description,
             "dataset_id": request.dataset_id, "created_at": now(), "request": request.model_dump(),
-            "task_spec": {}, "model": "deterministic-mock-v1" if request.provider == "mock" else (self.settings.model if request.provider == "deepseek" else self.settings.local_model),
-            "provenance": {"prompt_version": prompts.PROMPT_VERSION, "sealed_test_scored": False},
+            "task_spec": {}, "model": "deterministic-mock-v1" if request.provider == "mock" else ({"deepseek": self.settings.model, "openai": self.settings.openai_model, "local_http": self.settings.local_model}[request.provider]),
+            "provenance": {"prompt_version": prompts.PROMPT_VERSION, "sealed_test_scored": False,
+                           "agent_runtime": runtime_metadata()},
             "candidates": [], "selected_candidate_id": None, "events": [], "usage": {},
             "warnings": ["指标来自 validation_only，封存测试集保持未评分。", "执行器采用受限 AST 构造器和资源限制子进程；生产隔离需要强化运行时。"],
             "search_tree": [], "knowledge_writeback": {},
@@ -145,17 +148,17 @@ class Workflow:
             checkpoint()
             for attempt in range(2):
                 checkpoint()
-                if isinstance(provider, HTTPProvider):
+                if isinstance(provider, (HTTPProvider, OpenAIResponsesProvider)):
                     provider.settings.request_timeout_s = max(1, min(120, deadline - time.monotonic()))
                 request_number = provider.usage.calls + 1
                 stem = directory / "llm" / f"{request_number:02d}_{role}"
                 write_json(stem.with_suffix(".request.json"), {"role": role, "prompt_version": prompts.PROMPT_VERSION,
                                                               "system": system, "payload": payload})
                 try:
-                    data = provider.generate(role, system, payload, max_tokens=max_tokens)
-                    write_json(stem.with_suffix(".response.json"), data)
-                    checkpoint()
-                    return schema.model_validate(data)
+                    return invoke_role(
+                        provider, role, system, payload, schema, max_tokens, checkpoint,
+                        lambda data: write_json(stem.with_suffix(".response.json"), data),
+                    )
                 except (ValidationError, ResponseContractError) as error:
                     event("RESPONSE_SCHEMA_REJECTED", {"role": role, "error": type(error).__name__})
                     if attempt:
@@ -279,12 +282,17 @@ class Workflow:
                                           "pruned": False})
 
         try:
-            provider = MockProvider(event) if request.provider == "mock" else HTTPProvider(self.settings.model_copy(deep=True), request.provider, event)
+            if request.provider == "mock":
+                provider = MockProvider(event)
+            elif request.provider == "openai":
+                provider = OpenAIResponsesProvider(self.settings.model_copy(deep=True), event)
+            else:
+                provider = HTTPProvider(self.settings.model_copy(deep=True), request.provider, event)
             report["provider_metadata"] = (
                 {"provider": "mock", "model": provider.model, "deployment": "deterministic_mock"}
                 if request.provider == "mock" else provider.metadata()
             )
-            if isinstance(provider, HTTPProvider):
+            if isinstance(provider, (HTTPProvider, OpenAIResponsesProvider)):
                 provider.deadline = deadline
                 provider.checkpoint = checkpoint
             event("RECEIVED", {"mode": report["mode"], "model": report["model"]})
@@ -309,7 +317,7 @@ class Workflow:
             if declared_budget is not None:
                 budget_seconds = min(budget_seconds, declared_budget)
                 deadline = started + budget_seconds
-                if isinstance(provider, HTTPProvider):
+                if isinstance(provider, (HTTPProvider, OpenAIResponsesProvider)):
                     provider.deadline = deadline
                 event("RUN_BUDGET_APPLIED", {
                     "source": "explicit_user_description",
@@ -330,9 +338,13 @@ class Workflow:
                 })
             report["warnings"].extend(interpretation.warnings + interpretation.incompatible_requests)
             event("SPEC_VALIDATED", {"task_type": dataset["task_type"], "assumptions": interpretation.assumptions})
-            evidence = self.store.search(request.description, dataset["task_type"], limit=6, use_graph=request.use_graph) if request.use_retrieval else []
+            evidence = retrieve_capabilities(
+                self.store, checkpoint, query=request.description, task_type=dataset["task_type"],
+                limit=6, use_graph=request.use_graph,
+            ) if request.use_retrieval else []
             report["evidence"] = evidence
             event("KNOWLEDGE_RETRIEVED", {"count": len(evidence), "use_graph": request.use_graph,
+                                          "tool": "search_capabilities" if request.use_retrieval else None,
                                           "capability_ids": [item.get("capability_id", item.get("id")) for item in evidence]})
             initial_count = min(2, request.max_candidates)
             if request.orchestration == "single_shot":
@@ -415,9 +427,10 @@ class Workflow:
         except Exception as error:
             report["status"] = "failed"
             message = str(error)
-            secret = self.settings.api_key.get_secret_value()
-            if secret:
-                message = message.replace(secret, "[REDACTED]")
+            for credential in (self.settings.api_key, self.settings.openai_api_key, self.settings.local_api_key, self.settings.openai_proxy_url):
+                secret = credential.get_secret_value()
+                if secret:
+                    message = message.replace(secret, "[REDACTED]")
             report["failure_reason"] = f"{type(error).__name__}: {message[:2000]}"
         finally:
             for item in report["candidates"]:

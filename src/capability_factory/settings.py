@@ -12,6 +12,14 @@ class Settings(BaseModel):
     api_key: SecretStr = Field(default=SecretStr(""), repr=False)
     base_url: str = "https://api.deepseek.com"
     model: str = "deepseek-flash"
+    openai_api_key: SecretStr = Field(default=SecretStr(""), repr=False)
+    openai_proxy_url: SecretStr = Field(default=SecretStr(""), repr=False)
+    openai_base_url: str = "https://api.openai.com/v1"
+    openai_model: str = "gpt-5.5"
+    openai_stream: bool = True
+    # Disable reasoning for bounded JSON role calls by default. Set an empty
+    # value to use the configured model's default reasoning behavior.
+    openai_reasoning_effort: str = "none"
     local_base_url: str = "http://127.0.0.1:8100/v1"
     # Optional comma-separated pool of OpenAI-compatible local endpoints.  A
     # single endpoint remains the default for backwards compatibility; when
@@ -68,6 +76,14 @@ def load_settings(root: Path | str | None = None) -> Settings:
         api_key=SecretStr(value("DEEPSEEK_API_KEY", "")),
         base_url=value("DEEPSEEK_BASE_URL", "https://api.deepseek.com"),
         model=value("DEEPSEEK_MODEL", "deepseek-flash"),
+        openai_api_key=SecretStr(value("OPENAI_API_KEY", "")),
+        openai_proxy_url=SecretStr(value("OPENAI_PROXY_URL", "")),
+        openai_base_url=value("OPENAI_BASE_URL", "https://api.openai.com/v1"),
+        openai_model=value("OPENAI_MODEL", "gpt-5.5"),
+        openai_stream=value("OPENAI_STREAM", True),
+        openai_reasoning_effort=os.environ.get(
+            "OPENAI_REASONING_EFFORT", file_values.get("OPENAI_REASONING_EFFORT", "none") or "",
+        ),
         local_base_url=value("LOCAL_LLM_BASE_URL", "http://127.0.0.1:8100/v1"),
         local_base_urls=value("LOCAL_LLM_ENDPOINTS", value("LOCAL_LLM_BASE_URLS", "")),
         local_api_key=SecretStr(value("LOCAL_LLM_API_KEY", "")),

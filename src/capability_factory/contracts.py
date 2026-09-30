@@ -10,7 +10,7 @@ class RunRequest(BaseModel):
 
     description: str = Field(min_length=5, max_length=8000)
     dataset_id: Literal["bank", "sms"] = "bank"
-    provider: Literal["deepseek", "mock", "local_http"] = "deepseek"
+    provider: Literal["deepseek", "openai", "mock", "local_http"] = "deepseek"
     max_candidates: int = Field(default=2, ge=1, le=6)
     max_repairs: int = Field(default=2, ge=0, le=2)
     use_graph: bool = True

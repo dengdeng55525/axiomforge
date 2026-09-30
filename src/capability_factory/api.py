@@ -9,6 +9,7 @@ from urllib.parse import urlsplit, urlunsplit
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import HTMLResponse, PlainTextResponse
 
+from capability_factory.agent_runtime import runtime_metadata
 from capability_factory.contracts import RunRequest
 from capability_factory.graph_presentation import (
     capability_detail,
@@ -19,6 +20,7 @@ from capability_factory.graph_presentation import (
 from capability_factory.inference import load_inference_profiles, local_profile_metadata
 from capability_factory.knowledge import KnowledgeStore
 from capability_factory.optimization import analyze_resources
+from capability_factory.providers import OpenAIResponsesProvider, ProviderError
 from capability_factory.reporting import render_html, render_markdown
 from capability_factory.settings import Settings, load_settings
 from capability_factory.webui import mount_workbench
@@ -104,9 +106,32 @@ def _provider_catalog(settings: Settings) -> dict:
     local_endpoints = [_safe_endpoint(value) for value in settings.local_endpoints]
     local_endpoints = [value for value in local_endpoints if value]
     local_endpoint = local_endpoints[0] if local_endpoints else None
+    openai_configured = bool(settings.openai_api_key.get_secret_value())
+    openai_endpoint = _safe_endpoint(settings.openai_base_url)
+    parsed_openai = urlsplit(openai_endpoint or "")
+    openai_deployment = ("official_api" if parsed_openai.hostname == "api.openai.com"
+                         else "openai_compatible_api")
+    openai_available = False
+    openai_status = "missing_credentials"
+    if openai_configured:
+        try:
+            metadata = OpenAIResponsesProvider(settings).metadata()
+            openai_endpoint = metadata["base_url"]
+            openai_deployment = metadata["deployment"]
+            openai_available = True
+            openai_status = "configured"
+        except ProviderError:
+            openai_endpoint = None
+            openai_status = "invalid_configuration"
+    openai_model = settings.openai_model
+    for credential in (settings.api_key, settings.openai_api_key, settings.local_api_key, settings.openai_proxy_url):
+        secret = credential.get_secret_value()
+        if secret:
+            openai_model = openai_model.replace(secret, "[REDACTED]")
     return {
         "schema_version": "1.0",
         "default_provider": "deepseek",
+        "agent_runtime": runtime_metadata(),
         "providers": [
             {
                 "id": "deepseek",
@@ -120,6 +145,22 @@ def _provider_catalog(settings: Settings) -> dict:
                 "requires_api_key": True,
                 "local_model_deployed": False,
                 "capabilities": ["structured_json", "multi_role", "beam_search"],
+            },
+            {
+                "id": "openai",
+                "label": "OpenAI / Responses API",
+                "kind": "remote_api",
+                "deployment": openai_deployment,
+                "api": "responses",
+                "sdk": "openai",
+                "model": openai_model,
+                "endpoint": openai_endpoint,
+                "configured": openai_configured,
+                "available": openai_available,
+                "status": openai_status,
+                "requires_api_key": True,
+                "local_model_deployed": False,
+                "capabilities": ["structured_json", "multi_role", "beam_search", "responses"],
             },
             {
                 "id": "local_http",

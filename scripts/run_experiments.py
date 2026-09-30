@@ -126,7 +126,7 @@ def build_plan(
 ) -> dict:
     from capability_factory.contracts import RunRequest
 
-    if provider not in {"mock", "deepseek", "local_http"} or suite not in {"smoke", "full"}:
+    if provider not in {"mock", "deepseek", "openai", "local_http"} or suite not in {"smoke", "full"}:
         raise ValueError("Unsupported provider or suite")
     if type(repeats) is not int or not 1 <= repeats <= 100:
         raise ValueError("repeats must be an integer between 1 and 100")
@@ -258,7 +258,7 @@ def observed_record(job: dict, report: dict, elapsed: float) -> dict:
         "workflow_wall_seconds": _number((report.get("timing") or {}).get("wall_seconds")),
         "harness_wall_seconds": elapsed,
         "llm_role_calls": _number(usage.get("calls")),
-        "api_calls": _number(usage.get("calls")) if provider == "deepseek" else 0,
+        "api_calls": _number(usage.get("calls")) if provider in {"deepseek", "openai"} else 0,
         "input_tokens": _number(usage.get("input_tokens")),
         "output_tokens": _number(usage.get("output_tokens")),
         "cached_input_tokens": _number(usage.get("cached_input_tokens")),
@@ -421,7 +421,7 @@ def _safe_invocation(settings, plan: dict, dry_run: bool) -> dict:
     return {
         "project_root": str(settings.root),
         "provider": plan["provider"],
-        "model": "deterministic-mock-v1" if plan["provider"] == "mock" else settings.model,
+        "model": {"mock": "deterministic-mock-v1", "deepseek": settings.model, "openai": settings.openai_model, "local_http": settings.local_model}[plan["provider"]],
         "suite": plan["suite"],
         "repeats": plan["repeats"],
         "dry_run": dry_run,
@@ -511,7 +511,7 @@ def main(argv=None) -> int:
     from capability_factory.settings import load_settings
 
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--provider", choices=["mock", "deepseek", "local_http"], default="mock")
+    parser.add_argument("--provider", choices=["mock", "deepseek", "openai", "local_http"], default="mock")
     parser.add_argument("--suite", choices=["smoke", "full"], default="smoke")
     parser.add_argument("--repeats", type=int, default=1)
     parser.add_argument("--output", type=Path)
