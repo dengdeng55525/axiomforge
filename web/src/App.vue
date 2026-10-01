@@ -16,10 +16,12 @@ import {
   RefreshCw,
 } from "@lucide/vue";
 import { api } from "./lib/api";
+import GpuStatusBar from "./components/GpuStatusBar.vue";
 const route = useRoute(),
   router = useRouter(),
   mobileOpen = ref(false),
-  healthy = ref<boolean | null>(null);
+  healthy = ref<boolean | null>(null),
+  gpuStatus = ref<any | null>(null);
 const nav = [
   { path: "/", name: "工作台概览", icon: LayoutDashboard },
   { path: "/workbench", name: "创建算法任务", icon: Sparkles },
@@ -73,9 +75,12 @@ function dialogKeys(event: KeyboardEvent) {
 }
 async function check() {
   try {
-    healthy.value = (await api("/health")).status === "ok";
+    const health = await api<any>("/health");
+    healthy.value = health.status === "ok";
+    gpuStatus.value = health.gpu_status || null;
   } catch {
     healthy.value = false;
+    gpuStatus.value = null;
   }
 }
 let timer: ReturnType<typeof setInterval>;
@@ -148,6 +153,8 @@ const pageTitle = computed(() => route.meta.title || "工作台概览");
         }}</b>
       </div>
       <div class="topbar-actions">
+        <GpuStatusBar :snapshot="gpuStatus" />
+        <span class="topbar-divider"></span>
         <button
           class="service-indicator"
           @click="check"
@@ -166,7 +173,6 @@ const pageTitle = computed(() => route.meta.title || "工作台概览");
                 ? "服务未连接"
                 : "正在连接"
           }}</button
-        ><span class="topbar-divider"></span
         ><button
           class="icon-button"
           aria-label="使用指南"

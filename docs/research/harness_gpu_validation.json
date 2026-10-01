@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "validated_at_utc": "2026-10-01",
+  "scope": "Offline Agent Harness, GPU visibility contract and topbar status presentation",
+  "agent_harness": {
+    "schema_version": "agent-harness.v1",
+    "cases": ["bank_e2e", "bank_repair", "sms_text_transfer", "trace_redaction"],
+    "suite_schema_version": "agent-harness-suite.v1",
+    "cli": [
+      "algoforge harness cases",
+      "algoforge harness evaluate RUN_ID --case bank_e2e",
+      "algoforge harness suite RUN_ID",
+      "algoforge harness replay RUN_ID --through 12"
+    ],
+    "api": [
+      "GET /harness/cases",
+      "GET /runs/{run_id}/harness?case_id=bank_e2e",
+      "GET /runs/{run_id}/harness-suite"
+    ],
+    "tests_passed": 7,
+    "side_effects": ["no model call", "no generated-code execution", "no knowledge write"]
+  },
+  "gpu_status": {
+    "schema_version": "gpu-status.v1",
+    "slots": 4,
+    "coverage": ["0/4 CPU or Mock", "2/4 partial visibility", "4/4 ready", "probe error and timeout"],
+    "backend": ["GET /health", "GET /system/gpus"],
+    "tests_passed": 3,
+    "browser_tests_passed": 2,
+    "probe_policy": "process-local nvidia-smi read; no CUDA, proxy or environment mutation"
+  },
+  "frontend": {
+    "typecheck": "passed",
+    "format": "passed",
+    "production_build": "passed"
+  }
+}

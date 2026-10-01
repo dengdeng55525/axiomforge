@@ -1,5 +1,6 @@
 """Local API with bounded job concurrency and controlled artifact access."""
 
+import json
 import threading
 import uuid
 from concurrent.futures import ThreadPoolExecutor
@@ -11,12 +12,14 @@ from fastapi.responses import HTMLResponse, PlainTextResponse
 
 from capability_factory.agent_runtime import runtime_metadata
 from capability_factory.contracts import RunRequest
+from capability_factory.gpu_status import probe_gpus
 from capability_factory.graph_presentation import (
     capability_detail,
     explore_graph,
     quality_label,
     summarize_checks,
 )
+from capability_factory.harness import evaluate_report, evaluate_suite, load_cases
 from capability_factory.inference import load_inference_profiles, local_profile_metadata
 from capability_factory.knowledge import KnowledgeStore
 from capability_factory.knowledge_governance import validate_store
@@ -365,11 +368,20 @@ def create_app(settings: Settings | None = None):
 
     @app.get("/health")
     def health():
+        local_provider = _safe_local_profile(settings)
+        gpu_status = probe_gpus(local_provider.get("gpu_count") or 4)
         return {"status": "ok", "provider": "deepseek", "model": settings.model,
                 "credential_configured": bool(settings.api_key.get_secret_value()),
                 "sandbox": "constrained_ast_subprocess", "os_sandbox": False,
-                "local_model_deployed": False, "local_provider": _safe_local_profile(settings),
+                "local_model_deployed": False, "local_provider": local_provider,
+                "gpu_status": gpu_status,
                 "max_parallel_runs": 2}
+
+    @app.get("/system/gpus")
+    def system_gpus():
+        """Return a bounded read-only GPU snapshot for the visual console."""
+        local_provider = _safe_local_profile(settings)
+        return probe_gpus(local_provider.get("gpu_count") or 4)
 
     @app.get("/inference/profiles")
     def inference_profiles():
@@ -478,6 +490,43 @@ def create_app(settings: Settings | None = None):
         """Return SHA-256 evidence for inputs, code, validation, and reports."""
         report = report_for(run_id)
         return build_reproducibility(report, settings.runs_dir / run_id)
+
+    @app.get("/harness/cases")
+    def harness_cases():
+        """List local, versioned Agent evaluation rubrics."""
+        path = settings.root / "configs" / "agent_harness_cases.json"
+        try:
+            cases = load_cases(path)
+        except (OSError, ValueError, json.JSONDecodeError) as error:
+            raise HTTPException(status_code=500, detail=f"Invalid harness case catalog: {error}") from None
+        return {"schema_version": "agent-harness.v1", "cases": [case.model_dump() for case in cases]}
+
+    @app.get("/runs/{run_id}/harness")
+    def harness_run(run_id: str, case_id: str = Query("bank_e2e", min_length=2, max_length=64)):
+        """Evaluate a saved run with the local harness without mutating it."""
+        path = settings.root / "configs" / "agent_harness_cases.json"
+        try:
+            cases = load_cases(path)
+        except (OSError, ValueError, json.JSONDecodeError) as error:
+            raise HTTPException(status_code=500, detail=f"Invalid harness case catalog: {error}") from None
+        case = next((item for item in cases if item.id == case_id), None)
+        if case is None:
+            raise HTTPException(status_code=404, detail="Unknown harness case")
+        try:
+            result = evaluate_report(report_for(run_id), case)
+        except ValueError as error:
+            raise HTTPException(status_code=422, detail=str(error)) from None
+        return result.model_dump(mode="json")
+
+    @app.get("/runs/{run_id}/harness-suite")
+    def harness_suite(run_id: str):
+        """Evaluate all registered local Agent rubrics as one regression suite."""
+        path = settings.root / "configs" / "agent_harness_cases.json"
+        try:
+            cases = load_cases(path)
+        except (OSError, ValueError, json.JSONDecodeError) as error:
+            raise HTTPException(status_code=500, detail=f"Invalid harness case catalog: {error}") from None
+        return evaluate_suite(report_for(run_id), cases)
 
     @app.get("/runs/{run_id}/report")
     def report_json(run_id: str):

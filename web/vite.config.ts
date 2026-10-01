@@ -8,6 +8,8 @@ export default defineConfig({
     proxy: Object.fromEntries(
       [
         "health",
+        "system",
+        "harness",
         "runs",
         "config",
         "graph",

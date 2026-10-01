@@ -1,0 +1,51 @@
+{
+  "schema_version": "agent-harness.v1",
+  "description": "Offline trace-based evaluation rubrics for reproducible Agent runs.",
+  "cases": [
+    {
+      "id": "bank_e2e",
+      "title": "银行营销二分类端到端闭环",
+      "description": "检查需求理解、知识检索、候选生成、验证和结果记录是否形成完整闭环。",
+      "dataset_id": "bank",
+      "required_event_types": ["RECEIVED", "SPEC_VALIDATED", "KNOWLEDGE_RETRIEVED", "CANDIDATE_PLANNED", "VALIDATING", "VERIFIED", "COMPARED", "RECORDED", "RUN_FINISHED"],
+      "required_roles": ["interpreter", "planner", "coder"],
+      "required_candidate_count": 1,
+      "expected_statuses": ["passed"],
+      "max_repair_attempts": 2
+    },
+    {
+      "id": "bank_repair",
+      "title": "银行营销失败诊断与修复",
+      "description": "要求运行在失败后留下 reviewer/repair_coder 证据并在预算内完成恢复。",
+      "dataset_id": "bank",
+      "required_event_types": ["KNOWLEDGE_RETRIEVED", "VALIDATING", "VERIFIED", "REPAIR_PLANNED", "RECORDED", "RUN_FINISHED"],
+      "required_roles": ["reviewer", "repair_coder"],
+      "required_candidate_count": 1,
+      "expected_statuses": ["passed"],
+      "require_repair_evidence": true,
+      "max_repair_attempts": 2
+    },
+    {
+      "id": "sms_text_transfer",
+      "title": "短信文本分类跨场景迁移",
+      "description": "检查文本任务使用独立数据契约、角色链和验证事实。",
+      "dataset_id": "sms",
+      "required_event_types": ["SPEC_VALIDATED", "KNOWLEDGE_RETRIEVED", "CANDIDATE_PLANNED", "VALIDATING", "VERIFIED", "RUN_FINISHED"],
+      "required_roles": ["interpreter", "coder"],
+      "required_candidate_count": 1,
+      "expected_statuses": ["passed"],
+      "max_repair_attempts": 2
+    },
+    {
+      "id": "trace_redaction",
+      "title": "Agent 事件脱敏与可回放契约",
+      "description": "只验证事件事实、游标回放和禁止字段检查，适用于任意任务。",
+      "required_event_types": ["RECEIVED", "RUN_FINISHED"],
+      "required_roles": [],
+      "required_candidate_count": 0,
+      "expected_statuses": ["passed", "completed"],
+      "require_selected_candidate": false,
+      "max_repair_attempts": 20
+    }
+  ]
+}

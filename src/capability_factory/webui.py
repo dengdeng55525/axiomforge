@@ -53,7 +53,7 @@ def create_ui_app(backend_url: str | None = None, root: Path | None = None) -> F
     @app.api_route("/{path:path}", methods=["GET", "POST"], include_in_schema=False)
     async def proxy(path: str, request: Request):
         root_name = path.split("/")[0]
-        if root_name not in {"health", "runs", "graph", "capabilities", "config", "inference", "datasets"}:
+        if root_name not in {"health", "system", "harness", "runs", "graph", "capabilities", "config", "inference", "datasets"}:
             raise HTTPException(404, "Unknown API route")
         if ".." in path.split("/") or "\\" in path:
             raise HTTPException(400, "Invalid API path")

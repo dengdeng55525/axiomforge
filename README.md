@@ -21,18 +21,66 @@ AlgoForge 是基于 LLM Agent 的算法能力工厂，面向行业算法的复�
 - **可审计知识图谱**：SQLite 持久化来源、能力、算法、数据、环境、验证运行、制品和失败经验。
 - **可复现验证**：固定数据切分、主指标 AP、Dummy 基线、接口/功能/稳定性/资源检查，缺失值不填零。
 - **现代 Agent 观测台**：记录角色与工具 span、调用预算、token 用量和终态事件；运行报告支持按事件游标只读回放，不泄露未来步骤或隐式推理。
+- **Agent Evaluation Harness**：用版本化用例对运行报告做离线、只读、可重复评测，检查事件、角色协作、候选、修复预算和敏感字段。
 - **知识治理质量闸门**：对来源、状态、版本、内容哈希、任务类型和图谱关系逐项校验，空库、篡改和悬空关系都有明确结果。
 - **可复现制品证明**：按需生成输入、代码、验证、报告四类制品的 SHA256 清单，发现缺失、越界、超限或篡改时给出可定位诊断。
 - **多候选和有限搜索**：比较候选方案，并提供有界 Beam Search、修复预算和失败分母。
 - **四种推理后端**：OpenAI Responses API、DeepSeek API、本地 OpenAI 兼容 HTTP 接口、确定性 Mock。支持前端切换 API / 本地模型，配套 1 卡与 4 卡 14B 启动配置和端点池。
+- **0–4 卡资源状态栏**：顶栏显示 GPU 0–3 的可见性、启用状态、利用率、显存和温度；无卡时明确回退到 CPU / Mock。
 
-![工作台概览](docs/images/workbench-overview.png)
+## 界面与证据导览
 
-![知识图谱](docs/images/workbench-graph.png)
+下面的截图按“入口 → 运行 → 证据 → 图谱”的阅读顺序排列。图片是仓库内可复核的静态快照，数据面板中的运行编号、指标、状态和代码哈希都来自同一份报告制品；打开图片即可查看大图。
 
-![验证报告](docs/images/workbench-report.png)
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <a href="docs/images/workbench-overview.png"><img src="docs/images/workbench-overview.png" alt="AlgoForge 工作台概览" width="100%"></a><br>
+      <strong>① 工作台概览</strong><br>
+      <sub>从公开数据场景进入任务，查看运行历史、能力数量与端到端能力链。</sub>
+    </td>
+    <td width="50%" align="center">
+      <a href="docs/images/workbench-graph.png"><img src="docs/images/workbench-graph.png" alt="AlgoForge 知识图谱" width="100%"></a><br>
+      <strong>② 知识图谱</strong><br>
+      <sub>沿来源、能力版本、算法、验证运行和失败经验的关系定位证据。</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <a href="docs/images/workbench-report.png"><img src="docs/images/workbench-report.png" alt="AlgoForge 验证报告" width="100%"></a><br>
+      <strong>③ 验证报告</strong><br>
+      <sub>先看结论与候选比较，再展开检查、修复、Agent 观测和完整 JSON。</sub>
+    </td>
+    <td width="50%" align="center">
+      <a href="docs/images/resource-tradeoffs.png"><img src="docs/images/resource-tradeoffs.png" alt="候选算法质量与资源权衡" width="100%"></a><br>
+      <strong>④ 质量与资源权衡</strong><br>
+      <sub>在相同验证协议下比较 AP、训练耗时和 worker 峰值 RSS，辅助解释候选选择。</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <a href="docs/images/gpu-status-bar.png"><img src="docs/images/gpu-status-bar.png" alt="0到4卡 GPU 状态栏" width="100%"></a><br>
+      <strong>⑤ 0–4 卡 GPU 状态栏</strong><br>
+      <sub>顶栏显示可见卡数，展开后查看每张卡的启用状态、利用率、显存与温度。</sub>
+    </td>
+    <td width="50%" align="center">
+      <strong>阅读顺序</strong><br>
+      <sub>先从工作台进入任务，再查看报告结论和候选证据，最后沿图谱、Harness 与制品哈希复核。</sub>
+    </td>
+  </tr>
+</table>
 
-截图用于展示界面；真实指标、运行状态和代码哈希统一读取运行报告。
+### 页面和产物的对应关系
+
+| 页面 | 阅读重点 | 后端事实来源 | 可导出制品 |
+| --- | --- | --- | --- |
+| 工作台概览 | 场景、运行历史、能力链入口 | `GET /summary`、`GET /runs` | 运行索引 |
+| 创建算法任务 | 需求、数据、Provider、搜索与修复预算 | `POST /runs` | `request.json` |
+| 运行与报告 | 候选、检查、指标、修复、Agent trace | `GET /runs/{id}`、`GET /runs/{id}/agent-trace` | JSON / Markdown / HTML |
+| 知识探索 | 节点、关系、来源、版本、质量闸门 | `GET /graph`、`GET /knowledge/quality` | JSON / GraphML |
+| 模型与环境 | API / 本地模型、GPU 端点、0–4 卡启用状态、资源边界 | `GET /settings`、`GET /health`、`GET /system/gpus` | 环境快照 |
+
+截图用于解释交互层；最终结论以报告中的 `status`、`quality_status`、检查项和制品哈希为准。
 
 ## 60 秒离线体验
 
@@ -162,22 +210,97 @@ python -m capability_factory run \
 
 ## 端到端闭环
 
+下面的流程图对应当前仓库中的实际边界：用户入口通过 FastAPI 进入 Workflow；Agent 运行层负责结构化交接，算法执行和评测 Harness 负责独立事实；报告、图谱与制品证明共同形成回写闭环。
+
 ```mermaid
-%%{init: {"themeVariables": {"fontSize": "16px"}, "flowchart": {"nodeSpacing": 32, "rankSpacing": 42, "padding": 14}}}%%
-flowchart TD
-    A[自然语言需求] --> B[解释与约束]
-    B --> C[SQLite 知识检索]
-    C --> D[候选规划与 Beam 搜索]
-    D --> E[受限算法代码生成]
-    E --> F[AST / 接口 / 指标 / 稳定性验证]
-    F -->|失败且仍有预算| G[错误审查与有限修复]
-    G --> E
-    F --> H[候选比较与报告]
-    H --> I[能力版本、制品、失败经验回写]
-    I --> C
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "primaryColor": "#e8f5f2", "primaryBorderColor": "#0d9488", "lineColor": "#64748b"}, "flowchart": {"nodeSpacing": 28, "rankSpacing": 42, "padding": 14}}}%%
+flowchart LR
+    subgraph INPUT[入口层]
+      U[自然语言需求]
+      W[Vue 工作台]
+      C[Typer CLI]
+      A[FastAPI]
+      U --> W
+      U --> C
+      W --> A
+      C --> A
+    end
+
+    subgraph ORCH[Agent 编排层]
+      I[Interpreter<br/>需求解释]
+      R[只读图检索<br/>StructuredTool]
+      P[Planner<br/>候选规划 + Beam]
+      G[Coder<br/>受限代码生成]
+      V[Reviewer / Repair Coder]
+      K[Curator<br/>证据总结]
+      I --> R --> P --> G
+      G --> V
+      V -->|修复预算内| G
+      V -->|通过或终止| K
+    end
+
+    subgraph FACTS[确定性事实层]
+      KG[(SQLite<br/>能力图谱)]
+      X[AST 白名单<br/>隔离 Worker]
+      H[Evaluation Harness<br/>接口 / 功能 / 指标 / 稳定性 / 资源]
+      X --> H
+      H --> K
+    end
+
+    subgraph DELIVERY[交付与回写]
+      REP[JSON / Markdown / HTML 报告]
+      OBS[Agent Trace<br/>预算与只读回放]
+      PROOF[四类制品<br/>SHA256 完整性证明]
+      Q[知识治理质量闸门]
+      OUT[(版本 / 失败经验 / 验证运行)]
+    end
+
+    A --> I
+    R <--> KG
+    P --> KG
+    G --> X
+    H --> REP
+    K --> REP
+    ORCH -.事件与用量.-> OBS
+    REP --> PROOF
+    REP --> Q
+    Q --> OUT
+    PROOF --> OUT
+    OUT --> KG
 ```
 
-每一步都写入结构化事件和事实字段，形成可追溯的工作流记录。LangChain 角色链连接结构化交接，Workflow 控制阶段、预算与修复；一次运行使用选定的 LLM，每个角色拥有独立的提示词、输入和输出结构。
+### 一次运行的证据时序
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant User as 用户 / Web
+    participant API as FastAPI
+    participant Agent as Agent Runtime
+    participant KG as SQLite 图谱
+    participant Harness as Evaluation Harness
+    participant Store as 报告与制品
+
+    User->>API: POST /runs（需求、数据、Provider、预算）
+    API->>Agent: 创建有界 Workflow
+    Agent->>KG: search_capabilities（词项 + 图扩展）
+    KG-->>Agent: 能力卡、来源、证据路径
+    Agent->>Agent: 解释 → 规划 → 代码生成
+    Agent->>Harness: 编译、接口、运行、指标、资源检查
+    alt 检查失败且仍有修复预算
+      Harness-->>Agent: 结构化错误与失败指纹
+      Agent->>Agent: Reviewer → Repair Coder
+      Agent->>Harness: 使用同一协议重新验证
+    else 通过或达到终止条件
+      Harness-->>Agent: 候选事实与指标
+    end
+    Agent->>Store: 写入事件、报告、代码和验证制品
+    Store->>Store: 计算输入 / 代码 / 验证 / 报告 SHA256
+    Store->>KG: 回写版本、验证运行、失败经验
+    API-->>User: 状态、报告、图谱和可复核证据
+```
+
+每个边界都写入结构化事件和事实字段。LangChain 角色链负责角色交接，Workflow 控制预算、状态和终止条件，Evaluation Harness 只读取生成制品并独立判定检查结果；模型输出不会直接决定通过状态。
 
 ## Agent 角色与职责
 
@@ -212,13 +335,16 @@ interpreter → 知识检索 → planner → coder → 本地验证器
 | 层 | 实现 | 选择理由 |
 | --- | --- | --- |
 | Agent 编排 | LangChain Core Runnable / StructuredTool、显式状态机、Pydantic 合约 | 角色链与检索工具可组合，状态、预算、错误和终止条件可测试 |
+| Agent 评测 | 本地 Evaluation Harness、版本化 JSON case、Agent Trace 投影 | 对保存的运行事实做离线、确定性、只读评测，避免把模型自评当作验证结论 |
 | LLM | OpenAI SDK Responses、DeepSeek HTTP、本地 HTTP、Mock | 云端与本地共用角色合约；Mock 支撑离线工程验证 |
 | 知识库 | SQLite + 属性图表 | 单机可复现，节点/关系/版本/来源可审计 |
 | 检索 | 词项匹配 + 有界图扩展，最多两跳 | 结合文本相关性与图关系，提供可解释的知识证据路径 |
 | 算法执行 | 受限 AST 构造器 + 资源限制子进程 | 执行范围限定为允许的算法构造语言 |
 | 验证 | scikit-learn 固定协议、AP/Dummy、接口和资源检查 | 算法候选使用统一分母和验证集 |
+| Agent 评测 Harness | 版本化用例、事件/角色契约、候选与修复证据、游标安全 trace 投影 | 离线、确定性、只读评测；可在 CLI、API 和 CI 中复用 |
 | 服务 | FastAPI + CLI | 同一套后端同时服务命令行、API 和 Web |
 | Agent 观测 | 本地事件投影 + Vue AgentTracePanel | 角色、工具、预算和事件回放统一展示；投影只读、可脱敏、可测试 |
+| 运行资源 | 进程级 `nvidia-smi` 探测 + 顶栏 GPU Status Bar | 固定 0–3 四槽位，兼容 0/1/2/3/4 卡，状态读取不改变 CUDA、代理或服务配置 |
 | 前端 | Vue 3 + TypeScript + D3 + Lucide | 报告、图谱和交互状态可清楚分层 |
 
 执行器采用受限 AST 构造语言和资源限制子进程。公网部署需要补充认证、租户隔离和强化运行时。
@@ -239,6 +365,7 @@ interpreter → 知识检索 → planner → coder → 本地验证器
 | **Streamlit + Plotly** | Python 实验界面、报告读取与图谱展示 | 数据科学环境安装后即可运行；与主工作台共享 FastAPI 数据接口；[Streamlit 入口](ui/app.py)、[启动脚本](scripts/start_legacy_ui.sh) |
 | **Vue 3 + TypeScript + D3 + Lucide** | 任务创建、实时运行状态、候选比较、折叠报告与交互图谱 | 明确区分结论、证据和中间态，统一组件、路由与图标语义；[Web 源码](web)、[界面设计](docs/12_交互工作台与参考设计.md) |
 | **scikit-learn + pandas + NumPy** | 可组合算法 Pipeline、固定数据协议与可信指标评估 | 银行表格任务和 SMS 文本任务共用验证框架，模型方案可直接比较；[算法插件](src/capability_factory/plugins.py)、[验证器](src/capability_factory/execution/runner.py) |
+| **本地 Agent Evaluation Harness** | 对持久化运行报告执行版本化用例，检查终态、事件、角色、候选、修复预算和脱敏字段 | 评测不调用模型、不执行生成代码、不写知识库，适合 CI 和答辩复核；[Harness](src/capability_factory/harness.py)、[用例目录](configs/agent_harness_cases.json) |
 
 技术选型同时评估 **LlamaIndex、AutoGen、CrewAI、Neo4j** 的适用场景：文档规模化索引、多 Agent 对话、角色任务编排和服务化图存储。当前选型集中于 LangChain Core 的角色链、SQLite 的证据持久化与已有图检索协议，形成一套职责清晰的执行链路。逐项比较、配置参数和复核步骤见 [技术选型与框架集成](docs/14_技术选型与框架集成.md)。
 
@@ -334,6 +461,28 @@ def build_pipeline(task_spec):
 
 该设计适合答辩和研发复盘：老师可以沿 sequence 看到每一次角色交接、工具返回和合约拒绝，工程人员可以定位预算耗尽、工具失败或代码修复边界。它不会重新执行模型，也不会将 prompt、响应正文、生成代码或隐式推理复制到观测投影。字段协议与复核命令见 [Agent 观测与回放](docs/15_Agent观测与回放.md)。
 
+### Agent Harness 离线评测
+
+运行完成后，可以用版本化用例再次检查报告事实。Harness 不调用模型、不执行生成代码，也不修改运行记录；它把“工作流是否完整”和“模型是否自称完成”分成两个可复核层次。
+
+```bash
+# 查看已登记的银行、短信、修复和脱敏用例
+algoforge harness cases
+
+# 对单个运行执行一条 rubric
+algoforge harness evaluate "$RUN_ID" --case bank_e2e \
+  --output artifacts/harness/bank_e2e.json
+
+# 汇总全部登记用例，生成 suite 级回归制品
+algoforge harness suite "$RUN_ID" \
+  --output artifacts/harness/suite.json
+
+# 在某个事件游标前回放脱敏 Agent trace
+algoforge harness replay "$RUN_ID" --through 12
+```
+
+同一份评测可通过 `GET /harness/cases`、`GET /runs/{run_id}/harness?case_id=bank_e2e` 和 `GET /runs/{run_id}/harness-suite` 获取。用例字段包括终态、数据集、事件序列、角色、候选 AP、修复证据、时间预算和禁止字段；结果包含 `observed`、`expected`、证据路径和 `agent-harness.v1` schema。详见 [Agent Harness 离线评测](docs/17_Agent_Harness_离线评测.md)。
+
 ## 能力知识图谱示例
 
 图谱中的能力版本、来源和验证运行通过真实关系连接。下面按 `KnowledgeStore.graph()` 的导出格式展示最小结构，ID 与标签用于说明关系方向：
@@ -365,6 +514,7 @@ AlgoForge 将**证据驱动的 Agent 协作、有界方案搜索、失败经验�
 | 题目评价标准 | 创新机制与工程价值 | 实现与演示证据 |
 | --- | --- | --- |
 | **是否提出有创造性的 Agent 协作机制** | 采用“LangChain 角色链 + 结构化交接 + 独立验证反馈”的多角色协作：Planner 提交带知识引用的方案，Coder 按合约生成代码，Reviewer 根据执行错误指导 Repair Coder，Curator 汇总实测结果。显式状态机统一管理角色上下文、预算与终止条件，使每次决策和修复都可追踪。 | [角色链与工具](src/capability_factory/agent_runtime.py)、[角色合约](src/capability_factory/prompts.py)、[工作流](src/capability_factory/workflow.py)、[真实修复记录](docs/research/budget_beam_validation.json) |
+| **是否引入现代 Agent 评测与回放机制** | 采用本地、版本化、只读的 Evaluation Harness，对已保存报告执行终态、事件序列、角色协作、候选数量、修复预算和脱敏字段检查；Harness 支持 API、CLI 和 cursor replay，评测不会重新调用模型或改变运行事实。 | [Harness](src/capability_factory/harness.py)、[用例目录](configs/agent_harness_cases.json)、[离线评测文档](docs/17_Agent_Harness_离线评测.md) |
 | **是否有效利用知识图谱增强代码生成和验证** | 将来源、能力、任务、算法、依赖、验证运行与失败经验连接起来，通过词项检索和最多两跳图扩展提供生成依据。规划阶段校验知识引用，执行阶段按固定任务协议独立验证，结果与制品回写图谱，形成从来源到验证结论的证据路径。 | [知识检索与回写](src/capability_factory/knowledge.py)、[图谱 schema](knowledge/runtime_schema.sql)、[知识探索界面](web/src/views/KnowledgeView.vue) |
 | **是否建立可持续的知识治理机制** | 能力卡进入运行库前经过来源、状态、版本、哈希和关系质量闸门；验证失败形成可检索经验，能力版本通过 `SUPERSEDES` 保留演化路径。治理结果由 API、CLI、CI 和知识页共用。 | [质量闸门](src/capability_factory/knowledge_governance.py)、[校验命令](scripts/validate_knowledge.py)、[治理文档](docs/16_知识治理与可复现交付.md) |
 | **是否设计了合理的搜索、优化或自修复策略** | 有界 Beam Search 在合法算法变体中扩展候选，按全局唯一标识去重并保存父子关系与剪枝记录；Reviewer 与 Repair Coder 根据真实错误多轮修复。候选统一比较验证 AP，并展示训练时间、峰值内存的 Pareto 前沿，帮助解释质量与资源取舍。 | [搜索实现](src/capability_factory/search.py)、[资源分析](src/capability_factory/optimization.py)、[搜索与修复实测](docs/research/budget_beam_validation.json) |
@@ -377,6 +527,7 @@ AlgoForge 将**证据驱动的 Agent 协作、有界方案搜索、失败经验�
 | --- | --- | --- |
 | 图搜索 / Beam Search | 两跳知识检索、有界 Beam 扩展、全局唯一算法变体、父子关系和剪枝；候选规模匹配合法搜索空间 | [搜索实现](src/capability_factory/search.py)、[真实扩展与修复记录](docs/research/budget_beam_validation.json) |
 | 多智能体协作 | LangChain 角色链连接解释、规划、生成、审查、修复与总结；StructuredTool 提供图检索，状态机统一控制预算 | [角色运行层](src/capability_factory/agent_runtime.py)、[角色合约](src/capability_factory/prompts.py)、[工作流](src/capability_factory/workflow.py) |
+| Agent 评测 Harness 与安全回放 | 版本化用例对保存报告进行只读断言，检查角色、事件、候选、修复预算和脱敏字段；支持 API、CLI 与 cursor replay | [Harness](src/capability_factory/harness.py)、[Harness 文档](docs/17_Agent_Harness_离线评测.md)、[用例目录](configs/agent_harness_cases.json) |
 | 真实代码仓库抽取 | 从指定 Git commit 的 Python blob 抽取函数、类、方法、签名、注解、文档字符串和导入依赖，生成能力卡片 | [仓库抽取器](src/capability_factory/repository.py)、[真实仓库样例](examples/evidence/innovation/repository.json) |
 | 代码安全与受限执行 | AST 构造器白名单、参数与接口检查、独立进程、CPU/内存/时间限制、取消回收 | [执行器](src/capability_factory/execution/runner.py)、[对抗测试](tests/test_execution_adversarial.py)、[执行安全范围](SECURITY.md) |
 | 失败分析与经验复用 | 根据真实错误诊断和修复，再执行同一验证器；已验证经验与成功修复绑定，供后续图检索使用 | [知识回写](src/capability_factory/knowledge.py)、[自然错误修复证据](docs/research/budget_beam_validation.json) |
@@ -427,6 +578,7 @@ algorithm-capability-factory/
 │   ├── workflow.py               Agent 状态机：解释、检索、规划、生成、修复、比较、回写
 │   ├── agent_runtime.py          LangChain 角色链、结构化只读检索工具与本地审计
 │   ├── observability.py          Agent/Tool span、预算摘要和游标回放投影
+│   ├── harness.py                版本化离线 Agent 评测、报告检查和脱敏回放
 │   ├── knowledge_governance.py   来源/版本/哈希/关系质量闸门
 │   ├── reproducibility.py        运行制品 SHA256 清单和完整性诊断
 │   ├── providers.py              OpenAI SDK Responses、DeepSeek、本地 HTTP 和 Mock
@@ -443,7 +595,7 @@ algorithm-capability-factory/
 ├── web/                            Vue 3 工作台、报告折叠、图谱、Agent 观测和 Playwright 测试
 │   └── src/{views,components,services,stores}/
 ├── ui/                             可选旧版 Streamlit 界面
-├── configs/                        数据任务、验证策略和四卡本地推理配置
+├── configs/                        数据任务、验证策略、Harness 用例和四卡本地推理配置
 ├── knowledge/                      SQLite schema、种子能力卡和图谱说明
 ├── data/                           公开数据缓存（原始数据不提交）
 ├── examples/evidence/              脱敏报告、代码、知识抽取和验证样例
@@ -472,6 +624,7 @@ algorithm-capability-factory/
 | 10. 比较和沉淀 | `workflow.py` 的排序/curator + `reporting.py::write_report` + `knowledge.py::save_run/record_experience` | JSON/Markdown/HTML、SQLite 图谱、`RECORDED` 事件 |
 | 11. 观测与回放 | `observability.py::build_agent_trace` + `api.py::agent_trace` + `AgentTracePanel.vue` | `agent_trace`、span、预算摘要、游标事件投影 |
 | 12. 知识治理与制品核验 | `knowledge_governance.py::validate_store` + `reproducibility.py::build_reproducibility` | 质量 checks、问题定位、四类制品哈希和完整性状态 |
+| 13. Harness 质量复核 | `harness.py::evaluate_report` + `cli.py harness` + `api.py /runs/{id}/harness` | 版本化用例、事件/角色/候选检查、脱敏断言和可选 cursor replay |
 
 报告里的事件由上述函数在每次完成边界动作时写入；HTML/Markdown 将同一份结构化事实转换为适合阅读的展示形式。
 
@@ -508,6 +661,17 @@ npm run build
 npm run test:e2e
 ```
 
+Agent Harness（离线、只读）：
+
+```bash
+algoforge harness cases
+algoforge harness evaluate RUN_ID --case bank_e2e --output artifacts/harness/bank_e2e.json
+algoforge harness suite RUN_ID --output artifacts/harness/suite.json
+algoforge harness replay RUN_ID --through 12
+```
+
+Harness 用版本化用例检查终态、事件序列、角色协作、候选与修复证据及敏感字段；`suite` 一次执行全部登记用例并输出聚合通过率。它只读取已保存的运行报告，不重新调用模型、不执行生成代码，也不修改知识库。服务端提供等价的 `/harness/cases`、`/runs/{run_id}/harness` 与 `/runs/{run_id}/harness-suite` 接口，便于 CI、答辩和多模型运行比较。
+
 LangChain 角色链与只读工具通过 [运行层测试](tests/test_agent_runtime.py) 验证，OpenAI SDK Responses 的响应、预算和鉴权处理通过 [Provider 测试](tests/test_openai_provider.py) 验证。
 
 浏览器测试使用 HTTP 夹具，不调用付费模型；它验证 UI 状态、报告折叠、图谱交互和错误恢复。GitHub Actions 对 CPU 回归和 Web 交互分别执行同样的可复现检查。页面顶部的 CI 徽章显示 main 分支检查状态；[CI 回归记录](docs/research/ci_budget_validation.json) 保存预算精度修复和远程检查证据，功能实测见 [增强验收记录](docs/research/innovation_validation.json) 与 [前端验证索引](docs/research/frontend_validation.json)。
@@ -520,6 +684,8 @@ LangChain 角色链与只读工具通过 [运行层测试](tests/test_agent_runt
 - [技术选型与框架集成](docs/14_技术选型与框架集成.md)：LangChain、OpenAI SDK、图存储与服务工具的职责、理由和使用方式。
 - [Agent 观测与回放](docs/15_Agent观测与回放.md)：角色 span、工具事件、预算可见性、游标回放和敏感字段边界。
 - [知识治理与可复现交付](docs/16_知识治理与可复现交付.md)：能力卡质量闸门、版本/来源/关系校验和运行制品 SHA256 证明。
+- [Agent Harness 离线评测](docs/17_Agent_Harness_离线评测.md)：版本化用例、只读报告评测、游标回放和事件脱敏检查。
+- [前端截图与阅读路径](docs/18_前端截图与阅读路径.md)：截图画廊、页面职责、API 事实来源和截图复现规则。
 - [数据与知识来源](docs/02_数据与知识来源.md)：公开数据、切分、防泄漏和来源。
 - [实现与验收对照](docs/08_实现与验收对照.md)：原题逐项映射和验收证据。
 - [创新点与加分项演示](docs/13_创新点与加分项演示.md)：五项创新评分依据、十项加分能力与演示命令。

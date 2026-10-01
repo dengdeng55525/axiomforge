@@ -43,6 +43,10 @@ def test_ui_gateway_uses_fixed_backend_and_preserves_reports(monkeypatch, tmp_pa
         assert result.json() == {"status": "passed"}
         assert seen[0][1] == "http://127.0.0.1:8000/graph/explore?focus=capability:test:v1"
         assert "authorization" not in seen[0][2]["headers"]
+        assert client.get("/system/gpus").status_code == 200
+        assert seen[1][1] == "http://127.0.0.1:8000/system/gpus"
+        assert client.get("/harness/cases").status_code == 200
+        assert seen[2][1] == "http://127.0.0.1:8000/harness/cases"
         assert client.post("/runs", json={"description": "a new task"}).status_code == 200
         assert client.post("/runs/a/cancel").status_code == 200
         assert client.post("/config").status_code == 405

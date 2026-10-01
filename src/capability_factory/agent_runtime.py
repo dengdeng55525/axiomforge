@@ -25,6 +25,12 @@ def runtime_metadata() -> dict[str, Any]:
         "role_chain": ["invoke_provider", "persist_response", "validate_contract"],
         "retrieval_tool": "search_capabilities",
         "external_tracing": False,
+        "evaluation_harness": {
+            "name": "algoforge-agent-harness",
+            "schema_version": "agent-harness.v1",
+            "mode": "offline_trace_rubric",
+            "replay": "cursor_bounded",
+        },
     }
 
 

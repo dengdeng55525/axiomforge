@@ -12,6 +12,7 @@ import typer
 
 from capability_factory import prompts
 from capability_factory.contracts import RunRequest
+from capability_factory.harness import evaluate_run, evaluate_suite, load_cases
 from capability_factory.inference import local_profile_metadata
 from capability_factory.knowledge import KnowledgeStore
 from capability_factory.providers import HTTPProvider, OpenAIResponsesProvider, ProviderError
@@ -21,6 +22,9 @@ from capability_factory.workflow import Workflow, now, write_json
 
 app = typer.Typer(help="AlgoForge: verifiable algorithm generation, evidence and bounded repair", no_args_is_help=True,
                   pretty_exceptions_show_locals=False)
+harness_app = typer.Typer(help="Offline trace-based Agent evaluation harness", no_args_is_help=True,
+                          pretty_exceptions_show_locals=False)
+app.add_typer(harness_app, name="harness")
 
 
 def output(value):
@@ -256,6 +260,110 @@ def report(run_id: str, format: Annotated[str, typer.Option()] = "html", output_
         shutil.copyfile(source, output_path)
         source = output_path
     output({"path": str(source), "sha256": hashlib.sha256(source.read_bytes()).hexdigest()})
+
+
+@harness_app.command("cases")
+def harness_cases(
+    cases_path: Annotated[Path | None, typer.Option("--cases", help="Versioned harness case JSON")] = None,
+):
+    """List deterministic evaluation rubrics without loading a model or running a job."""
+    settings = load_settings()
+    path = cases_path or settings.root / "configs" / "agent_harness_cases.json"
+    try:
+        cases = load_cases(path)
+    except (OSError, ValueError, json.JSONDecodeError) as error:
+        raise typer.BadParameter(str(error)) from None
+    output({"schema_version": "agent-harness.v1", "path": str(path),
+            "cases": [item.model_dump() for item in cases]})
+
+
+@harness_app.command("evaluate")
+def harness_evaluate(
+    run_id: Annotated[str, typer.Argument(help="Persisted 32-character run identifier")],
+    case_id: Annotated[str, typer.Option("--case", help="Harness rubric ID")] = "bank_e2e",
+    cases_path: Annotated[Path | None, typer.Option("--cases", help="Versioned harness case JSON")] = None,
+    output_path: Annotated[Path | None, typer.Option("--output", help="Optional JSON result path")] = None,
+):
+    """Evaluate a saved run using the local harness; this command is read-only."""
+    settings = load_settings()
+    path = cases_path or settings.root / "configs" / "agent_harness_cases.json"
+    try:
+        cases = load_cases(path)
+    except (OSError, ValueError, json.JSONDecodeError) as error:
+        raise typer.BadParameter(str(error)) from None
+    case = next((item for item in cases if item.id == case_id), None)
+    if case is None:
+        raise typer.BadParameter(f"Unknown harness case: {case_id}")
+    store = KnowledgeStore(settings.db_path)
+    store.initialize()
+    try:
+        try:
+            result = evaluate_run(store, run_id, case)
+        except KeyError:
+            raise typer.BadParameter(f"Unknown run ID: {run_id}") from None
+    finally:
+        store.close()
+    payload = result.model_dump(mode="json")
+    if output_path is not None:
+        write_json(output_path, payload)
+        payload["output_path"] = str(output_path)
+    output(payload)
+    if not result.passed:
+        raise typer.Exit(1)
+
+
+@harness_app.command("replay")
+def harness_replay(
+    run_id: Annotated[str, typer.Argument(help="Persisted 32-character run identifier")],
+    through_sequence: Annotated[int | None, typer.Option("--through", min=0, help="Replay cursor sequence")] = None,
+):
+    """Print a cursor-bounded, redacted Agent trace for local debugging."""
+    settings = load_settings()
+    store = KnowledgeStore(settings.db_path)
+    store.initialize()
+    try:
+        report = store.get_run(run_id)
+        if report is None:
+            raise typer.BadParameter(f"Unknown run ID: {run_id}")
+        from capability_factory.observability import build_agent_trace
+
+        try:
+            trace = build_agent_trace(report, through_sequence=through_sequence)
+        except ValueError as error:
+            raise typer.BadParameter(str(error)) from None
+    finally:
+        store.close()
+    output(trace)
+
+
+@harness_app.command("suite")
+def harness_suite(
+    run_id: Annotated[str, typer.Argument(help="Persisted 32-character run identifier")],
+    cases_path: Annotated[Path | None, typer.Option("--cases", help="Versioned harness case JSON")] = None,
+    output_path: Annotated[Path | None, typer.Option("--output", help="Optional JSON result path")] = None,
+):
+    """Run every registered rubric and produce one aggregate regression artifact."""
+    settings = load_settings()
+    path = cases_path or settings.root / "configs" / "agent_harness_cases.json"
+    try:
+        cases = load_cases(path)
+    except (OSError, ValueError, json.JSONDecodeError) as error:
+        raise typer.BadParameter(str(error)) from None
+    store = KnowledgeStore(settings.db_path)
+    store.initialize()
+    try:
+        report = store.get_run(run_id)
+        if report is None:
+            raise typer.BadParameter(f"Unknown run ID: {run_id}")
+        payload = evaluate_suite(report, cases)
+    finally:
+        store.close()
+    if output_path is not None:
+        write_json(output_path, payload)
+        payload["output_path"] = str(output_path)
+    output(payload)
+    if not payload["passed"]:
+        raise typer.Exit(1)
 
 
 if __name__ == "__main__":

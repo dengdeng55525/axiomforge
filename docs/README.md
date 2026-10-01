@@ -14,6 +14,8 @@
 | 检查数据是否可复现 | [数据与知识来源](02_数据与知识来源.md)、[来源索引](SOURCES.md) |
 | 对照笔试评分项 | [实现与验收对照](08_实现与验收对照.md)、[五项创新依据与演示](13_创新点与加分项演示.md) |
 | 阅读报告和前端 | [前端与报告说明](11_前端与报告说明.md)、[交互工作台与参考设计](12_交互工作台与参考设计.md) |
+| 快速理解界面与截图 | [前端截图与阅读路径](18_前端截图与阅读路径.md) |
+| 复核 Agent 运行质量 | [Agent Harness 离线评测](17_Agent_Harness_离线评测.md) |
 | 规划 1–4 张 4090D | [算力预算与四卡兼容](05_算力预算与四卡兼容.md) |
 | 扩展指标和模板 | [插件扩展指南](10_插件扩展指南.md) |
 | 准备答辩实验 | [评测实验与演示](04_评测实验与演示.md)、[使用与演示指南](07_使用与演示指南.md) |
@@ -36,6 +38,8 @@
 - [14 技术选型与框架集成](14_技术选型与框架集成.md)：LangChain 角色链、OpenAI SDK Responses、模型切换、知识图谱工具和框架选型理由。
 - [15 Agent 观测与回放](15_Agent观测与回放.md)：角色 span、工具事件、预算视图、只读事件回放和前端观测台。
 - [16 知识治理与可复现交付](16_知识治理与可复现交付.md)：能力卡质量闸门、版本/来源/关系校验和运行制品 SHA256 证明。
+- [17 Agent Harness 离线评测](17_Agent_Harness_离线评测.md)：版本化用例、只读报告评测、游标回放和事件脱敏检查。
+- [18 前端截图与阅读路径](18_前端截图与阅读路径.md)：截图画廊、页面职责、API 事实来源和截图复现规则。
 
 ## 证据目录
 
@@ -44,6 +48,7 @@
 - [local_vllm_validation.json](research/local_vllm_validation.json)：本地 14B 单卡和四副本启动验证记录。
 - [budget_beam_validation.json](research/budget_beam_validation.json)：运行预算、唯一候选扩展、真实本地模型自动修复、报告和知识回写回归；含 389 项测试及浏览器核对结果。
 - [innovation_validation.json](research/innovation_validation.json)：加分项增强测试、固定提交抽取、资源分析和接口制品索引。
+- [harness_gpu_validation.json](research/harness_gpu_validation.json)：Agent Harness 用例、suite/API/CLI 入口和 0–4 卡 GPU 状态栏验收记录。
 - [ci_budget_validation.json](research/ci_budget_validation.json)：预算浮点精度回归、CPU CI 历史失败定位、修复验证及 GitHub CPU / Web 检查结果。
 - [data_audit.json](research/data_audit.json)：公开数据来源、哈希和切分事实。
 - [deepseek_model_discovery.json](research/deepseek_model_discovery.json)：模型名称与 API ID 的发现记录。
