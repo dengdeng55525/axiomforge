@@ -1,5 +1,6 @@
 """API rejects unsafe inputs and returns durable terminal errors."""
 
+import hashlib
 import time
 
 from fastapi.testclient import TestClient
@@ -47,6 +48,10 @@ def test_artifact_path_cannot_escape_run_directory(tmp_path):
         assert client.get(f"/runs/{run_id}/artifacts/c1").status_code == 404
         assert client.get("/graph").status_code == 200
         assert client.get("/capabilities").status_code == 200
+        quality = client.get("/knowledge/quality")
+        assert quality.status_code == 200
+        assert quality.json()["schema_version"] == "knowledge-quality.v1"
+        assert quality.json()["summary"]["errors"] == 0
 
 
 def test_agent_trace_endpoint_is_cursor_bounded_and_read_only(tmp_path):
@@ -164,3 +169,37 @@ def test_visual_run_metrics_resources_and_timeline_are_compact(tmp_path):
         markdown = client.get(f"/runs/{run_id}/report.md")
         assert markdown.status_code == 200
         assert "算法能力验证报告" in markdown.text
+
+
+def test_reproducibility_manifest_endpoint_is_read_only_and_relative(tmp_path):
+    app = create_app(Settings(root=tmp_path))
+    run_id = "d" * 32
+    run_dir = tmp_path / "artifacts" / "runs" / run_id
+    code = "def build_pipeline():\n    return None\n"
+    code_path = run_dir / "candidates" / "c1" / "attempt_0" / "model.py"
+    code_path.parent.mkdir(parents=True, exist_ok=True)
+    code_path.write_text(code, encoding="utf-8")
+    (code_path.parent / "verification.json").write_text('{"status":"passed"}', encoding="utf-8")
+    (run_dir / "dataset").mkdir(parents=True, exist_ok=True)
+    (run_dir / "dataset" / "manifest.json").write_text('{"schema_version":"1.0"}', encoding="utf-8")
+    app.state.manager.store.save_run({
+        "run_id": run_id,
+        "status": "passed",
+        "schema_version": "1.0",
+        "candidates": [{
+            "candidate_id": "c1",
+            "code_path": "candidates/c1/attempt_0/model.py",
+            "attempts": [{"code_path": "candidates/c1/attempt_0/model.py"}],
+        }],
+    })
+    with TestClient(app) as client:
+        response = client.get(f"/runs/{run_id}/reproducibility")
+        assert response.status_code == 200
+        payload = response.json()
+        assert payload["run_id"] == run_id
+        assert payload["hash_algorithm"] == "sha256"
+        model = next(item for item in payload["artifacts"] if item["path"].endswith("model.py"))
+        assert model["sha256"] == hashlib.sha256(code.encode()).hexdigest()
+        assert str(tmp_path) not in response.text
+        report = client.get(f"/runs/{run_id}").json()
+        assert "reproducibility" not in report

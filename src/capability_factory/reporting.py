@@ -225,19 +225,126 @@ def render_html(report: dict[str, Any]) -> str:
     )
 
 
-def render_markdown(report: dict[str, Any]) -> str:
-    """Produce a readable Markdown wrapper around safely fenced original facts."""
-    data = _mapping(_clean(report))
-    raw = _json(data)
-    # A fence longer than any backtick run prevents model text from escaping it.
+def _md(value: Any) -> str:
+    """Keep model-authored strings as inline text, including in table cells."""
+    text = html.escape(_display(value), quote=True)
+    text = re.sub(r"([\\`*_{}\[\]()#+.!|>~-])", r"\\\1", text)
+    return text.replace("\r", " ").replace("\n", " ")
+
+
+def _md_table(headers: list[str], rows: list[list[Any]]) -> str:
+    lines = ["| " + " | ".join(_md(v) for v in headers) + " |",
+             "| " + " | ".join("---" for _ in headers) + " |"]
+    lines += ["| " + " | ".join(_md(v) for v in row) + " |" for row in rows]
+    return "\n".join(lines) + "\n"
+
+
+def _audit_details(title: str, value: Any) -> str:
+    # JSON remains lossless inside a fence longer than any model-authored run
+    # of backticks. Never put model text in an HTML summary or attribute.
+    raw = _json(value)
     longest = max((len(match) for match in re.findall(r"`+", raw)), default=0)
     fence = "`" * max(4, longest + 1)
-    return (
-        "# 算法能力验证报告\n\n"
-        "指标与状态来自原始验证事实；缺失项不填零、不推断通过。\n\n"
-        "模式由原始报告的 mode 字段说明：mock 为模拟，replay 为历史回放。\n\n"
-        f"{fence}json\n{raw}\n{fence}\n"
-    )
+    return (f"<details>\n<summary>{html.escape(title)}</summary>\n\n"
+            f"{fence}json\n{raw}\n{fence}\n\n</details>\n")
+
+
+def render_markdown(report: dict[str, Any]) -> str:
+    """Render decisions and measured evidence first; fold detailed audit JSON.
+
+    Displayed values all come from the supplied report. No LLM, filesystem read,
+    scoring or selection is performed here, and the original object is untouched.
+    """
+    data = _mapping(_clean(report))
+    candidates = [_mapping(item) for item in _sequence(data.get("candidates"))
+                  if isinstance(item, Mapping)]
+    selected_id = data.get("selected_candidate_id")
+    selected = next((item for item in candidates if selected_id is not None
+                     and item.get("candidate_id") == selected_id), {})
+    metrics = _mapping(selected.get("metrics"))
+    task = _mapping(data.get("task_spec"))
+    dataset = _mapping(_mapping(data.get("provenance")).get("dataset"))
+    usage, timing = _mapping(data.get("usage")), _mapping(data.get("timing"))
+    sections = ["# 算法能力验证报告\n", "## 运行结论\n",
+                _md_table(["项目", "记录"], [
+                    ["运行 ID", data.get("run_id")], ["状态", data.get("status")],
+                    ["运行模式", _mode(data)], ["模型", data.get("model")],
+                    ["数据集", data.get("dataset_id", task.get("dataset_id"))],
+                    ["选中候选", selected_id],
+                    ["质量状态", selected.get("quality_status", data.get("quality_status"))],
+                ])]
+    if data.get("failure_reason"):
+        sections.append("运行诊断：" + _md(data["failure_reason"]) + "\n")
+    if selected:
+        sections.append(_md_table(["选中候选指标", "观测值"], [
+            ["Average Precision (AP)", metrics.get("average_precision")],
+            ["Dummy AP", metrics.get("dummy_average_precision")],
+            ["AP 较基线提升", metrics.get("ap_improvement_over_dummy")],
+            ["ROC-AUC", metrics.get("roc_auc")],
+            ["F1 @ 0.5", metrics.get("f1_threshold_0_5")],
+            ["Lift @ 10%", metrics.get("lift_at_10pct")],
+        ]))
+    else:
+        sections.append("当前报告未记录可定位的选中候选。\n")
+    sections += ["指标来自报告记录的评估范围；缺失项显示为未记录。Mock 表示模拟模型调用，"
+                 "replay 表示历史回放。功能检查、指标质量和业务上线评估分别复核。\n",
+                 "## 需求与数据协议\n", _md(data.get("description")) + "\n",
+                 _md_table(["协议", "记录"], [
+                     ["任务类型", task.get("task_type")], ["划分策略", dataset.get("split_policy")],
+                     ["特征策略", dataset.get("feature_policy", task.get("feature_policy"))],
+                     ["训练样本", dataset.get("train_rows")],
+                     ["验证样本", dataset.get("validation_rows")],
+                     ["封存测试集已评分", dataset.get("sealed_test_scored",
+                         _mapping(data.get("provenance")).get("sealed_test_scored"))],
+                     ["原始数据 SHA256", dataset.get("raw_sha256")],
+                 ]), "## 候选方案比较\n"]
+    if candidates:
+        rows = []
+        for candidate in candidates:
+            plan, score = _mapping(candidate.get("plan")), _mapping(candidate.get("metrics"))
+            resources = _mapping(candidate.get("resources"))
+            rows.append([candidate.get("candidate_id"), plan.get("algorithm"),
+                         candidate.get("status"), score.get("average_precision"),
+                         score.get("dummy_average_precision"), score.get("roc_auc"),
+                         resources.get("fit_seconds"), resources.get("peak_rss_mib")])
+        sections.append(_md_table(["候选", "算法", "状态", "AP", "Dummy AP", "ROC-AUC",
+                                   "训练秒数", "峰值 RSS MiB"], rows))
+    else:
+        sections.append("尚无候选验证记录。\n")
+    sections.append("## 验证证据与设计依据\n")
+    for candidate in candidates:
+        plan = _mapping(candidate.get("plan"))
+        sections += ["### " + _md(candidate.get("candidate_id")) + "\n",
+                     "设计依据：" + _md(plan.get("rationale")) + "\n",
+                     "引用能力：" + _md(plan.get("evidence_ids")) + "\n",
+                     "代码 SHA256：" + _md(candidate.get("code_sha256")) + "\n"]
+        checks = [c for c in _sequence(candidate.get("checks")) if isinstance(c, Mapping)]
+        if checks:
+            sections.append(_md_table(["检查", "结果", "必需", "证据"], [
+                [check.get("name"), {True: "通过", False: "失败"}.get(check.get("passed"), "未记录"),
+                 check.get("mandatory"), check.get("detail")] for check in checks]))
+        else:
+            sections.append("尚无逐项检查记录。\n")
+        sections.append(_audit_details("修复与执行尝试", {
+            "attempts": candidate.get("attempts"), "repairs": candidate.get("repairs"),
+            "error": candidate.get("error"),
+        }))
+    sections += ["## 资源与知识沉淀\n", _md_table(["项目", "记录"], [
+        ["模型调用数", usage.get("calls")], ["输入 token", usage.get("input_tokens")],
+        ["输出 token", usage.get("output_tokens")], ["运行耗时（秒）", timing.get("wall_seconds")],
+        ["时限（秒）", timing.get("budget_seconds")],
+        ["运行已保存", _mapping(data.get("knowledge_writeback")).get("run_saved")],
+    ]), _audit_details("知识依据、图谱回写与 Agent 时间线", {
+        "evidence": data.get("evidence"), "knowledge_writeback": data.get("knowledge_writeback"),
+        "events": data.get("events"), "search_tree": data.get("search_tree"),
+    }), "## 模型总结与运行提示\n",
+        "模型总结：" + _md(_mapping(data.get("explanation")).get("summary")) + "\n"]
+    notes = (_sequence(data.get("warnings"))
+             + _sequence(_mapping(data.get("explanation")).get("limitations")))
+    sections.append("\n".join("- " + _md(item) for item in notes) + "\n"
+                    if notes else "未记录额外运行提示。\n")
+    sections.append(_audit_details("完整 JSON 审计记录", data))
+    return "\n".join(sections)
 
 
 def write_report(report: dict[str, Any], directory: Path) -> dict[str, str]:

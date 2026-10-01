@@ -20,10 +20,36 @@ jobs:
         run: ruff check src tests scripts ui
       - name: Offline unit, integration and interface tests
         run: pytest -q tests ui --junitxml=artifacts/test-results.xml
+      - name: Knowledge provenance quality gate
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from capability_factory.knowledge import KnowledgeStore
+          from capability_factory.knowledge_governance import validate_store
+
+          database = Path("artifacts/knowledge-ci.sqlite3")
+          store = KnowledgeStore(database)
+          store.initialize()
+          try:
+              ingestion = store.ingest_sources(Path.cwd())
+              if ingestion.get("issues"):
+                  raise SystemExit(f"knowledge ingestion issues: {ingestion['issues']}")
+              report = validate_store(store)
+          finally:
+              store.close()
+          Path("artifacts/knowledge-quality.json").write_text(
+              json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+          )
+          if report["status"] != "passed":
+              raise SystemExit(json.dumps(report, ensure_ascii=False))
+          print(json.dumps(report["summary"], ensure_ascii=False))
       - name: Export test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cpu-test-results
-          path: artifacts/test-results.xml
+          path: |
+            artifacts/test-results.xml
+            artifacts/knowledge-quality.json
 # No provider credential, paid API call or GPU is needed in CI.

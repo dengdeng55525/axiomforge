@@ -138,7 +138,9 @@ def test_markdown_fence_cannot_be_closed_by_model_text():
     result = render_markdown({"description": '`````\n<script>alert(1)</script>\n`````'})
     lines = result.splitlines()
     assert "``````json" in lines
-    assert lines[-1] == "``````"
+    start = lines.index("``````json")
+    assert "``````" in lines[start + 1 :]
+    assert lines[-1] == "</details>"
 
 
 def test_html_is_self_contained_and_has_restrictive_policy(report):

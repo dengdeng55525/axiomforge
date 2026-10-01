@@ -24,6 +24,7 @@ import {
   SlidersHorizontal,
 } from "@lucide/vue";
 import GraphCanvas from "../components/GraphCanvas.vue";
+import KnowledgeQualityPanel from "../components/KnowledgeQualityPanel.vue";
 import { api } from "../lib/api";
 import {
   displayValue,
@@ -407,10 +408,12 @@ onBeforeUnmount(() => {
         >
       </div>
       <p>
-        <Info :size="15" />知识保存在 SQLite 属性图中，图谱检索参与 Agent
-        的方案规划。
+        <Info :size="15" />可按需检查来源、版本、哈希与关系，核验结果供
+        CI、答辩和运行审计使用。
       </p>
     </div>
+
+    <KnowledgeQualityPanel />
 
     <div class="knowledge-tabs" role="tablist" aria-label="知识库视图">
       <button

@@ -16,7 +16,7 @@
 | [`task_cases.json`](task_cases.json) | 银行 + 短信 | 规划用例，执行状态以运行报告记录 | 需求、数据集、期望的接口或约束行为 | JSON 输入清单 |
 | [`evidence/knowledge_extraction.json`](evidence/knowledge_extraction.json) | 行业能力抽取 | DeepSeek API 历史抽取记录 | 来源定位、能力卡、结构审计与抽取边界 | JSON 证据 |
 
-三份报告均提供同名的 `report.json`、`report.md` 和 `report.html`。`report.json` 是机器可读事实源；Markdown 适合代码审查和 diff；HTML 适合浏览器演示。候选目录中每个 `model.py` 都配有 `verification.json`，若某次尝试没有生成代码，则只保留描述该事实的 `metadata.json`，不会补造代码或指标。
+三份报告均提供同名的 `report.json`、`report.md` 和 `report.html`。`report.json` 是机器可读事实源；Markdown 先展示结论、候选对比、检查证据和资源，再折叠完整审计 JSON，适合代码审查和 diff；HTML 适合浏览器演示。候选目录中每个 `model.py` 都配有 `verification.json`，若某次尝试没有生成代码，则只保留描述该事实的 `metadata.json`，不会补造代码或指标。
 
 ## 五分钟本地演示（无需模型凭证）
 

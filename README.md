@@ -21,6 +21,8 @@ AlgoForge 是基于 LLM Agent 的算法能力工厂，面向行业算法的复�
 - **可审计知识图谱**：SQLite 持久化来源、能力、算法、数据、环境、验证运行、制品和失败经验。
 - **可复现验证**：固定数据切分、主指标 AP、Dummy 基线、接口/功能/稳定性/资源检查，缺失值不填零。
 - **现代 Agent 观测台**：记录角色与工具 span、调用预算、token 用量和终态事件；运行报告支持按事件游标只读回放，不泄露未来步骤或隐式推理。
+- **知识治理质量闸门**：对来源、状态、版本、内容哈希、任务类型和图谱关系逐项校验，空库、篡改和悬空关系都有明确结果。
+- **可复现制品证明**：按需生成输入、代码、验证、报告四类制品的 SHA256 清单，发现缺失、越界、超限或篡改时给出可定位诊断。
 - **多候选和有限搜索**：比较候选方案，并提供有界 Beam Search、修复预算和失败分母。
 - **四种推理后端**：OpenAI Responses API、DeepSeek API、本地 OpenAI 兼容 HTTP 接口、确定性 Mock。支持前端切换 API / 本地模型，配套 1 卡与 4 卡 14B 启动配置和端点池。
 
@@ -273,7 +275,7 @@ JSON 服务于 API 和前端，GraphML 用于离线交换；两者均从 SQLite 
 报告同时提供 JSON、Markdown 和 HTML：
 
 - JSON：机器审计、接口集成和完整事实结构。
-- Markdown：代码审查、答辩和版本控制友好。
+- Markdown：先展示结论、候选对比、检查证据和资源，再折叠完整审计 JSON，适合代码审查、答辩和版本控制。
 - HTML：阅读候选比较、检查、资源、修复和来源。
 
 报告首屏先显示运行结论、候选指标、基线和选择依据；计划、检索详情、修复链、代码和完整 JSON 默认折叠。`status` 表示工作流是否完成，`quality_status` 表示指标与建议基线的关系；缺少检查或指标的项目会标记为待评估。
@@ -364,6 +366,7 @@ AlgoForge 将**证据驱动的 Agent 协作、有界方案搜索、失败经验�
 | --- | --- | --- |
 | **是否提出有创造性的 Agent 协作机制** | 采用“LangChain 角色链 + 结构化交接 + 独立验证反馈”的多角色协作：Planner 提交带知识引用的方案，Coder 按合约生成代码，Reviewer 根据执行错误指导 Repair Coder，Curator 汇总实测结果。显式状态机统一管理角色上下文、预算与终止条件，使每次决策和修复都可追踪。 | [角色链与工具](src/capability_factory/agent_runtime.py)、[角色合约](src/capability_factory/prompts.py)、[工作流](src/capability_factory/workflow.py)、[真实修复记录](docs/research/budget_beam_validation.json) |
 | **是否有效利用知识图谱增强代码生成和验证** | 将来源、能力、任务、算法、依赖、验证运行与失败经验连接起来，通过词项检索和最多两跳图扩展提供生成依据。规划阶段校验知识引用，执行阶段按固定任务协议独立验证，结果与制品回写图谱，形成从来源到验证结论的证据路径。 | [知识检索与回写](src/capability_factory/knowledge.py)、[图谱 schema](knowledge/runtime_schema.sql)、[知识探索界面](web/src/views/KnowledgeView.vue) |
+| **是否建立可持续的知识治理机制** | 能力卡进入运行库前经过来源、状态、版本、哈希和关系质量闸门；验证失败形成可检索经验，能力版本通过 `SUPERSEDES` 保留演化路径。治理结果由 API、CLI、CI 和知识页共用。 | [质量闸门](src/capability_factory/knowledge_governance.py)、[校验命令](scripts/validate_knowledge.py)、[治理文档](docs/16_知识治理与可复现交付.md) |
 | **是否设计了合理的搜索、优化或自修复策略** | 有界 Beam Search 在合法算法变体中扩展候选，按全局唯一标识去重并保存父子关系与剪枝记录；Reviewer 与 Repair Coder 根据真实错误多轮修复。候选统一比较验证 AP，并展示训练时间、峰值内存的 Pareto 前沿，帮助解释质量与资源取舍。 | [搜索实现](src/capability_factory/search.py)、[资源分析](src/capability_factory/optimization.py)、[搜索与修复实测](docs/research/budget_beam_validation.json) |
 | **是否能将失败经验沉淀为可复用知识** | 将失败指纹、错误诊断、适用任务、修复前后代码哈希和验证结果保存为可关联的经验与运行证据。对应修复通过后将经验标记为 validated，供后续任务检索；能力内容变更形成新版本并通过 SUPERSEDES 保留历史。 | [经验与版本管理](src/capability_factory/knowledge.py)、[知识库回归测试](tests/test_knowledge_runtime.py)、[自然错误修复证据](docs/research/budget_beam_validation.json) |
 | **是否考虑真实行业落地中的复杂问题** | 银行场景采用通话前特征协议处理标签泄漏，固定数据切分并报告 AP 与类别占比基线；系统统一处理运行预算、取消、接口合约、代码白名单和进程资源限制。前端可切换 API / 本地 14B，提供 1 卡与 4 卡配置，并保留数据、代码和能力版本来源。 | [数据协议](src/capability_factory/datasets.py)、[受限执行器](src/capability_factory/execution/runner.py)、[四卡部署](docs/05_算力预算与四卡兼容.md)、[安全设计](SECURITY.md) |
@@ -382,6 +385,7 @@ AlgoForge 将**证据驱动的 Agent 协作、有界方案搜索、失败经验�
 | 跨场景迁移 | 银行表格分类与 SMS 文本分类共用编排、验证、修复和回写，各自采用专门的数据与特征协议 | [双场景协议](src/capability_factory/datasets.py)、[本地 14B 短信实测](examples/evidence/sms_local_resources/report.json) |
 | 自动接口文档 | FastAPI 生成交互文档；export-openapi 可离线导出真实路由与 Pydantic 合约 | [OpenAPI 样例](examples/evidence/innovation/openapi.json)、[CLI](src/capability_factory/cli.py) |
 | 性能优化与资源分析 | 搜索参数变体、比较验证 AP，分析 AP / 训练时间 / 峰值 RSS 的 Pareto 前沿与父子方案变化 | [分析实现](src/capability_factory/optimization.py)、[实测资源权衡](examples/evidence/innovation/resource_tradeoffs.json) |
+| 可复现制品与完整性证明 | 输入、代码、验证和报告形成只读相对路径清单，逐文件记录 SHA256、大小、schema 版本和预期哈希；缺失与篡改明确进入 partial/failed | [制品清单](src/capability_factory/reproducibility.py)、[API](src/capability_factory/api.py)、[治理文档](docs/16_知识治理与可复现交付.md) |
 
 ![真实短信任务的质量与资源权衡](docs/images/resource-tradeoffs.png)
 
@@ -409,6 +413,7 @@ AlgoForge 将**证据驱动的 Agent 协作、有界方案搜索、失败经验�
 | 多候选、修复、Beam、插件 | [workflow.py](src/capability_factory/workflow.py)、[plugins.py](src/capability_factory/plugins.py)、[插件指南](docs/10_插件扩展指南.md) |
 | 自动报告和回写 | [reporting.py](src/capability_factory/reporting.py)、[knowledge.py](src/capability_factory/knowledge.py) |
 | Agent 观测与安全回放 | [observability.py](src/capability_factory/observability.py)、[观测协议](docs/15_Agent观测与回放.md)、[AgentTracePanel.vue](web/src/components/AgentTracePanel.vue) |
+| 知识质量与制品完整性 | [knowledge_governance.py](src/capability_factory/knowledge_governance.py)、[reproducibility.py](src/capability_factory/reproducibility.py)、[治理与复现说明](docs/16_知识治理与可复现交付.md) |
 | 工具选择与集成理由 | [技术选型与框架集成](docs/14_技术选型与框架集成.md)、[依赖定义](pyproject.toml) |
 | 验收与运行证据 | [实现与验收对照](docs/08_实现与验收对照.md)、[后端验证索引](docs/research/execution_validation.json)、[前端验证索引](docs/research/frontend_validation.json) |
 
@@ -422,6 +427,8 @@ algorithm-capability-factory/
 │   ├── workflow.py               Agent 状态机：解释、检索、规划、生成、修复、比较、回写
 │   ├── agent_runtime.py          LangChain 角色链、结构化只读检索工具与本地审计
 │   ├── observability.py          Agent/Tool span、预算摘要和游标回放投影
+│   ├── knowledge_governance.py   来源/版本/哈希/关系质量闸门
+│   ├── reproducibility.py        运行制品 SHA256 清单和完整性诊断
 │   ├── providers.py              OpenAI SDK Responses、DeepSeek、本地 HTTP 和 Mock
 │   ├── contracts.py              LLM 和 API 的 Pydantic 结构化合约
 │   ├── prompts.py                interpreter/planner/coder/reviewer/curator 提示模板
@@ -464,6 +471,7 @@ algorithm-capability-factory/
 | 9. 修复重试 | `workflow.py` 中 reviewer/repair_coder 分支 | `repairs`、`attempt_1/...`、失败经验 |
 | 10. 比较和沉淀 | `workflow.py` 的排序/curator + `reporting.py::write_report` + `knowledge.py::save_run/record_experience` | JSON/Markdown/HTML、SQLite 图谱、`RECORDED` 事件 |
 | 11. 观测与回放 | `observability.py::build_agent_trace` + `api.py::agent_trace` + `AgentTracePanel.vue` | `agent_trace`、span、预算摘要、游标事件投影 |
+| 12. 知识治理与制品核验 | `knowledge_governance.py::validate_store` + `reproducibility.py::build_reproducibility` | 质量 checks、问题定位、四类制品哈希和完整性状态 |
 
 报告里的事件由上述函数在每次完成边界动作时写入；HTML/Markdown 将同一份结构化事实转换为适合阅读的展示形式。
 
@@ -511,6 +519,7 @@ LangChain 角色链与只读工具通过 [运行层测试](tests/test_agent_runt
 - [系统架构与接口](docs/03_系统架构与接口.md)：Agent 合约、状态机、图谱和接口。
 - [技术选型与框架集成](docs/14_技术选型与框架集成.md)：LangChain、OpenAI SDK、图存储与服务工具的职责、理由和使用方式。
 - [Agent 观测与回放](docs/15_Agent观测与回放.md)：角色 span、工具事件、预算可见性、游标回放和敏感字段边界。
+- [知识治理与可复现交付](docs/16_知识治理与可复现交付.md)：能力卡质量闸门、版本/来源/关系校验和运行制品 SHA256 证明。
 - [数据与知识来源](docs/02_数据与知识来源.md)：公开数据、切分、防泄漏和来源。
 - [实现与验收对照](docs/08_实现与验收对照.md)：原题逐项映射和验收证据。
 - [创新点与加分项演示](docs/13_创新点与加分项演示.md)：五项创新评分依据、十项加分能力与演示命令。
@@ -529,6 +538,7 @@ LangChain 角色链与只读工具通过 [运行层测试](tests/test_agent_runt
 | API 成本与运行中断 | 显式 Provider、总预算、调用超时、取消与不确定提交保护 | 预算与异常路径回归、运行事件、调用用量报告 |
 | Agent 状态难以解释 | 角色/工具生命周期事件、预算投影和游标回放 | [Agent 观测与回放](docs/15_Agent观测与回放.md)、`tests/test_observability.py`、前端观测面板 |
 | 知识来源与关系质量 | SQLite 属性图、词项检索、有界两跳扩展、来源哈希 | 能力引用校验、知识路径展示、版本与回写测试 |
+| 知识演化与运行制品被误改 | 只读质量闸门和按需完整性清单，逐项暴露来源、版本、哈希、缺失和篡改原因 | `GET /knowledge/quality`、`GET /runs/{run_id}/reproducibility`、治理与制品测试 |
 | 本地 14B 与多卡接入 | OpenAI 兼容 Provider、前端后端切换、1 卡 / 4 副本配置与端点池 | [本地部署实测](docs/research/local_vllm_validation.json)、[本地短信闭环](examples/evidence/sms_local_resources/report.json) |
 
 ## 部署与评测范围

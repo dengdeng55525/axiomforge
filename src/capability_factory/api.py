@@ -19,10 +19,12 @@ from capability_factory.graph_presentation import (
 )
 from capability_factory.inference import load_inference_profiles, local_profile_metadata
 from capability_factory.knowledge import KnowledgeStore
+from capability_factory.knowledge_governance import validate_store
 from capability_factory.observability import build_agent_trace
 from capability_factory.optimization import analyze_resources
 from capability_factory.providers import OpenAIResponsesProvider, ProviderError
 from capability_factory.reporting import render_html, render_markdown
+from capability_factory.reproducibility import build_reproducibility
 from capability_factory.settings import Settings, load_settings
 from capability_factory.webui import mount_workbench
 from capability_factory.workflow import Workflow, now
@@ -471,6 +473,12 @@ def create_app(settings: Settings | None = None):
         except ValueError as error:
             raise HTTPException(status_code=400, detail=str(error)) from None
 
+    @app.get("/runs/{run_id}/reproducibility")
+    def reproducibility(run_id: str):
+        """Return SHA-256 evidence for inputs, code, validation, and reports."""
+        report = report_for(run_id)
+        return build_reproducibility(report, settings.runs_dir / run_id)
+
     @app.get("/runs/{run_id}/report")
     def report_json(run_id: str):
         return report_for(run_id)
@@ -564,6 +572,11 @@ def create_app(settings: Settings | None = None):
     @app.get("/capabilities")
     def capabilities():
         return {"capabilities": manager.store.list_capabilities()}
+
+    @app.get("/knowledge/quality")
+    def knowledge_quality():
+        """Return the read-only capability graph quality gate for the console."""
+        return validate_store(manager.store)
 
     @app.get("/capabilities/{capability_id}")
     def capability(capability_id: str, version: int | None = Query(None, ge=1)):

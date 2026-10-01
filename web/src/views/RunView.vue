@@ -28,6 +28,7 @@ import {
 } from "@lucide/vue";
 import { api, download } from "../lib/api";
 import AgentTracePanel from "../components/AgentTracePanel.vue";
+import RunIntegrityPanel from "../components/RunIntegrityPanel.vue";
 import {
   type Json,
   dateTime,
@@ -294,11 +295,9 @@ const stages = computed(() => {
     events.value.some(
       (item) =>
         item.data?.role === role &&
-        [
-          "AGENT_COMPLETED",
-          "LLM_RESPONSE",
-          "VALIDATING",
-        ].includes(item.event_type || item.type),
+        ["AGENT_COMPLETED", "LLM_RESPONSE", "VALIDATING"].includes(
+          item.event_type || item.type,
+        ),
     );
   return [
     { title: "理解需求", done: types.has("SPEC_VALIDATED"), disabled: false },
@@ -1275,6 +1274,8 @@ onBeforeUnmount(() => {
           </div>
         </details>
       </section>
+
+      <RunIntegrityPanel :run-id="runId" />
 
       <section class="panel process-section">
         <div class="section-heading">
