@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 message: "If AxiomForge helps your work, please cite this repository."
 title: "AxiomForge · 知衡: Verifiable Algorithm Engineering"
-version: "0.1.0"
-date-released: 2026-09-29
+version: "0.2.0"
+date-released: 2026-10-02
 authors:
   - family-names: DengDeng
     given-names: DengDeng

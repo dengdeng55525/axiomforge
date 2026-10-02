@@ -10,6 +10,7 @@ from urllib.parse import urlsplit, urlunsplit
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import HTMLResponse, PlainTextResponse
 
+from capability_factory import __version__
 from capability_factory.agent_runtime import runtime_metadata
 from capability_factory.contracts import RunRequest
 from capability_factory.gpu_status import probe_gpus
@@ -351,7 +352,7 @@ def create_app(settings: Settings | None = None):
         yield
         manager.close()
 
-    app = FastAPI(title="AxiomForge · 知衡", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(title="AxiomForge · 知衡", version=__version__, lifespan=lifespan)
     app.state.manager = manager
 
     def report_for(run_id):
@@ -421,7 +422,7 @@ def create_app(settings: Settings | None = None):
         """Return bounded, non-secret UI configuration in one request."""
         return {
             "schema_version": "1.0",
-            "service": {"name": "AxiomForge · 知衡", "version": "0.1.0"},
+            "service": {"name": "AxiomForge · 知衡", "version": __version__},
             "providers": _provider_catalog(settings),
             "datasets": _dataset_catalog(settings),
             "limits": {
