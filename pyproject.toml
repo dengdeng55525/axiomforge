@@ -23,7 +23,7 @@ Issues = "https://github.com/dengdeng55525/axiomforge/issues"
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<10", "ruff>=0.12,<1", "pytest-cov>=5,<8"]
-ui = ["streamlit>=1.40,<2", "plotly>=5,<7"]
+ui = ["streamlit>=1.40,<2", "plotly>=5,<8"]
 
 [project.scripts]
 axiomforge = "capability_factory.cli:app"
