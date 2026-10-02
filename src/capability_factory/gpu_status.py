@@ -1,4 +1,4 @@
-"""Read-only GPU visibility status for the AlgoForge console.
+"""Read-only GPU visibility status for the AxiomForge console.
 
 The probe is intentionally small and process-local.  It calls ``nvidia-smi``
 when the executable is available, never changes CUDA or proxy environment

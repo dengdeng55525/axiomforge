@@ -1,6 +1,6 @@
 """Static metadata for independently deployed local inference servers.
 
-AlgoForge consumes an OpenAI-compatible HTTP endpoint when ``local_http`` is
+AxiomForge consumes an OpenAI-compatible HTTP endpoint when ``local_http`` is
 selected.  This module only reads the checked-in deployment plan; it never
 downloads model weights, probes a GPU, or starts a serving process.
 """

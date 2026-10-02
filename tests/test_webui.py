@@ -12,11 +12,11 @@ from capability_factory.webui import create_ui_app
 def test_workbench_mount_does_not_shadow_api_or_leak_repository(tmp_path):
     dist = tmp_path / "web" / "dist"
     (dist / "assets").mkdir(parents=True)
-    (dist / "index.html").write_text("<html>AlgoForge app</html>")
+    (dist / "index.html").write_text("<html>AxiomForge app</html>")
     (dist / "assets" / "app.js").write_text("export const app = true")
     (tmp_path / ".env").write_text("DO_NOT_EXPOSE=fixture")
     with TestClient(create_app(Settings(root=tmp_path))) as client:
-        assert client.get("/").text == "<html>AlgoForge app</html>"
+        assert client.get("/").text == "<html>AxiomForge app</html>"
         assert client.get("/app/assets/app.js").status_code == 200
         assert client.get("/health").json()["status"] == "ok"
         assert client.get("/app/.env").status_code == 404

@@ -333,7 +333,7 @@ test("cancel requests update from the server and report exports remain available
   ).toBeVisible();
   const downloaded = page.waitForEvent("download");
   await page.getByRole("button", { name: "JSON", exact: true }).click();
-  expect((await downloaded).suggestedFilename()).toBe("algoforge-cancel.json");
+  expect((await downloaded).suggestedFilename()).toBe("axiomforge-cancel.json");
   const popup = page.waitForEvent("popup");
   await page.getByRole("button", { name: "打开 / 打印报告" }).click();
   await expect(

@@ -462,7 +462,7 @@ async function saveReport(kind: "json" | "md") {
   try {
     await download(
       `/runs/${encodeURIComponent(identity)}/${kind === "json" ? "report" : "report.md"}`,
-      `algoforge-${identity}.${kind}`,
+      `axiomforge-${identity}.${kind}`,
     );
   } catch (error) {
     if (identity === runId.value && !disposed)

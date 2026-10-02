@@ -2,7 +2,7 @@
 
 vLLM 0.29.0 imports the MiniMax-M3 warmup module for every V1 model, even
 when the loaded model is Qwen.  On the current Triton/CUDA stack that import
-can fail before the first request.  AlgoForge does not serve MiniMax-M3, so a
+can fail before the first request.  AxiomForge does not serve MiniMax-M3, so a
 no-op module is safe for this launcher and keeps the workaround isolated from
 the installed vLLM package.
 """

@@ -21,7 +21,7 @@ from capability_factory.knowledge_governance import validate_database
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate AlgoForge capability knowledge provenance")
+    parser = argparse.ArgumentParser(description="Validate AxiomForge capability knowledge provenance")
     parser.add_argument("--database", type=Path, required=True, help="KnowledgeStore SQLite database")
     parser.add_argument("--output", type=Path, help="Create a new quality report file (must not exist)")
     parser.add_argument("--strict", action="store_true", help="Fail on warnings as well as errors")

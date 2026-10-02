@@ -104,7 +104,7 @@ const pageTitle = computed(() => route.meta.title || "工作台概览");
   <aside class="sidebar" :class="{ open: mobileOpen }">
     <RouterLink to="/" class="brand" @click="mobileOpen = false"
       ><span class="brand-mark"><Boxes :size="25" /></span>
-      <div><b>AlgoForge</b><span>算法能力工厂</span></div></RouterLink
+      <div><b>AxiomForge</b><span>知衡 · 算法能力工厂</span></div></RouterLink
     >
     <div class="workspace-label">
       <span class="workspace-dot"></span>研发工作空间<span
@@ -185,7 +185,7 @@ const pageTitle = computed(() => route.meta.title || "工作台概览");
     </header>
     <main id="main-content" tabindex="-1"><RouterView /></main>
     <footer class="workspace-footer">
-      <span>AlgoForge · 可追溯的算法研发</span
+      <span>AxiomForge · 知衡 · 可追溯的算法研发</span
       ><span>能力抽取 → 复刻 → 验证 → 沉淀</span>
     </footer>
   </div>

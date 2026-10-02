@@ -487,7 +487,7 @@ def monitor() -> None:
             except RuntimeError as exc:
                 st.error(str(exc))
     if run.get("warnings"):
-        st.warning("此运行包含警告，请在答辩和报告中保留。")
+        st.warning("此运行包含警告，请在复核与报告导出时保留。")
         with st.expander("查看警告原文", expanded=False):
             st.json(run["warnings"])
     rows = candidate_rows(run.get("candidates"))
@@ -716,7 +716,7 @@ def knowledge_view() -> None:
                     "来源/证据": len(records(item.get("evidence", item.get("source_ids")))),
                 })
             st.dataframe(capability_rows, use_container_width=True, hide_index=True)
-            with st.expander("能力卡详情（面向答辩展示）"):
+            with st.expander("能力卡详情与来源证据"):
                 choice = st.selectbox("选择能力", range(len(capabilities)), format_func=lambda index: capability_rows[index]["能力"], key="capability_detail")
                 card = capabilities[choice]
                 cols = st.columns(3)
@@ -804,7 +804,7 @@ def history_view() -> None:
 
 
 def main() -> None:
-    st.set_page_config(page_title="算法能力工厂 · AlgoForge", page_icon="🧩", layout="wide")
+    st.set_page_config(page_title="AxiomForge · 知衡", page_icon="🧩", layout="wide")
     # This literal stylesheet contains no model or user values.
     st.markdown("""<style>
     .stApp{background:linear-gradient(135deg,#f5f8fb 0%,#eef6f5 100%)}.block-container{max-width:1440px;padding-top:1.6rem}

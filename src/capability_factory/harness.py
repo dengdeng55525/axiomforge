@@ -1,7 +1,7 @@
 """Offline, trace-based Agent evaluation harness.
 
 The harness is deliberately local and deterministic.  It evaluates a persisted
-AlgoForge report against a versioned case rubric, builds a cursor-safe trace
+AxiomForge report against a versioned case rubric, builds a cursor-safe trace
 projection, and emits evidence for every check.  It never calls a model,
 executes generated code, or writes to the knowledge store.  This gives the
 project a small modern-agent evaluation layer without requiring a hosted

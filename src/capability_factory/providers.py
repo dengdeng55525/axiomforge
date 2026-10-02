@@ -102,7 +102,7 @@ class HTTPProvider:
                 "response_format": {"type": "json_object"}, "max_tokens": max_tokens, "temperature": 0}
         if self.mode == "deepseek":
             body["thinking"] = {"type": "disabled"}
-        headers = {"Content-Type": "application/json", "User-Agent": "AlgoForge/0.1"}
+        headers = {"Content-Type": "application/json", "User-Agent": "AxiomForge/0.1"}
         if self.mode == "deepseek":
             headers["Authorization"] = "Bearer " + self.settings.api_key.get_secret_value()
         elif self.settings.local_api_key.get_secret_value():

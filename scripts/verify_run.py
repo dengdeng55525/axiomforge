@@ -76,7 +76,7 @@ def _write_new(path: Path, content: str, run_dir: Path, database: Path) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Verify persisted AlgoForge run artifacts")
+    parser = argparse.ArgumentParser(description="Verify persisted AxiomForge run artifacts")
     parser.add_argument("--run-id", required=True, help="32-character lowercase run id")
     parser.add_argument("--output", type=Path, help="optional path for the JSON manifest")
     parser.add_argument("--project-root", type=Path, default=ROOT,

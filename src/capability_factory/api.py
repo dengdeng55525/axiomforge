@@ -103,7 +103,7 @@ def _provider_catalog(settings: Settings) -> dict:
     """Safe provider profiles consumed by the visual workflow client.
 
     ``local_http`` is intentionally advertised as a planned OpenAI-compatible
-    endpoint.  AlgoForge does not start it, download weights, or probe arbitrary
+    endpoint.  AxiomForge does not start it, download weights, or probe arbitrary
     URLs; the deployment status remains explicit until an operator runs the local
     serving stack.
     """
@@ -351,7 +351,7 @@ def create_app(settings: Settings | None = None):
         yield
         manager.close()
 
-    app = FastAPI(title="AlgoForge 算法能力工厂", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(title="AxiomForge · 知衡", version="0.1.0", lifespan=lifespan)
     app.state.manager = manager
 
     def report_for(run_id):
@@ -421,7 +421,7 @@ def create_app(settings: Settings | None = None):
         """Return bounded, non-secret UI configuration in one request."""
         return {
             "schema_version": "1.0",
-            "service": {"name": "AlgoForge 算法能力工厂", "version": "0.1.0"},
+            "service": {"name": "AxiomForge · 知衡", "version": "0.1.0"},
             "providers": _provider_catalog(settings),
             "datasets": _dataset_catalog(settings),
             "limits": {

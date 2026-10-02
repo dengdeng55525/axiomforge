@@ -129,7 +129,7 @@ const stats = computed(() => [
       <div class="orbit orbit-one"></div>
       <div class="orbit orbit-two"></div>
       <div class="flow-center">
-        <Boxes :size="33" /><b>AlgoForge</b><small>能力编排引擎</small>
+        <Boxes :size="33" /><b>AxiomForge</b><small>知衡 · 能力编排引擎</small>
       </div>
       <div class="flow-node node-one">
         <span><MessageSquareText :size="17" /></span>

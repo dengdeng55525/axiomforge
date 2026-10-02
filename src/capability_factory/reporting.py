@@ -146,7 +146,7 @@ def render_html(report: dict[str, Any]) -> str:
     run_id = data.get("run_id")
     candidates = _sequence(data.get("candidates"))
     body = [
-        '<header><div class="eyebrow">ALGORITHM CAPABILITY FACTORY</div>',
+        '<header><div class="eyebrow">AXIOMFORGE · 知衡</div>',
         "<h1>算法能力验证报告</h1>",
         f'<span class="badge">{_escape(_mode(data))}</span>',
         f"<p>运行 ID：{_escape(run_id)}</p></header>",
@@ -214,7 +214,7 @@ def render_html(report: dict[str, Any]) -> str:
              "</section><section><details><summary>完整原始报告</summary>",
              _pre(data), "</details></section>",
              "<footer>本报告离线可读，不加载外部脚本、字体或 CDN。模型文本不会作为 HTML 执行。</footer>"]
-    title = html.escape(f"算法能力验证报告 · {_display(run_id)}", quote=True)
+    title = html.escape(f"AxiomForge · 知衡 · 算法能力验证报告 · {_display(run_id)}", quote=True)
     return (
         '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -265,7 +265,7 @@ def render_markdown(report: dict[str, Any]) -> str:
     task = _mapping(data.get("task_spec"))
     dataset = _mapping(_mapping(data.get("provenance")).get("dataset"))
     usage, timing = _mapping(data.get("usage")), _mapping(data.get("timing"))
-    sections = ["# 算法能力验证报告\n", "## 运行结论\n",
+    sections = ["# 算法能力验证报告\n", "AxiomForge · 知衡\n", "## 运行结论\n",
                 _md_table(["项目", "记录"], [
                     ["运行 ID", data.get("run_id")], ["状态", data.get("status")],
                     ["运行模式", _mode(data)], ["模型", data.get("model")],

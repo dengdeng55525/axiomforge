@@ -20,7 +20,7 @@ from capability_factory.reporting import write_report
 from capability_factory.settings import load_settings
 from capability_factory.workflow import Workflow, now, write_json
 
-app = typer.Typer(help="AlgoForge: verifiable algorithm generation, evidence and bounded repair", no_args_is_help=True,
+app = typer.Typer(help="AxiomForge · 知衡: verifiable algorithm generation, evidence and bounded repair", no_args_is_help=True,
                   pretty_exceptions_show_locals=False)
 harness_app = typer.Typer(help="Offline trace-based Agent evaluation harness", no_args_is_help=True,
                           pretty_exceptions_show_locals=False)

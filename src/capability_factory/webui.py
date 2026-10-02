@@ -47,7 +47,7 @@ def create_ui_app(backend_url: str | None = None, root: Path | None = None) -> F
             app.state.backend_client = client
             yield
 
-    app = FastAPI(title="AlgoForge Web Workbench", lifespan=lifespan, docs_url=None, redoc_url=None)
+    app = FastAPI(title="AxiomForge · 知衡 Web Workbench", lifespan=lifespan, docs_url=None, redoc_url=None)
     mount_workbench(app, project)
 
     @app.api_route("/{path:path}", methods=["GET", "POST"], include_in_schema=False)

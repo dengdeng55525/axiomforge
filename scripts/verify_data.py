@@ -40,7 +40,7 @@ def download(url, target, expected_sha256):
         return payload
     for attempt in range(3):
         try:
-            request = urllib.request.Request(url, headers={"User-Agent": "AlgoForge-Research/0.1"})
+            request = urllib.request.Request(url, headers={"User-Agent": "AxiomForge-Research/0.1"})
             with urllib.request.urlopen(request, timeout=45) as response:
                 payload = response.read(MAX_BYTES + 1)
             if len(payload) > MAX_BYTES:

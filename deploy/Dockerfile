@@ -22,4 +22,4 @@ COPY schemas ./schemas
 RUN pip install --no-deps . && useradd --create-home --uid 10001 algoforge && mkdir -p /app/artifacts /app/data/raw && chown -R algoforge:algoforge /app
 USER algoforge
 ENV ALGOFORGE_ROOT=/app
-CMD ["algoforge", "serve", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["axiomforge", "serve", "--host", "0.0.0.0", "--port", "8000"]

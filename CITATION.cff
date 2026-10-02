@@ -1,12 +1,12 @@
 cff-version: 1.2.0
-message: "If AlgoForge helps your work, please cite this repository."
-title: "AlgoForge: Verifiable Algorithm Capability Factory"
+message: "If AxiomForge helps your work, please cite this repository."
+title: "AxiomForge · 知衡: Verifiable Algorithm Engineering"
 version: "0.1.0"
 date-released: 2026-09-29
 authors:
   - family-names: DengDeng
     given-names: DengDeng
-repository-code: "https://github.com/dengdeng55525/algorithm-capability-factory"
+repository-code: "https://github.com/dengdeng55525/axiomforge"
 license: MIT
 keywords:
   - AI agents
