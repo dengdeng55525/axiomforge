@@ -7,8 +7,8 @@
 先按主 [README](../README.md) 安装项目 Python 依赖、校验公开数据并初始化知识库。新版工作台构建另需 Node.js 22.12+ 与 npm：
 
 ~~~bash
-cd /root/algorithm-capability-factory
-.venv/bin/algoforge init --provider mock
+cd /path/to/axiomforge
+.venv/bin/axiomforge init --provider mock
 ./scripts/build_web.sh
 ./scripts/start_api.sh
 ~~~
@@ -16,7 +16,7 @@ cd /root/algorithm-capability-factory
 在第二个终端启动 UI 网关：
 
 ~~~bash
-/root/algorithm-capability-factory/scripts/start_ui.sh
+/path/to/axiomforge/scripts/start_ui.sh
 ~~~
 
 工作台为 `http://127.0.0.1:8501/app/`，API 也直接提供 `http://127.0.0.1:8000/app/`；接口文档是 `http://127.0.0.1:8000/docs`。根路径会跳转到 `/app/`。8501 网关只转发支持的 API 路由，不单独创建执行队列或读取模型凭证。
@@ -77,7 +77,7 @@ LOCAL_LLM_PROFILE=four_gpu_14b \
 工具链后可设置 `VLLM_USE_FLASHINFER_SAMPLER=1` 做单独性能验收。启动器自带的
 `compat/sitecustomize.py` 只跳过非 Qwen 模型的 MiniMax 预热导入，不修改模型权重。
 
-启动脚本由部署者管理 vLLM 子进程；AlgoForge 仍只通过 HTTP 调用。`local_http` Provider 负责端点轮询和失败重试，`scripts/check_local_llm.py` 负责主动健康检查；并发上限、熔断和故障摘除策略需在目标机器按实际部署验证，性能测量也单独记录。
+启动脚本由部署者管理 vLLM 子进程；AxiomForge 仍只通过 HTTP 调用。`local_http` Provider 负责端点轮询和失败重试，`scripts/check_local_llm.py` 负责主动健康检查；并发上限、熔断和故障摘除策略需在目标机器按实际部署验证，性能测量也单独记录。
 
 独立部署后，将项目 `.env` 配置为实际服务。规划脚本给四个服务指定共享的模型别名为 `coder14`，请求必须使用该服务别名而非自动假定模型仓库名称：
 

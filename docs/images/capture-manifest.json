@@ -1,0 +1,1061 @@
+{
+  "schema_version": "documentation-capture.v1",
+  "brand": "AxiomForge · 知衡",
+  "captured_at": "2026-10-02T15:36:24.050Z",
+  "source_base_commit": "f595c1ff15272b72e8707606b960a4e5e9c14bb4",
+  "source_worktree_dirty": true,
+  "source_inputs": [
+    {
+      "path": "web/src/App.vue",
+      "sha256": "bb080164ec4f22196d512762c621978bb83547645b4a0e0336745759df8e16b5"
+    },
+    {
+      "path": "web/src/components/AgentTracePanel.vue",
+      "sha256": "2a9189b20786551733d0a4f650239850ab74135643b7bc67bb61a8719071f358"
+    },
+    {
+      "path": "web/src/components/GpuStatusBar.vue",
+      "sha256": "3f02e65f3792ff96d8e9061f09a9d51164dc22dd203d5779961854c76ca2faf4"
+    },
+    {
+      "path": "web/src/components/GraphCanvas.vue",
+      "sha256": "3daced88f83d7d7b2185594d5d4c589660c53aa4d6225e5840bb3d949b6e959a"
+    },
+    {
+      "path": "web/src/components/KnowledgeQualityPanel.vue",
+      "sha256": "ee43c429e8279df945f21b0c69ecccbeb6b3c7f8d145111e1c9f76bf28619481"
+    },
+    {
+      "path": "web/src/components/RunIntegrityPanel.vue",
+      "sha256": "1d2a544e0e4b0ce85b28501cd1e52423ef960c1a0d57ed20e4aa948c4f8b392f"
+    },
+    {
+      "path": "web/src/lib/api.ts",
+      "sha256": "8a338298a21e0958a1c99b3350bd2994c76a1f57d3df020cd68903459af7f195"
+    },
+    {
+      "path": "web/src/lib/format.ts",
+      "sha256": "62dc30f08e7fbf0fd5303e25ae780e79e2bf2c8be09a59ff0833325df18477a1"
+    },
+    {
+      "path": "web/src/lib/graph.ts",
+      "sha256": "824c5a316fad3c4b137d000c5530f8748f9f5b076dc1dcaa772be3bb5f68ebd7"
+    },
+    {
+      "path": "web/src/lib/providers.ts",
+      "sha256": "3353f978a19958e343773761f95e5d2be4ae60ad1e8a0c29f026ae588761c4a6"
+    },
+    {
+      "path": "web/src/main.ts",
+      "sha256": "eb82564ef59ba63884925c672bce398b3b1796aff78676907fb3ee054ee0461b"
+    },
+    {
+      "path": "web/src/style.css",
+      "sha256": "d42fd1a5e53aeee310aec4ad6c7fbef46f3f26f4e4fd9523f46a9c01c20d9908"
+    },
+    {
+      "path": "web/src/views/HistoryView.vue",
+      "sha256": "e1566fa76e490ba1558310e210a2aadf06f06ec4659bc31541a4996882d297d7"
+    },
+    {
+      "path": "web/src/views/HomeView.vue",
+      "sha256": "c3b72e4de863b321496222d5148c84cd966fdaf53552634bca3c693347430797"
+    },
+    {
+      "path": "web/src/views/KnowledgeView.vue",
+      "sha256": "1b941df557103946a55007cbb41c9bfde6ddc2b77fd73314c4ed7468058ed0e3"
+    },
+    {
+      "path": "web/src/views/RunView.vue",
+      "sha256": "2ccd6b2305a774eefe3262e6206924ba9383838af936287952074b11831bd661"
+    },
+    {
+      "path": "web/src/views/SettingsView.vue",
+      "sha256": "aa79c3121ed2b7f207cd7618183b714a31463fc631ac7dac7cb91f92804a0cdf"
+    },
+    {
+      "path": "web/src/views/WorkbenchView.vue",
+      "sha256": "d24d4183559957a6d5f488dd6c6d979899cf7c5055ce97f26f7335944e120bed"
+    },
+    {
+      "path": "web/index.html",
+      "sha256": "fb2c1d99f4fc8c64436fea2b562d4032d9f2c7a4653160bea61b363fab3a8e0f"
+    },
+    {
+      "path": "web/vite.config.ts",
+      "sha256": "6cdc7cca02b084805c0236836de1450755573c9b88b7319c22611598f44533b5"
+    },
+    {
+      "path": "web/package-lock.json",
+      "sha256": "8da1f5898e4cd0983f8c9614693f8c8870c7c3bf202c75e9f5ac3c06c0147a0c"
+    },
+    {
+      "path": "web/scripts/capture-docs.mjs",
+      "sha256": "cd2d049fec5e55571136588585ec0c348e28ad9bea6defea8e27d965fc75c51a"
+    },
+    {
+      "path": "scripts/capture_docs_fixtures.py",
+      "sha256": "7d7f8c706dc4928635492c707baa542d37d69b63accb4b3021f9f210e5732a0f"
+    }
+  ],
+  "build_assets_sha256": "6cc3ea62d7b60c452171609502316d834ec306c80f46de40afe50104d56c7a23",
+  "reproduction": "npm --prefix web run build && node web/scripts/capture-docs.mjs",
+  "policy": {
+    "requests_intercepted": true,
+    "external_network_requests": 0,
+    "provider_calls": 0,
+    "live_database_writes": 0,
+    "metrics_fabricated": false,
+    "context": "Historical reports rendered by current UI. Default empty-credential configuration. GPU demonstration is visibly labelled as simulated."
+  },
+  "provenance": {
+    "reports": [
+      {
+        "path": "examples/evidence/bank_beam/report.json",
+        "sha256": "1f471c404c81c715dbf7f003d2331cc258e31f9a273b374d4fa64f101b67087c",
+        "run_id": "0f25cc2b756648439ccccdabc4b9aa70",
+        "mode": "real",
+        "provider": "deepseek",
+        "metrics_modified": false
+      },
+      {
+        "path": "examples/evidence/bank_repair/report.json",
+        "sha256": "ed749761a456a07d24411fd04e014b852fb7e43e8ab203ad818c55b0d20a6767",
+        "run_id": "13edb7649f0d41bba608251b6079e4d1",
+        "mode": "real",
+        "provider": "deepseek",
+        "metrics_modified": false
+      },
+      {
+        "path": "examples/evidence/sms_local_resources/report.json",
+        "sha256": "415a88ce024cd96c6efb2201d5a3e1b7a034f1826bc4dae986b85e68abd7e9b1",
+        "run_id": "99066c21c7f64134bcde65a0ef068473",
+        "mode": "real",
+        "provider": "local_http",
+        "metrics_modified": false
+      },
+      {
+        "path": "examples/evidence/sms_openai_langchain/report.json",
+        "sha256": "cbc96bdf6725801f656d4ef914069d476c2617a21908dc36039a4dc65bfa9c6a",
+        "run_id": "660682f3cf324bf1938b78c70f2fce8c",
+        "mode": "real",
+        "provider": "openai",
+        "metrics_modified": false
+      },
+      {
+        "path": "examples/evidence/sms_transfer/report.json",
+        "sha256": "a9600ada4548064ce2716810965023e7fd7ec6d499371c4ca98278d1841c444d",
+        "run_id": "30fbcd522366415880a0e2dfc9e17999",
+        "mode": "real",
+        "provider": "deepseek",
+        "metrics_modified": false
+      }
+    ],
+    "graph": {
+      "method": "KnowledgeStore(':memory:').ingest_sources + save_run",
+      "seed": "knowledge/seed_capabilities.json",
+      "source_manifest": [
+        {
+          "source_id": "src-036a9125a071ef6a1ae3c21f",
+          "source_key": "bank-duration",
+          "uri": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+          "revision": "sha256:10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+          "license": "CC-BY-4.0",
+          "content_sha256": "10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+          "excerpt_sha256": "3ca41d3d44d1a02e22a4331fe8f8eebcaa1a1a168b3b5e74ceda2d5fa0a57446",
+          "locator": {
+            "path": "data/raw/bank-additional-names.txt",
+            "line_start": 56,
+            "line_end": 58
+          },
+          "kind": "document"
+        },
+        {
+          "source_id": "src-b474b223d810ba493ecf945e",
+          "source_key": "bank-pdays",
+          "uri": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+          "revision": "sha256:10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+          "license": "CC-BY-4.0",
+          "content_sha256": "10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+          "excerpt_sha256": "51b9e95ad1bd8e3c12848e5d9ae54f82903a91ece1033d25bc222e8b390eaa34",
+          "locator": {
+            "path": "data/raw/bank-additional-names.txt",
+            "line_start": 59,
+            "line_end": 61
+          },
+          "kind": "document"
+        },
+        {
+          "source_id": "src-9e74f92e3a9cf01663fecfe4",
+          "source_key": "bank-target",
+          "uri": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+          "revision": "sha256:10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+          "license": "CC-BY-4.0",
+          "content_sha256": "10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+          "excerpt_sha256": "6af5b823b351ccf4f7afd10803bc9e6ddfe26e9866f78376d5d2f415d66aa02b",
+          "locator": {
+            "path": "data/raw/bank-additional-names.txt",
+            "line_start": 70,
+            "line_end": 72
+          },
+          "kind": "document"
+        },
+        {
+          "source_id": "src-e51b99ee0ad007282e9ecf74",
+          "source_key": "bank-unknown",
+          "uri": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+          "revision": "sha256:10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+          "license": "CC-BY-4.0",
+          "content_sha256": "10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+          "excerpt_sha256": "be576f959a5401ca45583fea6d54636c90557b8fbb23da8af1a5e16b124f2756",
+          "locator": {
+            "path": "data/raw/bank-additional-names.txt",
+            "line_start": 72,
+            "line_end": 72
+          },
+          "kind": "document"
+        },
+        {
+          "source_id": "src-4f8bdb3589548b6b90312e82",
+          "source_key": "sms-format",
+          "uri": "https://archive.ics.uci.edu/dataset/228/sms+spam+collection",
+          "revision": "sha256:8753cd2d3cab68f80c8257851b8c2037778c267f55accb6fd1b5a2e32d36a84e",
+          "license": "CC-BY-4.0",
+          "content_sha256": "8753cd2d3cab68f80c8257851b8c2037778c267f55accb6fd1b5a2e32d36a84e",
+          "excerpt_sha256": "12dbdfbc95e91934708054d54fea569a26ca0be87e54799b5cba32902214a076",
+          "locator": {
+            "path": "data/raw/sms-readme.txt",
+            "line_start": 28,
+            "line_end": 31
+          },
+          "kind": "document"
+        },
+        {
+          "source_id": "src-6be089b1302f0a8e5d360045",
+          "source_key": "project-bank-policy",
+          "uri": "file://docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md",
+          "revision": "sha256:fd3f2a406e87097154209345d67d2231a6189842547fe4ae1ae7d7a9e027b822",
+          "license": "original-project-notes",
+          "content_sha256": "fd3f2a406e87097154209345d67d2231a6189842547fe4ae1ae7d7a9e027b822",
+          "excerpt_sha256": "9db39ccd9a1179e012acac4a1ffb74cd439734b1707ff73a33d830c1660b2b83",
+          "locator": {
+            "path": "docs/02_数据与知识来源.md",
+            "line_start": 18,
+            "line_end": 34
+          },
+          "kind": "document"
+        },
+        {
+          "source_id": "src-7113f321f8ac573dadeb1106",
+          "source_key": "project-bank-split",
+          "uri": "file://docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md",
+          "revision": "sha256:fd3f2a406e87097154209345d67d2231a6189842547fe4ae1ae7d7a9e027b822",
+          "license": "original-project-notes",
+          "content_sha256": "fd3f2a406e87097154209345d67d2231a6189842547fe4ae1ae7d7a9e027b822",
+          "excerpt_sha256": "4e53c19fca35fe09b20b3fe634cc877edde7788a1c59d30df9d339349dbe6c58",
+          "locator": {
+            "path": "docs/02_数据与知识来源.md",
+            "line_start": 35,
+            "line_end": 50
+          },
+          "kind": "document"
+        },
+        {
+          "source_id": "src-31587b72d2c7c1458dc349c4",
+          "source_key": "project-sms-split",
+          "uri": "file://docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md",
+          "revision": "sha256:fd3f2a406e87097154209345d67d2231a6189842547fe4ae1ae7d7a9e027b822",
+          "license": "original-project-notes",
+          "content_sha256": "fd3f2a406e87097154209345d67d2231a6189842547fe4ae1ae7d7a9e027b822",
+          "excerpt_sha256": "b5f2f429b374f3aff65bba02e8b2e0e7a16b230ae6c0762b81d264b04e1f5e21",
+          "locator": {
+            "path": "docs/02_数据与知识来源.md",
+            "line_start": 51,
+            "line_end": 62
+          },
+          "kind": "document"
+        },
+        {
+          "source_id": "src-bdc3c7f68194d455ba006ed6",
+          "source_key": "project-evidence",
+          "uri": "file://docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md",
+          "revision": "sha256:fd3f2a406e87097154209345d67d2231a6189842547fe4ae1ae7d7a9e027b822",
+          "license": "original-project-notes",
+          "content_sha256": "fd3f2a406e87097154209345d67d2231a6189842547fe4ae1ae7d7a9e027b822",
+          "excerpt_sha256": "51c5711f619498fdfc27ba3d5be6b206a8f2bc9b73890b5d2db81b5fb4c270ac",
+          "locator": {
+            "path": "docs/02_数据与知识来源.md",
+            "line_start": 82,
+            "line_end": 89
+          },
+          "kind": "document"
+        },
+        {
+          "source_id": "src-8a2d3c4ad618f98dc3d974e1",
+          "source_key": "sklearn-pipeline",
+          "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/pipeline.py",
+          "revision": "1.7.2",
+          "license": "BSD-3-Clause",
+          "content_sha256": "06f7ccb74a31ab9d3c900d87c814b7ce81b8acbd938ad74fe9cc674075f07869",
+          "excerpt_sha256": "88dc0f2553332c5bad65ca3f45bcd9d88bdda2376ac8c0972a11aebaeaa654da",
+          "locator": {
+            "path": ".venv/lib/python3.10/site-packages/sklearn/pipeline.py",
+            "line_start": 123,
+            "line_end": 1407,
+            "symbol": "Pipeline",
+            "relative_path": "sklearn/pipeline.py",
+            "imports": [
+              "import warnings",
+              "from collections import Counter, defaultdict",
+              "from contextlib import contextmanager",
+              "from copy import deepcopy",
+              "from itertools import chain, islice",
+              "import numpy as np",
+              "from scipy import sparse",
+              "from .base import TransformerMixin, _fit_context, clone",
+              "from .exceptions import NotFittedError",
+              "from .preprocessing import FunctionTransformer",
+              "from .utils import Bunch",
+              "from .utils._metadata_requests import METHODS",
+              "from .utils._param_validation import HasMethods, Hidden",
+              "from .utils._repr_html.estimator import _VisualBlock",
+              "from .utils._set_output import _get_container_adapter, _safe_set_output",
+              "from .utils._tags import get_tags",
+              "from .utils._user_interface import _print_elapsed_time",
+              "from .utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, get_routing_for_object, process_routing",
+              "from .utils.metaestimators import _BaseComposition, available_if",
+              "from .utils.parallel import Parallel, delayed",
+              "from .utils.validation import check_is_fitted, check_memory"
+            ],
+            "methods": [
+              "__init__",
+              "set_output",
+              "get_params",
+              "set_params",
+              "_validate_steps",
+              "_iter",
+              "__len__",
+              "__getitem__",
+              "_estimator_type",
+              "named_steps",
+              "_final_estimator",
+              "_log_message",
+              "_check_method_params",
+              "_get_metadata_for_step",
+              "_fit",
+              "fit",
+              "_can_fit_transform",
+              "fit_transform",
+              "predict",
+              "fit_predict",
+              "predict_proba",
+              "decision_function",
+              "score_samples",
+              "predict_log_proba",
+              "_can_transform",
+              "transform",
+              "_can_inverse_transform",
+              "inverse_transform",
+              "score",
+              "classes_",
+              "__sklearn_tags__",
+              "get_feature_names_out",
+              "n_features_in_",
+              "feature_names_in_",
+              "__sklearn_is_fitted__",
+              "_sk_visual_block_",
+              "get_metadata_routing"
+            ],
+            "signature": "class Pipeline(_BaseComposition):\n    def __init__(self, steps, *, transform_input=None, memory=None, verbose=False)",
+            "parse_mode": "ast-only"
+          },
+          "kind": "python_ast"
+        },
+        {
+          "source_id": "src-edb49349edd5d01d96366d15",
+          "source_key": "sklearn-columns",
+          "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/compose/_column_transformer.py",
+          "revision": "1.7.2",
+          "license": "BSD-3-Clause",
+          "content_sha256": "e0fcb314512c8a487f48dfb7f52df5cda7e1a5b1fbc00c9121c2e337b5faac94",
+          "excerpt_sha256": "bc65bf1f577de02cd9a043640d2e3074e27c93fb0a736e597dcf8799ec9b3a39",
+          "locator": {
+            "path": ".venv/lib/python3.10/site-packages/sklearn/compose/_column_transformer.py",
+            "line_start": 63,
+            "line_end": 1327,
+            "symbol": "ColumnTransformer",
+            "relative_path": "sklearn/compose/_column_transformer.py",
+            "imports": [
+              "import warnings",
+              "from collections import Counter",
+              "from functools import partial",
+              "from itertools import chain",
+              "from numbers import Integral, Real",
+              "import numpy as np",
+              "from scipy import sparse",
+              "from ..base import TransformerMixin, _fit_context, clone",
+              "from ..pipeline import _fit_transform_one, _name_estimators, _transform_one",
+              "from ..preprocessing import FunctionTransformer",
+              "from ..utils import Bunch",
+              "from ..utils._indexing import _determine_key_type, _get_column_indices, _safe_indexing",
+              "from ..utils._metadata_requests import METHODS",
+              "from ..utils._param_validation import HasMethods, Hidden, Interval, StrOptions",
+              "from ..utils._repr_html.estimator import _VisualBlock",
+              "from ..utils._set_output import _get_container_adapter, _get_output_config, _safe_set_output",
+              "from ..utils._tags import get_tags",
+              "from ..utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, process_routing",
+              "from ..utils.metaestimators import _BaseComposition",
+              "from ..utils.parallel import Parallel, delayed",
+              "from ..utils.validation import _check_feature_names, _check_feature_names_in, _check_n_features, _get_feature_names, _is_pandas_df, _num_samples, check_array, check_is_fitted"
+            ],
+            "methods": [
+              "__init__",
+              "_transformers",
+              "_transformers",
+              "set_output",
+              "get_params",
+              "set_params",
+              "_iter",
+              "_validate_transformers",
+              "_validate_column_callables",
+              "_validate_remainder",
+              "_get_remainder_cols_dtype",
+              "_get_remainder_cols",
+              "named_transformers_",
+              "_get_feature_name_out_for_transformer",
+              "get_feature_names_out",
+              "_add_prefix_for_feature_names_out",
+              "_update_fitted_transformers",
+              "_validate_output",
+              "_record_output_indices",
+              "_log_message",
+              "_call_func_on_transformers",
+              "fit",
+              "fit_transform",
+              "transform",
+              "_hstack",
+              "_sk_visual_block_",
+              "__getitem__",
+              "_get_empty_routing",
+              "get_metadata_routing",
+              "__sklearn_tags__"
+            ],
+            "signature": "class ColumnTransformer(TransformerMixin, _BaseComposition):\n    def __init__(self, transformers, *, remainder='drop', sparse_threshold=0.3, n_jobs=None, transformer_weights=None, verbose=False, verbose_feature_names_out=True, force_int_remainder_cols='deprecated')",
+            "parse_mode": "ast-only"
+          },
+          "kind": "python_ast"
+        },
+        {
+          "source_id": "src-57ad627bd0c9f7e3e2b0f4c4",
+          "source_key": "sklearn-onehot",
+          "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/preprocessing/_encoders.py",
+          "revision": "1.7.2",
+          "license": "BSD-3-Clause",
+          "content_sha256": "182ad858c63cf28c26d6b332250006c052a502e483740b5b236a3c8e7493db97",
+          "excerpt_sha256": "e1dd2e94708eb514f6ae54063da04568cb3457a8a34891be1d49e058cba7e42a",
+          "locator": {
+            "path": ".venv/lib/python3.10/site-packages/sklearn/preprocessing/_encoders.py",
+            "line_start": 465,
+            "line_end": 1251,
+            "symbol": "OneHotEncoder",
+            "relative_path": "sklearn/preprocessing/_encoders.py",
+            "imports": [
+              "import numbers",
+              "import warnings",
+              "from numbers import Integral",
+              "import numpy as np",
+              "from scipy import sparse",
+              "from ..base import BaseEstimator, OneToOneFeatureMixin, TransformerMixin, _fit_context",
+              "from ..utils import _safe_indexing, check_array",
+              "from ..utils._encode import _check_unknown, _encode, _get_counts, _unique",
+              "from ..utils._mask import _get_mask",
+              "from ..utils._missing import is_scalar_nan",
+              "from ..utils._param_validation import Interval, RealNotInt, StrOptions",
+              "from ..utils._set_output import _get_output_config",
+              "from ..utils.validation import _check_feature_names, _check_feature_names_in, _check_n_features, check_is_fitted"
+            ],
+            "methods": [
+              "__init__",
+              "_map_drop_idx_to_infrequent",
+              "_set_drop_idx",
+              "_compute_transformed_categories",
+              "_remove_dropped_categories",
+              "_compute_n_features_outs",
+              "fit",
+              "transform",
+              "inverse_transform",
+              "get_feature_names_out",
+              "_check_get_feature_name_combiner"
+            ],
+            "signature": "class OneHotEncoder(_BaseEncoder):\n    def __init__(self, *, categories='auto', drop=None, sparse_output=True, dtype=np.float64, handle_unknown='error', min_frequency=None, max_categories=None, feature_name_combiner='concat')",
+            "parse_mode": "ast-only"
+          },
+          "kind": "python_ast"
+        },
+        {
+          "source_id": "src-d449b36555785d788d970e04",
+          "source_key": "sklearn-scaler",
+          "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/preprocessing/_data.py",
+          "revision": "1.7.2",
+          "license": "BSD-3-Clause",
+          "content_sha256": "1255040a0eb9c99f58775d55cf34f675cf61539f7c0a0dd0d6a36cb1f0da1e15",
+          "excerpt_sha256": "3b1758d43b35aa1710082c55fee023bc7e46b4ac8945921f9194db12eb3f9766",
+          "locator": {
+            "path": ".venv/lib/python3.10/site-packages/sklearn/preprocessing/_data.py",
+            "line_start": 723,
+            "line_end": 1149,
+            "symbol": "StandardScaler",
+            "relative_path": "sklearn/preprocessing/_data.py",
+            "imports": [
+              "import warnings",
+              "from numbers import Integral, Real",
+              "import numpy as np",
+              "from scipy import sparse, stats",
+              "from scipy.special import boxcox, inv_boxcox",
+              "from sklearn.utils import metadata_routing",
+              "from ..base import BaseEstimator, ClassNamePrefixFeaturesOutMixin, OneToOneFeatureMixin, TransformerMixin, _fit_context",
+              "from ..utils import _array_api, check_array, resample",
+              "from ..utils._array_api import _find_matching_floating_dtype, _modify_in_place_if_numpy, device, get_namespace, get_namespace_and_device",
+              "from ..utils._param_validation import Interval, Options, StrOptions, validate_params",
+              "from ..utils.extmath import _incremental_mean_and_var, row_norms",
+              "from ..utils.fixes import _yeojohnson_lambda",
+              "from ..utils.sparsefuncs import incr_mean_variance_axis, inplace_column_scale, mean_variance_axis, min_max_axis",
+              "from ..utils.sparsefuncs_fast import inplace_csr_row_normalize_l1, inplace_csr_row_normalize_l2",
+              "from ..utils.validation import FLOAT_DTYPES, _check_sample_weight, check_is_fitted, check_random_state, validate_data",
+              "from ._encoders import OneHotEncoder"
+            ],
+            "methods": [
+              "__init__",
+              "_reset",
+              "fit",
+              "partial_fit",
+              "transform",
+              "inverse_transform",
+              "__sklearn_tags__"
+            ],
+            "signature": "class StandardScaler(OneToOneFeatureMixin, TransformerMixin, BaseEstimator):\n    def __init__(self, *, copy=True, with_mean=True, with_std=True)",
+            "parse_mode": "ast-only"
+          },
+          "kind": "python_ast"
+        },
+        {
+          "source_id": "src-d3bbe7a469e7a71a6ec591de",
+          "source_key": "sklearn-imputer",
+          "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/impute/_base.py",
+          "revision": "1.7.2",
+          "license": "BSD-3-Clause",
+          "content_sha256": "f3549cbe4235a5c3e0b5f5695384dc481ee910f6098ced7c30d50805d0504447",
+          "excerpt_sha256": "993f8d9be128e8fc8950a12176f7f72f7440daa3af0a1abf69f490e707387aed",
+          "locator": {
+            "path": ".venv/lib/python3.10/site-packages/sklearn/impute/_base.py",
+            "line_start": 170,
+            "line_end": 790,
+            "symbol": "SimpleImputer",
+            "relative_path": "sklearn/impute/_base.py",
+            "imports": [
+              "import numbers",
+              "import warnings",
+              "from collections import Counter",
+              "from functools import partial",
+              "from typing import Callable",
+              "import numpy as np",
+              "import numpy.ma as ma",
+              "from scipy import sparse as sp",
+              "from ..base import BaseEstimator, TransformerMixin, _fit_context",
+              "from ..utils._mask import _get_mask",
+              "from ..utils._missing import is_pandas_na, is_scalar_nan",
+              "from ..utils._param_validation import MissingValues, StrOptions",
+              "from ..utils.fixes import _mode",
+              "from ..utils.sparsefuncs import _get_median",
+              "from ..utils.validation import FLOAT_DTYPES, _check_feature_names_in, _check_n_features, check_is_fitted, validate_data"
+            ],
+            "methods": [
+              "__init__",
+              "_validate_input",
+              "fit",
+              "_sparse_fit",
+              "_dense_fit",
+              "transform",
+              "inverse_transform",
+              "__sklearn_tags__",
+              "get_feature_names_out"
+            ],
+            "signature": "class SimpleImputer(_BaseImputer):\n    def __init__(self, *, missing_values=np.nan, strategy='mean', fill_value=None, copy=True, add_indicator=False, keep_empty_features=False)",
+            "parse_mode": "ast-only"
+          },
+          "kind": "python_ast"
+        },
+        {
+          "source_id": "src-584b66a31950a968f84ef11b",
+          "source_key": "sklearn-logistic",
+          "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/linear_model/_logistic.py",
+          "revision": "1.7.2",
+          "license": "BSD-3-Clause",
+          "content_sha256": "981f4e11c9a6fc2b02cd9322f2926849143e4a8bf1819e3a4159a9fce615a00c",
+          "excerpt_sha256": "470b3000a8f09ccfbb82bf99a4a181ffb17d7cdf3024861b6acdac2d48a058a4",
+          "locator": {
+            "path": ".venv/lib/python3.10/site-packages/sklearn/linear_model/_logistic.py",
+            "line_start": 829,
+            "line_end": 1497,
+            "symbol": "LogisticRegression",
+            "relative_path": "sklearn/linear_model/_logistic.py",
+            "imports": [
+              "import numbers",
+              "import warnings",
+              "from numbers import Integral, Real",
+              "import numpy as np",
+              "from joblib import effective_n_jobs",
+              "from scipy import optimize",
+              "from sklearn.metrics import get_scorer_names",
+              "from .._loss.loss import HalfBinomialLoss, HalfMultinomialLoss",
+              "from ..base import _fit_context",
+              "from ..metrics import get_scorer",
+              "from ..model_selection import check_cv",
+              "from ..preprocessing import LabelBinarizer, LabelEncoder",
+              "from ..svm._base import _fit_liblinear",
+              "from ..utils import Bunch, check_array, check_consistent_length, check_random_state, compute_class_weight",
+              "from ..utils._param_validation import Hidden, Interval, StrOptions",
+              "from ..utils.extmath import row_norms, softmax",
+              "from ..utils.fixes import _get_additional_lbfgs_options_dict",
+              "from ..utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, process_routing",
+              "from ..utils.multiclass import check_classification_targets",
+              "from ..utils.optimize import _check_optimize_result, _newton_cg",
+              "from ..utils.parallel import Parallel, delayed",
+              "from ..utils.validation import _check_method_params, _check_sample_weight, check_is_fitted, validate_data",
+              "from ._base import BaseEstimator, LinearClassifierMixin, SparseCoefMixin",
+              "from ._glm.glm import NewtonCholeskySolver",
+              "from ._linear_loss import LinearModelLoss",
+              "from ._sag import sag_solver"
+            ],
+            "methods": [
+              "__init__",
+              "fit",
+              "predict_proba",
+              "predict_log_proba",
+              "__sklearn_tags__"
+            ],
+            "signature": "class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):\n    def __init__(self, penalty='l2', *, dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1, class_weight=None, random_state=None, solver='lbfgs', max_iter=100, multi_class='deprecated', verbose=0, warm_start=False, n_jobs=None, l1_ratio=None)",
+            "parse_mode": "ast-only"
+          },
+          "kind": "python_ast"
+        },
+        {
+          "source_id": "src-65a2ca3df537050020eb73b5",
+          "source_key": "sklearn-forest",
+          "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/ensemble/_forest.py",
+          "revision": "1.7.2",
+          "license": "BSD-3-Clause",
+          "content_sha256": "c5a4230e63753d964674363bdbc47179340f28433133172dce1ecef4e73b6ee4",
+          "excerpt_sha256": "34aad8687622e0184b45aae36c6119f8012b9dc205b4b7c975fbe46efc60afd3",
+          "locator": {
+            "path": ".venv/lib/python3.10/site-packages/sklearn/ensemble/_forest.py",
+            "line_start": 1174,
+            "line_end": 1568,
+            "symbol": "RandomForestClassifier",
+            "relative_path": "sklearn/ensemble/_forest.py",
+            "imports": [
+              "import threading",
+              "from abc import ABCMeta, abstractmethod",
+              "from numbers import Integral, Real",
+              "from warnings import catch_warnings, simplefilter, warn",
+              "import numpy as np",
+              "from scipy.sparse import hstack as sparse_hstack",
+              "from scipy.sparse import issparse",
+              "from ..base import ClassifierMixin, MultiOutputMixin, RegressorMixin, TransformerMixin, _fit_context, is_classifier",
+              "from ..exceptions import DataConversionWarning",
+              "from ..metrics import accuracy_score, r2_score",
+              "from ..preprocessing import OneHotEncoder",
+              "from ..tree import BaseDecisionTree, DecisionTreeClassifier, DecisionTreeRegressor, ExtraTreeClassifier, ExtraTreeRegressor",
+              "from ..tree._tree import DOUBLE, DTYPE",
+              "from ..utils import check_random_state, compute_sample_weight",
+              "from ..utils._param_validation import Interval, RealNotInt, StrOptions",
+              "from ..utils._tags import get_tags",
+              "from ..utils.multiclass import check_classification_targets, type_of_target",
+              "from ..utils.parallel import Parallel, delayed",
+              "from ..utils.validation import _check_feature_names_in, _check_sample_weight, _num_samples, check_is_fitted, validate_data",
+              "from ._base import BaseEnsemble, _partition_estimators"
+            ],
+            "methods": [
+              "__init__"
+            ],
+            "signature": "class RandomForestClassifier(ForestClassifier):\n    def __init__(self, n_estimators=100, *, criterion='gini', max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features='sqrt', max_leaf_nodes=None, min_impurity_decrease=0.0, bootstrap=True, oob_score=False, n_jobs=None, random_state=None, verbose=0, warm_start=False, class_weight=None, ccp_alpha=0.0, max_samples=None, monotonic_cst=None)",
+            "parse_mode": "ast-only"
+          },
+          "kind": "python_ast"
+        },
+        {
+          "source_id": "src-8bb03b8a4d6fcff5a1d76293",
+          "source_key": "sklearn-histgb",
+          "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py",
+          "revision": "1.7.2",
+          "license": "BSD-3-Clause",
+          "content_sha256": "f88ec15b1f861d6ac8517b8e3e5348bb4522ebe3127c5d89127502078b427fdc",
+          "excerpt_sha256": "dcb960175d4aade197976dcb7f82caf50e3a718e0cbcc21bbaa9a60227f22e96",
+          "locator": {
+            "path": ".venv/lib/python3.10/site-packages/sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py",
+            "line_start": 1873,
+            "line_end": 2371,
+            "symbol": "HistGradientBoostingClassifier",
+            "relative_path": "sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py",
+            "imports": [
+              "import itertools",
+              "from abc import ABC, abstractmethod",
+              "from contextlib import contextmanager, nullcontext, suppress",
+              "from functools import partial",
+              "from numbers import Integral, Real",
+              "from time import time",
+              "import numpy as np",
+              "from ..._loss.loss import _LOSSES, BaseLoss, HalfBinomialLoss, HalfGammaLoss, HalfMultinomialLoss, HalfPoissonLoss, PinballLoss",
+              "from ...base import BaseEstimator, ClassifierMixin, RegressorMixin, _fit_context, is_classifier",
+              "from ...compose import ColumnTransformer",
+              "from ...metrics import check_scoring",
+              "from ...metrics._scorer import _SCORERS",
+              "from ...model_selection import train_test_split",
+              "from ...preprocessing import FunctionTransformer, LabelEncoder, OrdinalEncoder",
+              "from ...utils import check_random_state, compute_sample_weight, resample",
+              "from ...utils._missing import is_scalar_nan",
+              "from ...utils._openmp_helpers import _openmp_effective_n_threads",
+              "from ...utils._param_validation import Interval, RealNotInt, StrOptions",
+              "from ...utils.multiclass import check_classification_targets",
+              "from ...utils.validation import _check_monotonic_cst, _check_sample_weight, _check_y, _is_pandas_df, check_array, check_consistent_length, check_is_fitted, validate_data",
+              "from ._gradient_boosting import _update_raw_predictions",
+              "from .binning import _BinMapper",
+              "from .common import G_H_DTYPE, X_DTYPE, Y_DTYPE",
+              "from .grower import TreeGrower"
+            ],
+            "methods": [
+              "__init__",
+              "_finalize_sample_weight",
+              "predict",
+              "staged_predict",
+              "predict_proba",
+              "staged_predict_proba",
+              "decision_function",
+              "staged_decision_function",
+              "_encode_y",
+              "_encode_y_val",
+              "_get_loss"
+            ],
+            "signature": "class HistGradientBoostingClassifier(ClassifierMixin, BaseHistGradientBoosting):\n    def __init__(self, loss='log_loss', *, learning_rate=0.1, max_iter=100, max_leaf_nodes=31, max_depth=None, min_samples_leaf=20, l2_regularization=0.0, max_features=1.0, max_bins=255, categorical_features='from_dtype', monotonic_cst=None, interaction_cst=None, warm_start=False, early_stopping='auto', scoring='loss', validation_fraction=0.1, n_iter_no_change=10, tol=1e-07, verbose=0, random_state=None, class_weight=None)",
+            "parse_mode": "ast-only"
+          },
+          "kind": "python_ast"
+        },
+        {
+          "source_id": "src-ecb336a2fa483eb3b4f26d0b",
+          "source_key": "sklearn-tfidf",
+          "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/feature_extraction/text.py",
+          "revision": "1.7.2",
+          "license": "BSD-3-Clause",
+          "content_sha256": "876f0d334735f77174822fabff287fab5602ccff8973a5430ebc70548916da62",
+          "excerpt_sha256": "68ee510b687944e9e6e501bd142c2040942833f8952c80b5e01291e8527b0f7b",
+          "locator": {
+            "path": ".venv/lib/python3.10/site-packages/sklearn/feature_extraction/text.py",
+            "line_start": 1735,
+            "line_end": 2137,
+            "symbol": "TfidfVectorizer",
+            "relative_path": "sklearn/feature_extraction/text.py",
+            "imports": [
+              "import array",
+              "import re",
+              "import unicodedata",
+              "import warnings",
+              "from collections import defaultdict",
+              "from collections.abc import Mapping",
+              "from functools import partial",
+              "from numbers import Integral",
+              "from operator import itemgetter",
+              "import numpy as np",
+              "import scipy.sparse as sp",
+              "from sklearn.utils import metadata_routing",
+              "from ..base import BaseEstimator, OneToOneFeatureMixin, TransformerMixin, _fit_context",
+              "from ..exceptions import NotFittedError",
+              "from ..preprocessing import normalize",
+              "from ..utils._param_validation import HasMethods, Interval, RealNotInt, StrOptions",
+              "from ..utils.fixes import _IS_32BIT",
+              "from ..utils.validation import FLOAT_DTYPES, check_array, check_is_fitted, validate_data",
+              "from ._hash import FeatureHasher",
+              "from ._stop_words import ENGLISH_STOP_WORDS"
+            ],
+            "methods": [
+              "__init__",
+              "idf_",
+              "idf_",
+              "_check_params",
+              "fit",
+              "fit_transform",
+              "transform",
+              "__sklearn_tags__"
+            ],
+            "signature": "class TfidfVectorizer(CountVectorizer):\n    def __init__(self, *, input='content', encoding='utf-8', decode_error='strict', strip_accents=None, lowercase=True, preprocessor=None, tokenizer=None, analyzer='word', stop_words=None, token_pattern='(?u)\\\\b\\\\w\\\\w+\\\\b', ngram_range=(1, 1), max_df=1.0, min_df=1, max_features=None, vocabulary=None, binary=False, dtype=np.float64, norm='l2', use_idf=True, smooth_idf=True, sublinear_tf=False)",
+            "parse_mode": "ast-only"
+          },
+          "kind": "python_ast"
+        },
+        {
+          "source_id": "src-01e94fa0e553de89c2a7a671",
+          "source_key": "sklearn-complementnb",
+          "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/naive_bayes.py",
+          "revision": "1.7.2",
+          "license": "BSD-3-Clause",
+          "content_sha256": "ee265c08217b2b4a0543bd984cb11a962b4d2f4c9a8150332e84f1364b5d37ec",
+          "excerpt_sha256": "f3c9cec2e98c0d8b6fe1ddaa666a30b4ee51feba78ffdf853727cbcdde59a328",
+          "locator": {
+            "path": ".venv/lib/python3.10/site-packages/sklearn/naive_bayes.py",
+            "line_start": 907,
+            "line_end": 1059,
+            "symbol": "ComplementNB",
+            "relative_path": "sklearn/naive_bayes.py",
+            "imports": [
+              "import warnings",
+              "from abc import ABCMeta, abstractmethod",
+              "from numbers import Integral, Real",
+              "import numpy as np",
+              "from scipy.special import logsumexp",
+              "from .base import BaseEstimator, ClassifierMixin, _fit_context",
+              "from .preprocessing import LabelBinarizer, binarize, label_binarize",
+              "from .utils._param_validation import Interval",
+              "from .utils.extmath import safe_sparse_dot",
+              "from .utils.multiclass import _check_partial_fit_first_call",
+              "from .utils.validation import _check_n_features, _check_sample_weight, check_is_fitted, check_non_negative, validate_data"
+            ],
+            "methods": [
+              "__init__",
+              "__sklearn_tags__",
+              "_count",
+              "_update_feature_log_prob",
+              "_joint_log_likelihood"
+            ],
+            "signature": "class ComplementNB(_BaseDiscreteNB):\n    def __init__(self, *, alpha=1.0, force_alpha=True, fit_prior=True, class_prior=None, norm=False)",
+            "parse_mode": "ast-only"
+          },
+          "kind": "python_ast"
+        },
+        {
+          "source_id": "src-3ffc9e28ebb19e6bea23cac4",
+          "source_key": "sklearn-multinomialnb",
+          "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/naive_bayes.py",
+          "revision": "1.7.2",
+          "license": "BSD-3-Clause",
+          "content_sha256": "ee265c08217b2b4a0543bd984cb11a962b4d2f4c9a8150332e84f1364b5d37ec",
+          "excerpt_sha256": "e4c09dd5071c2181b54b2fff2cef627587ee19120b67537017de32b9f49f7921",
+          "locator": {
+            "path": ".venv/lib/python3.10/site-packages/sklearn/naive_bayes.py",
+            "line_start": 779,
+            "line_end": 904,
+            "symbol": "MultinomialNB",
+            "relative_path": "sklearn/naive_bayes.py",
+            "imports": [
+              "import warnings",
+              "from abc import ABCMeta, abstractmethod",
+              "from numbers import Integral, Real",
+              "import numpy as np",
+              "from scipy.special import logsumexp",
+              "from .base import BaseEstimator, ClassifierMixin, _fit_context",
+              "from .preprocessing import LabelBinarizer, binarize, label_binarize",
+              "from .utils._param_validation import Interval",
+              "from .utils.extmath import safe_sparse_dot",
+              "from .utils.multiclass import _check_partial_fit_first_call",
+              "from .utils.validation import _check_n_features, _check_sample_weight, check_is_fitted, check_non_negative, validate_data"
+            ],
+            "methods": [
+              "__init__",
+              "__sklearn_tags__",
+              "_count",
+              "_update_feature_log_prob",
+              "_joint_log_likelihood"
+            ],
+            "signature": "class MultinomialNB(_BaseDiscreteNB):\n    def __init__(self, *, alpha=1.0, force_alpha=True, fit_prior=True, class_prior=None)",
+            "parse_mode": "ast-only"
+          },
+          "kind": "python_ast"
+        },
+        {
+          "source_id": "src-9ca2de7b8493fff6ad94d779",
+          "source_key": "sklearn-ap",
+          "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/metrics/_ranking.py",
+          "revision": "1.7.2",
+          "license": "BSD-3-Clause",
+          "content_sha256": "a1fc02f0b042a3945c37692c9377a746800dd2a90cdc227df5268f218bea3f74",
+          "excerpt_sha256": "0e57d9babe5c6b5a2c7d10e1324922fe2b4da60c87231b3082f7048f2cfc3ff9",
+          "locator": {
+            "path": ".venv/lib/python3.10/site-packages/sklearn/metrics/_ranking.py",
+            "line_start": 118,
+            "line_end": 268,
+            "symbol": "average_precision_score",
+            "relative_path": "sklearn/metrics/_ranking.py",
+            "imports": [
+              "import warnings",
+              "from functools import partial",
+              "from numbers import Integral, Real",
+              "import numpy as np",
+              "from scipy.integrate import trapezoid",
+              "from scipy.sparse import csr_matrix, issparse",
+              "from scipy.stats import rankdata",
+              "from ..exceptions import UndefinedMetricWarning",
+              "from ..preprocessing import label_binarize",
+              "from ..utils import assert_all_finite, check_array, check_consistent_length, column_or_1d",
+              "from ..utils._encode import _encode, _unique",
+              "from ..utils._param_validation import Interval, StrOptions, validate_params",
+              "from ..utils.extmath import stable_cumsum",
+              "from ..utils.multiclass import type_of_target",
+              "from ..utils.sparsefuncs import count_nonzero",
+              "from ..utils.validation import _check_pos_label_consistency, _check_sample_weight",
+              "from ._base import _average_binary_score, _average_multiclass_ovo_score"
+            ],
+            "methods": [
+              "_binary_uninterpolated_average_precision"
+            ],
+            "signature": "def average_precision_score(y_true, y_score, *, average='macro', pos_label=1, sample_weight=None)",
+            "parse_mode": "ast-only"
+          },
+          "kind": "python_ast"
+        },
+        {
+          "source_id": "src-d3763791783869c635f954f3",
+          "source_key": "sklearn-rocauc",
+          "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/metrics/_ranking.py",
+          "revision": "1.7.2",
+          "license": "BSD-3-Clause",
+          "content_sha256": "a1fc02f0b042a3945c37692c9377a746800dd2a90cdc227df5268f218bea3f74",
+          "excerpt_sha256": "e1defd1db3e08e8eb135d035b647ed3e86e70f70ac925a7623039af10d4363d8",
+          "locator": {
+            "path": ".venv/lib/python3.10/site-packages/sklearn/metrics/_ranking.py",
+            "line_start": 466,
+            "line_end": 700,
+            "symbol": "roc_auc_score",
+            "relative_path": "sklearn/metrics/_ranking.py",
+            "imports": [
+              "import warnings",
+              "from functools import partial",
+              "from numbers import Integral, Real",
+              "import numpy as np",
+              "from scipy.integrate import trapezoid",
+              "from scipy.sparse import csr_matrix, issparse",
+              "from scipy.stats import rankdata",
+              "from ..exceptions import UndefinedMetricWarning",
+              "from ..preprocessing import label_binarize",
+              "from ..utils import assert_all_finite, check_array, check_consistent_length, column_or_1d",
+              "from ..utils._encode import _encode, _unique",
+              "from ..utils._param_validation import Interval, StrOptions, validate_params",
+              "from ..utils.extmath import stable_cumsum",
+              "from ..utils.multiclass import type_of_target",
+              "from ..utils.sparsefuncs import count_nonzero",
+              "from ..utils.validation import _check_pos_label_consistency, _check_sample_weight",
+              "from ._base import _average_binary_score, _average_multiclass_ovo_score"
+            ],
+            "methods": [],
+            "signature": "def roc_auc_score(y_true, y_score, *, average='macro', sample_weight=None, max_fpr=None, multi_class='raise', labels=None)",
+            "parse_mode": "ast-only"
+          },
+          "kind": "python_ast"
+        }
+      ],
+      "live_database_accessed": false,
+      "llm_extraction_invoked": false
+    },
+    "environment": {
+      "method": "Settings(root=repository), without .env or credentials",
+      "api_connectivity_probed": false,
+      "local_model_started": false
+    }
+  },
+  "captures": [
+    {
+      "file": "docs/images/workbench-overview.png",
+      "title": "工作台概览",
+      "route": "/",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "sha256": "bcc7972940d6e6ef9cf71871eec5b713103fd7e06c65c209981c217cb2c903d4",
+      "historical_run_id": null,
+      "gpu_fixture": "offline-cpu-configuration"
+    },
+    {
+      "file": "docs/images/task-workbench.png",
+      "title": "任务配置与自然语言需求",
+      "route": "/workbench?dataset=sms&provider=mock",
+      "viewport": {
+        "width": 1440,
+        "height": 1200
+      },
+      "sha256": "9989d69e20646efe6b87a279dd98bbfa83b686c9f85dec425bd8181706afc965",
+      "historical_run_id": null,
+      "gpu_fixture": "offline-cpu-configuration"
+    },
+    {
+      "file": "docs/images/model-settings.png",
+      "title": "API 与本地模型配置",
+      "route": "/settings",
+      "viewport": {
+        "width": 1440,
+        "height": 1160
+      },
+      "sha256": "90083d9b0023e4ef73d0e2cbb72b3ceb918600425f0d77c4a83d1d7aa06c532a",
+      "historical_run_id": null,
+      "gpu_fixture": "offline-cpu-configuration"
+    },
+    {
+      "file": "docs/images/gpu-status-bar.png",
+      "title": "GPU 状态栏（明确标注的模拟状态）",
+      "route": "/settings",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "738b4de6fba269b21477e3db12e1e83c8cd061936030bdf36a1690e2c591cbc8",
+      "historical_run_id": null,
+      "gpu_fixture": "explicitly-labelled-2-of-4-simulation"
+    },
+    {
+      "file": "docs/images/workbench-report.png",
+      "title": "独立验证报告与历史 API 指标",
+      "route": "/runs/660682f3cf324bf1938b78c70f2fce8c",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      },
+      "sha256": "1c6df5944ef320313dba851ab5b1d222387ff6bfee3f13035d987da86f70777a",
+      "historical_run_id": "660682f3cf324bf1938b78c70f2fce8c",
+      "gpu_fixture": "offline-cpu-configuration"
+    },
+    {
+      "file": "docs/images/agent-observability.png",
+      "title": "历史事件投影、Agent 时序与预算",
+      "route": "/runs/660682f3cf324bf1938b78c70f2fce8c",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      },
+      "sha256": "a7178e73c80fcd5971fc7d4bb34651da5619532e44e9f1eea6f73d6aec6be650",
+      "historical_run_id": "660682f3cf324bf1938b78c70f2fce8c",
+      "gpu_fixture": "offline-cpu-configuration"
+    },
+    {
+      "file": "docs/images/resource-tradeoffs.png",
+      "title": "本地模型候选质量与资源实测权衡",
+      "route": "/runs/99066c21c7f64134bcde65a0ef068473",
+      "viewport": {
+        "width": 1440,
+        "height": 620
+      },
+      "sha256": "74c19384de1b8ab0dc8d03ae9834d004c45979c4cf4bedda28b34761ece6aa67",
+      "historical_run_id": "99066c21c7f64134bcde65a0ef068473",
+      "gpu_fixture": "offline-cpu-configuration"
+    },
+    {
+      "file": "docs/images/workbench-graph.png",
+      "title": "来源、能力与历史验证组成的知识图谱",
+      "route": "/knowledge",
+      "viewport": {
+        "width": 1680,
+        "height": 1100
+      },
+      "sha256": "d9409f761d7e79b53d923cd122c842cdf25ba656b2f2e5b5ebc8ae1796e06f3c",
+      "historical_run_id": null,
+      "gpu_fixture": "offline-cpu-configuration"
+    }
+  ]
+}
