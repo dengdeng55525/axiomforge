@@ -1,8 +1,8 @@
 {
   "schema_version": "documentation-capture.v1",
   "brand": "AxiomForge · 知衡",
-  "captured_at": "2026-10-03T15:49:55.057Z",
-  "source_base_commit": "30eda6e432a0cdc0e36b477d734479cea6f7285b",
+  "captured_at": "2026-10-03T16:05:39.838Z",
+  "source_base_commit": "d4983843a22f3354661ece0fbf333b2c803b8e16",
   "source_worktree_dirty": true,
   "source_inputs": [
     {
@@ -103,14 +103,18 @@
     }
   ],
   "build_assets_sha256": "43a12f3f5871fe8f7104cbf04d3ba72d6270bd89051f72e680f9b4357174b222",
-  "reproduction": "npm --prefix web run build && node web/scripts/capture-docs.mjs",
+  "reproduction": "node web/node_modules/.bin/vue-tsc --noEmit && node web/node_modules/.bin/vite build && node web/scripts/capture-docs.mjs && node web/scripts/capture-cli-docs.mjs",
   "policy": {
     "requests_intercepted": true,
     "external_network_requests": 0,
     "provider_calls": 0,
     "live_database_writes": 0,
     "metrics_fabricated": false,
-    "context": "Historical reports rendered by current UI. Default empty-credential configuration. GPU demonstration is visibly labelled as simulated."
+    "context": "Historical reports rendered by current UI. Default empty-credential configuration. GPU demonstration is visibly labelled as simulated.",
+    "cli_external_network_requests": 0,
+    "cli_provider_calls": 0,
+    "cli_live_database_writes": 0,
+    "cli_workspace": "disposable temporary root under /tmp"
   },
   "provenance": {
     "reports": [
@@ -1060,6 +1064,104 @@
       "sha256": "8bdd86b4505fb388fe83d38793669314659110f01915408141d5ef5e8d2e60a7",
       "historical_run_id": null,
       "gpu_fixture": "offline-cpu-configuration"
+    },
+    {
+      "file": "docs/images/cli-init.png",
+      "title": "CLI 初始化知识底座",
+      "route": "cli",
+      "command": "axiomforge init --provider mock",
+      "viewport": {
+        "width": 1800,
+        "height": 1100
+      },
+      "sha256": "1695ed7245b2fdda2d13e2b1498de6e3a73da9c2e8d95f3e28d97b9c6a29d078",
+      "source_output_sha256": "a53037fff661c39b2346167e3ce0605277d289adad8e6f0f2c2b4ea6ff8e62a5",
+      "historical_run_id": null,
+      "capture_type": "cli-offline-command"
+    },
+    {
+      "file": "docs/images/cli-doctor.png",
+      "title": "CLI 环境诊断与安全边界",
+      "route": "cli",
+      "command": "axiomforge doctor",
+      "viewport": {
+        "width": 1800,
+        "height": 1100
+      },
+      "sha256": "c0c422d17c1bb876a4cac16dd812fe65cbe4712c7b5364a9596f0776aeb30344",
+      "source_output_sha256": "7de9ceaa37a6aba4868114a3fe201ffee604d0db94188b22040577a03eb1f9ad",
+      "historical_run_id": null,
+      "capture_type": "cli-offline-command"
+    },
+    {
+      "file": "docs/images/cli-status.png",
+      "title": "CLI 运行状态总览",
+      "route": "cli",
+      "command": "axiomforge status --recent 2",
+      "viewport": {
+        "width": 1800,
+        "height": 1100
+      },
+      "sha256": "d660d84d14746e6ceea11a568bca19f9ec48b900566310ccb3ca8ea65c9d3c79",
+      "source_output_sha256": "ae2aceca8bd8157ae65c64e983880556fa1869728228469add0a9a4589c85d6d",
+      "historical_run_id": null,
+      "capture_type": "cli-offline-command"
+    },
+    {
+      "file": "docs/images/cli-run.png",
+      "title": "CLI 运行完整能力闭环",
+      "route": "cli",
+      "command": "axiomforge run --provider mock --dataset bank --search compare",
+      "viewport": {
+        "width": 1800,
+        "height": 1100
+      },
+      "sha256": "2bc0c8e701539ae28c138557b8ccb26f9a231be87622c7890397dc0f8d258988",
+      "source_output_sha256": "562acc303e4f6050db18ec4f1643126206f9ab39e5e6be7cf1047fb6936bb67c",
+      "historical_run_id": null,
+      "capture_type": "cli-offline-command"
+    },
+    {
+      "file": "docs/images/cli-harness-cases.png",
+      "title": "CLI Harness 用例目录",
+      "route": "cli",
+      "command": "axiomforge harness cases",
+      "viewport": {
+        "width": 1800,
+        "height": 1100
+      },
+      "sha256": "117268aeeca2efd8874d5dccd9e75d695f245fee86798b9154b85403e5f83615",
+      "source_output_sha256": "ab9c6a8a8c60280b6e11fc744153cfe5a7ac2c3f67d8b4b3a016bc495b97b79e",
+      "historical_run_id": null,
+      "capture_type": "cli-offline-command"
+    },
+    {
+      "file": "docs/images/cli-harness-suite-replay.png",
+      "title": "CLI Harness 聚合评测与游标回放",
+      "route": "cli",
+      "command": "axiomforge harness suite 054caa853a1847eea03371788485cf21 && axiomforge harness replay 054caa853a1847eea03371788485cf21 --through 12",
+      "viewport": {
+        "width": 1800,
+        "height": 1100
+      },
+      "sha256": "0c90f7b2bda33cdbde06ad06828226653e59bee282d3673e9f86ad164fc4d69b",
+      "source_output_sha256": "d546c990f0101a3a798813031107b1655060635caff5d1be4c102844f4b34f4e",
+      "historical_run_id": "054caa853a1847eea03371788485cf21",
+      "capture_type": "cli-offline-command"
+    },
+    {
+      "file": "docs/images/cli-export-report-analyze.png",
+      "title": "CLI 图谱、报告与资源分析",
+      "route": "cli",
+      "command": "axiomforge export-graph && axiomforge report 054caa853a1847eea03371788485cf21 && axiomforge analyze-run 054caa853a1847eea03371788485cf21",
+      "viewport": {
+        "width": 1800,
+        "height": 1100
+      },
+      "sha256": "8bc40315cd4cbc85c95ec6e02ce064f5613d27961e67789cfc2ecdcc2712e982",
+      "source_output_sha256": "f8c149cecb6c880e39de09b9b15892942b6ddb4e5cdfb693fe99eb73cf202d5a",
+      "historical_run_id": "054caa853a1847eea03371788485cf21",
+      "capture_type": "cli-offline-command"
     }
   ]
 }

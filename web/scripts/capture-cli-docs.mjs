@@ -232,7 +232,11 @@ const caseView = cases.cases.map((item) => ({
   dataset_id: item.dataset_id,
   required_event_types: item.required_event_types.length,
   required_roles: item.required_roles.length,
-  checks: item.checks.length,
+  checks:
+    item.required_event_types.length +
+    item.required_roles.length +
+    Number(Boolean(item.require_repair_evidence)) +
+    Number(Boolean(item.require_selected_candidate)),
 }));
 const suiteSummary = {
   schema_version: suite.schema_version,
