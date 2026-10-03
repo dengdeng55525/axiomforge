@@ -1,8 +1,8 @@
 {
   "schema_version": "documentation-capture.v1",
   "brand": "AxiomForge · 知衡",
-  "captured_at": "2026-10-03T16:05:39.838Z",
-  "source_base_commit": "d4983843a22f3354661ece0fbf333b2c803b8e16",
+  "captured_at": "2026-10-03T16:24:50.643Z",
+  "source_base_commit": "ae637f0167140c0f5e9fc8f55b68271512369863",
   "source_worktree_dirty": true,
   "source_inputs": [
     {
@@ -95,7 +95,7 @@
     },
     {
       "path": "web/scripts/capture-docs.mjs",
-      "sha256": "cd2d049fec5e55571136588585ec0c348e28ad9bea6defea8e27d965fc75c51a"
+      "sha256": "306cb713eb1857e8a1b98050332d27ed84a9b345a04bb8a23254cebcf289168a"
     },
     {
       "path": "scripts/capture_docs_fixtures.py",
@@ -1061,7 +1061,7 @@
         "width": 1680,
         "height": 1100
       },
-      "sha256": "8bdd86b4505fb388fe83d38793669314659110f01915408141d5ef5e8d2e60a7",
+      "sha256": "5082d0d20fa182b68513ee93eae6312f1e7713961625230ef674d52768721861",
       "historical_run_id": null,
       "gpu_fixture": "offline-cpu-configuration"
     },
@@ -1089,7 +1089,7 @@
         "height": 1100
       },
       "sha256": "c0c422d17c1bb876a4cac16dd812fe65cbe4712c7b5364a9596f0776aeb30344",
-      "source_output_sha256": "7de9ceaa37a6aba4868114a3fe201ffee604d0db94188b22040577a03eb1f9ad",
+      "source_output_sha256": "8295bc80526391369a0d59cd60d865b5a85cf437cc5dea5eb3d301ea1baa06fd",
       "historical_run_id": null,
       "capture_type": "cli-offline-command"
     },
@@ -1103,7 +1103,7 @@
         "height": 1100
       },
       "sha256": "d660d84d14746e6ceea11a568bca19f9ec48b900566310ccb3ca8ea65c9d3c79",
-      "source_output_sha256": "ae2aceca8bd8157ae65c64e983880556fa1869728228469add0a9a4589c85d6d",
+      "source_output_sha256": "b8b6c58f03dd6128ac30b06ec3de86185614729a4ac7cf107c6b9924b4eb4506",
       "historical_run_id": null,
       "capture_type": "cli-offline-command"
     },
@@ -1116,8 +1116,8 @@
         "width": 1800,
         "height": 1100
       },
-      "sha256": "2bc0c8e701539ae28c138557b8ccb26f9a231be87622c7890397dc0f8d258988",
-      "source_output_sha256": "562acc303e4f6050db18ec4f1643126206f9ab39e5e6be7cf1047fb6936bb67c",
+      "sha256": "1704a0e253481fb9fc92dbf751fef88b6e997f1c9745b662c872115319be5b79",
+      "source_output_sha256": "2a55b55d2a78548bd30f8d5b8efb1d96371fc1e25893e53d1c9261d377e5999b",
       "historical_run_id": null,
       "capture_type": "cli-offline-command"
     },
@@ -1131,7 +1131,7 @@
         "height": 1100
       },
       "sha256": "117268aeeca2efd8874d5dccd9e75d695f245fee86798b9154b85403e5f83615",
-      "source_output_sha256": "ab9c6a8a8c60280b6e11fc744153cfe5a7ac2c3f67d8b4b3a016bc495b97b79e",
+      "source_output_sha256": "606d7c382baac4d7dfb2ba2986d682627af447ac405ab055c0ec5e48dd64e52e",
       "historical_run_id": null,
       "capture_type": "cli-offline-command"
     },
@@ -1139,28 +1139,28 @@
       "file": "docs/images/cli-harness-suite-replay.png",
       "title": "CLI Harness 聚合评测与游标回放",
       "route": "cli",
-      "command": "axiomforge harness suite 054caa853a1847eea03371788485cf21 && axiomforge harness replay 054caa853a1847eea03371788485cf21 --through 12",
+      "command": "axiomforge harness suite d60a7139880d4e36b60cc6558f3436c8 && axiomforge harness replay d60a7139880d4e36b60cc6558f3436c8 --through 12",
       "viewport": {
         "width": 1800,
         "height": 1100
       },
-      "sha256": "0c90f7b2bda33cdbde06ad06828226653e59bee282d3673e9f86ad164fc4d69b",
-      "source_output_sha256": "d546c990f0101a3a798813031107b1655060635caff5d1be4c102844f4b34f4e",
-      "historical_run_id": "054caa853a1847eea03371788485cf21",
+      "sha256": "8fbc2bf23f9d17971dcc009fd5633c817a833f3ecfad0daa7a8544fcd6883c11",
+      "source_output_sha256": "63a9b58b202968634dc24d1ce16a165c50e15931f6d21a5653e6418f5d8b5ddc",
+      "historical_run_id": "d60a7139880d4e36b60cc6558f3436c8",
       "capture_type": "cli-offline-command"
     },
     {
       "file": "docs/images/cli-export-report-analyze.png",
       "title": "CLI 图谱、报告与资源分析",
       "route": "cli",
-      "command": "axiomforge export-graph && axiomforge report 054caa853a1847eea03371788485cf21 && axiomforge analyze-run 054caa853a1847eea03371788485cf21",
+      "command": "axiomforge export-graph && axiomforge report d60a7139880d4e36b60cc6558f3436c8 && axiomforge analyze-run d60a7139880d4e36b60cc6558f3436c8",
       "viewport": {
         "width": 1800,
         "height": 1100
       },
-      "sha256": "8bc40315cd4cbc85c95ec6e02ce064f5613d27961e67789cfc2ecdcc2712e982",
-      "source_output_sha256": "f8c149cecb6c880e39de09b9b15892942b6ddb4e5cdfb693fe99eb73cf202d5a",
-      "historical_run_id": "054caa853a1847eea03371788485cf21",
+      "sha256": "5e0c3681866a0f73989ab8244d8521c8b0739cf928948edb4c7dc2a91b0f4f9e",
+      "source_output_sha256": "4e1ac420c49075b0559d61c02334eee54c65c8da86b39711c610e87733105198",
+      "historical_run_id": "d60a7139880d4e36b60cc6558f3436c8",
       "capture_type": "cli-offline-command"
     }
   ]

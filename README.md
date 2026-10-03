@@ -26,7 +26,7 @@ Knowledge-grounded agents for reproducible algorithm engineering.
 
 工作台将任务、报告和知识放在同一个研发空间：从需求进入运行，从结论展开证据，再沿图谱追溯来源与历史。
 
-文中截图由当前前端渲染仓库历史报告与文档配置；[截图来源清单](docs/images/capture-manifest.json)记录报告来源、构建信息、图像哈希与复现命令。
+文中截图由当前前端渲染仓库历史报告与文档配置；[截图来源清单](docs/images/capture-manifest.json)记录报告来源、构建信息、图像哈希与复现命令。当前清单包含 8 张 Web 工作台截图和 7 张 CLI 过程截图，共 15 张上下文证据。
 
 | 核心能力 | 工程价值 |
 | --- | --- |
@@ -68,6 +68,10 @@ axiomforge report RUN_ID --format html --output artifacts/demo-report.html
 
 Mock 使用确定性规则产生角色响应，同时执行真实的数据处理、算法训练和验证。报告通过 `mode` 区分 Mock 与真实模型运行。Python 模块入口 `python -m capability_factory` 与 `axiomforge` 命令等价。
 
+![CLI 初始化知识底座：mock provider、来源索引与能力卡](docs/images/cli-init.png)
+
+CLI 初始化在临时工作区写入 SQLite 知识底座，并输出种子卡片数量、来源数量和运行模式。文档截图由真实 `axiomforge init --provider mock` 输出渲染。
+
 ### CLI 运行契约
 
 CLI 与 Web 使用同一套 `Workflow`、SQLite 知识库和报告格式。诊断、治理和 Harness 命令默认读取本地事实；模型调用仅由 `run`、`init` 和显式的 `doctor --check-api` 触发。
@@ -95,6 +99,12 @@ axiomforge validate RUN_ID --suite \
 ```
 
 每个 JSON 都包含 `schema_version`、检查结果、退出依据和运行标识，可直接交给 CI、报告页面或后续审计流程。`--output` 是唯一写入路径；命令本身不会修改全局环境、CUDA、代理或 SSH 配置。
+
+![CLI 状态总览：Provider、知识库、数据集与四卡槽位](docs/images/cli-status.png)
+
+![CLI 环境诊断：执行器限制、脱敏配置与 GPU 探测](docs/images/cli-doctor.png)
+
+`status` 适合开发者进入项目后的第一条命令，`doctor` 用于定位依赖、数据和端点配置。两者默认离线读取本地事实，输出可保存为 CI 附件。
 
 ## Web 研发工作台
 
@@ -128,6 +138,10 @@ axiomforge validate RUN_ID --suite \
 | 知识探索 | `/app/#/knowledge` | `/graph/explore`、`/capabilities/{id}`、`/knowledge/quality` |
 | 运行历史 | `/app/#/history` | `/runs` |
 | 模型与环境 | `/app/#/settings` | `/config`、`/health`、`/inference/profiles` |
+
+![CLI 运行完整能力闭环：run_id、候选指标与报告路径](docs/images/cli-run.png)
+
+CLI 和 Web 进入同一个 Workflow。命令行输出保留运行标识、候选摘要、模型用量和报告路径，便于脚本继续调用 `validate`、`harness`、`report` 与 `analyze-run`。
 
 ## 模型接入与计算资源
 
@@ -380,6 +394,8 @@ axiomforge harness suite RUN_ID --output artifacts/harness/suite.json
 axiomforge harness replay RUN_ID --through 12
 ```
 
+![CLI Harness 用例目录：端到端、修复、跨场景与脱敏契约](docs/images/cli-harness-cases.png)
+
 | 接口 | 输出 |
 | --- | --- |
 | `GET /harness/cases` | 已登记的银行、短信、修复和脱敏用例 |
@@ -387,6 +403,10 @@ axiomforge harness replay RUN_ID --through 12
 | `GET /runs/{id}/harness-suite` | 全部登记用例的聚合分数、失败用例与逐项结果 |
 
 `suite` 对一条运行执行整个用例目录；不同任务、修复要求与预期状态由各用例独立判定。定向回归可选择与运行协议对应的单用例。Harness 只读已保存事实，无模型调用、无生成代码执行；schema 与扩展方式见 [离线评测指南](docs/17_Agent_Harness_离线评测.md)。
+
+![CLI Harness 聚合评测与游标回放：suite 结果和事件 spans](docs/images/cli-harness-suite-replay.png)
+
+`suite` 负责聚合用例结果，`replay` 负责按游标回放脱敏事件。两条命令组合后可以从总体状态进入具体角色交接。
 
 ## 知识图谱与能力资产
 
@@ -423,6 +443,10 @@ python scripts/export_graphml.py --output artifacts/graph.graphml
 ```
 
 JSON 服务于 API 与前端，GraphML 供 Gephi、yEd 和图分析工具交换。两种导出都读取同一份 SQLite 图谱。
+
+![CLI 图谱、报告与资源分析：导出、重生成和 Pareto 证据](docs/images/cli-export-report-analyze.png)
+
+图谱导出、报告重生成和资源分析共用同一份持久化运行事实；导出的 JSON、Markdown 和资源分析结果可以独立归档。
 
 ### 知识治理与制品完整性
 

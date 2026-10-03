@@ -303,8 +303,18 @@ try {
   );
 
   if (errors.length) throw new Error(`Browser errors: ${errors.join("; ")}`);
+  const manifestPath = path.join(output, "capture-manifest.json");
+  let preservedCliCaptures = [];
+  try {
+    const previous = JSON.parse(await fs.readFile(manifestPath, "utf8"));
+    preservedCliCaptures = (previous.captures || []).filter(
+      (item) => item.capture_type === "cli-offline-command",
+    );
+  } catch {
+    preservedCliCaptures = [];
+  }
   await fs.writeFile(
-    path.join(output, "capture-manifest.json"),
+    manifestPath,
     `${JSON.stringify(
       {
         schema_version: "documentation-capture.v1",
@@ -334,7 +344,7 @@ try {
             "Historical reports rendered by current UI. Default empty-credential configuration. GPU demonstration is visibly labelled as simulated.",
         },
         provenance: fixtures.provenance,
-        captures,
+        captures: [...captures, ...preservedCliCaptures],
       },
       null,
       2,
