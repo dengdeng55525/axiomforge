@@ -48,7 +48,7 @@ Knowledge-grounded agents for reproducible algorithm engineering.
 
 演示时长 **6 分 23 秒**，展示工作台、任务配置、验证报告与知识图谱交互。点击下方播放器即可在 GitHub 内观看，也可[下载原始 MP4](display/display.mp4)。
 
-https://github.com/user-attachments/assets/ef5e2318-a0b2-44e6-9c0f-b5b0f795cff8
+https://github.com/user-attachments/assets/0716fbd6-675a-4dd8-863c-39e44db8545a
 
 ## 系统框架与模块设计
 
