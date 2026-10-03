@@ -49,6 +49,20 @@ def test_doctor_without_api_check_returns_safe_operator_checks(tmp_path, monkeyp
     assert "fixture-private" not in result.output
 
 
+def test_doctor_api_check_failure_has_nonzero_exit_without_proxy_side_effect(tmp_path, monkeypatch):
+    settings = Settings(root=tmp_path, api_key=SecretStr("fixture-private"))
+    monkeypatch.setattr("capability_factory.cli.load_settings", lambda: settings)
+    monkeypatch.setattr("capability_factory.cli.HTTPProvider", lambda settings: (_ for _ in ()).throw(
+        ValueError("fixture endpoint rejected")))
+
+    result = CliRunner().invoke(app, ["doctor", "--provider", "deepseek", "--check-api"])
+
+    assert result.exit_code == 1, result.output
+    payload = json.loads(result.output)
+    assert payload["api_status"] == "connection_or_response_error"
+    assert "fixture-private" not in result.output
+
+
 def test_validate_missing_database_has_nonzero_exit_and_json_reason(tmp_path, monkeypatch):
     settings = Settings(root=tmp_path)
     monkeypatch.setattr("capability_factory.cli.load_settings", lambda: settings)
