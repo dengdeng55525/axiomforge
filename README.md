@@ -14,19 +14,25 @@ Knowledge-grounded agents for reproducible algorithm engineering.
 
 [![CPU verification](https://github.com/dengdeng55525/axiomforge/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/dengdeng55525/axiomforge/actions/workflows/ci.yml) [![Web verification](https://github.com/dengdeng55525/axiomforge/actions/workflows/frontend.yml/badge.svg?branch=main)](https://github.com/dengdeng55525/axiomforge/actions/workflows/frontend.yml)
 
-[快速开始](#快速离线体验) · [系统架构](#端到端闭环) · [验证报告](#验证报告与结果) · [Agent Harness](#agent-harness-离线评测) · [知识图谱](#知识图谱与能力资产) · [文档中心](docs/README.md)
+[项目目标](#项目背景与目标) · [演示视频](#论文演示视频) · [框架图](#系统框架与模块设计) · [快速开始](#快速离线体验) · [验证报告](#验证报告与结果) · [Agent Harness](#agent-harness-离线评测) · [知识图谱](#知识图谱与能力资产) · [文档中心](docs/README.md)
 
-## 从一次需求到可复用能力
+## 项目背景与目标
 
-算法经验常常分散在业务文档、代码仓库和实验报告中。知衡将来源、适用条件、实现方案和验证结果组织成能力知识图谱，再通过有预算、有合约、有反馈的 Agent 工作流完成算法复刻。每个候选都经过统一的数据与评估协议，成功实现和失败经验共同进入后续检索。
+算法经验分散在业务文档、历史代码、实验记录和验证报告中。AxiomForge · 知衡把这些材料转化为可检索、可验证、可版本化的算法能力资产，再由 Agent 工作流把自然语言需求推进到可运行代码、独立验证和知识回写。
 
 项目以**银行营销响应预测**为主场景，以 **SMS 垃圾信息分类**展示跨场景迁移。两类任务使用公开数据，共享编排、验证、报告与知识接口，分别管理特征规则和数据划分。
+
+项目目标覆盖算法能力工厂的完整闭环：
+
+- 把自然语言需求解析为任务目标、输入输出、业务约束、评价指标和资源预算。
+- 从结构化知识图谱、批准来源和历史失败经验中检索可复用依据。
+- 通过 Interpreter、Planner、Coder、Reviewer、Repair Coder 和 Curator 协作生成多个候选方案。
+- 在受限执行器中检查代码安全、接口规范、功能正确性、指标表现和运行稳定性。
+- 把运行报告、候选代码、失败诊断、修复结果和能力版本保存为下一次检索可以直接使用的证据。
 
 ![知衡工作台：任务入口、运行历史与能力概览](docs/images/workbench-overview.png)
 
 工作台将任务、报告和知识放在同一个研发空间：从需求进入运行，从结论展开证据，再沿图谱追溯来源与历史。
-
-文中截图由当前前端渲染仓库历史报告与文档配置；[截图来源清单](docs/images/capture-manifest.json)记录报告来源、构建信息、图像哈希与复现命令。当前清单包含 8 张 Web 工作台截图和 7 张 CLI 过程截图，共 15 张上下文证据。
 
 | 核心能力 | 工程价值 |
 | --- | --- |
@@ -37,6 +43,33 @@ Knowledge-grounded agents for reproducible algorithm engineering.
 | Agent 观测与 Harness | 角色与工具时序、token 预算、事件回放、版本化离线评测 |
 | 可复现知识资产 | 能力版本、来源哈希、验证记录、失败经验与按需制品完整性核验 |
 | API 与本地推理 | OpenAI Responses、DeepSeek、本地兼容 HTTP、Mock，配套单卡与四卡 14B 配置 |
+
+## 论文演示视频
+
+视频完整演示从任务提交、模型选择、Agent 运行、候选验证、报告查看到知识图谱探索的实际界面流程，时长约 6 分 23 秒。仓库同时保存 MP4 文件和 README 播放入口，公开仓库页面可以直接打开或播放。
+
+<p align="center">
+  <video controls preload="metadata" width="960">
+    <source src="https://raw.githubusercontent.com/dengdeng55525/axiomforge/main/display/display.mp4" type="video/mp4" />
+    <a href="display/display.mp4">打开 AxiomForge 演示视频</a>
+  </video>
+</p>
+
+视频文件：[display/display.mp4](display/display.mp4) · [浏览器直接播放](https://raw.githubusercontent.com/dengdeng55525/axiomforge/main/display/display.mp4)。仓库内文件链接和 Raw 播放链接都指向同一份 MP4 制品。
+
+## 系统框架与模块设计
+
+下面的框架图对应仓库的实际模块边界：用户从 Vue 工作台、FastAPI 或 Typer CLI 进入 Workflow；Agent 角色链负责理解、检索、规划、生成和修复；独立验证器负责算法事实；报告、图谱、Harness 和制品哈希共同形成可追溯的回写闭环。
+
+<p align="center">
+  <img src="AxiomForge_Framework.svg" alt="AxiomForge · 知衡系统框架与运行流程" width="1200" />
+</p>
+
+框架图中的主流程分为九个阶段：需求理解建立固定 `TaskSpec`，证据检索返回能力卡和来源路径，方案规划生成候选，代码生成输出 `build_pipeline(task_spec)`，受控执行完成 AST 和资源检查，独立验证计算指标，Reviewer 与 Repair Coder 在预算内处理失败，Curator 比较候选并整理依据，最终保存代码、报告、事件和知识版本。图中的 Beam 扩展、Agent Trace、Agent Harness、知识治理和 SHA256 核验都是运行后的可复核边界。
+
+模块之间通过明确合约连接：`contracts.py` 定义角色输出，`workflow.py` 管理状态、预算和终止，`agent_runtime.py` 组织 LangChain Runnable，`knowledge.py` 持久化能力图谱，`execution/` 执行受限算法，`reporting.py` 生成 JSON、Markdown 和 HTML，FastAPI、Vue 和 CLI 复用同一份运行事实。
+
+需要深入了解接口、状态机、数据协议、部署和实验记录时，请进入[文档中心](docs/README.md)。文档中心按“首次运行、架构理解、Agent 工程、知识治理、部署验证、扩展开发”组织了完整资料，适合继续阅读代码边界和复现实验。
 
 ## 快速离线体验
 
@@ -288,7 +321,7 @@ sequenceDiagram
 
 算法验证器计算运行期的代码与指标事实；Agent Harness 评估已保存的工作流证据。知识治理和完整性检查是按需复核接口，独立于知识回写路径。边界动作写入事件，模型输出通过结构化合约后进入下一阶段。
 
-## Agent 协作与模块设计
+## Agent 工作流设计与模块协作
 
 一次运行由选定的 Provider 承担多个专职角色。LangChain Core 的 `RunnableSequence` 连接 `invoke_provider → persist_response → validate_contract`，`StructuredTool` 封装只读能力检索，Workflow 控制搜索、修复、预算和终态。
 
@@ -559,7 +592,24 @@ GitHub Actions 分别运行 CPU 与 Web 工作流。浏览器测试使用 HTTP �
 | 前端与报告 | [报告说明](docs/11_前端与报告说明.md)、[交互设计](docs/12_交互工作台与参考设计.md)、[样例目录](examples/README.md) |
 | 部署与验证 | [算力与四卡](docs/05_算力预算与四卡兼容.md)、[部署说明](deploy/README.md)、[实现与验收](docs/08_实现与验收对照.md) |
 
-## 工程挑战与演进
+### 项目交付索引
+
+| 交付主题 | README 阅读位置 | 关键实现或制品 |
+| --- | --- | --- |
+| 项目背景与目标 | [项目背景与目标](#项目背景与目标) | `README.md`、[实施总方案](docs/01_项目实施总方案.md) |
+| 系统架构与模块设计 | [系统框架与模块设计](#系统框架与模块设计)、[端到端闭环](#端到端闭环) | `AxiomForge_Framework.svg`、`src/capability_factory/` |
+| 能力知识图谱 schema 与示例 | [知识图谱与能力资产](#知识图谱与能力资产) | `knowledge/runtime_schema.sql`、`knowledge/seed_capabilities.json`、GraphML 导出 |
+| Agent 工作流设计 | [Agent 工作流设计与模块协作](#agent-工作流设计与模块协作) | `workflow.py`、`agent_runtime.py`、`contracts.py` |
+| 环境配置与运行方法 | [快速离线体验](#快速离线体验)、[模型接入与计算资源](#模型接入与计算资源) | `requirements.txt`、`.env.example`、`deploy/` |
+| 示例数据与测试任务 | [示例数据与行业协议](#示例数据与行业协议) | UCI Bank Marketing、UCI SMS Spam、`configs/` |
+| 生成算法代码 | [生成代码接口](#生成代码接口) | `examples/evidence/*/candidates/`、`execution/` |
+| 验证结果与报告样例 | [验证报告与结果](#验证报告与结果) | JSON / Markdown / HTML 报告、`examples/evidence/` |
+| 工程挑战与解决方案 | [工程挑战、解决方案与后续方向](#工程挑战解决方案与后续方向) | Harness、治理、资源和安全测试 |
+| 后续可扩展方向 | [后续可扩展方向](#后续可扩展方向) | 插件接口、四卡端点池、图存储适配器 |
+
+## 工程挑战、解决方案与后续方向
+
+### 工程挑战与解决方案
 
 | 挑战 | 当前机制 | 复核入口 |
 | --- | --- | --- |
@@ -569,7 +619,18 @@ GitHub Actions 分别运行 CPU 与 Web 工作流。浏览器测试使用 HTTP �
 | 知识与运行逐步演化 | 不可变能力版本、来源哈希、治理与制品核验 | 图谱关系、质量报告、SHA256 清单 |
 | 多后端与设备差异 | 统一模型接口、单卡 / 四副本配置、设备与端点状态分离 | 部署配置、健康检查与本地运行报告 |
 
-当前部署面向本机与受控研发环境。后续扩展围绕专用执行节点与更强隔离、固定预算的重复评测与消融、多卡负载与故障恢复基准、认证与租户隔离，以及时间序列、异常检测和推荐任务插件展开。运行权限与服务暴露范围统一说明在 [SECURITY.md](SECURITY.md)。
+当前部署面向本机与受控研发环境。工程边界、依赖版本、数据协议和运行事实均有对应入口，便于在同一套约束下复现结果。
+
+### 后续可扩展方向
+
+- **更强的 Agent 执行隔离**：将 Reviewer、Repair Coder 和 Curator 拆分为独立任务进程，增加工具权限、并发上限和输出大小治理。
+- **图搜索与候选优化**：把能力图谱路径、候选历史和资源约束加入 Beam Search 或 MCTS 的评分函数，形成跨任务的方案搜索器。
+- **更多行业插件**：加入异常检测、时间序列预测、推荐和图像缺陷识别的数据协议、指标注册表和代码模板。
+- **生产部署能力**：补充模型服务路由、队列、认证、租户隔离、审计存储、灰度发布和自动生成部署清单。
+- **更完整的资源画像**：记录 GPU 显存、吞吐、延迟、CPU/RSS 和单位任务成本，支持四卡端点池的负载均衡与故障恢复基准。
+- **服务化知识图谱**：保持 SQLite 单机复现路径，同时提供 Neo4j 或其他图存储适配器，用于团队级能力协作和权限治理。
+
+运行权限与服务暴露范围统一说明在 [SECURITY.md](SECURITY.md)。
 
 ## 贡献与许可证
 
