@@ -46,16 +46,9 @@ Knowledge-grounded agents for reproducible algorithm engineering.
 
 ## 论文演示视频
 
-视频完整演示从任务提交、模型选择、Agent 运行、候选验证、报告查看到知识图谱探索的实际界面流程，时长约 6 分 23 秒。仓库同时保存 MP4 文件和 README 播放入口，公开仓库页面可以直接打开或播放。
+演示时长 **6 分 23 秒**，展示工作台、任务配置、验证报告与知识图谱交互。点击下方播放器即可在 GitHub 内观看，也可[下载原始 MP4](display/display.mp4)。
 
-<p align="center">
-  <video controls preload="metadata" width="960">
-    <source src="https://raw.githubusercontent.com/dengdeng55525/axiomforge/main/display/display.mp4" type="video/mp4" />
-    <a href="display/display.mp4">打开 AxiomForge 演示视频</a>
-  </video>
-</p>
-
-视频文件：[display/display.mp4](display/display.mp4) · [浏览器直接播放](https://raw.githubusercontent.com/dengdeng55525/axiomforge/main/display/display.mp4)。仓库内文件链接和 Raw 播放链接都指向同一份 MP4 制品。
+https://github.com/user-attachments/assets/ef5e2318-a0b2-44e6-9c0f-b5b0f795cff8
 
 ## 系统框架与模块设计
 
@@ -65,15 +58,24 @@ Knowledge-grounded agents for reproducible algorithm engineering.
   <img src="AxiomForge_Framework.svg" alt="AxiomForge · 知衡系统框架与运行流程" width="1200" />
 </p>
 
-框架图中的主流程分为九个阶段：需求理解建立固定 `TaskSpec`，证据检索返回能力卡和来源路径，方案规划生成候选，代码生成输出 `build_pipeline(task_spec)`，受控执行完成 AST 和资源检查，独立验证计算指标，Reviewer 与 Repair Coder 在预算内处理失败，Curator 比较候选并整理依据，最终保存代码、报告、事件和知识版本。图中的 Beam 扩展、Agent Trace、Agent Harness、知识治理和 SHA256 核验都是运行后的可复核边界。
+图中央的 ①–⑨ 展开主流程：需求理解 → 证据检索 → 方案规划 → 代码生成 → 受控执行 → 独立验证 → 汇总候选 → 比较与终态整理 → 结果交付。橙色支路由 Reviewer 与 Repair Coder 处理候选失败，紫色虚线表示运行期间的可选 Beam 扩展；两条支路都重新经过同一个验证器。底部反馈路径把运行与修复经验写回左侧知识底座，右侧的 Trace、Harness、知识治理和 SHA256 核验用于运行后的独立复核。[打开框架图原图](AxiomForge_Framework.svg)可放大查看模块连接。
 
 模块之间通过明确合约连接：`contracts.py` 定义角色输出，`workflow.py` 管理状态、预算和终止，`agent_runtime.py` 组织 LangChain Runnable，`knowledge.py` 持久化能力图谱，`execution/` 执行受限算法，`reporting.py` 生成 JSON、Markdown 和 HTML，FastAPI、Vue 和 CLI 复用同一份运行事实。
+
+| 模块 | 输入与职责 | 输出与协作边界 |
+| --- | --- | --- |
+| 入口层 `api.py` / `cli.py` / `web/` | 接收需求、数据场景、Provider、候选与修复预算 | 经 `RunRequest` 校验后提交运行，按运行 ID 查询进度与报告 |
+| 编排层 `workflow.py` / `agent_runtime.py` | 固定任务协议、调用角色、管理候选与全局预算 | 有序事件、角色响应、候选计划和终态；统一处理取消与异常 |
+| 知识层 `ingestion.py` / `repository.py` / `knowledge.py` | 摄取文档和 Git 快照，定位来源，检索能力与邻域 | 带版本、来源、约束和路径的能力卡；保存运行与失败经验 |
+| 执行层 `execution/compiler.py` / `runner.py` | 校验构造程序、准备 worker 输入、限制资源 | 预测、检查项、结构化错误和资源测量；主进程独立计算指标 |
+| 交付层 `reporting.py` / `optimization.py` | 聚合候选事实、选中结果、质量与成本 | 三种报告、候选代码、资源比较与 Pareto 前沿 |
+| 复核层 `harness.py` / `knowledge_governance.py` / `reproducibility.py` | 读取已保存轨迹、知识快照和运行制品 | 用例检查、来源与版本治理、SHA256 完整性结果 |
 
 需要深入了解接口、状态机、数据协议、部署和实验记录时，请进入[文档中心](docs/README.md)。文档中心按“首次运行、架构理解、Agent 工程、知识治理、部署验证、扩展开发”组织了完整资料，适合继续阅读代码边界和复现实验。
 
 ## 快速离线体验
 
-使用 Python 3.10+。Mock 模式无需 API Key 或 GPU；完成依赖安装和数据准备后，模型阶段可离线运行。
+使用 Python 3.10+；前端构建使用 Node.js 22.12+。Mock 模式无需 API Key 或 GPU，完整闭环包括真实的 CPU 训练与指标验证。`requirements.txt` 固定复现依赖，`pyproject.toml` 提供可编辑安装与 `axiomforge` 命令。
 
 ```bash
 git clone https://github.com/dengdeng55525/axiomforge.git
@@ -81,7 +83,7 @@ cd axiomforge
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
-python -m pip install -e '.[dev,ui]'
+python -m pip install --no-deps -e .
 python scripts/verify_data.py
 
 axiomforge init --provider mock
@@ -103,7 +105,20 @@ Mock 使用确定性规则产生角色响应，同时执行真实的数据处理
 
 ![CLI 初始化知识底座：mock provider、来源索引与能力卡](docs/images/cli-init.png)
 
-CLI 初始化在临时工作区写入 SQLite 知识底座，并输出种子卡片数量、来源数量和运行模式。文档截图由真实 `axiomforge init --provider mock` 输出渲染。
+`init` 导入来源和种子能力卡，输出摄取数量与模式；`run` 生成候选、执行验证，并把结果写入 `artifacts/runs/<run_id>/`。
+
+### 环境与首次运行检查
+
+所有命令在仓库根目录、项目虚拟环境内执行。先运行 `axiomforge status` 检查数据和知识库，再运行 `axiomforge doctor` 查看执行器与模型配置。数据校验脚本优先校验缓存归档，缺失时从 UCI 下载并核对固定 SHA256；哈希不一致会停止处理。
+
+| 入口 | 启动前准备 | 成功后查看 |
+| --- | --- | --- |
+| CLI / Mock | Python 依赖、数据校验、`init --provider mock` | 终端的 `run_id`、候选摘要、报告路径 |
+| Web / API | 构建 `web/dist/`，启动 FastAPI | `/app/` 工作台、`/docs` 接口说明、`/health` 状态 |
+| 云端 API | 在项目 `.env` 配置服务端 Key、模型 ID 和端点 | `doctor --check-api`，然后在创建任务页选择 Provider |
+| 本地 14B | 启动独立 vLLM 服务，配置单卡或四副本端点 | 模型与环境页面、GPU 状态栏、本地任务报告 |
+
+`python -m capability_factory` 与 `.venv/bin/axiomforge` 可用于明确指定项目环境。出现 `No module named capability_factory` 时，在仓库内执行上述可编辑安装；Web 启动、API / 本地切换和常见问题见[使用指南](docs/07_使用与演示指南.md)。
 
 ### CLI 运行契约
 
@@ -131,7 +146,7 @@ axiomforge validate RUN_ID --suite \
   --output artifacts/harness/RUN_ID-suite.json
 ```
 
-每个 JSON 都包含 `schema_version`、检查结果、退出依据和运行标识，可直接交给 CI、报告页面或后续审计流程。`--output` 是唯一写入路径；命令本身不会修改全局环境、CUDA、代理或 SSH 配置。
+诊断与治理输出包含版本化 `schema_version`，运行级命令同时返回运行标识。`validate --output` 可把检查结果保存为 CI 制品；查询和离线评测复用已保存事实。模型调用、算法训练和知识回写由 `run` 负责。
 
 ![CLI 状态总览：Provider、知识库、数据集与四卡槽位](docs/images/cli-status.png)
 
@@ -337,6 +352,26 @@ sequenceDiagram
 
 角色提示词见 [prompts.py](src/capability_factory/prompts.py)，输出约束见 [contracts.py](src/capability_factory/contracts.py)。调用文件、耗时、模型和 token 统计保存于 `artifacts/runs/<run_id>/llm/` 与报告的 `usage.records`，运行层元数据记录在 `provenance.agent_runtime`。
 
+### 从需求到知识回写
+
+以“仅使用通话前信息，比较客户订购预测方案”为例，Workflow 先加载银行字段白名单和固定划分，再让 Interpreter 提取目标与约束。检索工具返回通话时长禁用规则、混合列处理、未知类别处理和 AP 评价等能力卡；Planner 在 `evidence_ids` 中引用这些依据，并为每个候选记录算法、参数变体和设计理由。
+
+Coder 接收计划、任务协议和检索结果，输出统一的 Pipeline 构造函数。执行器检查构造程序与计划的一致性，再训练和验证；错误以类型、消息和检查项进入 Reviewer。Reviewer 给出诊断与修改建议，Repair Coder 生成下一次代码，随后按相同数据协议重新验证。每次尝试保存独立代码哈希、检查结果与修复记录。
+
+候选比较从通过强制检查的方案中按验证 AP 降序选择，同分时优先训练耗时更短的方案。Curator 使用候选事实总结设计依据和取舍；运行状态、制品和经验随后写回知识库。经过验证的修复经验形成 `verified` 能力卡，待验证建议保留 `proposed` 经验状态。
+
+### 搜索、修复与终止策略
+
+| 控制项 | 实现方式 | 工程作用 |
+| --- | --- | --- |
+| 候选比较 | `--search compare` 在相同数据协议下比较初始方案 | 使算法差异与指标变化可以直接对照 |
+| Beam 扩展 | `--search beam`，宽度 2、深度 2，最多 6 个候选 | 从通过检查的父方案扩展合法变体，记录父子关系和剪枝 |
+| 有限修复 | `--max-repairs` 为 0–2，每次修复重新验证 | 将错误诊断与可运行修复绑定，保留失败到恢复的路径 |
+| 全局预算 | `--max-seconds` 为 10–1800 秒，同时约束调用与 token | 防止角色循环、候选扩展和慢响应持续占用资源 |
+| 终态保存 | 成功、失败、取消与异常均进入终态整理 | 部分候选与失败原因仍可通过运行 ID 查询 |
+
+`--orchestration multi_role` 使用完整角色链；`single_shot` 提供单次生成的对照入口。角色合约、工具调用、预算和最终算法验证均由服务层控制，便于开展固定条件下的编排比较。
+
 ### 工具选型与集成理由
 
 | 工具 | 实际职责 | 选型理由与入口 |
@@ -382,9 +417,22 @@ sequenceDiagram
 
 [示例目录](examples/README.md)提供复现命令、完整报告与候选代码。每个证据包的 `manifest.json` 记录模式、状态、文件哈希和导出范围；[能力抽取样例](examples/evidence/knowledge_extraction.json)展示结构化知识输出。
 
+### 如何阅读一次验证结果
+
+银行 Beam 示例共比较 6 个候选，选中方案的验证 AP 为 **0.182877**，同一验证集的 Dummy AP 为 **0.110706**，绝对提升 **0.072171**；前 10% 联系名单的 Lift 为 **2.093790**。该结果用于衡量客户排序能力，业务阈值与联系预算可以继续结合报告中的 Precision、Recall 和 F1 分析。
+
+短信迁移示例在 1,032 条验证样本上得到 AP **0.959834**、ROC-AUC **0.983741**、F1@0.5 **0.914729**。报告同时保存数据协议、选中候选和验证检查，可沿以下顺序阅读：
+
+1. 打开[银行候选比较报告](examples/evidence/bank_beam/report.md)或[短信迁移报告](examples/evidence/sms_transfer/report.md)，先查看结论与基线。
+2. 查看 `candidates[].checks` 和 `attempts`，定位接口、安全、功能、资源及修复结果。
+3. 沿 `code_path` 打开候选代码，用 `code_sha256` 和制品清单对应具体版本。
+4. 查看 `evidence`、`events` 和 `knowledge_writeback`，追踪选型依据、角色执行与知识沉淀。
+
+JSON 适合程序读取，Markdown 可以直接在 GitHub 浏览，HTML 可下载后在浏览器打开。测试集评分与候选选择分离，当前示例的评估范围为验证集。
+
 ### 生成代码接口
 
-生成器输出 `build_pipeline(task_spec)`。以下节选来自 [bank_beam 的选中候选](examples/evidence/bank_beam/candidates/bank_logistic_default/)：
+生成器输出 `build_pipeline(task_spec)`。以下节选来自 [bank_beam 的选中候选](examples/evidence/bank_beam/candidates/bank_logistic_default/model.py)：
 
 ```python
 from sklearn.compose import ColumnTransformer
@@ -406,6 +454,10 @@ def build_pipeline(task_spec):
 ```
 
 构造程序先通过 AST 白名单解析，再交给受限 worker。可信执行器负责训练、预测和行号对齐，指标由主进程计算。执行范围与部署权限见 [安全说明](SECURITY.md)。
+
+`task_spec` 提供允许的数值列、类别列和随机种子，生成函数只负责返回尚未拟合的 Pipeline。worker 使用训练集拟合预处理与分类器，调用 `predict_proba` 取得正类概率；验证器检查输出长度、有限值、概率范围和边界输入。由执行器统一控制数据读写、标签和指标，避免候选自行改变评估协议。
+
+对于文本任务，插件把列预处理替换为 TF-IDF 与分类器，复用同一个生成和验证框架。完整代码可查看[短信 TF-IDF + ComplementNB 示例](examples/evidence/sms_transfer/candidates/sms_nb_tfidf_default/attempt_0/model.py)。
 
 ## Agent 观测与事件回放
 
@@ -470,6 +522,38 @@ Source ← DERIVED_FROM — Capability v1 ← SUPERSEDES — Capability v2
 
 能力卡完整内容保存在 `cf_capability_versions.card_json`，详情接口可按版本读取。内容哈希支持重复导入去重，历史版本保留来源和验证关系。具体字段、节点示例与导入方式见 [系统架构与接口](docs/03_系统架构与接口.md) 和 [知识库说明](knowledge/README.md)。
 
+### 能力卡与来源示例
+
+下面是 `init --provider mock` 摄取的 `bank-precontact-policy` 能力卡字段节选，表达通话前特征约束及其输入输出：
+
+```json
+{
+  "capability_id": "bank-precontact-policy",
+  "name": "银行营销通话前特征与泄漏防护",
+  "version": 1,
+  "status": "extracted",
+  "task_types": ["tabular_binary_classification"],
+  "input_schema": {
+    "type": "features",
+    "task_types": ["tabular_binary_classification"]
+  },
+  "output_schema": {"type": "implementation-guidance"},
+  "dependencies": ["Python >=3.10", "scikit-learn"]
+}
+```
+
+完整卡片还保存规则摘要、`evidence`、标签、关联能力和来源定位。每条来源包含 `source_id`、`uri`、`revision`、`license`、`locator` 和 `content_sha256`；代码来源进一步定位文件、函数和行号。该能力通过 `DERIVED_FROM` 关联 UCI 字段说明与项目业务协议，通过 `SOLVES` 关联表格二分类任务，生成的算法制品再通过 `IMPLEMENTS` 关联能力版本。
+
+| 持久化表 | 核心字段与约束 | 作用 |
+| --- | --- | --- |
+| `cf_sources` | 来源 ID、内容哈希、来源 JSON | 保留原始证据及抽取定位 |
+| `cf_capability_versions` | `(capability_id, version)` 主键、内容哈希、状态、完整卡片 | 同内容去重，更新生成不可变新版本 |
+| `cf_nodes` / `cf_edges` | 节点类型、属性、关系类型、两端外键、关系唯一约束 | 表达来源、任务、算法、依赖、制品与验证路径 |
+| `cf_runs` / `cf_run_revisions` / `cf_events` | 运行 ID、报告修订、事件序号 | 保存当前报告、历史快照和有序轨迹 |
+| `cf_artifacts` / `cf_failures` | 制品哈希、失败指纹、任务类型、验证状态 | 绑定代码版本、错误诊断和可复用经验 |
+
+能力状态采用 `draft / extracted / verified / deprecated`。同内容重复摄取保持幂等，内容变更产生新版本并用 `SUPERSEDES` 连接前序；失败经验单独记录 `proposed / validated`，通过修复验证后再进入已验证能力。字段定义见 [runtime_schema.sql](knowledge/runtime_schema.sql)，初始内容见 [seed_capabilities.json](knowledge/seed_capabilities.json)。
+
 ```bash
 axiomforge export-graph --output artifacts/graph.json
 python scripts/export_graphml.py --output artifacts/graph.graphml
@@ -487,12 +571,35 @@ JSON 服务于 API 与前端，GraphML 供 Gephi、yEd 和图分析工具交换�
 
 ## 示例数据与行业协议
 
-| 场景 | 公开数据 | 任务约束 | 评价方式 |
+| 场景 | 固定数据版本 | 输入与正类 | 划分与评价 |
 | --- | --- | --- | --- |
-| 银行营销响应 | UCI Bank Marketing | 通话前特征、禁止 `duration`、固定 60/20/20 划分 | AP、Dummy 基线、ROC-AUC、Lift |
-| SMS 垃圾信息分类 | UCI SMS Spam Collection | 文本规范化、分组去重、训练 / 验证 / 测试隔离 | AP、F1、固定分类接口 |
+| 银行营销响应 | UCI Bank Marketing 的 `bank-additional-full.csv`，41,188 行 | 主协议使用 10 个通话前字段，`y=yes` 为正类 | 原始顺序 24,712 / 8,238 / 8,238；AP、Dummy AP、ROC-AUC、Lift |
+| SMS 垃圾信息分类 | UCI SMS Spam Collection，解析 5,574 行，规范化后 5,159 组 | 原始短信文本，`spam` 为正类 | seed=42 分层划分 3,095 / 1,032 / 1,032；AP、F1、概率接口 |
 
 来源、许可、下载方式、行数与 SHA256 记录在 [数据协议](docs/02_数据与知识来源.md)、[数据审计](docs/research/data_audit.json) 和 [来源索引](docs/SOURCES.md)。训练集用于拟合，验证集用于候选比较，封存测试集保持独立。
+
+银行主协议使用 `age`、`job`、`marital`、`education`、`default`、`housing`、`loan`、`pdays`、`previous`、`poutcome`，禁用预测时不可获取的 `duration`。短信按大小写与空白规范化结果分组，保证同一规范化文本不跨集合；TF-IDF 词表与 IDF 仅由训练集拟合。
+
+### 可直接运行的测试任务
+
+```bash
+# 跨场景：比较短信分类候选
+axiomforge run --dataset sms --provider mock \
+  --max-candidates 2 --max-repairs 2 \
+  --description '识别垃圾短信，spam 为正类，比较 TF-IDF 逻辑回归与朴素贝叶斯，输出概率与验证报告。'
+
+# 搜索：银行任务最多扩展 6 个候选
+axiomforge run --dataset bank --provider mock --search beam \
+  --max-candidates 6 --max-seconds 900 \
+  --description '仅使用通话前字段预测客户订购，禁止 duration，比较 AP 与前 10% 名单 Lift。'
+
+# 修复回归：显式注入一次接口故障，观察诊断、修复与重验证
+axiomforge run --dataset bank --provider mock --inject-failure \
+  --max-candidates 2 --max-repairs 2 \
+  --description '比较银行营销预测方案，接口出错时修复并保存失败经验。'
+```
+
+模型配置完成后，将 `--provider mock` 换为 `deepseek`、`openai` 或 `local_http` 即可运行对应后端。任务输入目录见 [task_cases.json](examples/task_cases.json)，包含银行预算、未知类别、泄漏请求、错误修复以及短信去重和空输入等 12 个测试场景。运行后可按任务选择 `bank_e2e`、`bank_repair` 或 `sms_text_transfer` Harness 用例，检查同一条运行的事件、角色和候选证据。
 
 ## 创新性与加分点
 
@@ -583,6 +690,8 @@ GitHub Actions 分别运行 CPU 与 Web 工作流。浏览器测试使用 HTTP �
 
 ## 文档中心
 
+[文档中心](docs/README.md)按研发任务组织完整指南：首次使用可以沿“安装 → 数据 → 运行 → 报告”阅读，开发者可以从“架构 → 合约 → 插件 → 测试”进入源码，本地部署则从“四卡配置 → 模型端点 → 状态诊断”开始。每篇专题文档都链接对应实现和验证材料，便于边读边运行。
+
 | 主题 | 文档 |
 | --- | --- |
 | 安装与使用 | [文档总览](docs/README.md)、[使用指南](docs/07_使用与演示指南.md)、[界面阅读路径](docs/18_前端截图与阅读路径.md) |
@@ -611,24 +720,29 @@ GitHub Actions 分别运行 CPU 与 Web 工作流。浏览器测试使用 HTTP �
 
 ### 工程挑战与解决方案
 
-| 挑战 | 当前机制 | 复核入口 |
+| 开发中遇到的问题 | 解决方案 | 结果与复核入口 |
 | --- | --- | --- |
-| 标签泄漏与指标失真 | 通话前特征协议、固定切分、验证与封存测试隔离 | 数据审计、特征检查、AP 与 Dummy |
-| 生成代码与资源风险 | 受限 AST、可信执行器、进程 CPU / 内存 / 时间预算 | 对抗测试、超时与取消回收 |
-| 模型成本与运行中断 | Provider 显式配置、全局预算、调用超时、取消 | 用量记录、事件和异常回归 |
-| 知识与运行逐步演化 | 不可变能力版本、来源哈希、治理与制品核验 | 图谱关系、质量报告、SHA256 清单 |
-| 多后端与设备差异 | 统一模型接口、单卡 / 四副本配置、设备与端点状态分离 | 部署配置、健康检查与本地运行报告 |
+| 银行通话时长能够抬高离线指标，但在发起联系前不可获得 | TaskSpec 固定字段白名单；生成、构造与验证共用特征策略 | 用 AP、Dummy 和 Lift 评价同一业务协议，见[数据准备](src/capability_factory/datasets.py) |
+| 重复短信会使训练与验证之间共享文本 | 规范化文本分组、seed=42 固定切分；TF-IDF 仅在训练集拟合 | 分组与标签规则进入数据 manifest，见[数据协议](docs/02_数据与知识来源.md) |
+| 本地模型慢响应曾在代码生成前消耗运行预算 | 将总时限贯穿角色调用、候选扩展与验证；超时写入终态和阶段事实 | 能从事件区分模型调用超时、算法执行超时与候选失败，见[预算修复记录](docs/research/budget_beam_validation.json) |
+| JSON 格式错误、接口命名错误和计划与代码不一致会中断执行 | Pydantic 合约、AST 构造器检查、算法与变体核验；真实错误驱动有限修复 | 每次尝试独立保存代码与检查，见[修复示例](examples/evidence/bank_repair/report.md) |
+| 自由代码执行会引入文件、网络和进程资源风险 | 受限构造程序、可信 worker、CPU / 内存 / 时间预算与取消回收 | 支持边界和对抗回归，权限范围见[安全说明](SECURITY.md) |
+| 修复建议和历史知识会随代码、来源与验证结果变化 | 能力内容哈希去重、不可变版本、成功验证绑定经验、来源与关系治理 | 历史版本可追溯，见[知识治理指南](docs/16_知识治理与可复现交付.md) |
+| 长报告与原始 JSON 增加理解成本，异步返回可能覆盖其他运行 | 结论优先、候选比较、证据折叠、运行 ID 绑定请求与事件游标 | 报告可浏览、可下载、可回放，浏览器回归覆盖路由切换和错误恢复 |
+| API、单卡与四副本模型服务具有不同连接和资源状态 | Provider 统一合约；设备可见性与模型端点状态分别展示 | 同一工作台切换模型后端，见[四卡部署与状态诊断](docs/05_算力预算与四卡兼容.md) |
 
 当前部署面向本机与受控研发环境。工程边界、依赖版本、数据协议和运行事实均有对应入口，便于在同一套约束下复现结果。
 
 ### 后续可扩展方向
 
-- **更强的 Agent 执行隔离**：将 Reviewer、Repair Coder 和 Curator 拆分为独立任务进程，增加工具权限、并发上限和输出大小治理。
-- **图搜索与候选优化**：把能力图谱路径、候选历史和资源约束加入 Beam Search 或 MCTS 的评分函数，形成跨任务的方案搜索器。
-- **更多行业插件**：加入异常检测、时间序列预测、推荐和图像缺陷识别的数据协议、指标注册表和代码模板。
-- **生产部署能力**：补充模型服务路由、队列、认证、租户隔离、审计存储、灰度发布和自动生成部署清单。
-- **更完整的资源画像**：记录 GPU 显存、吞吐、延迟、CPU/RSS 和单位任务成本，支持四卡端点池的负载均衡与故障恢复基准。
-- **服务化知识图谱**：保持 SQLite 单机复现路径，同时提供 Neo4j 或其他图存储适配器，用于团队级能力协作和权限治理。
+| 扩展方向 | 现有基础 | 下一步工程目标 |
+| --- | --- | --- |
+| Agent 独立执行与任务调度 | 角色合约、工具边界、全局预算、事件流 | 独立 worker、队列、任务级并发和输出限额，验证取消与故障恢复 |
+| 搜索与跨任务经验迁移 | 有界 Beam、图谱检索、候选谱系与失败记忆 | 将知识路径、资源成本与历史成功率加入评分，比较 MCTS 和 Beam 的固定预算表现 |
+| 更多行业任务 | 表格 / 文本插件、指标与模板注册接口 | 接入异常检测、时序预测和推荐，分别建立切分、泄漏与评估协议 |
+| 四卡运行基准 | 14B 四副本端点池、GPU 状态与算法资源报告 | 记录并发吞吐、P50/P95 延迟、显存、失败重试和单任务成本 |
+| 团队部署与访问控制 | FastAPI、版本化运行、OpenAPI 与部署模板 | 加入认证、租户数据隔离、审计保留策略和分级发布流程 |
+| 服务化知识存储 | SQLite 属性图、能力版本、来源与关系校验 | 增加 Neo4j 适配器与数据迁移校验，保持单机复现入口 |
 
 运行权限与服务暴露范围统一说明在 [SECURITY.md](SECURITY.md)。
 
