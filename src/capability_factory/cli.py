@@ -201,13 +201,14 @@ def status(
     settings = load_settings()
     database = _database_snapshot(settings.db_path, recent_limit=recent)
     try:
-        package_version = importlib.metadata.version("axiomforge")
+        distribution_version = importlib.metadata.version("axiomforge")
     except importlib.metadata.PackageNotFoundError:
-        package_version = __version__
+        distribution_version = None
     gpu = probe_gpus(expected_count=4)
     output({
         "schema_version": "axiomforge-status.v1",
-        "package": {"name": "axiomforge", "version": package_version},
+        "package": {"name": "axiomforge", "version": __version__,
+                     "distribution_version": distribution_version},
         "root": str(settings.root),
         "python": sys.version.split()[0],
         "runtime": runtime_metadata(),
@@ -328,7 +329,7 @@ def doctor(
               "checks": {"python_supported": sys.version_info >= (3, 10),
                          "selected_provider_configured": bool(selected_key.get_secret_value()),
                          "any_dataset_available": any(datasets.values()),
-                         "knowledge_database_ready": database["status"] in {"ready", "missing"},
+                         "knowledge_database_ready": database["status"] == "ready",
                          "gpu_probe_is_process_local": True}}
     if check_api and provider == "openai":
         try:
@@ -359,6 +360,8 @@ def doctor(
         except (httpx.TransportError, ProviderError, ValueError, KeyError, TypeError):
             result["api_status"] = "connection_or_response_error"
     output(result)
+    if check_api and result.get("api_status") != "authenticated":
+        raise typer.Exit(1)
 
 
 @app.command("export-graph")
