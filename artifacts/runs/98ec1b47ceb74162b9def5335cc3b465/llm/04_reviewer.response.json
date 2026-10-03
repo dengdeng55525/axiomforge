@@ -1,0 +1,6 @@
+{
+  "error_type": "plan_consistency",
+  "diagnosis": "The generated code defines a function named broken_pipeline that returns a Pipeline, but it does not match the expected constructor-program interface: the plan requires a function that builds and returns the estimator/pipeline under the expected entrypoint name, and the source policy rejected the code before execution because the generated program is inconsistent with its plan. The code itself is otherwise a valid sklearn pipeline using only allowed preprocessing and LogisticRegression, but the entrypoint/name mismatch prevents plan-consistency validation.",
+  "fix": "Rename the function to the expected entrypoint name required by the task plan (e.g., build_pipeline or the exact name specified in the plan) and ensure it accepts task_spec and returns the constructed Pipeline. Keep the same ColumnTransformer, SimpleImputer, OneHotEncoder, StandardScaler, and LogisticRegression configuration; do not alter the runner, task_spec, feature lists, or metric.",
+  "repairable": true
+}

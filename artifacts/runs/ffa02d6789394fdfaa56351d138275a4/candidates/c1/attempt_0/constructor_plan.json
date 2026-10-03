@@ -1,0 +1,123 @@
+{
+  "kind": "constructor",
+  "name": "Pipeline",
+  "args": [
+    {
+      "kind": "list",
+      "items": [
+        {
+          "kind": "tuple",
+          "items": [
+            "prepare",
+            {
+              "kind": "constructor",
+              "name": "ColumnTransformer",
+              "args": [
+                {
+                  "kind": "list",
+                  "items": [
+                    {
+                      "kind": "tuple",
+                      "items": [
+                        "numeric",
+                        {
+                          "kind": "constructor",
+                          "name": "Pipeline",
+                          "args": [
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "tuple",
+                                  "items": [
+                                    "impute",
+                                    {
+                                      "kind": "constructor",
+                                      "name": "SimpleImputer",
+                                      "args": [],
+                                      "kwargs": {
+                                        "strategy": "median"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "kind": "tuple",
+                                  "items": [
+                                    "scale",
+                                    {
+                                      "kind": "constructor",
+                                      "name": "StandardScaler",
+                                      "args": [],
+                                      "kwargs": {}
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ],
+                          "kwargs": {}
+                        },
+                        {
+                          "kind": "list",
+                          "items": [
+                            "age",
+                            "pdays",
+                            "previous"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "tuple",
+                      "items": [
+                        "categorical",
+                        {
+                          "kind": "constructor",
+                          "name": "OneHotEncoder",
+                          "args": [],
+                          "kwargs": {
+                            "handle_unknown": "ignore"
+                          }
+                        },
+                        {
+                          "kind": "list",
+                          "items": [
+                            "job",
+                            "marital",
+                            "education",
+                            "default",
+                            "housing",
+                            "loan",
+                            "poutcome"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "kwargs": {}
+            }
+          ]
+        },
+        {
+          "kind": "tuple",
+          "items": [
+            "model",
+            {
+              "kind": "constructor",
+              "name": "LogisticRegression",
+              "args": [],
+              "kwargs": {
+                "max_iter": 1000,
+                "random_state": 42
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "kwargs": {}
+}

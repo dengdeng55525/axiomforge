@@ -1,0 +1,26 @@
+{
+  "objective": "构建短信垃圾信息二分类能力，在固定数据集 sms 上比较 TF-IDF 特征配合线性模型与朴素贝叶斯方案，并按 normalized_group_split_v1 保持训练/验证/测试隔离，报告平均精度（AP）、F1 以及接口检查结果。",
+  "constraints": [
+    "仅使用 task_spec 指定的数据集 sms 与特征 text（categorical_features=['text']，numeric_features=[]）。",
+    "任务类型为 text_binary_classification，正类标签为 spam，主指标为 average_precision。",
+    "特征策略固定为 normalized_group_split_v1，不得更改划分协议或评估标签。",
+    "随机种子固定为 seed=42。",
+    "资源上限：cpu=2、memory_mib=2048、timeout_s=120，不得超出。",
+    "仅使用受支持的算法：TF-IDF 特征配合线性分类器或朴素贝叶斯。",
+    "结果需报告 AP、F1 与接口检查结果。",
+    "不得请求或泄露凭据，不得修改 task_spec。"
+  ],
+  "assumptions": [
+    "'线性或朴素贝叶斯方案'指 TF-IDF 加线性模型（如逻辑回归/线性 SVM）与 TF-IDF 加朴素贝叶斯两类候选。",
+    "F1 按正类 spam 计算。",
+    "接口检查指对输入/输出契约与预测接口的合规性验证。",
+    "未指定整轮墙钟预算，因此不设置 requested_run_seconds，沿用宿主 timeout_s=120。"
+  ],
+  "warnings": [
+    "未提供客户端 ID 字段，无法承诺或验证跨客户端分离；只能依据 normalized_group_split_v1 在现有分组字段上做隔离。",
+    "若数据中不存在可用的分组字段，normalized_group_split_v1 的隔离效果可能受限，需在接口检查中说明。",
+    "AP 与 F1 需在隔离的测试集上报告，验证集仅用于选择方案与阈值。"
+  ],
+  "incompatible_requests": [],
+  "requested_run_seconds": null
+}

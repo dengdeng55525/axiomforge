@@ -1,0 +1,30 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "sms_tfidf_logistic_default",
+      "algorithm": "logistic",
+      "variant": "default",
+      "rationale": "使用训练集拟合 TF-IDF 后接 LogisticRegression，适合短信稀疏文本；按固定分组分层协议验证，并以 average precision 比较排序能力。",
+      "evidence_ids": [
+        "text-tfidf",
+        "probability-logistic",
+        "sms-grouped-split",
+        "average-precision"
+      ],
+      "parent_id": null
+    },
+    {
+      "candidate_id": "sms_tfidf_nb_default",
+      "algorithm": "nb",
+      "variant": "default",
+      "rationale": "使用训练集拟合 TF-IDF 后接 ComplementNB；该估计器支持非负 TF-IDF 特征，适合纳入短信文本基线，并按同一协议以 average precision 验证。",
+      "evidence_ids": [
+        "text-tfidf",
+        "complement-naive-bayes",
+        "sms-grouped-split",
+        "average-precision"
+      ],
+      "parent_id": null
+    }
+  ]
+}

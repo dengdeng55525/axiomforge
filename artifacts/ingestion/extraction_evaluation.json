@@ -1,0 +1,270 @@
+{
+  "schema_version": "1.0",
+  "mode": "real",
+  "model": "deepseek-flash",
+  "evaluation_kind": "offline_recorded_extraction_audit",
+  "new_model_calls": 0,
+  "counts": {
+    "submitted_sources": 10,
+    "ingested_corpus_sources": 22,
+    "returned_cards": 9,
+    "schema_valid_cards": 9
+  },
+  "structural_quality": {
+    "required_fields": [
+      "capability_id",
+      "name",
+      "summary",
+      "task_types",
+      "inputs",
+      "outputs",
+      "preconditions",
+      "dependencies",
+      "source_ids"
+    ],
+    "valid_card_rate": 1.0,
+    "nonempty_field_counts": {
+      "capability_id": 9,
+      "name": 9,
+      "summary": 9,
+      "task_types": 9,
+      "inputs": 9,
+      "outputs": 9,
+      "preconditions": 9,
+      "dependencies": 9,
+      "source_ids": 9,
+      "metrics": 6
+    },
+    "empty_metrics_allowed": "Transforms need not define evaluation metrics.",
+    "duplicate_id_count": 0,
+    "duplicate_name_count": 0,
+    "exact_duplicate_summary_count": 0,
+    "duplicate_rate_definition": "Repeated normalized strings after the first occurrence / returned cards.",
+    "duplicate_id_rate": 0.0,
+    "semantic_duplicate_rate": null
+  },
+  "provenance": {
+    "reference_count": 10,
+    "resolved_reference_count": 10,
+    "reference_resolution_rate": 1.0,
+    "cards_with_all_references_resolved": 9,
+    "card_reference_resolution_rate": 1.0,
+    "verified_source_files": 10,
+    "verified_source_locators": 10,
+    "verified_submitted_excerpts": 10,
+    "definition": "References exist in the exact submitted source set and current approved snapshots match. This does not prove every cited source entails every card claim.",
+    "source_checks": [
+      {
+        "source_id": "src-036a9125a071ef6a1ae3c21f",
+        "source_key": "bank-duration",
+        "known_current_source": true,
+        "locator_matches": true,
+        "file_sha256_matches": true,
+        "submitted_excerpt_matches": true
+      },
+      {
+        "source_id": "src-9d912fa3bc826e2bfd7f1aff",
+        "source_key": "project-bank-policy",
+        "known_current_source": true,
+        "locator_matches": true,
+        "file_sha256_matches": true,
+        "submitted_excerpt_matches": true
+      },
+      {
+        "source_id": "src-df4abddd7280ca49a8328ee6",
+        "source_key": "project-sms-split",
+        "known_current_source": true,
+        "locator_matches": true,
+        "file_sha256_matches": true,
+        "submitted_excerpt_matches": true
+      },
+      {
+        "source_id": "src-8a2d3c4ad618f98dc3d974e1",
+        "source_key": "sklearn-pipeline",
+        "known_current_source": true,
+        "locator_matches": true,
+        "file_sha256_matches": true,
+        "submitted_excerpt_matches": true
+      },
+      {
+        "source_id": "src-edb49349edd5d01d96366d15",
+        "source_key": "sklearn-columns",
+        "known_current_source": true,
+        "locator_matches": true,
+        "file_sha256_matches": true,
+        "submitted_excerpt_matches": true
+      },
+      {
+        "source_id": "src-57ad627bd0c9f7e3e2b0f4c4",
+        "source_key": "sklearn-onehot",
+        "known_current_source": true,
+        "locator_matches": true,
+        "file_sha256_matches": true,
+        "submitted_excerpt_matches": true
+      },
+      {
+        "source_id": "src-584b66a31950a968f84ef11b",
+        "source_key": "sklearn-logistic",
+        "known_current_source": true,
+        "locator_matches": true,
+        "file_sha256_matches": true,
+        "submitted_excerpt_matches": true
+      },
+      {
+        "source_id": "src-ecb336a2fa483eb3b4f26d0b",
+        "source_key": "sklearn-tfidf",
+        "known_current_source": true,
+        "locator_matches": true,
+        "file_sha256_matches": true,
+        "submitted_excerpt_matches": true
+      },
+      {
+        "source_id": "src-01e94fa0e553de89c2a7a671",
+        "source_key": "sklearn-complementnb",
+        "known_current_source": true,
+        "locator_matches": true,
+        "file_sha256_matches": true,
+        "submitted_excerpt_matches": true
+      },
+      {
+        "source_id": "src-9ca2de7b8493fff6ad94d779",
+        "source_key": "sklearn-ap",
+        "known_current_source": true,
+        "locator_matches": true,
+        "file_sha256_matches": true,
+        "submitted_excerpt_matches": true
+      }
+    ]
+  },
+  "automatic_review_flags": {
+    "method_names_used_as_metrics": [
+      {
+        "capability_id": "extracted_sklearn_logistic_regression",
+        "value": "predict_proba"
+      }
+    ],
+    "ambiguous_score_metric_labels": [
+      {
+        "capability_id": "extracted_sklearn_pipeline_composition",
+        "value": "score"
+      },
+      {
+        "capability_id": "extracted_sklearn_logistic_regression",
+        "value": "score"
+      },
+      {
+        "capability_id": "extracted_sklearn_complement_nb",
+        "value": "score"
+      }
+    ]
+  },
+  "gold_assertion_evaluation": {
+    "status": "unevaluated_schema_mismatch",
+    "reference_assertions_total": 38,
+    "reference_assertions_in_submitted_source_scope": 17,
+    "reference_assertions_outside_submitted_source_scope": 21,
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "reason": "Recorded output contains prose capability cards, not canonical assertion quadruples. No automatic or hand-invented alignment is counted as model predictions.",
+    "annotation_origin": "manual reference labels grounded in approved local source corpus",
+    "independent_human_validation": false
+  },
+  "semantic_precision": null,
+  "semantic_recall": null,
+  "card_checks": [
+    {
+      "index": 0,
+      "capability_id": "extracted_bank_marketing_tabular_binary_classification",
+      "schema_valid": true,
+      "missing_or_empty_fields": [],
+      "wrong_type_fields": [],
+      "supported_task_types": true,
+      "all_references_resolve_to_submitted_sources": true,
+      "unresolved_source_ids": []
+    },
+    {
+      "index": 1,
+      "capability_id": "extracted_sms_spam_text_binary_classification",
+      "schema_valid": true,
+      "missing_or_empty_fields": [],
+      "wrong_type_fields": [],
+      "supported_task_types": true,
+      "all_references_resolve_to_submitted_sources": true,
+      "unresolved_source_ids": []
+    },
+    {
+      "index": 2,
+      "capability_id": "extracted_sklearn_pipeline_composition",
+      "schema_valid": true,
+      "missing_or_empty_fields": [],
+      "wrong_type_fields": [],
+      "supported_task_types": true,
+      "all_references_resolve_to_submitted_sources": true,
+      "unresolved_source_ids": []
+    },
+    {
+      "index": 3,
+      "capability_id": "extracted_sklearn_column_transformer",
+      "schema_valid": true,
+      "missing_or_empty_fields": [],
+      "wrong_type_fields": [],
+      "supported_task_types": true,
+      "all_references_resolve_to_submitted_sources": true,
+      "unresolved_source_ids": []
+    },
+    {
+      "index": 4,
+      "capability_id": "extracted_sklearn_onehot_encoding",
+      "schema_valid": true,
+      "missing_or_empty_fields": [],
+      "wrong_type_fields": [],
+      "supported_task_types": true,
+      "all_references_resolve_to_submitted_sources": true,
+      "unresolved_source_ids": []
+    },
+    {
+      "index": 5,
+      "capability_id": "extracted_sklearn_logistic_regression",
+      "schema_valid": true,
+      "missing_or_empty_fields": [],
+      "wrong_type_fields": [],
+      "supported_task_types": true,
+      "all_references_resolve_to_submitted_sources": true,
+      "unresolved_source_ids": []
+    },
+    {
+      "index": 6,
+      "capability_id": "extracted_sklearn_tfidf_vectorization",
+      "schema_valid": true,
+      "missing_or_empty_fields": [],
+      "wrong_type_fields": [],
+      "supported_task_types": true,
+      "all_references_resolve_to_submitted_sources": true,
+      "unresolved_source_ids": []
+    },
+    {
+      "index": 7,
+      "capability_id": "extracted_sklearn_complement_nb",
+      "schema_valid": true,
+      "missing_or_empty_fields": [],
+      "wrong_type_fields": [],
+      "supported_task_types": true,
+      "all_references_resolve_to_submitted_sources": true,
+      "unresolved_source_ids": []
+    },
+    {
+      "index": 8,
+      "capability_id": "extracted_average_precision_metric",
+      "schema_valid": true,
+      "missing_or_empty_fields": [],
+      "wrong_type_fields": [],
+      "supported_task_types": true,
+      "all_references_resolve_to_submitted_sources": true,
+      "unresolved_source_ids": []
+    }
+  ],
+  "source_collection_issues": [],
+  "input_artifact_sha256": "5f40d7831c48d9a94c61af2567417d3213f4ff3ab49fc72fb940aa4f37e88728",
+  "gold_sha256": "cec8f2dfbd16be8d17c8ae28a57efffc5cbd431affbfe135a345ca9e4c7ea5bf"
+}

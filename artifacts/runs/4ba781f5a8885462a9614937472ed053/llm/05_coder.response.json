@@ -1,0 +1,4 @@
+{
+  "code": "from sklearn.pipeline import Pipeline\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.naive_bayes import ComplementNB\n\ndef build_pipeline(task_spec):\n    return Pipeline([\n        ('text', TfidfVectorizer(ngram_range=(1, 2), min_df=2, max_features=30000)),\n        ('model', ComplementNB(alpha=2.0)),\n    ])\n",
+  "explanation": "明确标记的离线模板输出"
+}

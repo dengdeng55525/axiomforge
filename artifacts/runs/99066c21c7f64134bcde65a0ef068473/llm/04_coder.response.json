@@ -1,0 +1,4 @@
+{
+  "code": "from sklearn.pipeline import Pipeline\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.naive_bayes import ComplementNB\n\ndef build_pipeline(task_spec):\n    return Pipeline([\n        ('text', TfidfVectorizer(ngram_range=(1, 2), min_df=2, max_features=30000)),\n        ('model', ComplementNB(alpha=0.5)),\n    ])",
+  "explanation": "The generated code creates a scikit-learn pipeline for text binary classification using TfidfVectorizer and ComplementNB. The TfidfVectorizer is configured with ngram_range=(1, 2), min_df=2, and max_features=30000. The ComplementNB classifier has an alpha value of 0.5."
+}

@@ -1,0 +1,4 @@
+{
+  "code": "from sklearn.pipeline import Pipeline\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.naive_bayes import ComplementNB\n\ndef build_pipeline(task_spec):\n    text = TfidfVectorizer(ngram_range=(1, 2), max_features=30000, min_df=2)\n    model = ComplementNB(alpha=0.5)\n    return Pipeline([('text', text), ('model', model)])\n",
+  "explanation": "The plan specifies a default ComplementNB text baseline on TF-IDF features; the evidence confirms TfidfVectorizer with ngram_range=(1,2), max_features=30000, min_df=2 and ComplementNB (non-negative sparse features) as the complementary baseline, so the pipeline uses those exact settings with alpha=0.5 and no random_state (unsupported by ComplementNB)."
+}

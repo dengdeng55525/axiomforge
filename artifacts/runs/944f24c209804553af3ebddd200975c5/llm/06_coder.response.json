@@ -1,0 +1,4 @@
+{
+  "code": "from sklearn.pipeline import Pipeline\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.naive_bayes import ComplementNB\n\ndef build_pipeline(task_spec):\n    vectorizer = TfidfVectorizer(ngram_range=(1, 2), max_features=30000, min_df=2)\n    model = ComplementNB(alpha=1.0)\n    return Pipeline([('text', vectorizer), ('model', model)])\n",
+  "explanation": "Follows the nb/default plan: TF-IDF (1-2 grams, max_features=30000, min_df=2) feeding ComplementNB with default alpha=1.0, matching the text-tfidf and complement-naive-bayes evidence for non-negative sparse SMS features."
+}

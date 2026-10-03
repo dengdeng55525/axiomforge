@@ -1,0 +1,10 @@
+{
+  "summary": "在仅验证集（validation_only，1032 行，正例率 0.125）上，两个候选均通过。sms_logreg_default 的平均精度为 0.9584，较 dummy 基线（0.125）提升 0.8334，ROC-AUC 为 0.9881，阈值 0.5 时 F1 为 0.8056，前 10% 的 lift 为 7.9231、precision@10% 为 0.9904、recall@10% 为 0.7984。sms_nb_default 的平均精度为 0.9459，提升 0.8209，ROC-AUC 为 0.9781，阈值 0.5 时 F1 为 0.9024，前 10% 的 lift 为 8.0、precision@10% 为 1.0、recall@10% 为 0.8062。两者均使用原始验证行顺序作为排名并列处理，且均未对封存测试集评分（sealed_test_scored=false）。综合平均精度与 ROC-AUC，选择 sms_logreg_default 作为当前候选；该结论引用了检索到的能力项 text-tfidf、complement-naive-bayes、probability-logistic、average-precision、sms-format、sms-grouped-split。",
+  "limitations": [
+    "以上数值均为验证集结果，不代表最终测试集性能；封存测试集尚未评分（sealed_test_scored=false），不能据此推断泛化表现。",
+    "约束式 AST 执行仅用于受控的算法执行环境，并非通用操作系统沙箱，不能提供通用隔离或安全保证。",
+    "模型选择本身不能证明营销提升的因果关系；lift 等指标为验证集上的关联性度量，未包含随机对照或因果识别设计。",
+    "两个候选的排名并列处理均依赖原始验证行顺序，可能影响前 10% 指标的稳定性。",
+    "sms_nb_default 虽在阈值 0.5 的 F1 与前 10% precision 上更高，但平均精度与 ROC-AUC 低于 sms_logreg_default，选择依据为综合排序指标而非单一阈值指标。"
+  ]
+}

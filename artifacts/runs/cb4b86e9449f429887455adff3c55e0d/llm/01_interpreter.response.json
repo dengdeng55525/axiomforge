@@ -1,0 +1,11 @@
+{
+  "objective": "新版 Vue 工作台端到端验收：构建短信垃圾分类能力，比较两个候选，完成验证报告与知识回写。",
+  "constraints": [
+    "遵守固定数据与特征协议"
+  ],
+  "assumptions": [
+    "离线规则测试模式"
+  ],
+  "warnings": [],
+  "incompatible_requests": []
+}

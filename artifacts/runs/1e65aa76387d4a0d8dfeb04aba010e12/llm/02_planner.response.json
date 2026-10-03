@@ -1,0 +1,28 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "logistic_default",
+      "algorithm": "logistic",
+      "variant": "default",
+      "rationale": "Logistic regression is a standard approach for binary classification tasks and provides a good baseline for comparison.",
+      "evidence_ids": [
+        "bank-precontact-policy",
+        "bank-target",
+        "probability-logistic"
+      ],
+      "parent_id": null
+    },
+    {
+      "candidate_id": "logistic_balanced",
+      "algorithm": "logistic",
+      "variant": "balanced",
+      "rationale": "Balancing the class weights can help improve performance on imbalanced datasets by penalizing errors more heavily on the minority class.",
+      "evidence_ids": [
+        "bank-precontact-policy",
+        "bank-target",
+        "probability-logistic"
+      ],
+      "parent_id": null
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "summary": "在 validation_only 协议下，候选 sms_tfidf_nb_default 与 sms_tfidf_logistic_default 均通过；前者被选中。sms_tfidf_nb_default 的平均精确率为 0.959834、F1 为 0.914729、10%目标集精确率为 1.0、lift 为 8.0、召回率为 0.806202；sms_tfidf_logistic_default 的对应值为 0.958390、0.805556、0.990385、7.923077、0.798450。logistic 候选的 ROC AUC 较高（0.988059 对 0.983741），因此选择结论主要由平均精确率、F1 及 top-10% 指标支持。相关能力证据包括 complement-naive-bayes、text-tfidf、probability-logistic、average-precision、sms-format 和 sms-grouped-split。",
+  "limitations": [
+    "所有指标均使用 validation-only 协议；sealed test set 保持独立，且两个候选的 sealed_test_scored 均为 false。",
+    "比较仅覆盖已提供的两个通过候选，未提供失败候选结果；排序并列时使用原始验证行顺序，结果可能受该规则影响。",
+    "受约束的 AST runner 具有已定义的执行范围；本摘要不扩展到该范围之外的能力或未提供的算法。",
+    "模型选择不构成因果营销增量的证明，还不能据此断言真实营销 uplift。"
+  ]
+}

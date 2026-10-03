@@ -1,0 +1,26 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "sms_logistic_regression",
+      "algorithm": "logistic",
+      "variant": "default",
+      "rationale": "逻辑回归适合文本分类任务，能够输出概率接口。",
+      "evidence_ids": [
+        "text-tfidf",
+        "probability-logistic"
+      ],
+      "parent_id": null
+    },
+    {
+      "candidate_id": "sms_complement_nb",
+      "algorithm": "nb",
+      "variant": "default",
+      "rationale": "补集朴素贝叶斯适合不平衡数据，适合非负文本计数或 TF-IDF 特征。",
+      "evidence_ids": [
+        "text-tfidf",
+        "complement-naive-bayes"
+      ],
+      "parent_id": null
+    }
+  ]
+}

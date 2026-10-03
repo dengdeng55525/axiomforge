@@ -1,4 +1,10 @@
-# AxiomForge · 知衡
+<p align="center">
+  <img src="logo.png" alt="AxiomForge · 知衡 Logo" width="156" />
+</p>
+
+<h1 align="center">AxiomForge · 知衡</h1>
+
+<p align="center"><strong>作者：丁俊泽（Ding Junze）</strong></p>
 
 ### 知识驱动，验证有据。让算法能力持续生长。
 
@@ -61,6 +67,34 @@ axiomforge report RUN_ID --format html --output artifacts/demo-report.html
 ```
 
 Mock 使用确定性规则产生角色响应，同时执行真实的数据处理、算法训练和验证。报告通过 `mode` 区分 Mock 与真实模型运行。Python 模块入口 `python -m capability_factory` 与 `axiomforge` 命令等价。
+
+### CLI 运行契约
+
+CLI 与 Web 使用同一套 `Workflow`、SQLite 知识库和报告格式。诊断、治理和 Harness 命令默认读取本地事实；模型调用仅由 `run`、`init` 和显式的 `doctor --check-api` 触发。
+
+| 命令 | 作用 | 读写边界 | 成功退出码 | JSON 产物 |
+| --- | --- | --- | ---: | --- |
+| `axiomforge status` | 汇总 Python、Provider、四卡槽位、数据集、知识库和最近运行 | 只读；不创建数据库、不请求网络 | `0` | 标准输出 `axiomforge-status.v1` |
+| `axiomforge doctor` | 检查运行前提、执行器和本地部署配置 | 只读；默认不请求网络 | `0` | 标准输出 `axiomforge-doctor.v1` |
+| `axiomforge doctor --check-api --provider openai` | 在显式授权下读取模型目录 | 仅访问选定 API；不会读取代理环境变量 | `0` 已认证，`1` 连接或配置失败 | 结果包含脱敏的 `api_status` |
+| `axiomforge validate` | 检查知识图谱来源、版本、哈希和关系完整性 | SQLite 只读打开，不初始化或迁移 | `0` 质量门通过，`1` 缺失或失败 | `--output artifacts/validation.json` |
+| `axiomforge validate RUN_ID --case bank_e2e` | 对单次运行执行对应 Harness 用例 | 只读已保存事件；不调用模型、不执行生成代码 | `0` 运行与用例均通过，`1` 失败 | `--output artifacts/harness/run.json` |
+| `axiomforge validate RUN_ID --suite` | 对单次运行执行全部版本化 Harness 用例 | 只读 | `0` 全部通过，`1` 存在失败用例 | `--output artifacts/harness/suite.json` |
+| `axiomforge harness replay RUN_ID --through 12` | 回放脱敏 Agent 事件 | 只读；按游标裁剪 | `0` | 标准输出 `agent-trace.v1` |
+
+常用的本地检查路径如下。`status` 可以在刚安装的空目录执行；`validate` 会明确返回数据库缺失或质量门失败，适合作为 CI 门禁。
+
+```bash
+axiomforge status --recent 5
+axiomforge doctor
+axiomforge validate --output artifacts/knowledge-validation.json
+axiomforge validate RUN_ID --case bank_e2e \
+  --output artifacts/harness/RUN_ID.json
+axiomforge validate RUN_ID --suite \
+  --output artifacts/harness/RUN_ID-suite.json
+```
+
+每个 JSON 都包含 `schema_version`、检查结果、退出依据和运行标识，可直接交给 CI、报告页面或后续审计流程。`--output` 是唯一写入路径；命令本身不会修改全局环境、CUDA、代理或 SSH 配置。
 
 ## Web 研发工作台
 
@@ -465,7 +499,7 @@ axiomforge/
 ├── tests/                      单元、接口、集成与回归测试
 ├── docs/                       架构、数据、部署与工程指南
 ├── deploy/                     服务部署与容器模板
-└── artifacts/                  本地运行产物，默认不提交
+└── artifacts/                  可复核运行报告、代码、日志与验证制品
 ```
 
 单次运行保存在 `artifacts/runs/<run_id>/`，包括请求、事件、角色调用、候选代码、检查结果和报告。核心调用路径为 `Workflow.run → invoke_role → validate_candidate → write_report / save_run`；Web 通过 API 查询同一份状态与产物。

@@ -1,0 +1,10 @@
+{
+  "summary": "在仅验证集（validation_only，1032 行，正例率 0.125）上，两个候选均通过。sms_nb_tfidf_default 的 average_precision 为 0.9598341674027927，略高于 sms_logreg_tfidf_default 的 0.9583895772337544；其 f1_threshold_0_5 为 0.9147286821705426，高于后者的 0.8055555555555556；top 10% 的 precision_at_10pct 为 1.0、lift_at_10pct 为 8.0，recall_at_10pct 为 0.8062015503875969，均略优于 logreg 候选（0.9903846153846154、7.923076923076923、0.7984496124031008）。roc_auc 方面 logreg 为 0.9880587533372823，高于 nb 的 0.9837406749250989。基于上述验证指标，选择 sms_nb_tfidf_default。相关能力证据包括 complement-naive-bayes、probability-logistic、text-tfidf、average-precision、sms-grouped-split 与 sms-format。",
+  "limitations": [
+    "所有数值均为 validation_only 结果，sealed_test_scored 为 false，验证集表现不代表最终测试集性能。",
+    "约束式 AST 执行仅用于受控的算法执行环境，不等同于通用操作系统沙箱，不能据此推断任意代码或系统级安全性。",
+    "模型选择（如选择 sms_nb_tfidf_default）仅反映验证集上的排序与阈值指标，不构成因果营销提升的证据。",
+    "两个候选的 ranking_tie_break 均为 original_validation_row_order，top 10% 指标可能受该固定顺序影响。",
+    "未提供失败候选或未通过项，无法评估被淘汰方案的具体失败原因。"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "error_type": "CodePolicyError",
+  "diagnosis": "The source defines the entry function as broken_pipeline instead of the required name build_pipeline(task_spec), violating the source_policy check that exactly one function named build_pipeline(task_spec) must be defined.",
+  "fix": "Rename the function definition from 'def broken_pipeline(task_spec):' to 'def build_pipeline(task_spec):' so the module exposes exactly one function with the required name and signature.",
+  "repairable": true
+}

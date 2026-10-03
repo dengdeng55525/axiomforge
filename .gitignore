@@ -1,19 +1,25 @@
 .env
 .env.*
 !.env.example
+# Credentials, private keys and model weights must never enter the repository.
+*.pem
+*.key
+*.p12
+*.pfx
+*.safetensors
+*.ckpt
+*.pth
+*.pt
+*.bin
+*.gguf
+*.onnx
+auth.json
+credentials.json
 .venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .ruff_cache/
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
-artifacts/*
-!artifacts/.gitkeep
-*.sqlite*
-*.log
 *.egg-info/
 .coverage
 coverage.xml
@@ -22,6 +28,5 @@ htmlcov/
 # Frontend dependencies and generated local browser evidence
 web/node_modules/
 web/dist/
-web/test-results/
 web/playwright-report/
 web/.vite/

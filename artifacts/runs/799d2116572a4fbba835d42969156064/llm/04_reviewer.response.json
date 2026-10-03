@@ -1,0 +1,6 @@
+{
+  "error_type": "plan_consistency",
+  "diagnosis": "The generated code defines a function `broken_pipeline(task_spec)` that returns an unfitted sklearn Pipeline, but the plan requires a constructor program that builds and fits a model on the provided dataset. The function name and signature do not match the expected constructor interface, and no training/fitting step is performed, so the source policy check cannot verify consistency with the plan.",
+  "fix": "Rename the function to the expected constructor name (e.g., `build_model` or `make_pipeline`) and ensure it returns a fitted estimator by calling `.fit(X, y)` on the pipeline using the task's text feature and target label, or return the unfitted pipeline only if the plan explicitly expects a constructor that the runner will fit. Align the function signature with the task_spec fields (text column, label column) and remove the non-standard `broken_pipeline` name.",
+  "repairable": true
+}

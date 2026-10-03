@@ -1,0 +1,176 @@
+{
+  "schema_version": "1.0",
+  "run_id": "15c0371f0ce9435d90d0d5fe5962bcaa",
+  "status": "failed",
+  "mode": "real",
+  "provider": "local_http",
+  "description": "预测客户是否订购银行定期存款。仅使用通话前可得特征，禁止使用 duration。比较两个算法候选，按验证集 AP 选择方案，并输出功能检查、来源依据、资源消耗和验证报告。",
+  "dataset_id": "bank",
+  "created_at": "2026-09-29T14:57:26.406124+00:00",
+  "request": {
+    "description": "预测客户是否订购银行定期存款。仅使用通话前可得特征，禁止使用 duration。比较两个算法候选，按验证集 AP 选择方案，并输出功能检查、来源依据、资源消耗和验证报告。",
+    "dataset_id": "bank",
+    "provider": "local_http",
+    "max_candidates": 2,
+    "max_repairs": 2,
+    "use_graph": true,
+    "use_retrieval": true,
+    "orchestration": "multi_role",
+    "search": "compare",
+    "inject_failure": false,
+    "max_seconds": 900
+  },
+  "task_spec": {
+    "task_type": "tabular_binary_classification",
+    "dataset_id": "bank",
+    "positive_label": "yes",
+    "feature_names": [
+      "age",
+      "job",
+      "marital",
+      "education",
+      "default",
+      "housing",
+      "loan",
+      "pdays",
+      "previous",
+      "poutcome"
+    ],
+    "numeric_features": [
+      "age",
+      "pdays",
+      "previous"
+    ],
+    "categorical_features": [
+      "job",
+      "marital",
+      "education",
+      "default",
+      "housing",
+      "loan",
+      "poutcome"
+    ],
+    "seed": 42,
+    "primary_metric": "average_precision",
+    "limits": {
+      "cpu": 2,
+      "memory_mib": 2048,
+      "timeout_s": 120
+    },
+    "feature_policy": "precontact_conservative_v1"
+  },
+  "model": "coder14",
+  "provenance": {
+    "prompt_version": "algoforge-roles-v2",
+    "sealed_test_scored": false,
+    "dataset": {
+      "schema_version": "1.0",
+      "dataset_id": "uci-bank-additional-full",
+      "source_url": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+      "license": "CC BY 4.0",
+      "raw_sha256": "74adfc578bf77a7ff4bb1ba4a9f8709d9e3c6907342959c2c8416847e0afb4d8",
+      "split_policy": "original_order_60_20_20",
+      "split_seed": 42,
+      "train_rows": 24712,
+      "validation_rows": 8238,
+      "sealed_test_rows": 8238,
+      "sealed_test_exported": false,
+      "sealed_test_scored": false,
+      "validation_labels_visible_to_generated_code": false,
+      "preprocessing_fit_split": "train_only",
+      "feature_policy": "precontact_conservative_v1",
+      "feature_names": [
+        "age",
+        "job",
+        "marital",
+        "education",
+        "default",
+        "housing",
+        "loan",
+        "pdays",
+        "previous",
+        "poutcome"
+      ],
+      "numeric_features": [
+        "age",
+        "pdays",
+        "previous"
+      ],
+      "file_sha256": {
+        "train": "860058ef9a7a6869e9c129277967ca5699fdb249202917201da4991a7c2b3a0c",
+        "validation_features": "62b188cf7c57553585006e3b20f4364d41cd8f567b04513fcdc3358429c1986a",
+        "validation_labels": "8c505a2f2ed47d04c62c6d182097535f09e9ccab901576fc0727acfe5f882816"
+      }
+    }
+  },
+  "candidates": [],
+  "selected_candidate_id": null,
+  "events": [
+    {
+      "sequence": 0,
+      "event_type": "RECEIVED",
+      "type": "RECEIVED",
+      "created_at": "2026-09-29T14:57:26.684228+00:00",
+      "data": {
+        "mode": "real",
+        "model": "coder14"
+      }
+    },
+    {
+      "sequence": 1,
+      "event_type": "RECORDED",
+      "type": "RECORDED",
+      "created_at": "2026-09-29T14:57:28.414676+00:00",
+      "data": {
+        "intended_status": "failed",
+        "experiences": 0
+      }
+    }
+  ],
+  "usage": {
+    "calls": 2,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cached_input_tokens": 0,
+    "records": []
+  },
+  "warnings": [
+    "验证集成绩，不是最终测试成绩。",
+    "受限AST构造器程序，不是任意Python或Docker操作系统沙箱。"
+  ],
+  "search_tree": [],
+  "knowledge_writeback": {
+    "run_saved": true,
+    "experiences": []
+  },
+  "provider_metadata": {
+    "provider": "local_http",
+    "model": "coder14",
+    "base_url": "http://127.0.0.1:8100/v1",
+    "base_urls": [
+      "http://127.0.0.1:8100/v1",
+      "http://127.0.0.1:8101/v1",
+      "http://127.0.0.1:8102/v1",
+      "http://127.0.0.1:8103/v1"
+    ],
+    "authorization": "none",
+    "local_profile": "four_gpu_14b",
+    "deployment": "external_local_http"
+  },
+  "data_summary": {
+    "train_rows": 24712,
+    "validation_rows": 8238
+  },
+  "failure_reason": "ProviderError: Provider transport failure: ConnectError",
+  "finished_at": "2026-09-29T14:57:28.256014+00:00",
+  "timing": {
+    "wall_seconds": 1.85,
+    "budget_seconds": 900.0,
+    "request_ceiling_seconds": 900
+  },
+  "report_paths": {
+    "json": "/root/algorithm-capability-factory/artifacts/runs/15c0371f0ce9435d90d0d5fe5962bcaa/report.json",
+    "html": "/root/algorithm-capability-factory/artifacts/runs/15c0371f0ce9435d90d0d5fe5962bcaa/report.html",
+    "markdown": "/root/algorithm-capability-factory/artifacts/runs/15c0371f0ce9435d90d0d5fe5962bcaa/report.md"
+  }
+}

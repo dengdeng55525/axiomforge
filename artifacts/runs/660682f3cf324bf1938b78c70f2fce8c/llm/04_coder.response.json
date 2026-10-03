@@ -1,0 +1,4 @@
+{
+  "code": "from sklearn.pipeline import Pipeline\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.naive_bayes import ComplementNB\n\ndef build_pipeline(task_spec):\n    return Pipeline([\n        ('text', TfidfVectorizer(ngram_range=(1, 2), max_features=30000, min_df=2)),\n        ('model', ComplementNB(alpha=0.5)),\n    ])\n",
+  "explanation": "Uses the supplied SMS evidence and plan: training-fitted TF-IDF with bigrams and bounded vocabulary followed by ComplementNB for nonnegative sparse text features and predict_proba-compatible classification."
+}

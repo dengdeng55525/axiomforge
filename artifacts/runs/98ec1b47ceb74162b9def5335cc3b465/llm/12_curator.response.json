@@ -1,0 +1,12 @@
+{
+  "summary": "在仅使用验证集（validation_only，8238 行，正例率 0.1107）的独立测量中，六个候选均通过。逻辑回归族整体优于随机森林族：bank_logistic_balanced_default（AP 0.1829，AP 相对 dummy 提升 0.0722，lift@10% 2.094，ROC-AUC 0.6131）与 bank_logistic_balanced_regularized（AP 0.1814，提升 0.0707，lift@10% 2.006，ROC-AUC 0.6085）、bank_logistic_balanced（AP 0.1808，提升 0.0701，lift@10% 1.984，ROC-AUC 0.6093）表现接近，其中 bank_logistic_balanced_default 在 AP、lift@10% 与 ROC-AUC 上均为最高，故被选为 selected_candidate_id。随机森林族较弱：bank_forest_balanced_default（AP 0.1479，提升 0.0372，lift@10% 1.633）、bank_forest_balanced_shallower（AP 0.1349，提升 0.0242，lift@10% 1.436）、bank_forest_balanced（AP 0.1283，提升 0.0175，lift@10% 1.315）。需注意 bank_logistic_balanced_default 与 bank_forest_balanced_default 在阈值 0.5 下 F1 为 0.0，说明默认阈值下无正例被判定，排序指标与阈值分类指标不一致。相关检索能力证据包括 bank-precontact-policy、bank-target、bank-ordered-split、average-precision、probability-logistic、training-only-pipeline。",
+  "limitations": [
+    "所有指标均为 validation_only，sealed_test_scored 为 false，验证集表现不代表最终测试集性能，不能据此宣称泛化效果。",
+    "约束式 AST 执行仅为受控评测环境，不等同于通用操作系统沙箱，不能推断任意代码或生产环境下的安全性。",
+    "模型选择（如 bank_logistic_balanced_default 优于随机森林候选）仅反映该数据集与协议下的预测指标，不构成因果营销增益证明。",
+    "bank_logistic_balanced_default 与 bank_forest_balanced_default 在阈值 0.5 下 F1 为 0.0，说明阈值未校准，分类阈值相关结论不可靠。",
+    "排序并列采用 original_validation_row_order，top_10pct_count 固定为 824，lift/precision/recall@10% 对并列处理方式敏感。",
+    "未提供置信区间、显著性检验或重复随机种子结果，候选间小幅差异（如逻辑回归族内部）可能不稳定。",
+    "未报告失败候选，本次输入中所有候选状态均为 passed，无法评估被淘汰方案的风险。"
+  ]
+}

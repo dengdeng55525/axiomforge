@@ -1,0 +1,30 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "sms_logreg_default",
+      "algorithm": "logistic",
+      "variant": "default",
+      "rationale": "TF-IDF 稀疏文本特征配合逻辑回归，提供 predict_proba 概率接口用于 AP 计算；按 classes_ 映射正类 spam 列。",
+      "evidence_ids": [
+        "probability-logistic",
+        "text-tfidf",
+        "sms-format",
+        "average-precision"
+      ],
+      "parent_id": null
+    },
+    {
+      "candidate_id": "sms_cnb_default",
+      "algorithm": "nb",
+      "variant": "default",
+      "rationale": "ComplementNB 面向不平衡非负文本计数/TF-IDF 特征，与逻辑回归形成线性与朴素贝叶斯方案对比。",
+      "evidence_ids": [
+        "complement-naive-bayes",
+        "text-tfidf",
+        "sms-format",
+        "average-precision"
+      ],
+      "parent_id": null
+    }
+  ]
+}

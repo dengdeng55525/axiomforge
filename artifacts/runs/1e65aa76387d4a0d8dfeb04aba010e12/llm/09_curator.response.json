@@ -1,0 +1,8 @@
+{
+  "summary": "候选模型 'logistic_regularized' 在验证集上表现最佳，其平均精度（average_precision）为 0.183086，AP 提升（ap_improvement_over_dummy）为 0.072380。该模型在 10% 的提升率（lift_at_10pct）和召回率（recall_at_10pct）方面也优于其他模型。",
+  "limitations": [
+    "所有模型的评估仅基于验证集，未使用密封测试集进行评分。",
+    "模型选择不能证明因果营销提升。",
+    "评估结果受训练数据集的影响，可能存在过拟合风险。"
+  ]
+}

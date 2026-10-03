@@ -1,0 +1,42 @@
+{
+  "code_path": "/root/algorithm-capability-factory/artifacts/runs/1e65aa76387d4a0d8dfeb04aba010e12/candidates/logistic_regularized/attempt_1/model.py",
+  "train_path": "/root/algorithm-capability-factory/artifacts/runs/1e65aa76387d4a0d8dfeb04aba010e12/dataset/worker/train.json",
+  "validation_features_path": "/root/algorithm-capability-factory/artifacts/runs/1e65aa76387d4a0d8dfeb04aba010e12/dataset/worker/validation_features.json",
+  "output_path": "/root/algorithm-capability-factory/artifacts/runs/1e65aa76387d4a0d8dfeb04aba010e12/candidates/logistic_regularized/attempt_1/predictions.json",
+  "task_spec": {
+    "task_type": "tabular_binary_classification",
+    "feature_names": [
+      "age",
+      "job",
+      "marital",
+      "education",
+      "default",
+      "housing",
+      "loan",
+      "pdays",
+      "previous",
+      "poutcome"
+    ],
+    "numeric_features": [
+      "age",
+      "pdays",
+      "previous"
+    ],
+    "categorical_features": [
+      "job",
+      "marital",
+      "education",
+      "default",
+      "housing",
+      "loan",
+      "poutcome"
+    ],
+    "positive_label": "yes",
+    "seed": 42
+  },
+  "limits": {
+    "timeout_s": 120.0,
+    "memory_mib": 2048,
+    "cpu_cores": 2
+  }
+}

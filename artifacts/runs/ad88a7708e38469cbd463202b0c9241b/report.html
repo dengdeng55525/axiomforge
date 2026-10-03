@@ -1,0 +1,332 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'"><title>算法能力验证报告 · ad88a7708e38469cbd463202b0c9241b</title><style>
+:root{color-scheme:light;--ink:#183047;--muted:#526578;--line:#dbe4ec;
+--accent:#076d77;--paper:#fff;--wash:#f3f7fa}
+*{box-sizing:border-box}body{margin:0;background:var(--wash);color:var(--ink);
+font:15px/1.65 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+main{max-width:1180px;margin:32px auto;padding:0 24px 48px}
+header{background:#16364b;color:white;padding:30px 32px;border-radius:14px}
+header h1{font-size:28px;margin:8px 0}header p{color:#d9e9f0;margin:8px 0}
+.eyebrow{text-transform:uppercase;font-size:12px;letter-spacing:.13em}
+.badge{display:inline-block;background:#e8f7f3;color:#125247;padding:4px 10px;
+border-radius:6px;font-weight:650;max-width:100%;overflow-wrap:anywhere}
+section{background:var(--paper);padding:24px 28px;margin:18px 0;border:1px solid
+var(--line);border-radius:12px}h2{font-size:20px;margin:0 0 14px}
+h3{font-size:16px;margin:22px 0 8px}.muted,footer{color:var(--muted)}
+.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:10px;text-align:left;
+vertical-align:top;overflow-wrap:anywhere}th{background:#eef4f7}tr.selected{background:#edf9f5}
+pre{background:#f4f7fa;border:1px solid var(--line);padding:15px;border-radius:7px;
+white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.6 ui-monospace,monospace}
+dl{display:grid;grid-template-columns:minmax(130px,1fr) 3fr;gap:7px 20px}
+dt{font-weight:650}dd{margin:0;overflow-wrap:anywhere}.warning{border-left:4px solid #b77c20}
+details{padding:10px 0;border-top:1px solid var(--line)}summary{cursor:pointer;font-weight:650}
+footer{font-size:12px;padding-top:10px}@media print{body{background:white}main{margin:0;
+max-width:none;padding:0}section{break-inside:avoid}details{display:block}}
+@media(max-width:640px){main{padding:0 12px}header,section{padding:20px}dl{grid-template-columns:1fr}}
+</style></head><body><main><header><div class="eyebrow">ALGORITHM CAPABILITY FACTORY</div><h1>算法能力验证报告</h1><span class="badge">真实 LLM · OpenAI 兼容服务 · Responses</span><p>运行 ID：ad88a7708e38469cbd463202b0c9241b</p></header><section><h2>运行概览</h2><dl><dt>运行状态</dt><dd>failed</dd><dt>质量门槛</dt><dd>未记录</dd><dt>模型与版本</dt><dd>gpt-5.5</dd><dt>选中候选</dt><dd>未记录</dd></dl><p class="muted">指标仅来自提供的验证记录。未记录项目显示为缺失，质量、安全和泛化能力分别查看对应检查与评估结果。</p></section><section><h2>需求与约束</h2><p>使用 UCI SMS Spam Collection 构建垃圾短信分类能力。检索已有能力与失败经验，比较 TF-IDF 逻辑回归和朴素贝叶斯，再用 Beam Search 扩展一个合法参数候选。以验证集平均精度选择方案，保留封存测试集，输出接口检查、设计依据、资源分析和可复核报告。</p><pre>{
+  &quot;task_type&quot;: &quot;text_binary_classification&quot;,
+  &quot;dataset_id&quot;: &quot;sms&quot;,
+  &quot;positive_label&quot;: &quot;spam&quot;,
+  &quot;feature_names&quot;: [
+    &quot;text&quot;
+  ],
+  &quot;numeric_features&quot;: [],
+  &quot;categorical_features&quot;: [
+    &quot;text&quot;
+  ],
+  &quot;seed&quot;: 42,
+  &quot;primary_metric&quot;: &quot;average_precision&quot;,
+  &quot;limits&quot;: {
+    &quot;cpu&quot;: 2,
+    &quot;memory_mib&quot;: 2048,
+    &quot;timeout_s&quot;: 120
+  },
+  &quot;feature_policy&quot;: &quot;normalized_group_split_v1&quot;
+}</pre></section><section><h2>数据、证据与来源</h2><pre>{
+  &quot;prompt_version&quot;: &quot;algoforge-roles-v3&quot;,
+  &quot;sealed_test_scored&quot;: false,
+  &quot;agent_runtime&quot;: {
+    &quot;framework&quot;: &quot;langchain-core&quot;,
+    &quot;version&quot;: &quot;1.6.5&quot;,
+    &quot;role_chain&quot;: [
+      &quot;invoke_provider&quot;,
+      &quot;persist_response&quot;,
+      &quot;validate_contract&quot;
+    ],
+    &quot;retrieval_tool&quot;: &quot;search_capabilities&quot;,
+    &quot;external_tracing&quot;: false
+  },
+  &quot;dataset&quot;: {
+    &quot;schema_version&quot;: &quot;1.0&quot;,
+    &quot;dataset_id&quot;: &quot;uci-sms-spam&quot;,
+    &quot;source_url&quot;: &quot;https://archive.ics.uci.edu/dataset/228/sms+spam+collection&quot;,
+    &quot;license&quot;: &quot;CC BY 4.0&quot;,
+    &quot;raw_sha256&quot;: &quot;7d039a24a6083ed9ef0f806ebad56bbb976e3aeb8de05669173bfdc4996c239d&quot;,
+    &quot;split_policy&quot;: &quot;normalized_text_group_dedup_stratified_60_20_20&quot;,
+    &quot;split_seed&quot;: 42,
+    &quot;train_rows&quot;: 3095,
+    &quot;validation_rows&quot;: 1032,
+    &quot;sealed_test_rows&quot;: 1032,
+    &quot;sealed_test_exported&quot;: false,
+    &quot;sealed_test_scored&quot;: false,
+    &quot;validation_labels_visible_to_generated_code&quot;: false,
+    &quot;preprocessing_fit_split&quot;: &quot;train_only&quot;,
+    &quot;feature_policy&quot;: &quot;text_only_group_dedup_v1&quot;,
+    &quot;feature_names&quot;: [
+      &quot;text&quot;
+    ],
+    &quot;numeric_features&quot;: [],
+    &quot;file_sha256&quot;: {
+      &quot;train&quot;: &quot;02e817b63d1687cba45abc15c3820c3748405fd185f09ee73c2b7854ea7117a6&quot;,
+      &quot;validation_features&quot;: &quot;b56334649c55b5873b8a94c0d0efcceb8710824808fba4900e639dcd782f343b&quot;,
+      &quot;validation_labels&quot;: &quot;71907784e61eabc1fff51e1e71293e9cc4ef0a8359d1923def4c0519185a7421&quot;
+    },
+    &quot;raw_rows&quot;: 5574,
+    &quot;normalized_groups&quot;: 5159,
+    &quot;conflicting_groups_excluded&quot;: 0,
+    &quot;train_group_ids_sha256&quot;: &quot;67b569ca179c2f301db65dea9f94b0ce90cb2ad6359b601a00ca38c1b567860c&quot;,
+    &quot;validation_group_ids_sha256&quot;: &quot;d7b9f23990ff4133c30b7b64ce309f75d9e1baea67c59ccfdf929cbe2330d31c&quot;,
+    &quot;sealed_group_ids_sha256&quot;: &quot;d9a436d8888da5cbd06d15795c909d935e7709cc7b4f7cd3dbbf357d7e60fd65&quot;
+  }
+}</pre></section><section><h2>验证结果与候选比较</h2><p class="muted">尚无候选验证记录。</p><p class="muted">仅同一任务、切分和预算下的指标适合直接比较。AP 指 average precision；候选选择依据验证集结果，最终测试集结果请结合 provenance 单独查看。</p></section><section><h2>质量与资源权衡</h2><p>在已通过验证且测量齐全的候选中，同时比较 AP（越高越好）、训练耗时和峰值 RSS（越低越好）。</p><dl><dt>Pareto 前沿候选</dt><dd>[]</dd><dt>观测次数</dt><dd>0</dd></dl><div class="table-wrap"><table><thead><tr><th>候选</th><th>AP</th><th>训练秒数</th><th>峰值 RSS MiB</th><th>前沿</th></tr></thead><tbody></tbody></table></div><p>单次资源观测不证明稳定加速；候选选择仍以验证 AP 为主。</p><details><summary>父子方案变化与分析审计</summary><pre>{
+  &quot;schema_version&quot;: &quot;1.0&quot;,
+  &quot;analysis_version&quot;: &quot;pareto-observations-v1&quot;,
+  &quot;run_id&quot;: &quot;ad88a7708e38469cbd463202b0c9241b&quot;,
+  &quot;scope&quot;: &quot;within_run_validation_observations&quot;,
+  &quot;objectives&quot;: {
+    &quot;average_precision&quot;: &quot;maximize&quot;,
+    &quot;fit_seconds&quot;: &quot;minimize&quot;,
+    &quot;peak_rss_mib&quot;: &quot;minimize&quot;
+  },
+  &quot;selected_candidate_id&quot;: null,
+  &quot;selection_policy&quot;: &quot;validation_ap_desc_then_candidate_wall_seconds_asc&quot;,
+  &quot;frontier_candidate_ids&quot;: [],
+  &quot;candidates&quot;: [],
+  &quot;excluded&quot;: [],
+  &quot;parent_child_changes&quot;: [],
+  &quot;measurement_repetitions&quot;: 0,
+  &quot;limitations&quot;: [
+    &quot;同次运行的验证集 AP、训练耗时和 worker 峰值 RSS 观测，不能跨任务混排。&quot;,
+    &quot;单次耗时受负载与测量噪声影响，不代表稳定加速或统计显著性。&quot;,
+    &quot;Pareto 分析提供资源权衡依据，不改变原有 AP 优先选择规则。&quot;,
+    &quot;worker RSS 不含 LLM 服务显存；封存测试集没有用于优化。&quot;
+  ]
+}</pre></details></section><section><h2>资源、调用与耗时</h2><h3>LLM 用量</h3><pre>{
+  &quot;calls&quot;: 1,
+  &quot;input_tokens&quot;: 0,
+  &quot;output_tokens&quot;: 0,
+  &quot;cached_input_tokens&quot;: 0,
+  &quot;records&quot;: []
+}</pre><h3>计时记录</h3><pre>{
+  &quot;wall_seconds&quot;: 5.18,
+  &quot;budget_seconds&quot;: 600,
+  &quot;request_ceiling_seconds&quot;: 600
+}</pre></section><section><h2>知识回写</h2><pre>{
+  &quot;run_saved&quot;: true,
+  &quot;experiences&quot;: []
+}</pre></section><section class="warning"><h2>警告与局限</h2><pre>[
+  &quot;指标来自 validation_only，封存测试集保持未评分。&quot;,
+  &quot;执行器采用受限 AST 构造器和资源限制子进程；生产隔离需要强化运行时。&quot;
+]</pre><p class="muted">mock 仅验证流程；replay 仅呈现历史记录。多卡配置提供接入规划；多卡部署结论以目标环境实测制品与验证证据为准。</p></section><section><h2>事件与复现证据</h2><pre>[
+  {
+    &quot;sequence&quot;: 0,
+    &quot;event_type&quot;: &quot;RECEIVED&quot;,
+    &quot;type&quot;: &quot;RECEIVED&quot;,
+    &quot;created_at&quot;: &quot;2026-09-30T16:22:50.402015+00:00&quot;,
+    &quot;data&quot;: {
+      &quot;mode&quot;: &quot;real&quot;,
+      &quot;model&quot;: &quot;gpt-5.5&quot;
+    }
+  },
+  {
+    &quot;sequence&quot;: 1,
+    &quot;event_type&quot;: &quot;RECORDED&quot;,
+    &quot;type&quot;: &quot;RECORDED&quot;,
+    &quot;created_at&quot;: &quot;2026-09-30T16:22:55.532682+00:00&quot;,
+    &quot;data&quot;: {
+      &quot;intended_status&quot;: &quot;failed&quot;,
+      &quot;experiences&quot;: 0
+    }
+  }
+]</pre></section><section><details><summary>完整原始报告</summary><pre>{
+  &quot;schema_version&quot;: &quot;1.0&quot;,
+  &quot;run_id&quot;: &quot;ad88a7708e38469cbd463202b0c9241b&quot;,
+  &quot;status&quot;: &quot;failed&quot;,
+  &quot;mode&quot;: &quot;real&quot;,
+  &quot;provider&quot;: &quot;openai&quot;,
+  &quot;description&quot;: &quot;使用 UCI SMS Spam Collection 构建垃圾短信分类能力。检索已有能力与失败经验，比较 TF-IDF 逻辑回归和朴素贝叶斯，再用 Beam Search 扩展一个合法参数候选。以验证集平均精度选择方案，保留封存测试集，输出接口检查、设计依据、资源分析和可复核报告。&quot;,
+  &quot;dataset_id&quot;: &quot;sms&quot;,
+  &quot;created_at&quot;: &quot;2026-09-30T16:22:50.086229+00:00&quot;,
+  &quot;request&quot;: {
+    &quot;description&quot;: &quot;使用 UCI SMS Spam Collection 构建垃圾短信分类能力。检索已有能力与失败经验，比较 TF-IDF 逻辑回归和朴素贝叶斯，再用 Beam Search 扩展一个合法参数候选。以验证集平均精度选择方案，保留封存测试集，输出接口检查、设计依据、资源分析和可复核报告。&quot;,
+    &quot;dataset_id&quot;: &quot;sms&quot;,
+    &quot;provider&quot;: &quot;openai&quot;,
+    &quot;max_candidates&quot;: 3,
+    &quot;max_repairs&quot;: 2,
+    &quot;use_graph&quot;: true,
+    &quot;use_retrieval&quot;: true,
+    &quot;orchestration&quot;: &quot;multi_role&quot;,
+    &quot;search&quot;: &quot;beam&quot;,
+    &quot;inject_failure&quot;: false,
+    &quot;max_seconds&quot;: 600
+  },
+  &quot;task_spec&quot;: {
+    &quot;task_type&quot;: &quot;text_binary_classification&quot;,
+    &quot;dataset_id&quot;: &quot;sms&quot;,
+    &quot;positive_label&quot;: &quot;spam&quot;,
+    &quot;feature_names&quot;: [
+      &quot;text&quot;
+    ],
+    &quot;numeric_features&quot;: [],
+    &quot;categorical_features&quot;: [
+      &quot;text&quot;
+    ],
+    &quot;seed&quot;: 42,
+    &quot;primary_metric&quot;: &quot;average_precision&quot;,
+    &quot;limits&quot;: {
+      &quot;cpu&quot;: 2,
+      &quot;memory_mib&quot;: 2048,
+      &quot;timeout_s&quot;: 120
+    },
+    &quot;feature_policy&quot;: &quot;normalized_group_split_v1&quot;
+  },
+  &quot;model&quot;: &quot;gpt-5.5&quot;,
+  &quot;provenance&quot;: {
+    &quot;prompt_version&quot;: &quot;algoforge-roles-v3&quot;,
+    &quot;sealed_test_scored&quot;: false,
+    &quot;agent_runtime&quot;: {
+      &quot;framework&quot;: &quot;langchain-core&quot;,
+      &quot;version&quot;: &quot;1.6.5&quot;,
+      &quot;role_chain&quot;: [
+        &quot;invoke_provider&quot;,
+        &quot;persist_response&quot;,
+        &quot;validate_contract&quot;
+      ],
+      &quot;retrieval_tool&quot;: &quot;search_capabilities&quot;,
+      &quot;external_tracing&quot;: false
+    },
+    &quot;dataset&quot;: {
+      &quot;schema_version&quot;: &quot;1.0&quot;,
+      &quot;dataset_id&quot;: &quot;uci-sms-spam&quot;,
+      &quot;source_url&quot;: &quot;https://archive.ics.uci.edu/dataset/228/sms+spam+collection&quot;,
+      &quot;license&quot;: &quot;CC BY 4.0&quot;,
+      &quot;raw_sha256&quot;: &quot;7d039a24a6083ed9ef0f806ebad56bbb976e3aeb8de05669173bfdc4996c239d&quot;,
+      &quot;split_policy&quot;: &quot;normalized_text_group_dedup_stratified_60_20_20&quot;,
+      &quot;split_seed&quot;: 42,
+      &quot;train_rows&quot;: 3095,
+      &quot;validation_rows&quot;: 1032,
+      &quot;sealed_test_rows&quot;: 1032,
+      &quot;sealed_test_exported&quot;: false,
+      &quot;sealed_test_scored&quot;: false,
+      &quot;validation_labels_visible_to_generated_code&quot;: false,
+      &quot;preprocessing_fit_split&quot;: &quot;train_only&quot;,
+      &quot;feature_policy&quot;: &quot;text_only_group_dedup_v1&quot;,
+      &quot;feature_names&quot;: [
+        &quot;text&quot;
+      ],
+      &quot;numeric_features&quot;: [],
+      &quot;file_sha256&quot;: {
+        &quot;train&quot;: &quot;02e817b63d1687cba45abc15c3820c3748405fd185f09ee73c2b7854ea7117a6&quot;,
+        &quot;validation_features&quot;: &quot;b56334649c55b5873b8a94c0d0efcceb8710824808fba4900e639dcd782f343b&quot;,
+        &quot;validation_labels&quot;: &quot;71907784e61eabc1fff51e1e71293e9cc4ef0a8359d1923def4c0519185a7421&quot;
+      },
+      &quot;raw_rows&quot;: 5574,
+      &quot;normalized_groups&quot;: 5159,
+      &quot;conflicting_groups_excluded&quot;: 0,
+      &quot;train_group_ids_sha256&quot;: &quot;67b569ca179c2f301db65dea9f94b0ce90cb2ad6359b601a00ca38c1b567860c&quot;,
+      &quot;validation_group_ids_sha256&quot;: &quot;d7b9f23990ff4133c30b7b64ce309f75d9e1baea67c59ccfdf929cbe2330d31c&quot;,
+      &quot;sealed_group_ids_sha256&quot;: &quot;d9a436d8888da5cbd06d15795c909d935e7709cc7b4f7cd3dbbf357d7e60fd65&quot;
+    }
+  },
+  &quot;candidates&quot;: [],
+  &quot;selected_candidate_id&quot;: null,
+  &quot;events&quot;: [
+    {
+      &quot;sequence&quot;: 0,
+      &quot;event_type&quot;: &quot;RECEIVED&quot;,
+      &quot;type&quot;: &quot;RECEIVED&quot;,
+      &quot;created_at&quot;: &quot;2026-09-30T16:22:50.402015+00:00&quot;,
+      &quot;data&quot;: {
+        &quot;mode&quot;: &quot;real&quot;,
+        &quot;model&quot;: &quot;gpt-5.5&quot;
+      }
+    },
+    {
+      &quot;sequence&quot;: 1,
+      &quot;event_type&quot;: &quot;RECORDED&quot;,
+      &quot;type&quot;: &quot;RECORDED&quot;,
+      &quot;created_at&quot;: &quot;2026-09-30T16:22:55.532682+00:00&quot;,
+      &quot;data&quot;: {
+        &quot;intended_status&quot;: &quot;failed&quot;,
+        &quot;experiences&quot;: 0
+      }
+    }
+  ],
+  &quot;usage&quot;: {
+    &quot;calls&quot;: 1,
+    &quot;input_tokens&quot;: 0,
+    &quot;output_tokens&quot;: 0,
+    &quot;cached_input_tokens&quot;: 0,
+    &quot;records&quot;: []
+  },
+  &quot;warnings&quot;: [
+    &quot;指标来自 validation_only，封存测试集保持未评分。&quot;,
+    &quot;执行器采用受限 AST 构造器和资源限制子进程；生产隔离需要强化运行时。&quot;
+  ],
+  &quot;search_tree&quot;: [],
+  &quot;knowledge_writeback&quot;: {
+    &quot;run_saved&quot;: true,
+    &quot;experiences&quot;: []
+  },
+  &quot;provider_metadata&quot;: {
+    &quot;provider&quot;: &quot;openai&quot;,
+    &quot;model&quot;: &quot;gpt-5.5&quot;,
+    &quot;base_url&quot;: &quot;https://sub2api.luciferai.cc/v1&quot;,
+    &quot;base_urls&quot;: [
+      &quot;https://sub2api.luciferai.cc/v1&quot;
+    ],
+    &quot;authorization&quot;: &quot;bearer&quot;,
+    &quot;deployment&quot;: &quot;openai_compatible_api&quot;,
+    &quot;api&quot;: &quot;responses&quot;,
+    &quot;sdk&quot;: &quot;openai&quot;,
+    &quot;store&quot;: false,
+    &quot;proxy_configured&quot;: true,
+    &quot;reasoning_effort&quot;: &quot;none&quot;
+  },
+  &quot;data_summary&quot;: {
+    &quot;train_rows&quot;: 3095,
+    &quot;validation_rows&quot;: 1032
+  },
+  &quot;failure_reason&quot;: &quot;ProviderError: Responses provider returned HTTP 400&quot;,
+  &quot;optimization&quot;: {
+    &quot;schema_version&quot;: &quot;1.0&quot;,
+    &quot;analysis_version&quot;: &quot;pareto-observations-v1&quot;,
+    &quot;run_id&quot;: &quot;ad88a7708e38469cbd463202b0c9241b&quot;,
+    &quot;scope&quot;: &quot;within_run_validation_observations&quot;,
+    &quot;objectives&quot;: {
+      &quot;average_precision&quot;: &quot;maximize&quot;,
+      &quot;fit_seconds&quot;: &quot;minimize&quot;,
+      &quot;peak_rss_mib&quot;: &quot;minimize&quot;
+    },
+    &quot;selected_candidate_id&quot;: null,
+    &quot;selection_policy&quot;: &quot;validation_ap_desc_then_candidate_wall_seconds_asc&quot;,
+    &quot;frontier_candidate_ids&quot;: [],
+    &quot;candidates&quot;: [],
+    &quot;excluded&quot;: [],
+    &quot;parent_child_changes&quot;: [],
+    &quot;measurement_repetitions&quot;: 0,
+    &quot;limitations&quot;: [
+      &quot;同次运行的验证集 AP、训练耗时和 worker 峰值 RSS 观测，不能跨任务混排。&quot;,
+      &quot;单次耗时受负载与测量噪声影响，不代表稳定加速或统计显著性。&quot;,
+      &quot;Pareto 分析提供资源权衡依据，不改变原有 AP 优先选择规则。&quot;,
+      &quot;worker RSS 不含 LLM 服务显存；封存测试集没有用于优化。&quot;
+    ]
+  },
+  &quot;finished_at&quot;: &quot;2026-09-30T16:22:55.266597+00:00&quot;,
+  &quot;timing&quot;: {
+    &quot;wall_seconds&quot;: 5.18,
+    &quot;budget_seconds&quot;: 600,
+    &quot;request_ceiling_seconds&quot;: 600
+  },
+  &quot;report_paths&quot;: {}
+}</pre></details></section><footer>本报告离线可读，不加载外部脚本、字体或 CDN。模型文本不会作为 HTML 执行。</footer></main></body></html>

@@ -1,0 +1,24 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "c1",
+      "algorithm": "logistic",
+      "variant": "default",
+      "rationale": "可复现线性参考方案",
+      "evidence_ids": [
+        "average-precision",
+        "text-tfidf"
+      ]
+    },
+    {
+      "candidate_id": "c2",
+      "algorithm": "nb",
+      "variant": "default",
+      "rationale": "不同算法结构的对照方案",
+      "evidence_ids": [
+        "average-precision",
+        "text-tfidf"
+      ]
+    }
+  ]
+}

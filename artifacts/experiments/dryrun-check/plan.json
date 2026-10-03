@@ -1,0 +1,281 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "43c9e972eb9e4e669094d092c07c59cb",
+  "created_at": "2026-09-28T11:52:43.080476+00:00",
+  "provider": "mock",
+  "suite": "smoke",
+  "repeats": 1,
+  "profiles": {
+    "A": {
+      "use_retrieval": false,
+      "use_graph": false,
+      "orchestration": "single_shot",
+      "max_candidates": 1,
+      "max_repairs": 0,
+      "search": "compare"
+    },
+    "B": {
+      "use_retrieval": true,
+      "use_graph": false,
+      "orchestration": "single_shot",
+      "max_candidates": 1,
+      "max_repairs": 0,
+      "search": "compare"
+    },
+    "C": {
+      "use_retrieval": true,
+      "use_graph": true,
+      "orchestration": "single_shot",
+      "max_candidates": 1,
+      "max_repairs": 2,
+      "search": "compare"
+    },
+    "D": {
+      "use_retrieval": true,
+      "use_graph": true,
+      "orchestration": "multi_role",
+      "max_candidates": 6,
+      "max_repairs": 2,
+      "search": "beam"
+    }
+  },
+  "selected_case_ids": [
+    "B01",
+    "S01"
+  ],
+  "case_selection": "smoke",
+  "planned_runs": 8,
+  "jobs": [
+    {
+      "job_id": "A_B01_r01",
+      "profile": "A",
+      "case_id": "B01",
+      "dataset": "bank",
+      "repeat": 1,
+      "expected_outcome": "valid_probability_pipeline",
+      "run_id": "43c118ea83275b09b3ce74b77411761c",
+      "request": {
+        "description": "用通话前客户信息预测是否订购，输出概率，比较两种算法。",
+        "dataset_id": "bank",
+        "provider": "mock",
+        "max_candidates": 1,
+        "max_repairs": 0,
+        "use_graph": false,
+        "use_retrieval": false,
+        "orchestration": "single_shot",
+        "search": "compare",
+        "inject_failure": false,
+        "max_seconds": 900
+      }
+    },
+    {
+      "job_id": "B_B01_r01",
+      "profile": "B",
+      "case_id": "B01",
+      "dataset": "bank",
+      "repeat": 1,
+      "expected_outcome": "valid_probability_pipeline",
+      "run_id": "a4d8b2bc3c995e7fba8499e55456d57d",
+      "request": {
+        "description": "用通话前客户信息预测是否订购，输出概率，比较两种算法。",
+        "dataset_id": "bank",
+        "provider": "mock",
+        "max_candidates": 1,
+        "max_repairs": 0,
+        "use_graph": false,
+        "use_retrieval": true,
+        "orchestration": "single_shot",
+        "search": "compare",
+        "inject_failure": false,
+        "max_seconds": 900
+      }
+    },
+    {
+      "job_id": "C_B01_r01",
+      "profile": "C",
+      "case_id": "B01",
+      "dataset": "bank",
+      "repeat": 1,
+      "expected_outcome": "valid_probability_pipeline",
+      "run_id": "ba3d950bcbdc58f48110f43315c1af66",
+      "request": {
+        "description": "用通话前客户信息预测是否订购，输出概率，比较两种算法。",
+        "dataset_id": "bank",
+        "provider": "mock",
+        "max_candidates": 1,
+        "max_repairs": 2,
+        "use_graph": true,
+        "use_retrieval": true,
+        "orchestration": "single_shot",
+        "search": "compare",
+        "inject_failure": false,
+        "max_seconds": 900
+      }
+    },
+    {
+      "job_id": "D_B01_r01",
+      "profile": "D",
+      "case_id": "B01",
+      "dataset": "bank",
+      "repeat": 1,
+      "expected_outcome": "valid_probability_pipeline",
+      "run_id": "7474169a35755ce09195616e13281862",
+      "request": {
+        "description": "用通话前客户信息预测是否订购，输出概率，比较两种算法。",
+        "dataset_id": "bank",
+        "provider": "mock",
+        "max_candidates": 6,
+        "max_repairs": 2,
+        "use_graph": true,
+        "use_retrieval": true,
+        "orchestration": "multi_role",
+        "search": "beam",
+        "inject_failure": false,
+        "max_seconds": 900
+      }
+    },
+    {
+      "job_id": "B_S01_r01",
+      "profile": "B",
+      "case_id": "S01",
+      "dataset": "sms",
+      "repeat": 1,
+      "expected_outcome": "text_plugin_probability",
+      "run_id": "f21cbc57656857f5af5fca33338092eb",
+      "request": {
+        "description": "训练短信垃圾信息分类器，spam是正类，输出垃圾概率。",
+        "dataset_id": "sms",
+        "provider": "mock",
+        "max_candidates": 1,
+        "max_repairs": 0,
+        "use_graph": false,
+        "use_retrieval": true,
+        "orchestration": "single_shot",
+        "search": "compare",
+        "inject_failure": false,
+        "max_seconds": 900
+      }
+    },
+    {
+      "job_id": "C_S01_r01",
+      "profile": "C",
+      "case_id": "S01",
+      "dataset": "sms",
+      "repeat": 1,
+      "expected_outcome": "text_plugin_probability",
+      "run_id": "7ecd14647e61574fa69efbf42d8e30c3",
+      "request": {
+        "description": "训练短信垃圾信息分类器，spam是正类，输出垃圾概率。",
+        "dataset_id": "sms",
+        "provider": "mock",
+        "max_candidates": 1,
+        "max_repairs": 2,
+        "use_graph": true,
+        "use_retrieval": true,
+        "orchestration": "single_shot",
+        "search": "compare",
+        "inject_failure": false,
+        "max_seconds": 900
+      }
+    },
+    {
+      "job_id": "D_S01_r01",
+      "profile": "D",
+      "case_id": "S01",
+      "dataset": "sms",
+      "repeat": 1,
+      "expected_outcome": "text_plugin_probability",
+      "run_id": "ebd197fdd5ed5915b369c1b2d2da5801",
+      "request": {
+        "description": "训练短信垃圾信息分类器，spam是正类，输出垃圾概率。",
+        "dataset_id": "sms",
+        "provider": "mock",
+        "max_candidates": 6,
+        "max_repairs": 2,
+        "use_graph": true,
+        "use_retrieval": true,
+        "orchestration": "multi_role",
+        "search": "beam",
+        "inject_failure": false,
+        "max_seconds": 900
+      }
+    },
+    {
+      "job_id": "A_S01_r01",
+      "profile": "A",
+      "case_id": "S01",
+      "dataset": "sms",
+      "repeat": 1,
+      "expected_outcome": "text_plugin_probability",
+      "run_id": "4b430352043753528265a9003fe03f5b",
+      "request": {
+        "description": "训练短信垃圾信息分类器，spam是正类，输出垃圾概率。",
+        "dataset_id": "sms",
+        "provider": "mock",
+        "max_candidates": 1,
+        "max_repairs": 0,
+        "use_graph": false,
+        "use_retrieval": false,
+        "orchestration": "single_shot",
+        "search": "compare",
+        "inject_failure": false,
+        "max_seconds": 900
+      }
+    }
+  ],
+  "matrix_sha256": "1465289ae93caf462dc38b1690a41e74a4348de9fe0b55a9780ad49c8aeb9d46",
+  "ordering": "deterministic profile rotation by case and repeat",
+  "knowledge_policy": "fresh isolated database per job; identical source-derived initial knowledge",
+  "statistical_limitations": [
+    "Only actual terminal workflow reports count as completed runs; planned/unstarted jobs are not observations.",
+    "Mock results test software behavior and CPU estimators, not DeepSeek capability or API cost.",
+    "One repeat cannot establish statistical reliability; sample standard deviations require at least two observations.",
+    "Cases reuse the same fixed train/validation splits and are correlated, not independent dataset samples.",
+    "Candidate selection uses validation AP; the sealed final test remains unscored, so selection bias remains.",
+    "A/B/C/D change multiple mechanisms across some comparisons; C versus B and D versus C are not single-factor causal ablations.",
+    "Temperature zero and fixed estimator seeds do not guarantee identical remote LLM responses or hardware timings.",
+    "Case expected_outcome labels are retained for review, not automatically equated with workflow status or semantic task success.",
+    "No faults are injected in the base matrix; repair statistics only describe failures that actually occurred.",
+    "Each job gets the same source-derived initial knowledge and its own database; cross-run learning is deliberately excluded.",
+    "Provider token totals are reported observations, not a billing reconciliation; failures without usage remain missing."
+  ],
+  "invocation": {
+    "project_root": "/root/algorithm-capability-factory",
+    "provider": "mock",
+    "model": "deterministic-mock-v1",
+    "suite": "smoke",
+    "repeats": 1,
+    "dry_run": true,
+    "request_timeout_s": 120.0,
+    "per_run_limits": {
+      "max_calls": 24,
+      "max_input_tokens": 200000,
+      "max_output_tokens": 40000
+    },
+    "python_version": "3.10.8",
+    "package_versions": {
+      "scikit-learn": "1.7.2",
+      "numpy": "2.2.6",
+      "pandas": "2.3.3",
+      "pydantic": "2.13.5",
+      "httpx": "0.28.1"
+    },
+    "git_revision": "61ea139f4287b028982cec0de0ea28e3432303ff",
+    "git_worktree_dirty": true,
+    "source_sha256": {
+      "scripts/run_experiments.py": "efbf027e6149b71309bcdfd824802409a81500bf68b78a71a26eabef153f9894",
+      "src/capability_factory/workflow.py": "1433fd118632e0161748a122e32da8e3b8e99f18636d1f4d7e45e7a4de04fac8",
+      "src/capability_factory/providers.py": "cf699af843a12b2a8ebcc2522e09fa904ed7703f9b9865dd98010697d6e631c7",
+      "src/capability_factory/prompts.py": "b3657a8f6365ee98499576f3809de7b49a82b2a65827fd760edc52664a990337",
+      "src/capability_factory/contracts.py": "b39ef974368049fdbedc4a6a7fa67c265250f768b966bf2336e89b28f4e628dd",
+      "src/capability_factory/datasets.py": "3181d6f5a2f80f3449af12433b4572fdcc4850f952cfee8cdde6928787b5d485",
+      "src/capability_factory/metrics.py": "8f5f8c333419bb380551e32bf0abe1c3d7552f948e70e1ca385305ca6e079442",
+      "src/capability_factory/knowledge.py": "3b4f398e5a208f52cbec7db0a47c39e383d31c99abeda54b92e29c33beb81db2",
+      "src/capability_factory/execution/compiler.py": "69740aa210c2aecf40a59fdc8ee4c2f9b2380e0879b6f3ec7ba6aacdec278b9f",
+      "src/capability_factory/execution/worker.py": "a98c7b7bd02eb811eeb3a424d909a1bc685a88fc67a0ec99d8ea53d63de0726d",
+      "src/capability_factory/execution/runner.py": "90a43fdcc305111df68b175c3b2c74ae30186cfff8a5912e6b54070a0508d5d6"
+    },
+    "credentials_recorded": false
+  },
+  "case_source_sha256": "1976f2e546238beb260310162fdf8a8574aad966abc6aba558a37b2ed6328655"
+}

@@ -1,0 +1,2991 @@
+{
+  "run": {
+    "candidates": [
+      {
+        "artifact_id": "c1",
+        "attempts": [
+          {
+            "attempt": 0,
+            "checks": [
+              {
+                "detail": "AST parsed as approved constructors without exec/eval",
+                "mandatory": true,
+                "name": "source_policy",
+                "passed": true
+              },
+              {
+                "detail": "Final classifier matches planned logistic",
+                "mandatory": true,
+                "name": "plan_consistency",
+                "passed": true
+              },
+              {
+                "detail": "SHA256, split disjointness, row alignment, feature policy",
+                "mandatory": true,
+                "name": "dataset_integrity",
+                "passed": true
+              },
+              {
+                "detail": "Worker receives no validation labels or final test",
+                "mandatory": true,
+                "name": "labels_withheld",
+                "passed": true
+              },
+              {
+                "detail": "Resource-limited fresh process exited successfully",
+                "mandatory": true,
+                "name": "worker_execution",
+                "passed": true
+              },
+              {
+                "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities",
+                "mandatory": true,
+                "name": "prediction_contract",
+                "passed": true
+              },
+              {
+                "detail": "",
+                "mandatory": true,
+                "name": "single_row",
+                "passed": true
+              },
+              {
+                "detail": "",
+                "mandatory": true,
+                "name": "repeat_prediction",
+                "passed": true
+              },
+              {
+                "detail": "",
+                "mandatory": true,
+                "name": "empty_batch_wrapper",
+                "passed": true
+              },
+              {
+                "detail": "",
+                "mandatory": true,
+                "name": "empty_text",
+                "passed": true
+              },
+              {
+                "detail": "No API keys/tokens passed to worker",
+                "mandatory": true,
+                "name": "clean_environment",
+                "passed": true
+              },
+              {
+                "detail": "Advisory quality gate; not a substitute for sealed-test evaluation",
+                "mandatory": false,
+                "name": "ap_above_dummy",
+                "passed": true
+              },
+              {
+                "detail": "Metrics computed only by trusted host using validation labels",
+                "mandatory": true,
+                "name": "host_evaluation",
+                "passed": true
+              }
+            ],
+            "code_path": "candidates/c1/attempt_0/model.py",
+            "code_sha256": "61a2be7f2f64180c0a0f1056c661abfa8e8ae5f91be4d126c200ce6eedd9101a",
+            "containment": {
+              "arbitrary_python_execution": false,
+              "backend": "constrained_ast_subprocess",
+              "constructors_allowlisted": true,
+              "filesystem_namespace": false,
+              "network_namespace": false,
+              "os_sandbox": false,
+              "resource_limited_fresh_process": true,
+              "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary.",
+              "source_evaluated_with_exec_or_eval": false
+            },
+            "error": null,
+            "metrics": {
+              "ap_improvement_over_dummy": 0.8333895772337544,
+              "average_precision": 0.9583895772337544,
+              "classification_threshold": 0.5,
+              "dummy_average_precision": 0.125,
+              "evaluation_split": "validation_only",
+              "f1_threshold_0_5": 0.8055555555555556,
+              "lift_at_10pct": 7.923076923076923,
+              "precision_at_10pct": 0.9903846153846154,
+              "ranking_tie_break": "original_validation_row_order",
+              "recall_at_10pct": 0.7984496124031008,
+              "roc_auc": 0.9880587533372823,
+              "sealed_test_scored": false,
+              "top_10pct_count": 104,
+              "validation_positive_rate": 0.125,
+              "validation_rows": 1032
+            },
+            "model_metadata": {
+              "actual_algorithm": "logistic",
+              "classifier_class": "LogisticRegression",
+              "classifier_parameters": {
+                "max_iter": 1000,
+                "random_state": 42
+              },
+              "classifier_path": [
+                "model"
+              ],
+              "constructor_classes": [
+                "Pipeline",
+                "TfidfVectorizer",
+                "LogisticRegression"
+              ],
+              "constructor_count": 3,
+              "source": "independently_parsed_constructor_plan"
+            },
+            "resources": {
+              "cpu_seconds": 0.960809,
+              "fit_seconds": 0.10642466507852077,
+              "joblib_backend": "threading",
+              "limits": {
+                "cpu_cores": 2,
+                "memory_mib": 2048,
+                "timeout_s": 120.0
+              },
+              "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+              "peak_rss_mib": 218.0,
+              "predict_seconds": 0.012710178969427943,
+              "python_version": "3.10.8",
+              "repeat_prediction_max_abs_delta": 0.0,
+              "sklearn_version": "1.7.2",
+              "total_seconds": 0.8794973220210522,
+              "wall_seconds": 0.8532090638764203,
+              "worker_pid": 77965,
+              "worker_wall_seconds": 0.7218338809907436
+            },
+            "status": "passed"
+          }
+        ],
+        "candidate_id": "c1",
+        "checks": [
+          {
+            "detail": "AST parsed as approved constructors without exec/eval",
+            "mandatory": true,
+            "name": "source_policy",
+            "passed": true
+          },
+          {
+            "detail": "Final classifier matches planned logistic",
+            "mandatory": true,
+            "name": "plan_consistency",
+            "passed": true
+          },
+          {
+            "detail": "SHA256, split disjointness, row alignment, feature policy",
+            "mandatory": true,
+            "name": "dataset_integrity",
+            "passed": true
+          },
+          {
+            "detail": "Worker receives no validation labels or final test",
+            "mandatory": true,
+            "name": "labels_withheld",
+            "passed": true
+          },
+          {
+            "detail": "Resource-limited fresh process exited successfully",
+            "mandatory": true,
+            "name": "worker_execution",
+            "passed": true
+          },
+          {
+            "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities",
+            "mandatory": true,
+            "name": "prediction_contract",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "mandatory": true,
+            "name": "single_row",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "mandatory": true,
+            "name": "repeat_prediction",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "mandatory": true,
+            "name": "empty_batch_wrapper",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "mandatory": true,
+            "name": "empty_text",
+            "passed": true
+          },
+          {
+            "detail": "No API keys/tokens passed to worker",
+            "mandatory": true,
+            "name": "clean_environment",
+            "passed": true
+          },
+          {
+            "detail": "Advisory quality gate; not a substitute for sealed-test evaluation",
+            "mandatory": false,
+            "name": "ap_above_dummy",
+            "passed": true
+          },
+          {
+            "detail": "Metrics computed only by trusted host using validation labels",
+            "mandatory": true,
+            "name": "host_evaluation",
+            "passed": true
+          }
+        ],
+        "code_path": "candidates/c1/attempt_0/model.py",
+        "code_sha256": "61a2be7f2f64180c0a0f1056c661abfa8e8ae5f91be4d126c200ce6eedd9101a",
+        "containment": {
+          "arbitrary_python_execution": false,
+          "backend": "constrained_ast_subprocess",
+          "constructors_allowlisted": true,
+          "filesystem_namespace": false,
+          "network_namespace": false,
+          "os_sandbox": false,
+          "resource_limited_fresh_process": true,
+          "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary.",
+          "source_evaluated_with_exec_or_eval": false
+        },
+        "error": null,
+        "explanation": "明确标记的离线模板输出",
+        "metrics": {
+          "ap_improvement_over_dummy": 0.8333895772337544,
+          "average_precision": 0.9583895772337544,
+          "classification_threshold": 0.5,
+          "dummy_average_precision": 0.125,
+          "evaluation_split": "validation_only",
+          "f1_threshold_0_5": 0.8055555555555556,
+          "lift_at_10pct": 7.923076923076923,
+          "precision_at_10pct": 0.9903846153846154,
+          "ranking_tie_break": "original_validation_row_order",
+          "recall_at_10pct": 0.7984496124031008,
+          "roc_auc": 0.9880587533372823,
+          "sealed_test_scored": false,
+          "top_10pct_count": 104,
+          "validation_positive_rate": 0.125,
+          "validation_rows": 1032
+        },
+        "model_metadata": {
+          "actual_algorithm": "logistic",
+          "classifier_class": "LogisticRegression",
+          "classifier_parameters": {
+            "max_iter": 1000,
+            "random_state": 42
+          },
+          "classifier_path": [
+            "model"
+          ],
+          "constructor_classes": [
+            "Pipeline",
+            "TfidfVectorizer",
+            "LogisticRegression"
+          ],
+          "constructor_count": 3,
+          "source": "independently_parsed_constructor_plan"
+        },
+        "parent_id": null,
+        "plan": {
+          "algorithm": "logistic",
+          "candidate_id": "c1",
+          "evidence_ids": [
+            "average-precision",
+            "text-tfidf"
+          ],
+          "parent_id": null,
+          "rationale": "可复现线性参考方案",
+          "variant": "default"
+        },
+        "quality_status": "above_prevalence",
+        "repairs": [],
+        "resources": {
+          "cpu_seconds": 0.960809,
+          "fit_seconds": 0.10642466507852077,
+          "joblib_backend": "threading",
+          "limits": {
+            "cpu_cores": 2,
+            "memory_mib": 2048,
+            "timeout_s": 120.0
+          },
+          "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+          "peak_rss_mib": 218.0,
+          "predict_seconds": 0.012710178969427943,
+          "python_version": "3.10.8",
+          "repeat_prediction_max_abs_delta": 0.0,
+          "sklearn_version": "1.7.2",
+          "total_seconds": 0.8794973220210522,
+          "wall_seconds": 0.8532090638764203,
+          "worker_pid": 77965,
+          "worker_wall_seconds": 0.7218338809907436
+        },
+        "status": "passed"
+      },
+      {
+        "artifact_id": "c2",
+        "attempts": [
+          {
+            "attempt": 0,
+            "checks": [
+              {
+                "detail": "AST parsed as approved constructors without exec/eval",
+                "mandatory": true,
+                "name": "source_policy",
+                "passed": true
+              },
+              {
+                "detail": "Final classifier matches planned nb",
+                "mandatory": true,
+                "name": "plan_consistency",
+                "passed": true
+              },
+              {
+                "detail": "SHA256, split disjointness, row alignment, feature policy",
+                "mandatory": true,
+                "name": "dataset_integrity",
+                "passed": true
+              },
+              {
+                "detail": "Worker receives no validation labels or final test",
+                "mandatory": true,
+                "name": "labels_withheld",
+                "passed": true
+              },
+              {
+                "detail": "Resource-limited fresh process exited successfully",
+                "mandatory": true,
+                "name": "worker_execution",
+                "passed": true
+              },
+              {
+                "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities",
+                "mandatory": true,
+                "name": "prediction_contract",
+                "passed": true
+              },
+              {
+                "detail": "",
+                "mandatory": true,
+                "name": "single_row",
+                "passed": true
+              },
+              {
+                "detail": "",
+                "mandatory": true,
+                "name": "repeat_prediction",
+                "passed": true
+              },
+              {
+                "detail": "",
+                "mandatory": true,
+                "name": "empty_batch_wrapper",
+                "passed": true
+              },
+              {
+                "detail": "",
+                "mandatory": true,
+                "name": "empty_text",
+                "passed": true
+              },
+              {
+                "detail": "No API keys/tokens passed to worker",
+                "mandatory": true,
+                "name": "clean_environment",
+                "passed": true
+              },
+              {
+                "detail": "Advisory quality gate; not a substitute for sealed-test evaluation",
+                "mandatory": false,
+                "name": "ap_above_dummy",
+                "passed": true
+              },
+              {
+                "detail": "Metrics computed only by trusted host using validation labels",
+                "mandatory": true,
+                "name": "host_evaluation",
+                "passed": true
+              }
+            ],
+            "code_path": "candidates/c2/attempt_0/model.py",
+            "code_sha256": "7e23e2eba48a13be272c9fb98c92bc5ca3389b899e44647b93ae7561499a65e4",
+            "containment": {
+              "arbitrary_python_execution": false,
+              "backend": "constrained_ast_subprocess",
+              "constructors_allowlisted": true,
+              "filesystem_namespace": false,
+              "network_namespace": false,
+              "os_sandbox": false,
+              "resource_limited_fresh_process": true,
+              "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary.",
+              "source_evaluated_with_exec_or_eval": false
+            },
+            "error": null,
+            "metrics": {
+              "ap_improvement_over_dummy": 0.8348341674027927,
+              "average_precision": 0.9598341674027927,
+              "classification_threshold": 0.5,
+              "dummy_average_precision": 0.125,
+              "evaluation_split": "validation_only",
+              "f1_threshold_0_5": 0.9147286821705426,
+              "lift_at_10pct": 8.0,
+              "precision_at_10pct": 1.0,
+              "ranking_tie_break": "original_validation_row_order",
+              "recall_at_10pct": 0.8062015503875969,
+              "roc_auc": 0.9837406749250989,
+              "sealed_test_scored": false,
+              "top_10pct_count": 104,
+              "validation_positive_rate": 0.125,
+              "validation_rows": 1032
+            },
+            "model_metadata": {
+              "actual_algorithm": "nb",
+              "classifier_class": "ComplementNB",
+              "classifier_parameters": {
+                "alpha": 0.5
+              },
+              "classifier_path": [
+                "model"
+              ],
+              "constructor_classes": [
+                "Pipeline",
+                "TfidfVectorizer",
+                "ComplementNB"
+              ],
+              "constructor_count": 3,
+              "source": "independently_parsed_constructor_plan"
+            },
+            "resources": {
+              "cpu_seconds": 0.8724649999999999,
+              "fit_seconds": 0.06931267399340868,
+              "joblib_backend": "threading",
+              "limits": {
+                "cpu_cores": 2,
+                "memory_mib": 2048,
+                "timeout_s": 120.0
+              },
+              "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+              "peak_rss_mib": 218.0,
+              "predict_seconds": 0.012512490851804614,
+              "python_version": "3.10.8",
+              "repeat_prediction_max_abs_delta": 0.0,
+              "sklearn_version": "1.7.2",
+              "total_seconds": 0.8359713610261679,
+              "wall_seconds": 0.8061874159611762,
+              "worker_pid": 77979,
+              "worker_wall_seconds": 0.6541237011551857
+            },
+            "status": "passed"
+          }
+        ],
+        "candidate_id": "c2",
+        "checks": [
+          {
+            "detail": "AST parsed as approved constructors without exec/eval",
+            "mandatory": true,
+            "name": "source_policy",
+            "passed": true
+          },
+          {
+            "detail": "Final classifier matches planned nb",
+            "mandatory": true,
+            "name": "plan_consistency",
+            "passed": true
+          },
+          {
+            "detail": "SHA256, split disjointness, row alignment, feature policy",
+            "mandatory": true,
+            "name": "dataset_integrity",
+            "passed": true
+          },
+          {
+            "detail": "Worker receives no validation labels or final test",
+            "mandatory": true,
+            "name": "labels_withheld",
+            "passed": true
+          },
+          {
+            "detail": "Resource-limited fresh process exited successfully",
+            "mandatory": true,
+            "name": "worker_execution",
+            "passed": true
+          },
+          {
+            "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities",
+            "mandatory": true,
+            "name": "prediction_contract",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "mandatory": true,
+            "name": "single_row",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "mandatory": true,
+            "name": "repeat_prediction",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "mandatory": true,
+            "name": "empty_batch_wrapper",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "mandatory": true,
+            "name": "empty_text",
+            "passed": true
+          },
+          {
+            "detail": "No API keys/tokens passed to worker",
+            "mandatory": true,
+            "name": "clean_environment",
+            "passed": true
+          },
+          {
+            "detail": "Advisory quality gate; not a substitute for sealed-test evaluation",
+            "mandatory": false,
+            "name": "ap_above_dummy",
+            "passed": true
+          },
+          {
+            "detail": "Metrics computed only by trusted host using validation labels",
+            "mandatory": true,
+            "name": "host_evaluation",
+            "passed": true
+          }
+        ],
+        "code_path": "candidates/c2/attempt_0/model.py",
+        "code_sha256": "7e23e2eba48a13be272c9fb98c92bc5ca3389b899e44647b93ae7561499a65e4",
+        "containment": {
+          "arbitrary_python_execution": false,
+          "backend": "constrained_ast_subprocess",
+          "constructors_allowlisted": true,
+          "filesystem_namespace": false,
+          "network_namespace": false,
+          "os_sandbox": false,
+          "resource_limited_fresh_process": true,
+          "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary.",
+          "source_evaluated_with_exec_or_eval": false
+        },
+        "error": null,
+        "explanation": "明确标记的离线模板输出",
+        "metrics": {
+          "ap_improvement_over_dummy": 0.8348341674027927,
+          "average_precision": 0.9598341674027927,
+          "classification_threshold": 0.5,
+          "dummy_average_precision": 0.125,
+          "evaluation_split": "validation_only",
+          "f1_threshold_0_5": 0.9147286821705426,
+          "lift_at_10pct": 8.0,
+          "precision_at_10pct": 1.0,
+          "ranking_tie_break": "original_validation_row_order",
+          "recall_at_10pct": 0.8062015503875969,
+          "roc_auc": 0.9837406749250989,
+          "sealed_test_scored": false,
+          "top_10pct_count": 104,
+          "validation_positive_rate": 0.125,
+          "validation_rows": 1032
+        },
+        "model_metadata": {
+          "actual_algorithm": "nb",
+          "classifier_class": "ComplementNB",
+          "classifier_parameters": {
+            "alpha": 0.5
+          },
+          "classifier_path": [
+            "model"
+          ],
+          "constructor_classes": [
+            "Pipeline",
+            "TfidfVectorizer",
+            "ComplementNB"
+          ],
+          "constructor_count": 3,
+          "source": "independently_parsed_constructor_plan"
+        },
+        "parent_id": null,
+        "plan": {
+          "algorithm": "nb",
+          "candidate_id": "c2",
+          "evidence_ids": [
+            "average-precision",
+            "text-tfidf"
+          ],
+          "parent_id": null,
+          "rationale": "不同算法结构的对照方案",
+          "variant": "default"
+        },
+        "quality_status": "above_prevalence",
+        "repairs": [],
+        "resources": {
+          "cpu_seconds": 0.8724649999999999,
+          "fit_seconds": 0.06931267399340868,
+          "joblib_backend": "threading",
+          "limits": {
+            "cpu_cores": 2,
+            "memory_mib": 2048,
+            "timeout_s": 120.0
+          },
+          "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+          "peak_rss_mib": 218.0,
+          "predict_seconds": 0.012512490851804614,
+          "python_version": "3.10.8",
+          "repeat_prediction_max_abs_delta": 0.0,
+          "sklearn_version": "1.7.2",
+          "total_seconds": 0.8359713610261679,
+          "wall_seconds": 0.8061874159611762,
+          "worker_pid": 77979,
+          "worker_wall_seconds": 0.6541237011551857
+        },
+        "status": "passed"
+      }
+    ],
+    "created_at": "2026-09-30T17:26:38.450638+00:00",
+    "data_summary": {
+      "train_rows": 3095,
+      "validation_rows": 1032
+    },
+    "dataset_id": "sms",
+    "description": "演示 Agent 角色协作：检索短信分类能力，比较候选并验证接口稳定性，回写验证经验。",
+    "events": [
+      {
+        "created_at": "2026-09-30T17:26:38.550099+00:00",
+        "data": {
+          "mode": "mock",
+          "model": "deterministic-mock-v1"
+        },
+        "event_id": "event-5d73e441e69d4a7c8de35ddcde24bcf9",
+        "event_type": "RECEIVED",
+        "sequence": 1,
+        "type": "RECEIVED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:39.498443+00:00",
+        "data": {
+          "attempt": 1,
+          "candidate_id": null,
+          "max_tokens": 1300,
+          "name": "interpreter",
+          "role": "interpreter",
+          "schema": "TaskInterpretation",
+          "span_id": "agent:interpreter:1:1"
+        },
+        "event_id": "event-0e4959db842c4f9d9e3efe6fb84b901a",
+        "event_type": "AGENT_STARTED",
+        "sequence": 2,
+        "type": "AGENT_STARTED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:39.818764+00:00",
+        "data": {
+          "model": "deterministic-mock-v1",
+          "role": "interpreter"
+        },
+        "event_id": "event-7a98339c454841519951d93466353b8d",
+        "event_type": "MOCK_RESPONSE",
+        "sequence": 3,
+        "type": "MOCK_RESPONSE"
+      },
+      {
+        "created_at": "2026-09-30T17:26:40.058761+00:00",
+        "data": {
+          "attempt": 1,
+          "candidate_id": null,
+          "name": "interpreter",
+          "result_keys": [
+            "assumptions",
+            "constraints",
+            "incompatible_requests",
+            "objective",
+            "requested_run_seconds",
+            "warnings"
+          ],
+          "role": "interpreter",
+          "schema": "TaskInterpretation",
+          "span_id": "agent:interpreter:1:1"
+        },
+        "event_id": "event-50e45610ea1e43c998b28fb009a82be7",
+        "event_type": "AGENT_COMPLETED",
+        "sequence": 4,
+        "type": "AGENT_COMPLETED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:40.649699+00:00",
+        "data": {
+          "assumptions": [
+            "离线规则测试模式"
+          ],
+          "task_type": "text_binary_classification"
+        },
+        "event_id": "event-aa508f6ea0ef4e2b874aacbc624a9cdb",
+        "event_type": "SPEC_VALIDATED",
+        "sequence": 5,
+        "type": "SPEC_VALIDATED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:40.920992+00:00",
+        "data": {
+          "name": "search_capabilities",
+          "role": "retrieval",
+          "schema": "CapabilitySearchInput",
+          "span_id": "tool:search_capabilities:1"
+        },
+        "event_id": "event-b6a82c587c2c48e78290dbec9ec93e8e",
+        "event_type": "TOOL_STARTED",
+        "sequence": 6,
+        "type": "TOOL_STARTED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:41.628958+00:00",
+        "data": {
+          "capability_ids": [
+            "average-precision",
+            "text-tfidf",
+            "evidence-versioning",
+            "probability-logistic",
+            "sms-format",
+            "complement-naive-bayes"
+          ],
+          "name": "search_capabilities",
+          "returned_count": 6,
+          "role": "retrieval",
+          "span_id": "tool:search_capabilities:1"
+        },
+        "event_id": "event-213afba12a3540ddb88782e5ef99ef9c",
+        "event_type": "TOOL_COMPLETED",
+        "sequence": 7,
+        "type": "TOOL_COMPLETED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:41.910366+00:00",
+        "data": {
+          "capability_ids": [
+            "average-precision",
+            "text-tfidf",
+            "evidence-versioning",
+            "probability-logistic",
+            "sms-format",
+            "complement-naive-bayes"
+          ],
+          "count": 6,
+          "tool": "search_capabilities",
+          "use_graph": true
+        },
+        "event_id": "event-fdf1a24621524cd286c3ee121de9ba5d",
+        "event_type": "KNOWLEDGE_RETRIEVED",
+        "sequence": 8,
+        "type": "KNOWLEDGE_RETRIEVED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:42.138614+00:00",
+        "data": {
+          "attempt": 1,
+          "candidate_id": null,
+          "max_tokens": 2200,
+          "name": "planner",
+          "role": "planner",
+          "schema": "PlanSet",
+          "span_id": "agent:planner:2:1"
+        },
+        "event_id": "event-cc1a12dfa8a64945aaab81b455dca805",
+        "event_type": "AGENT_STARTED",
+        "sequence": 9,
+        "type": "AGENT_STARTED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:42.373415+00:00",
+        "data": {
+          "model": "deterministic-mock-v1",
+          "role": "planner"
+        },
+        "event_id": "event-2c52262bbb974fab8c7116ef95cc2a8a",
+        "event_type": "MOCK_RESPONSE",
+        "sequence": 10,
+        "type": "MOCK_RESPONSE"
+      },
+      {
+        "created_at": "2026-09-30T17:26:42.645686+00:00",
+        "data": {
+          "attempt": 1,
+          "candidate_id": null,
+          "name": "planner",
+          "result_keys": [
+            "candidates"
+          ],
+          "role": "planner",
+          "schema": "PlanSet",
+          "span_id": "agent:planner:2:1"
+        },
+        "event_id": "event-eb08e770471b4181a77a66f8fec86a39",
+        "event_type": "AGENT_COMPLETED",
+        "sequence": 11,
+        "type": "AGENT_COMPLETED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:42.903101+00:00",
+        "data": {
+          "algorithm": "logistic",
+          "candidate_id": "c1",
+          "evidence_ids": [
+            "average-precision",
+            "text-tfidf"
+          ],
+          "parent_id": null,
+          "rationale": "可复现线性参考方案",
+          "variant": "default"
+        },
+        "event_id": "event-c8c285752a0e4cc78e37cfcf59b91939",
+        "event_type": "CANDIDATE_PLANNED",
+        "sequence": 12,
+        "type": "CANDIDATE_PLANNED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:43.173552+00:00",
+        "data": {
+          "attempt": 1,
+          "candidate_id": "c1",
+          "max_tokens": 2800,
+          "name": "coder",
+          "role": "coder",
+          "schema": "GeneratedCode",
+          "span_id": "agent:coder:3:1"
+        },
+        "event_id": "event-ef91b40e1e4240ce9937f32b3b595bbb",
+        "event_type": "AGENT_STARTED",
+        "sequence": 13,
+        "type": "AGENT_STARTED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:43.383924+00:00",
+        "data": {
+          "model": "deterministic-mock-v1",
+          "role": "coder"
+        },
+        "event_id": "event-29b022ba52d5462e94b25ad7b1e5c995",
+        "event_type": "MOCK_RESPONSE",
+        "sequence": 14,
+        "type": "MOCK_RESPONSE"
+      },
+      {
+        "created_at": "2026-09-30T17:26:43.767305+00:00",
+        "data": {
+          "attempt": 1,
+          "candidate_id": "c1",
+          "name": "coder",
+          "result_keys": [
+            "code",
+            "explanation"
+          ],
+          "role": "coder",
+          "schema": "GeneratedCode",
+          "span_id": "agent:coder:3:1"
+        },
+        "event_id": "event-9775a4c8ed774827ac37c356b6aaffe6",
+        "event_type": "AGENT_COMPLETED",
+        "sequence": 15,
+        "type": "AGENT_COMPLETED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:44.024099+00:00",
+        "data": {
+          "attempt": 0,
+          "candidate_id": "c1",
+          "code_sha256": "61a2be7f2f64180c0a0f1056c661abfa8e8ae5f91be4d126c200ce6eedd9101a"
+        },
+        "event_id": "event-354fb4c9d49e4725972b6b4b62da143b",
+        "event_type": "VALIDATING",
+        "sequence": 16,
+        "type": "VALIDATING"
+      },
+      {
+        "created_at": "2026-09-30T17:26:45.149305+00:00",
+        "data": {
+          "attempt": 0,
+          "candidate_id": "c1",
+          "error": null,
+          "metrics": {
+            "ap_improvement_over_dummy": 0.8333895772337544,
+            "average_precision": 0.9583895772337544,
+            "classification_threshold": 0.5,
+            "dummy_average_precision": 0.125,
+            "evaluation_split": "validation_only",
+            "f1_threshold_0_5": 0.8055555555555556,
+            "lift_at_10pct": 7.923076923076923,
+            "precision_at_10pct": 0.9903846153846154,
+            "ranking_tie_break": "original_validation_row_order",
+            "recall_at_10pct": 0.7984496124031008,
+            "roc_auc": 0.9880587533372823,
+            "sealed_test_scored": false,
+            "top_10pct_count": 104,
+            "validation_positive_rate": 0.125,
+            "validation_rows": 1032
+          },
+          "status": "passed"
+        },
+        "event_id": "event-c29d4914edba457889c396790532e1ba",
+        "event_type": "VERIFIED",
+        "sequence": 17,
+        "type": "VERIFIED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:45.571594+00:00",
+        "data": {
+          "algorithm": "nb",
+          "candidate_id": "c2",
+          "evidence_ids": [
+            "average-precision",
+            "text-tfidf"
+          ],
+          "parent_id": null,
+          "rationale": "不同算法结构的对照方案",
+          "variant": "default"
+        },
+        "event_id": "event-a1de91f57b514854a479311a4d19367f",
+        "event_type": "CANDIDATE_PLANNED",
+        "sequence": 18,
+        "type": "CANDIDATE_PLANNED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:45.776739+00:00",
+        "data": {
+          "attempt": 1,
+          "candidate_id": "c2",
+          "max_tokens": 2800,
+          "name": "coder",
+          "role": "coder",
+          "schema": "GeneratedCode",
+          "span_id": "agent:coder:4:1"
+        },
+        "event_id": "event-00c38bb825cf43dca1a8c6bcef27893d",
+        "event_type": "AGENT_STARTED",
+        "sequence": 19,
+        "type": "AGENT_STARTED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:45.979506+00:00",
+        "data": {
+          "model": "deterministic-mock-v1",
+          "role": "coder"
+        },
+        "event_id": "event-3af6695075f947ab9e7024431f776c93",
+        "event_type": "MOCK_RESPONSE",
+        "sequence": 20,
+        "type": "MOCK_RESPONSE"
+      },
+      {
+        "created_at": "2026-09-30T17:26:46.517443+00:00",
+        "data": {
+          "attempt": 1,
+          "candidate_id": "c2",
+          "name": "coder",
+          "result_keys": [
+            "code",
+            "explanation"
+          ],
+          "role": "coder",
+          "schema": "GeneratedCode",
+          "span_id": "agent:coder:4:1"
+        },
+        "event_id": "event-7fdedce0236a40d998954f4266d5d812",
+        "event_type": "AGENT_COMPLETED",
+        "sequence": 21,
+        "type": "AGENT_COMPLETED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:46.778333+00:00",
+        "data": {
+          "attempt": 0,
+          "candidate_id": "c2",
+          "code_sha256": "7e23e2eba48a13be272c9fb98c92bc5ca3389b899e44647b93ae7561499a65e4"
+        },
+        "event_id": "event-5dd5c920bf0946048ab9c33c8e574cce",
+        "event_type": "VALIDATING",
+        "sequence": 22,
+        "type": "VALIDATING"
+      },
+      {
+        "created_at": "2026-09-30T17:26:47.952370+00:00",
+        "data": {
+          "attempt": 0,
+          "candidate_id": "c2",
+          "error": null,
+          "metrics": {
+            "ap_improvement_over_dummy": 0.8348341674027927,
+            "average_precision": 0.9598341674027927,
+            "classification_threshold": 0.5,
+            "dummy_average_precision": 0.125,
+            "evaluation_split": "validation_only",
+            "f1_threshold_0_5": 0.9147286821705426,
+            "lift_at_10pct": 8.0,
+            "precision_at_10pct": 1.0,
+            "ranking_tie_break": "original_validation_row_order",
+            "recall_at_10pct": 0.8062015503875969,
+            "roc_auc": 0.9837406749250989,
+            "sealed_test_scored": false,
+            "top_10pct_count": 104,
+            "validation_positive_rate": 0.125,
+            "validation_rows": 1032
+          },
+          "status": "passed"
+        },
+        "event_id": "event-ef53e01bc4434fdeb9719548434dbdb2",
+        "event_type": "VERIFIED",
+        "sequence": 23,
+        "type": "VERIFIED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:48.246608+00:00",
+        "data": {
+          "attempt": 1,
+          "candidate_id": null,
+          "max_tokens": 1300,
+          "name": "curator",
+          "role": "curator",
+          "schema": "Explanation",
+          "span_id": "agent:curator:5:1"
+        },
+        "event_id": "event-16e53e5f177d4e498e128b453f202c26",
+        "event_type": "AGENT_STARTED",
+        "sequence": 24,
+        "type": "AGENT_STARTED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:48.623099+00:00",
+        "data": {
+          "model": "deterministic-mock-v1",
+          "role": "curator"
+        },
+        "event_id": "event-09fa6275f65341448a96e851e1a44b82",
+        "event_type": "MOCK_RESPONSE",
+        "sequence": 25,
+        "type": "MOCK_RESPONSE"
+      },
+      {
+        "created_at": "2026-09-30T17:26:48.934421+00:00",
+        "data": {
+          "attempt": 1,
+          "candidate_id": null,
+          "name": "curator",
+          "result_keys": [
+            "limitations",
+            "summary"
+          ],
+          "role": "curator",
+          "schema": "Explanation",
+          "span_id": "agent:curator:5:1"
+        },
+        "event_id": "event-bb00fd5211a24b85938531f2e769a306",
+        "event_type": "AGENT_COMPLETED",
+        "sequence": 26,
+        "type": "AGENT_COMPLETED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:49.156195+00:00",
+        "data": {
+          "selected_candidate_id": "c2"
+        },
+        "event_id": "event-fc401dcc017943c5899c209c55773a61",
+        "event_type": "COMPARED",
+        "sequence": 27,
+        "type": "COMPARED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:49.660073+00:00",
+        "data": {
+          "experiences": 0,
+          "intended_status": "passed"
+        },
+        "event_id": "event-87c4d98e38ad4778932fe6c6ff26de2b",
+        "event_type": "RECORDED",
+        "sequence": 28,
+        "type": "RECORDED"
+      },
+      {
+        "created_at": "2026-09-30T17:26:49.974739+00:00",
+        "data": {
+          "event_count": 28,
+          "status": "passed"
+        },
+        "event_id": "event-ff139b0d920b4ab28661b1d3dc68b5ee",
+        "event_type": "RUN_FINISHED",
+        "sequence": 29,
+        "type": "RUN_FINISHED"
+      }
+    ],
+    "evidence": [
+      {
+        "capability_id": "average-precision",
+        "confidence": 1.0,
+        "created_at": "2026-09-28T11:23:24.518754+00:00",
+        "dependencies": [
+          "Python >=3.10",
+          "scikit-learn"
+        ],
+        "evidence": [
+          {
+            "content_sha256": "a1fc02f0b042a3945c37692c9377a746800dd2a90cdc227df5268f218bea3f74",
+            "license": "BSD-3-Clause",
+            "locator": {
+              "imports": [
+                "import warnings",
+                "from functools import partial",
+                "from numbers import Integral, Real",
+                "import numpy as np",
+                "from scipy.integrate import trapezoid",
+                "from scipy.sparse import csr_matrix, issparse",
+                "from scipy.stats import rankdata",
+                "from ..exceptions import UndefinedMetricWarning",
+                "from ..preprocessing import label_binarize",
+                "from ..utils import assert_all_finite, check_array, check_consistent_length, column_or_1d",
+                "from ..utils._encode import _encode, _unique",
+                "from ..utils._param_validation import Interval, StrOptions, validate_params",
+                "from ..utils.extmath import stable_cumsum",
+                "from ..utils.multiclass import type_of_target",
+                "from ..utils.sparsefuncs import count_nonzero",
+                "from ..utils.validation import _check_pos_label_consistency, _check_sample_weight",
+                "from ._base import _average_binary_score, _average_multiclass_ovo_score"
+              ],
+              "line_end": 268,
+              "line_start": 118,
+              "methods": [
+                "_binary_uninterpolated_average_precision"
+              ],
+              "parse_mode": "ast-only",
+              "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/metrics/_ranking.py",
+              "relative_path": "sklearn/metrics/_ranking.py",
+              "signature": "def average_precision_score(y_true, y_score, *, average='macro', pos_label=1, sample_weight=None)",
+              "symbol": "average_precision_score"
+            },
+            "revision": "1.7.2",
+            "source_id": "src-9ca2de7b8493fff6ad94d779",
+            "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/metrics/_ranking.py"
+          }
+        ],
+        "evidence_path": [
+          {
+            "bonus": 0.28736848324283987,
+            "hops": [
+              {
+                "from": "capability:probability-logistic:v1",
+                "relation": "REQUIRES",
+                "to": "capability:average-precision:v1"
+              }
+            ],
+            "seed": "capability:probability-logistic:v1"
+          },
+          {
+            "bonus": 0.28736848324283987,
+            "hops": [
+              {
+                "from": "capability:sms-format:v2",
+                "relation": "REQUIRES",
+                "to": "capability:average-precision:v1"
+              }
+            ],
+            "seed": "capability:sms-format:v2"
+          }
+        ],
+        "extraction_method": "curated-source-grounded",
+        "graph_score": 0.574737,
+        "graph_used": true,
+        "id": "average-precision",
+        "input_schema": {
+          "task_types": [
+            "tabular_binary_classification",
+            "text_binary_classification"
+          ],
+          "type": "features"
+        },
+        "lexical_score": 0.538816,
+        "matched_constraints": [
+          "task_type=text_binary_classification"
+        ],
+        "name": "不平衡二分类 Average Precision",
+        "origin": "manual_seed",
+        "output_schema": {
+          "type": "implementation-guidance"
+        },
+        "preconditions": [
+          "由可信验证器计算，使用同一分割协议。"
+        ],
+        "rejected_reason": null,
+        "related": [],
+        "score": 1.113553,
+        "source_locator": [
+          {
+            "imports": [
+              "import warnings",
+              "from functools import partial",
+              "from numbers import Integral, Real",
+              "import numpy as np",
+              "from scipy.integrate import trapezoid",
+              "from scipy.sparse import csr_matrix, issparse",
+              "from scipy.stats import rankdata",
+              "from ..exceptions import UndefinedMetricWarning",
+              "from ..preprocessing import label_binarize",
+              "from ..utils import assert_all_finite, check_array, check_consistent_length, column_or_1d",
+              "from ..utils._encode import _encode, _unique",
+              "from ..utils._param_validation import Interval, StrOptions, validate_params",
+              "from ..utils.extmath import stable_cumsum",
+              "from ..utils.multiclass import type_of_target",
+              "from ..utils.sparsefuncs import count_nonzero",
+              "from ..utils.validation import _check_pos_label_consistency, _check_sample_weight",
+              "from ._base import _average_binary_score, _average_multiclass_ovo_score"
+            ],
+            "line_end": 268,
+            "line_start": 118,
+            "methods": [
+              "_binary_uninterpolated_average_precision"
+            ],
+            "parse_mode": "ast-only",
+            "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/metrics/_ranking.py",
+            "relative_path": "sklearn/metrics/_ranking.py",
+            "signature": "def average_precision_score(y_true, y_score, *, average='macro', pos_label=1, sample_weight=None)",
+            "symbol": "average_precision_score"
+          }
+        ],
+        "status": "extracted",
+        "summary": "average_precision_score 根据预测分数汇总精确率召回率曲线，定义为召回增量对 precision 的加权和。输入真实二值标签和正类预测分数；本项目以 AP 为主指标，并记录正类率基线。不得将其等同于梯形插值 PR-AUC。",
+        "tags": [
+          "average_precision",
+          "AP",
+          "排序",
+          "不平衡",
+          "precision",
+          "recall",
+          "正类"
+        ],
+        "task_types": [
+          "tabular_binary_classification",
+          "text_binary_classification"
+        ],
+        "uses": [
+          {
+            "kind": "Metric",
+            "label": "average_precision"
+          }
+        ],
+        "version": 1
+      },
+      {
+        "capability_id": "text-tfidf",
+        "confidence": 1.0,
+        "created_at": "2026-09-29T15:08:50.633076+00:00",
+        "dependencies": [
+          "Python >=3.10",
+          "scikit-learn"
+        ],
+        "evidence": [
+          {
+            "content_sha256": "876f0d334735f77174822fabff287fab5602ccff8973a5430ebc70548916da62",
+            "license": "BSD-3-Clause",
+            "locator": {
+              "imports": [
+                "import array",
+                "import re",
+                "import unicodedata",
+                "import warnings",
+                "from collections import defaultdict",
+                "from collections.abc import Mapping",
+                "from functools import partial",
+                "from numbers import Integral",
+                "from operator import itemgetter",
+                "import numpy as np",
+                "import scipy.sparse as sp",
+                "from sklearn.utils import metadata_routing",
+                "from ..base import BaseEstimator, OneToOneFeatureMixin, TransformerMixin, _fit_context",
+                "from ..exceptions import NotFittedError",
+                "from ..preprocessing import normalize",
+                "from ..utils._param_validation import HasMethods, Interval, RealNotInt, StrOptions",
+                "from ..utils.fixes import _IS_32BIT",
+                "from ..utils.validation import FLOAT_DTYPES, check_array, check_is_fitted, validate_data",
+                "from ._hash import FeatureHasher",
+                "from ._stop_words import ENGLISH_STOP_WORDS"
+              ],
+              "line_end": 2137,
+              "line_start": 1735,
+              "methods": [
+                "__init__",
+                "idf_",
+                "idf_",
+                "_check_params",
+                "fit",
+                "fit_transform",
+                "transform",
+                "__sklearn_tags__"
+              ],
+              "parse_mode": "ast-only",
+              "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/feature_extraction/text.py",
+              "relative_path": "sklearn/feature_extraction/text.py",
+              "signature": "class TfidfVectorizer(CountVectorizer):\n    def __init__(self, *, input='content', encoding='utf-8', decode_error='strict', strip_accents=None, lowercase=True, preprocessor=None, tokenizer=None, analyzer='word', stop_words=None, token_pattern='(?u)\\\\b\\\\w\\\\w+\\\\b', ngram_range=(1, 1), max_df=1.0, min_df=1, max_features=None, vocabulary=None, binary=False, dtype=np.float64, norm='l2', use_idf=True, smooth_idf=True, sublinear_tf=False)",
+              "symbol": "TfidfVectorizer"
+            },
+            "revision": "1.7.2",
+            "source_id": "src-ecb336a2fa483eb3b4f26d0b",
+            "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/feature_extraction/text.py"
+          },
+          {
+            "content_sha256": "aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23",
+            "license": "original-project-notes",
+            "locator": {
+              "line_end": 62,
+              "line_start": 51,
+              "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md"
+            },
+            "revision": "sha256:aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23",
+            "source_id": "src-b78d3450109d520074cd321f",
+            "uri": "file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md"
+          }
+        ],
+        "evidence_path": [
+          {
+            "bonus": 0.28736848324283987,
+            "hops": [
+              {
+                "from": "capability:probability-logistic:v1",
+                "relation": "REQUIRES",
+                "to": "capability:text-tfidf:v2"
+              }
+            ],
+            "seed": "capability:probability-logistic:v1"
+          },
+          {
+            "bonus": 0.28736848324283987,
+            "hops": [
+              {
+                "from": "capability:sms-format:v2",
+                "relation": "REQUIRES",
+                "to": "capability:text-tfidf:v2"
+              }
+            ],
+            "seed": "capability:sms-format:v2"
+          }
+        ],
+        "extraction_method": "curated-source-grounded",
+        "graph_score": 0.574737,
+        "graph_used": true,
+        "id": "text-tfidf",
+        "input_schema": {
+          "task_types": [
+            "text_binary_classification"
+          ],
+          "type": "features"
+        },
+        "lexical_score": 0.538816,
+        "matched_constraints": [
+          "task_type=text_binary_classification"
+        ],
+        "name": "TF-IDF 文本稀疏向量",
+        "origin": "manual_seed",
+        "output_schema": {
+          "type": "implementation-guidance"
+        },
+        "preconditions": [],
+        "rejected_reason": null,
+        "related": [
+          "probability-logistic",
+          "complement-naive-bayes"
+        ],
+        "score": 1.113553,
+        "source_locator": [
+          {
+            "imports": [
+              "import array",
+              "import re",
+              "import unicodedata",
+              "import warnings",
+              "from collections import defaultdict",
+              "from collections.abc import Mapping",
+              "from functools import partial",
+              "from numbers import Integral",
+              "from operator import itemgetter",
+              "import numpy as np",
+              "import scipy.sparse as sp",
+              "from sklearn.utils import metadata_routing",
+              "from ..base import BaseEstimator, OneToOneFeatureMixin, TransformerMixin, _fit_context",
+              "from ..exceptions import NotFittedError",
+              "from ..preprocessing import normalize",
+              "from ..utils._param_validation import HasMethods, Interval, RealNotInt, StrOptions",
+              "from ..utils.fixes import _IS_32BIT",
+              "from ..utils.validation import FLOAT_DTYPES, check_array, check_is_fitted, validate_data",
+              "from ._hash import FeatureHasher",
+              "from ._stop_words import ENGLISH_STOP_WORDS"
+            ],
+            "line_end": 2137,
+            "line_start": 1735,
+            "methods": [
+              "__init__",
+              "idf_",
+              "idf_",
+              "_check_params",
+              "fit",
+              "fit_transform",
+              "transform",
+              "__sklearn_tags__"
+            ],
+            "parse_mode": "ast-only",
+            "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/feature_extraction/text.py",
+            "relative_path": "sklearn/feature_extraction/text.py",
+            "signature": "class TfidfVectorizer(CountVectorizer):\n    def __init__(self, *, input='content', encoding='utf-8', decode_error='strict', strip_accents=None, lowercase=True, preprocessor=None, tokenizer=None, analyzer='word', stop_words=None, token_pattern='(?u)\\\\b\\\\w\\\\w+\\\\b', ngram_range=(1, 1), max_df=1.0, min_df=1, max_features=None, vocabulary=None, binary=False, dtype=np.float64, norm='l2', use_idf=True, smooth_idf=True, sublinear_tf=False)",
+            "symbol": "TfidfVectorizer"
+          },
+          {
+            "line_end": 62,
+            "line_start": 51,
+            "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md"
+          }
+        ],
+        "status": "extracted",
+        "summary": "TfidfVectorizer 将原始文本转成 TF-IDF 特征。训练词表和 IDF 只使用训练文本；通过 ngram_range、max_features 和 min_df 控制表示及资源。与线性分类器或朴素贝叶斯组合，保持稀疏表示。",
+        "tags": [
+          "TfidfVectorizer",
+          "tfidf",
+          "短信",
+          "文本",
+          "词表",
+          "稀疏"
+        ],
+        "task_types": [
+          "text_binary_classification"
+        ],
+        "uses": [
+          {
+            "kind": "Transform",
+            "label": "TfidfVectorizer"
+          }
+        ],
+        "version": 2
+      },
+      {
+        "capability_id": "evidence-versioning",
+        "confidence": 1.0,
+        "created_at": "2026-09-29T15:08:50.633423+00:00",
+        "dependencies": [
+          "Python >=3.10",
+          "scikit-learn"
+        ],
+        "evidence": [
+          {
+            "content_sha256": "aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23",
+            "license": "original-project-notes",
+            "locator": {
+              "line_end": 89,
+              "line_start": 82,
+              "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md"
+            },
+            "revision": "sha256:aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23",
+            "source_id": "src-b07d24d7110ddbc19e0f2883",
+            "uri": "file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md"
+          }
+        ],
+        "evidence_path": [],
+        "extraction_method": "curated-source-grounded",
+        "graph_score": 0.0,
+        "graph_used": true,
+        "id": "evidence-versioning",
+        "input_schema": {
+          "task_types": [
+            "tabular_binary_classification",
+            "text_binary_classification"
+          ],
+          "type": "features"
+        },
+        "lexical_score": 0.898027,
+        "matched_constraints": [
+          "task_type=text_binary_classification"
+        ],
+        "name": "出处与失败经验版本化",
+        "origin": "manual_seed",
+        "output_schema": {
+          "type": "implementation-guidance"
+        },
+        "preconditions": [],
+        "rejected_reason": null,
+        "related": [],
+        "score": 0.898027,
+        "source_locator": [
+          {
+            "line_end": 89,
+            "line_start": 82,
+            "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md"
+          }
+        ],
+        "status": "extracted",
+        "summary": "项目知识协议要求保存来源哈希、定位、抽取方式和版本；LLM 置信度不是正确率。未经复测的修复仅标记 proposed，真实验证通过后才可作为 validated 经验检索；失败结果仍须保留。",
+        "tags": [
+          "出处",
+          "provenance",
+          "失败",
+          "修复",
+          "版本",
+          "evidence"
+        ],
+        "task_types": [
+          "tabular_binary_classification",
+          "text_binary_classification"
+        ],
+        "uses": [],
+        "version": 2
+      },
+      {
+        "capability_id": "probability-logistic",
+        "confidence": 1.0,
+        "created_at": "2026-09-28T11:23:24.517906+00:00",
+        "dependencies": [
+          "Python >=3.10",
+          "scikit-learn"
+        ],
+        "evidence": [
+          {
+            "content_sha256": "981f4e11c9a6fc2b02cd9322f2926849143e4a8bf1819e3a4159a9fce615a00c",
+            "license": "BSD-3-Clause",
+            "locator": {
+              "imports": [
+                "import numbers",
+                "import warnings",
+                "from numbers import Integral, Real",
+                "import numpy as np",
+                "from joblib import effective_n_jobs",
+                "from scipy import optimize",
+                "from sklearn.metrics import get_scorer_names",
+                "from .._loss.loss import HalfBinomialLoss, HalfMultinomialLoss",
+                "from ..base import _fit_context",
+                "from ..metrics import get_scorer",
+                "from ..model_selection import check_cv",
+                "from ..preprocessing import LabelBinarizer, LabelEncoder",
+                "from ..svm._base import _fit_liblinear",
+                "from ..utils import Bunch, check_array, check_consistent_length, check_random_state, compute_class_weight",
+                "from ..utils._param_validation import Hidden, Interval, StrOptions",
+                "from ..utils.extmath import row_norms, softmax",
+                "from ..utils.fixes import _get_additional_lbfgs_options_dict",
+                "from ..utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, process_routing",
+                "from ..utils.multiclass import check_classification_targets",
+                "from ..utils.optimize import _check_optimize_result, _newton_cg",
+                "from ..utils.parallel import Parallel, delayed",
+                "from ..utils.validation import _check_method_params, _check_sample_weight, check_is_fitted, validate_data",
+                "from ._base import BaseEstimator, LinearClassifierMixin, SparseCoefMixin",
+                "from ._glm.glm import NewtonCholeskySolver",
+                "from ._linear_loss import LinearModelLoss",
+                "from ._sag import sag_solver"
+              ],
+              "line_end": 1497,
+              "line_start": 829,
+              "methods": [
+                "__init__",
+                "fit",
+                "predict_proba",
+                "predict_log_proba",
+                "__sklearn_tags__"
+              ],
+              "parse_mode": "ast-only",
+              "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/linear_model/_logistic.py",
+              "relative_path": "sklearn/linear_model/_logistic.py",
+              "signature": "class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):\n    def __init__(self, penalty='l2', *, dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1, class_weight=None, random_state=None, solver='lbfgs', max_iter=100, multi_class='deprecated', verbose=0, warm_start=False, n_jobs=None, l1_ratio=None)",
+              "symbol": "LogisticRegression"
+            },
+            "revision": "1.7.2",
+            "source_id": "src-584b66a31950a968f84ef11b",
+            "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/linear_model/_logistic.py"
+          }
+        ],
+        "evidence_path": [
+          {
+            "bonus": 0.14368424162141993,
+            "hops": [
+              {
+                "from": "capability:sms-format:v2",
+                "relation": "REQUIRES",
+                "to": "capability:average-precision:v1"
+              },
+              {
+                "from": "capability:average-precision:v1",
+                "relation": "REQUIRES",
+                "to": "capability:probability-logistic:v1"
+              }
+            ],
+            "seed": "capability:sms-format:v2"
+          }
+        ],
+        "extraction_method": "curated-source-grounded",
+        "graph_score": 0.143684,
+        "graph_used": true,
+        "id": "probability-logistic",
+        "input_schema": {
+          "task_types": [
+            "tabular_binary_classification",
+            "text_binary_classification"
+          ],
+          "type": "features"
+        },
+        "lexical_score": 0.718421,
+        "matched_constraints": [
+          "task_type=text_binary_classification"
+        ],
+        "name": "逻辑回归二分类概率接口",
+        "origin": "manual_seed",
+        "output_schema": {
+          "type": "implementation-guidance"
+        },
+        "preconditions": [],
+        "rejected_reason": null,
+        "related": [
+          "average-precision"
+        ],
+        "score": 0.862105,
+        "source_locator": [
+          {
+            "imports": [
+              "import numbers",
+              "import warnings",
+              "from numbers import Integral, Real",
+              "import numpy as np",
+              "from joblib import effective_n_jobs",
+              "from scipy import optimize",
+              "from sklearn.metrics import get_scorer_names",
+              "from .._loss.loss import HalfBinomialLoss, HalfMultinomialLoss",
+              "from ..base import _fit_context",
+              "from ..metrics import get_scorer",
+              "from ..model_selection import check_cv",
+              "from ..preprocessing import LabelBinarizer, LabelEncoder",
+              "from ..svm._base import _fit_liblinear",
+              "from ..utils import Bunch, check_array, check_consistent_length, check_random_state, compute_class_weight",
+              "from ..utils._param_validation import Hidden, Interval, StrOptions",
+              "from ..utils.extmath import row_norms, softmax",
+              "from ..utils.fixes import _get_additional_lbfgs_options_dict",
+              "from ..utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, process_routing",
+              "from ..utils.multiclass import check_classification_targets",
+              "from ..utils.optimize import _check_optimize_result, _newton_cg",
+              "from ..utils.parallel import Parallel, delayed",
+              "from ..utils.validation import _check_method_params, _check_sample_weight, check_is_fitted, validate_data",
+              "from ._base import BaseEstimator, LinearClassifierMixin, SparseCoefMixin",
+              "from ._glm.glm import NewtonCholeskySolver",
+              "from ._linear_loss import LinearModelLoss",
+              "from ._sag import sag_solver"
+            ],
+            "line_end": 1497,
+            "line_start": 829,
+            "methods": [
+              "__init__",
+              "fit",
+              "predict_proba",
+              "predict_log_proba",
+              "__sklearn_tags__"
+            ],
+            "parse_mode": "ast-only",
+            "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/linear_model/_logistic.py",
+            "relative_path": "sklearn/linear_model/_logistic.py",
+            "signature": "class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):\n    def __init__(self, penalty='l2', *, dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1, class_weight=None, random_state=None, solver='lbfgs', max_iter=100, multi_class='deprecated', verbose=0, warm_start=False, n_jobs=None, l1_ratio=None)",
+            "symbol": "LogisticRegression"
+          }
+        ],
+        "status": "extracted",
+        "summary": "LogisticRegression 提供 predict_proba，输出列顺序由 classes_ 决定。必须根据正类标签映射提取正确一列，不能把 predict 的类别标签当概率。适合经过编码的表格特征及 TF-IDF 稀疏文本特征。",
+        "tags": [
+          "LogisticRegression",
+          "predict_proba",
+          "概率",
+          "二分类",
+          "classes_"
+        ],
+        "task_types": [
+          "tabular_binary_classification",
+          "text_binary_classification"
+        ],
+        "uses": [
+          {
+            "kind": "Algorithm",
+            "label": "LogisticRegression"
+          }
+        ],
+        "version": 1
+      },
+      {
+        "capability_id": "sms-format",
+        "confidence": 1.0,
+        "created_at": "2026-09-29T15:08:50.632206+00:00",
+        "dependencies": [
+          "Python >=3.10",
+          "scikit-learn"
+        ],
+        "evidence": [
+          {
+            "content_sha256": "8753cd2d3cab68f80c8257851b8c2037778c267f55accb6fd1b5a2e32d36a84e",
+            "license": "CC-BY-4.0",
+            "locator": {
+              "line_end": 31,
+              "line_start": 28,
+              "path": "/root/algorithm-capability-factory/data/raw/sms-readme.txt"
+            },
+            "revision": "sha256:8753cd2d3cab68f80c8257851b8c2037778c267f55accb6fd1b5a2e32d36a84e",
+            "source_id": "src-4f8bdb3589548b6b90312e82",
+            "uri": "https://archive.ics.uci.edu/dataset/228/sms+spam+collection"
+          },
+          {
+            "content_sha256": "aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23",
+            "license": "original-project-notes",
+            "locator": {
+              "line_end": 62,
+              "line_start": 51,
+              "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md"
+            },
+            "revision": "sha256:aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23",
+            "source_id": "src-b78d3450109d520074cd321f",
+            "uri": "file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md"
+          }
+        ],
+        "evidence_path": [
+          {
+            "bonus": 0.14368424162141993,
+            "hops": [
+              {
+                "from": "capability:probability-logistic:v1",
+                "relation": "REQUIRES",
+                "to": "capability:average-precision:v1"
+              },
+              {
+                "from": "capability:average-precision:v1",
+                "relation": "REQUIRES",
+                "to": "capability:sms-format:v2"
+              }
+            ],
+            "seed": "capability:probability-logistic:v1"
+          }
+        ],
+        "extraction_method": "curated-source-grounded",
+        "graph_score": 0.143684,
+        "graph_used": true,
+        "id": "sms-format",
+        "input_schema": {
+          "task_types": [
+            "text_binary_classification"
+          ],
+          "type": "features"
+        },
+        "lexical_score": 0.718421,
+        "matched_constraints": [
+          "task_type=text_binary_classification"
+        ],
+        "name": "SMS 垃圾短信标签和文本格式",
+        "origin": "manual_seed",
+        "output_schema": {
+          "type": "implementation-guidance"
+        },
+        "preconditions": [],
+        "rejected_reason": null,
+        "related": [
+          "text-tfidf",
+          "average-precision"
+        ],
+        "score": 0.862105,
+        "source_locator": [
+          {
+            "line_end": 31,
+            "line_start": 28,
+            "path": "/root/algorithm-capability-factory/data/raw/sms-readme.txt"
+          },
+          {
+            "line_end": 62,
+            "line_start": 51,
+            "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md"
+          }
+        ],
+        "status": "extracted",
+        "summary": "官方 README 规定每行含标签和原始短信两列，标签为 ham 或 spam。项目逐行按首个制表符分隔，spam 作为正类；模型接收原始文本，演示和外部 LLM 只接收脱敏摘要。",
+        "tags": [
+          "sms",
+          "文本",
+          "短信",
+          "spam",
+          "ham",
+          "tab"
+        ],
+        "task_types": [
+          "text_binary_classification"
+        ],
+        "uses": [],
+        "version": 2
+      },
+      {
+        "capability_id": "complement-naive-bayes",
+        "confidence": 1.0,
+        "created_at": "2026-09-28T11:23:24.518487+00:00",
+        "dependencies": [
+          "Python >=3.10",
+          "scikit-learn"
+        ],
+        "evidence": [
+          {
+            "content_sha256": "ee265c08217b2b4a0543bd984cb11a962b4d2f4c9a8150332e84f1364b5d37ec",
+            "license": "BSD-3-Clause",
+            "locator": {
+              "imports": [
+                "import warnings",
+                "from abc import ABCMeta, abstractmethod",
+                "from numbers import Integral, Real",
+                "import numpy as np",
+                "from scipy.special import logsumexp",
+                "from .base import BaseEstimator, ClassifierMixin, _fit_context",
+                "from .preprocessing import LabelBinarizer, binarize, label_binarize",
+                "from .utils._param_validation import Interval",
+                "from .utils.extmath import safe_sparse_dot",
+                "from .utils.multiclass import _check_partial_fit_first_call",
+                "from .utils.validation import _check_n_features, _check_sample_weight, check_is_fitted, check_non_negative, validate_data"
+              ],
+              "line_end": 1059,
+              "line_start": 907,
+              "methods": [
+                "__init__",
+                "__sklearn_tags__",
+                "_count",
+                "_update_feature_log_prob",
+                "_joint_log_likelihood"
+              ],
+              "parse_mode": "ast-only",
+              "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/naive_bayes.py",
+              "relative_path": "sklearn/naive_bayes.py",
+              "signature": "class ComplementNB(_BaseDiscreteNB):\n    def __init__(self, *, alpha=1.0, force_alpha=True, fit_prior=True, class_prior=None, norm=False)",
+              "symbol": "ComplementNB"
+            },
+            "revision": "1.7.2",
+            "source_id": "src-01e94fa0e553de89c2a7a671",
+            "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/naive_bayes.py"
+          }
+        ],
+        "evidence_path": [
+          {
+            "bonus": 0.14368424162141993,
+            "hops": [
+              {
+                "from": "capability:probability-logistic:v1",
+                "relation": "REQUIRES",
+                "to": "capability:average-precision:v1"
+              },
+              {
+                "from": "capability:average-precision:v1",
+                "relation": "REQUIRES",
+                "to": "capability:complement-naive-bayes:v1"
+              }
+            ],
+            "seed": "capability:probability-logistic:v1"
+          },
+          {
+            "bonus": 0.14368424162141993,
+            "hops": [
+              {
+                "from": "capability:sms-format:v2",
+                "relation": "REQUIRES",
+                "to": "capability:average-precision:v1"
+              },
+              {
+                "from": "capability:average-precision:v1",
+                "relation": "REQUIRES",
+                "to": "capability:complement-naive-bayes:v1"
+              }
+            ],
+            "seed": "capability:sms-format:v2"
+          }
+        ],
+        "extraction_method": "curated-source-grounded",
+        "graph_score": 0.287368,
+        "graph_used": true,
+        "id": "complement-naive-bayes",
+        "input_schema": {
+          "task_types": [
+            "text_binary_classification"
+          ],
+          "type": "features"
+        },
+        "lexical_score": 0.538816,
+        "matched_constraints": [
+          "task_type=text_binary_classification"
+        ],
+        "name": "ComplementNB 文本分类",
+        "origin": "manual_seed",
+        "output_schema": {
+          "type": "implementation-guidance"
+        },
+        "preconditions": [],
+        "rejected_reason": null,
+        "related": [
+          "text-tfidf",
+          "average-precision"
+        ],
+        "score": 0.826184,
+        "source_locator": [
+          {
+            "imports": [
+              "import warnings",
+              "from abc import ABCMeta, abstractmethod",
+              "from numbers import Integral, Real",
+              "import numpy as np",
+              "from scipy.special import logsumexp",
+              "from .base import BaseEstimator, ClassifierMixin, _fit_context",
+              "from .preprocessing import LabelBinarizer, binarize, label_binarize",
+              "from .utils._param_validation import Interval",
+              "from .utils.extmath import safe_sparse_dot",
+              "from .utils.multiclass import _check_partial_fit_first_call",
+              "from .utils.validation import _check_n_features, _check_sample_weight, check_is_fitted, check_non_negative, validate_data"
+            ],
+            "line_end": 1059,
+            "line_start": 907,
+            "methods": [
+              "__init__",
+              "__sklearn_tags__",
+              "_count",
+              "_update_feature_log_prob",
+              "_joint_log_likelihood"
+            ],
+            "parse_mode": "ast-only",
+            "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/naive_bayes.py",
+            "relative_path": "sklearn/naive_bayes.py",
+            "signature": "class ComplementNB(_BaseDiscreteNB):\n    def __init__(self, *, alpha=1.0, force_alpha=True, fit_prior=True, class_prior=None, norm=False)",
+            "symbol": "ComplementNB"
+          }
+        ],
+        "status": "extracted",
+        "summary": "ComplementNB 是面向不平衡数据的补集朴素贝叶斯估计器，适合非负文本计数或 TF-IDF 特征。不得将中心化后含负数的特征直接传入；必须由验证集实测性能。",
+        "tags": [
+          "ComplementNB",
+          "朴素贝叶斯",
+          "不平衡",
+          "非负",
+          "文本"
+        ],
+        "task_types": [
+          "text_binary_classification"
+        ],
+        "uses": [
+          {
+            "kind": "Algorithm",
+            "label": "ComplementNB"
+          },
+          {
+            "kind": "Transform",
+            "label": "TfidfVectorizer"
+          }
+        ],
+        "version": 1
+      }
+    ],
+    "explanation": {
+      "limitations": [
+        "未调用真实大模型"
+      ],
+      "summary": "已根据独立验证报告比较方案；本次为mock运行。"
+    },
+    "finished_at": "2026-09-30T17:26:49.448132+00:00",
+    "interpretation": {
+      "assumptions": [
+        "离线规则测试模式"
+      ],
+      "constraints": [
+        "遵守固定数据与特征协议"
+      ],
+      "incompatible_requests": [],
+      "objective": "演示 Agent 角色协作：检索短信分类能力，比较候选并验证接口稳定性，回写验证经验。",
+      "requested_run_seconds": null,
+      "warnings": []
+    },
+    "knowledge_writeback": {
+      "experiences": [],
+      "run_saved": true
+    },
+    "mode": "mock",
+    "model": "deterministic-mock-v1",
+    "optimization": {
+      "analysis_version": "pareto-observations-v1",
+      "candidates": [
+        {
+          "average_precision": 0.9598341674027927,
+          "candidate_id": "c2",
+          "dominated_by": [],
+          "fit_seconds": 0.06931267399340868,
+          "parent_id": null,
+          "pareto_optimal": true,
+          "peak_rss_mib": 218.0,
+          "predict_seconds": 0.012512490851804614
+        },
+        {
+          "average_precision": 0.9583895772337544,
+          "candidate_id": "c1",
+          "dominated_by": [
+            "c2"
+          ],
+          "fit_seconds": 0.10642466507852077,
+          "parent_id": null,
+          "pareto_optimal": false,
+          "peak_rss_mib": 218.0,
+          "predict_seconds": 0.012710178969427943
+        }
+      ],
+      "excluded": [],
+      "frontier_candidate_ids": [
+        "c2"
+      ],
+      "limitations": [
+        "同次运行的验证集 AP、训练耗时和 worker 峰值 RSS 观测，不能跨任务混排。",
+        "单次耗时受负载与测量噪声影响，不代表稳定加速或统计显著性。",
+        "Pareto 分析提供资源权衡依据，不改变原有 AP 优先选择规则。",
+        "worker RSS 不含 LLM 服务显存；封存测试集没有用于优化。"
+      ],
+      "measurement_repetitions": 1,
+      "objectives": {
+        "average_precision": "maximize",
+        "fit_seconds": "minimize",
+        "peak_rss_mib": "minimize"
+      },
+      "parent_child_changes": [],
+      "run_id": "2fbab3dbe43540f79e4fed07efe0fb53",
+      "schema_version": "1.0",
+      "scope": "within_run_validation_observations",
+      "selected_candidate_id": "c2",
+      "selection_policy": "validation_ap_desc_then_candidate_wall_seconds_asc"
+    },
+    "provenance": {
+      "agent_runtime": {
+        "external_tracing": false,
+        "framework": "langchain-core",
+        "retrieval_tool": "search_capabilities",
+        "role_chain": [
+          "invoke_provider",
+          "persist_response",
+          "validate_contract"
+        ],
+        "version": "1.6.5"
+      },
+      "dataset": {
+        "conflicting_groups_excluded": 0,
+        "dataset_id": "uci-sms-spam",
+        "feature_names": [
+          "text"
+        ],
+        "feature_policy": "text_only_group_dedup_v1",
+        "file_sha256": {
+          "train": "02e817b63d1687cba45abc15c3820c3748405fd185f09ee73c2b7854ea7117a6",
+          "validation_features": "b56334649c55b5873b8a94c0d0efcceb8710824808fba4900e639dcd782f343b",
+          "validation_labels": "71907784e61eabc1fff51e1e71293e9cc4ef0a8359d1923def4c0519185a7421"
+        },
+        "license": "CC BY 4.0",
+        "normalized_groups": 5159,
+        "numeric_features": [],
+        "preprocessing_fit_split": "train_only",
+        "raw_rows": 5574,
+        "raw_sha256": "7d039a24a6083ed9ef0f806ebad56bbb976e3aeb8de05669173bfdc4996c239d",
+        "schema_version": "1.0",
+        "sealed_group_ids_sha256": "d9a436d8888da5cbd06d15795c909d935e7709cc7b4f7cd3dbbf357d7e60fd65",
+        "sealed_test_exported": false,
+        "sealed_test_rows": 1032,
+        "sealed_test_scored": false,
+        "source_url": "https://archive.ics.uci.edu/dataset/228/sms+spam+collection",
+        "split_policy": "normalized_text_group_dedup_stratified_60_20_20",
+        "split_seed": 42,
+        "train_group_ids_sha256": "67b569ca179c2f301db65dea9f94b0ce90cb2ad6359b601a00ca38c1b567860c",
+        "train_rows": 3095,
+        "validation_group_ids_sha256": "d7b9f23990ff4133c30b7b64ce309f75d9e1baea67c59ccfdf929cbe2330d31c",
+        "validation_labels_visible_to_generated_code": false,
+        "validation_rows": 1032
+      },
+      "prompt_version": "algoforge-roles-v3",
+      "sealed_test_scored": false
+    },
+    "provider": "mock",
+    "provider_metadata": {
+      "deployment": "deterministic_mock",
+      "model": "deterministic-mock-v1",
+      "provider": "mock"
+    },
+    "quality_status": "above_prevalence",
+    "report_paths": {
+      "html": "/root/algorithm-capability-factory/artifacts/runs/2fbab3dbe43540f79e4fed07efe0fb53/report.html",
+      "json": "/root/algorithm-capability-factory/artifacts/runs/2fbab3dbe43540f79e4fed07efe0fb53/report.json",
+      "markdown": "/root/algorithm-capability-factory/artifacts/runs/2fbab3dbe43540f79e4fed07efe0fb53/report.md"
+    },
+    "request": {
+      "dataset_id": "sms",
+      "description": "演示 Agent 角色协作：检索短信分类能力，比较候选并验证接口稳定性，回写验证经验。",
+      "inject_failure": false,
+      "max_candidates": 2,
+      "max_repairs": 1,
+      "max_seconds": 180,
+      "orchestration": "multi_role",
+      "provider": "mock",
+      "search": "compare",
+      "use_graph": true,
+      "use_retrieval": true
+    },
+    "resource_budget": {
+      "max_calls": 24,
+      "max_input_tokens": 200000,
+      "max_output_tokens": 40000,
+      "max_seconds": 180
+    },
+    "run_id": "2fbab3dbe43540f79e4fed07efe0fb53",
+    "schema_version": "1.0",
+    "search_tree": [
+      {
+        "average_precision": 0.9583895772337544,
+        "candidate_id": "c1",
+        "parent_id": null,
+        "pruned": false,
+        "pruned_reason": null,
+        "status": "passed"
+      },
+      {
+        "average_precision": 0.9598341674027927,
+        "candidate_id": "c2",
+        "parent_id": null,
+        "pruned": false,
+        "pruned_reason": null,
+        "status": "passed"
+      }
+    ],
+    "selected_candidate_id": "c2",
+    "status": "passed",
+    "task_spec": {
+      "categorical_features": [
+        "text"
+      ],
+      "dataset_id": "sms",
+      "feature_names": [
+        "text"
+      ],
+      "feature_policy": "normalized_group_split_v1",
+      "limits": {
+        "cpu": 2,
+        "memory_mib": 2048,
+        "timeout_s": 120
+      },
+      "numeric_features": [],
+      "positive_label": "spam",
+      "primary_metric": "average_precision",
+      "seed": 42,
+      "task_type": "text_binary_classification"
+    },
+    "timing": {
+      "budget_seconds": 180,
+      "request_ceiling_seconds": 180,
+      "wall_seconds": 10.998
+    },
+    "usage": {
+      "cached_input_tokens": 0,
+      "calls": 5,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "records": []
+    },
+    "warnings": [
+      "指标来自 validation_only，封存测试集保持未评分。",
+      "执行器采用受限 AST 构造器和资源限制子进程；生产隔离需要强化运行时。"
+    ],
+    "experiences": [],
+    "revision_count": 33,
+    "agent_trace": {
+      "schema_version": "1.0",
+      "run_id": "2fbab3dbe43540f79e4fed07efe0fb53",
+      "status": "passed",
+      "mode": "mock",
+      "framework": {
+        "name": "langchain-core",
+        "version": "1.6.5"
+      },
+      "event_count": 29,
+      "total_event_count": 29,
+      "cursor_sequence": 29,
+      "is_replay": false,
+      "spans": [
+        {
+          "span_id": "agent:interpreter:1:1",
+          "kind": "agent",
+          "name": "interpreter",
+          "role": "interpreter",
+          "status": "completed",
+          "attempt": 1,
+          "candidate_id": null,
+          "started_at": "2026-09-30T17:26:39.498443+00:00",
+          "finished_at": "2026-09-30T17:26:40.058761+00:00",
+          "duration_seconds": null,
+          "start_sequence": 2,
+          "end_sequence": 4,
+          "schema": "TaskInterpretation",
+          "error_type": null,
+          "output_summary": {
+            "result_keys": [
+              "assumptions",
+              "constraints",
+              "incompatible_requests",
+              "objective",
+              "requested_run_seconds",
+              "warnings"
+            ],
+            "returned_count": null,
+            "capability_ids": []
+          },
+          "model": null
+        },
+        {
+          "span_id": "tool:search_capabilities:1",
+          "kind": "tool",
+          "name": "search_capabilities",
+          "role": "retrieval",
+          "status": "completed",
+          "attempt": null,
+          "candidate_id": null,
+          "started_at": "2026-09-30T17:26:40.920992+00:00",
+          "finished_at": "2026-09-30T17:26:41.628958+00:00",
+          "duration_seconds": null,
+          "start_sequence": 6,
+          "end_sequence": 7,
+          "schema": "CapabilitySearchInput",
+          "error_type": null,
+          "output_summary": {
+            "result_keys": [],
+            "returned_count": 6,
+            "capability_ids": [
+              "average-precision",
+              "text-tfidf",
+              "evidence-versioning",
+              "probability-logistic",
+              "sms-format",
+              "complement-naive-bayes"
+            ]
+          },
+          "model": null
+        },
+        {
+          "span_id": "agent:planner:2:1",
+          "kind": "agent",
+          "name": "planner",
+          "role": "planner",
+          "status": "completed",
+          "attempt": 1,
+          "candidate_id": null,
+          "started_at": "2026-09-30T17:26:42.138614+00:00",
+          "finished_at": "2026-09-30T17:26:42.645686+00:00",
+          "duration_seconds": null,
+          "start_sequence": 9,
+          "end_sequence": 11,
+          "schema": "PlanSet",
+          "error_type": null,
+          "output_summary": {
+            "result_keys": [
+              "candidates"
+            ],
+            "returned_count": null,
+            "capability_ids": []
+          },
+          "model": null
+        },
+        {
+          "span_id": "agent:coder:3:1",
+          "kind": "agent",
+          "name": "coder",
+          "role": "coder",
+          "status": "completed",
+          "attempt": 1,
+          "candidate_id": "c1",
+          "started_at": "2026-09-30T17:26:43.173552+00:00",
+          "finished_at": "2026-09-30T17:26:43.767305+00:00",
+          "duration_seconds": null,
+          "start_sequence": 13,
+          "end_sequence": 15,
+          "schema": "GeneratedCode",
+          "error_type": null,
+          "output_summary": {
+            "result_keys": [
+              "code",
+              "explanation"
+            ],
+            "returned_count": null,
+            "capability_ids": []
+          },
+          "model": null
+        },
+        {
+          "span_id": "agent:coder:4:1",
+          "kind": "agent",
+          "name": "coder",
+          "role": "coder",
+          "status": "completed",
+          "attempt": 1,
+          "candidate_id": "c2",
+          "started_at": "2026-09-30T17:26:45.776739+00:00",
+          "finished_at": "2026-09-30T17:26:46.517443+00:00",
+          "duration_seconds": null,
+          "start_sequence": 19,
+          "end_sequence": 21,
+          "schema": "GeneratedCode",
+          "error_type": null,
+          "output_summary": {
+            "result_keys": [
+              "code",
+              "explanation"
+            ],
+            "returned_count": null,
+            "capability_ids": []
+          },
+          "model": null
+        },
+        {
+          "span_id": "agent:curator:5:1",
+          "kind": "agent",
+          "name": "curator",
+          "role": "curator",
+          "status": "completed",
+          "attempt": 1,
+          "candidate_id": null,
+          "started_at": "2026-09-30T17:26:48.246608+00:00",
+          "finished_at": "2026-09-30T17:26:48.934421+00:00",
+          "duration_seconds": null,
+          "start_sequence": 24,
+          "end_sequence": 26,
+          "schema": "Explanation",
+          "error_type": null,
+          "output_summary": {
+            "result_keys": [
+              "limitations",
+              "summary"
+            ],
+            "returned_count": null,
+            "capability_ids": []
+          },
+          "model": null
+        }
+      ],
+      "budget": {
+        "calls": 5,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cached_input_tokens": 0,
+        "max_calls": 24,
+        "max_input_tokens": 200000,
+        "max_output_tokens": 40000,
+        "max_seconds": 180,
+        "wall_seconds": 10.998,
+        "usage_source": "events"
+      },
+      "evidence": {
+        "capability_ids": [
+          "average-precision",
+          "text-tfidf",
+          "evidence-versioning",
+          "probability-logistic",
+          "sms-format",
+          "complement-naive-bayes"
+        ],
+        "count": 6,
+        "retrieval_count": 1
+      },
+      "events": [
+        {
+          "sequence": 1,
+          "event_type": "RECEIVED",
+          "created_at": "2026-09-30T17:26:38.550099+00:00"
+        },
+        {
+          "sequence": 2,
+          "event_type": "AGENT_STARTED",
+          "created_at": "2026-09-30T17:26:39.498443+00:00",
+          "role": "interpreter",
+          "span_id": "agent:interpreter:1:1",
+          "name": "interpreter",
+          "status": "running"
+        },
+        {
+          "sequence": 3,
+          "event_type": "MOCK_RESPONSE",
+          "created_at": "2026-09-30T17:26:39.818764+00:00",
+          "role": "interpreter"
+        },
+        {
+          "sequence": 4,
+          "event_type": "AGENT_COMPLETED",
+          "created_at": "2026-09-30T17:26:40.058761+00:00",
+          "role": "interpreter",
+          "span_id": "agent:interpreter:1:1",
+          "name": "interpreter",
+          "status": "completed"
+        },
+        {
+          "sequence": 5,
+          "event_type": "SPEC_VALIDATED",
+          "created_at": "2026-09-30T17:26:40.649699+00:00"
+        },
+        {
+          "sequence": 6,
+          "event_type": "TOOL_STARTED",
+          "created_at": "2026-09-30T17:26:40.920992+00:00",
+          "role": "retrieval",
+          "span_id": "tool:search_capabilities:1",
+          "name": "search_capabilities",
+          "status": "running"
+        },
+        {
+          "sequence": 7,
+          "event_type": "TOOL_COMPLETED",
+          "created_at": "2026-09-30T17:26:41.628958+00:00",
+          "role": "retrieval",
+          "span_id": "tool:search_capabilities:1",
+          "name": "search_capabilities",
+          "status": "completed"
+        },
+        {
+          "sequence": 8,
+          "event_type": "KNOWLEDGE_RETRIEVED",
+          "created_at": "2026-09-30T17:26:41.910366+00:00"
+        },
+        {
+          "sequence": 9,
+          "event_type": "AGENT_STARTED",
+          "created_at": "2026-09-30T17:26:42.138614+00:00",
+          "role": "planner",
+          "span_id": "agent:planner:2:1",
+          "name": "planner",
+          "status": "running"
+        },
+        {
+          "sequence": 10,
+          "event_type": "MOCK_RESPONSE",
+          "created_at": "2026-09-30T17:26:42.373415+00:00",
+          "role": "planner"
+        },
+        {
+          "sequence": 11,
+          "event_type": "AGENT_COMPLETED",
+          "created_at": "2026-09-30T17:26:42.645686+00:00",
+          "role": "planner",
+          "span_id": "agent:planner:2:1",
+          "name": "planner",
+          "status": "completed"
+        },
+        {
+          "sequence": 12,
+          "event_type": "CANDIDATE_PLANNED",
+          "created_at": "2026-09-30T17:26:42.903101+00:00"
+        },
+        {
+          "sequence": 13,
+          "event_type": "AGENT_STARTED",
+          "created_at": "2026-09-30T17:26:43.173552+00:00",
+          "role": "coder",
+          "span_id": "agent:coder:3:1",
+          "name": "coder",
+          "status": "running"
+        },
+        {
+          "sequence": 14,
+          "event_type": "MOCK_RESPONSE",
+          "created_at": "2026-09-30T17:26:43.383924+00:00",
+          "role": "coder"
+        },
+        {
+          "sequence": 15,
+          "event_type": "AGENT_COMPLETED",
+          "created_at": "2026-09-30T17:26:43.767305+00:00",
+          "role": "coder",
+          "span_id": "agent:coder:3:1",
+          "name": "coder",
+          "status": "completed"
+        },
+        {
+          "sequence": 16,
+          "event_type": "VALIDATING",
+          "created_at": "2026-09-30T17:26:44.024099+00:00"
+        },
+        {
+          "sequence": 17,
+          "event_type": "VERIFIED",
+          "created_at": "2026-09-30T17:26:45.149305+00:00",
+          "status": "passed"
+        },
+        {
+          "sequence": 18,
+          "event_type": "CANDIDATE_PLANNED",
+          "created_at": "2026-09-30T17:26:45.571594+00:00"
+        },
+        {
+          "sequence": 19,
+          "event_type": "AGENT_STARTED",
+          "created_at": "2026-09-30T17:26:45.776739+00:00",
+          "role": "coder",
+          "span_id": "agent:coder:4:1",
+          "name": "coder",
+          "status": "running"
+        },
+        {
+          "sequence": 20,
+          "event_type": "MOCK_RESPONSE",
+          "created_at": "2026-09-30T17:26:45.979506+00:00",
+          "role": "coder"
+        },
+        {
+          "sequence": 21,
+          "event_type": "AGENT_COMPLETED",
+          "created_at": "2026-09-30T17:26:46.517443+00:00",
+          "role": "coder",
+          "span_id": "agent:coder:4:1",
+          "name": "coder",
+          "status": "completed"
+        },
+        {
+          "sequence": 22,
+          "event_type": "VALIDATING",
+          "created_at": "2026-09-30T17:26:46.778333+00:00"
+        },
+        {
+          "sequence": 23,
+          "event_type": "VERIFIED",
+          "created_at": "2026-09-30T17:26:47.952370+00:00",
+          "status": "passed"
+        },
+        {
+          "sequence": 24,
+          "event_type": "AGENT_STARTED",
+          "created_at": "2026-09-30T17:26:48.246608+00:00",
+          "role": "curator",
+          "span_id": "agent:curator:5:1",
+          "name": "curator",
+          "status": "running"
+        },
+        {
+          "sequence": 25,
+          "event_type": "MOCK_RESPONSE",
+          "created_at": "2026-09-30T17:26:48.623099+00:00",
+          "role": "curator"
+        },
+        {
+          "sequence": 26,
+          "event_type": "AGENT_COMPLETED",
+          "created_at": "2026-09-30T17:26:48.934421+00:00",
+          "role": "curator",
+          "span_id": "agent:curator:5:1",
+          "name": "curator",
+          "status": "completed"
+        },
+        {
+          "sequence": 27,
+          "event_type": "COMPARED",
+          "created_at": "2026-09-30T17:26:49.156195+00:00"
+        },
+        {
+          "sequence": 28,
+          "event_type": "RECORDED",
+          "created_at": "2026-09-30T17:26:49.660073+00:00"
+        },
+        {
+          "sequence": 29,
+          "event_type": "RUN_FINISHED",
+          "created_at": "2026-09-30T17:26:49.974739+00:00",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "trace": {
+    "schema_version": "1.0",
+    "run_id": "2fbab3dbe43540f79e4fed07efe0fb53",
+    "status": "passed",
+    "mode": "mock",
+    "framework": {
+      "name": "langchain-core",
+      "version": "1.6.5"
+    },
+    "event_count": 29,
+    "total_event_count": 29,
+    "cursor_sequence": 29,
+    "is_replay": false,
+    "spans": [
+      {
+        "span_id": "agent:interpreter:1:1",
+        "kind": "agent",
+        "name": "interpreter",
+        "role": "interpreter",
+        "status": "completed",
+        "attempt": 1,
+        "candidate_id": null,
+        "started_at": "2026-09-30T17:26:39.498443+00:00",
+        "finished_at": "2026-09-30T17:26:40.058761+00:00",
+        "duration_seconds": null,
+        "start_sequence": 2,
+        "end_sequence": 4,
+        "schema": "TaskInterpretation",
+        "error_type": null,
+        "output_summary": {
+          "result_keys": [
+            "assumptions",
+            "constraints",
+            "incompatible_requests",
+            "objective",
+            "requested_run_seconds",
+            "warnings"
+          ],
+          "returned_count": null,
+          "capability_ids": []
+        },
+        "model": null
+      },
+      {
+        "span_id": "tool:search_capabilities:1",
+        "kind": "tool",
+        "name": "search_capabilities",
+        "role": "retrieval",
+        "status": "completed",
+        "attempt": null,
+        "candidate_id": null,
+        "started_at": "2026-09-30T17:26:40.920992+00:00",
+        "finished_at": "2026-09-30T17:26:41.628958+00:00",
+        "duration_seconds": null,
+        "start_sequence": 6,
+        "end_sequence": 7,
+        "schema": "CapabilitySearchInput",
+        "error_type": null,
+        "output_summary": {
+          "result_keys": [],
+          "returned_count": 6,
+          "capability_ids": [
+            "average-precision",
+            "text-tfidf",
+            "evidence-versioning",
+            "probability-logistic",
+            "sms-format",
+            "complement-naive-bayes"
+          ]
+        },
+        "model": null
+      },
+      {
+        "span_id": "agent:planner:2:1",
+        "kind": "agent",
+        "name": "planner",
+        "role": "planner",
+        "status": "completed",
+        "attempt": 1,
+        "candidate_id": null,
+        "started_at": "2026-09-30T17:26:42.138614+00:00",
+        "finished_at": "2026-09-30T17:26:42.645686+00:00",
+        "duration_seconds": null,
+        "start_sequence": 9,
+        "end_sequence": 11,
+        "schema": "PlanSet",
+        "error_type": null,
+        "output_summary": {
+          "result_keys": [
+            "candidates"
+          ],
+          "returned_count": null,
+          "capability_ids": []
+        },
+        "model": null
+      },
+      {
+        "span_id": "agent:coder:3:1",
+        "kind": "agent",
+        "name": "coder",
+        "role": "coder",
+        "status": "completed",
+        "attempt": 1,
+        "candidate_id": "c1",
+        "started_at": "2026-09-30T17:26:43.173552+00:00",
+        "finished_at": "2026-09-30T17:26:43.767305+00:00",
+        "duration_seconds": null,
+        "start_sequence": 13,
+        "end_sequence": 15,
+        "schema": "GeneratedCode",
+        "error_type": null,
+        "output_summary": {
+          "result_keys": [
+            "code",
+            "explanation"
+          ],
+          "returned_count": null,
+          "capability_ids": []
+        },
+        "model": null
+      },
+      {
+        "span_id": "agent:coder:4:1",
+        "kind": "agent",
+        "name": "coder",
+        "role": "coder",
+        "status": "completed",
+        "attempt": 1,
+        "candidate_id": "c2",
+        "started_at": "2026-09-30T17:26:45.776739+00:00",
+        "finished_at": "2026-09-30T17:26:46.517443+00:00",
+        "duration_seconds": null,
+        "start_sequence": 19,
+        "end_sequence": 21,
+        "schema": "GeneratedCode",
+        "error_type": null,
+        "output_summary": {
+          "result_keys": [
+            "code",
+            "explanation"
+          ],
+          "returned_count": null,
+          "capability_ids": []
+        },
+        "model": null
+      },
+      {
+        "span_id": "agent:curator:5:1",
+        "kind": "agent",
+        "name": "curator",
+        "role": "curator",
+        "status": "completed",
+        "attempt": 1,
+        "candidate_id": null,
+        "started_at": "2026-09-30T17:26:48.246608+00:00",
+        "finished_at": "2026-09-30T17:26:48.934421+00:00",
+        "duration_seconds": null,
+        "start_sequence": 24,
+        "end_sequence": 26,
+        "schema": "Explanation",
+        "error_type": null,
+        "output_summary": {
+          "result_keys": [
+            "limitations",
+            "summary"
+          ],
+          "returned_count": null,
+          "capability_ids": []
+        },
+        "model": null
+      }
+    ],
+    "budget": {
+      "calls": 5,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cached_input_tokens": 0,
+      "max_calls": 24,
+      "max_input_tokens": 200000,
+      "max_output_tokens": 40000,
+      "max_seconds": 180,
+      "wall_seconds": 10.998,
+      "usage_source": "events"
+    },
+    "evidence": {
+      "capability_ids": [
+        "average-precision",
+        "text-tfidf",
+        "evidence-versioning",
+        "probability-logistic",
+        "sms-format",
+        "complement-naive-bayes"
+      ],
+      "count": 6,
+      "retrieval_count": 1
+    },
+    "events": [
+      {
+        "sequence": 1,
+        "event_type": "RECEIVED",
+        "created_at": "2026-09-30T17:26:38.550099+00:00"
+      },
+      {
+        "sequence": 2,
+        "event_type": "AGENT_STARTED",
+        "created_at": "2026-09-30T17:26:39.498443+00:00",
+        "role": "interpreter",
+        "span_id": "agent:interpreter:1:1",
+        "name": "interpreter",
+        "status": "running"
+      },
+      {
+        "sequence": 3,
+        "event_type": "MOCK_RESPONSE",
+        "created_at": "2026-09-30T17:26:39.818764+00:00",
+        "role": "interpreter"
+      },
+      {
+        "sequence": 4,
+        "event_type": "AGENT_COMPLETED",
+        "created_at": "2026-09-30T17:26:40.058761+00:00",
+        "role": "interpreter",
+        "span_id": "agent:interpreter:1:1",
+        "name": "interpreter",
+        "status": "completed"
+      },
+      {
+        "sequence": 5,
+        "event_type": "SPEC_VALIDATED",
+        "created_at": "2026-09-30T17:26:40.649699+00:00"
+      },
+      {
+        "sequence": 6,
+        "event_type": "TOOL_STARTED",
+        "created_at": "2026-09-30T17:26:40.920992+00:00",
+        "role": "retrieval",
+        "span_id": "tool:search_capabilities:1",
+        "name": "search_capabilities",
+        "status": "running"
+      },
+      {
+        "sequence": 7,
+        "event_type": "TOOL_COMPLETED",
+        "created_at": "2026-09-30T17:26:41.628958+00:00",
+        "role": "retrieval",
+        "span_id": "tool:search_capabilities:1",
+        "name": "search_capabilities",
+        "status": "completed"
+      },
+      {
+        "sequence": 8,
+        "event_type": "KNOWLEDGE_RETRIEVED",
+        "created_at": "2026-09-30T17:26:41.910366+00:00"
+      },
+      {
+        "sequence": 9,
+        "event_type": "AGENT_STARTED",
+        "created_at": "2026-09-30T17:26:42.138614+00:00",
+        "role": "planner",
+        "span_id": "agent:planner:2:1",
+        "name": "planner",
+        "status": "running"
+      },
+      {
+        "sequence": 10,
+        "event_type": "MOCK_RESPONSE",
+        "created_at": "2026-09-30T17:26:42.373415+00:00",
+        "role": "planner"
+      },
+      {
+        "sequence": 11,
+        "event_type": "AGENT_COMPLETED",
+        "created_at": "2026-09-30T17:26:42.645686+00:00",
+        "role": "planner",
+        "span_id": "agent:planner:2:1",
+        "name": "planner",
+        "status": "completed"
+      },
+      {
+        "sequence": 12,
+        "event_type": "CANDIDATE_PLANNED",
+        "created_at": "2026-09-30T17:26:42.903101+00:00"
+      },
+      {
+        "sequence": 13,
+        "event_type": "AGENT_STARTED",
+        "created_at": "2026-09-30T17:26:43.173552+00:00",
+        "role": "coder",
+        "span_id": "agent:coder:3:1",
+        "name": "coder",
+        "status": "running"
+      },
+      {
+        "sequence": 14,
+        "event_type": "MOCK_RESPONSE",
+        "created_at": "2026-09-30T17:26:43.383924+00:00",
+        "role": "coder"
+      },
+      {
+        "sequence": 15,
+        "event_type": "AGENT_COMPLETED",
+        "created_at": "2026-09-30T17:26:43.767305+00:00",
+        "role": "coder",
+        "span_id": "agent:coder:3:1",
+        "name": "coder",
+        "status": "completed"
+      },
+      {
+        "sequence": 16,
+        "event_type": "VALIDATING",
+        "created_at": "2026-09-30T17:26:44.024099+00:00"
+      },
+      {
+        "sequence": 17,
+        "event_type": "VERIFIED",
+        "created_at": "2026-09-30T17:26:45.149305+00:00",
+        "status": "passed"
+      },
+      {
+        "sequence": 18,
+        "event_type": "CANDIDATE_PLANNED",
+        "created_at": "2026-09-30T17:26:45.571594+00:00"
+      },
+      {
+        "sequence": 19,
+        "event_type": "AGENT_STARTED",
+        "created_at": "2026-09-30T17:26:45.776739+00:00",
+        "role": "coder",
+        "span_id": "agent:coder:4:1",
+        "name": "coder",
+        "status": "running"
+      },
+      {
+        "sequence": 20,
+        "event_type": "MOCK_RESPONSE",
+        "created_at": "2026-09-30T17:26:45.979506+00:00",
+        "role": "coder"
+      },
+      {
+        "sequence": 21,
+        "event_type": "AGENT_COMPLETED",
+        "created_at": "2026-09-30T17:26:46.517443+00:00",
+        "role": "coder",
+        "span_id": "agent:coder:4:1",
+        "name": "coder",
+        "status": "completed"
+      },
+      {
+        "sequence": 22,
+        "event_type": "VALIDATING",
+        "created_at": "2026-09-30T17:26:46.778333+00:00"
+      },
+      {
+        "sequence": 23,
+        "event_type": "VERIFIED",
+        "created_at": "2026-09-30T17:26:47.952370+00:00",
+        "status": "passed"
+      },
+      {
+        "sequence": 24,
+        "event_type": "AGENT_STARTED",
+        "created_at": "2026-09-30T17:26:48.246608+00:00",
+        "role": "curator",
+        "span_id": "agent:curator:5:1",
+        "name": "curator",
+        "status": "running"
+      },
+      {
+        "sequence": 25,
+        "event_type": "MOCK_RESPONSE",
+        "created_at": "2026-09-30T17:26:48.623099+00:00",
+        "role": "curator"
+      },
+      {
+        "sequence": 26,
+        "event_type": "AGENT_COMPLETED",
+        "created_at": "2026-09-30T17:26:48.934421+00:00",
+        "role": "curator",
+        "span_id": "agent:curator:5:1",
+        "name": "curator",
+        "status": "completed"
+      },
+      {
+        "sequence": 27,
+        "event_type": "COMPARED",
+        "created_at": "2026-09-30T17:26:49.156195+00:00"
+      },
+      {
+        "sequence": 28,
+        "event_type": "RECORDED",
+        "created_at": "2026-09-30T17:26:49.660073+00:00"
+      },
+      {
+        "sequence": 29,
+        "event_type": "RUN_FINISHED",
+        "created_at": "2026-09-30T17:26:49.974739+00:00",
+        "status": "passed"
+      }
+    ]
+  }
+}

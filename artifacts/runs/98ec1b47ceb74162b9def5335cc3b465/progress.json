@@ -1,0 +1,4254 @@
+{
+  "schema_version": "1.0",
+  "run_id": "98ec1b47ceb74162b9def5335cc3b465",
+  "status": "passed",
+  "mode": "real",
+  "provider": "deepseek",
+  "description": "请预测哪些银行客户更可能购买定期存款。",
+  "dataset_id": "bank",
+  "created_at": "2026-09-29T15:35:39.754955+00:00",
+  "request": {
+    "description": "请预测哪些银行客户更可能购买定期存款。",
+    "dataset_id": "bank",
+    "provider": "deepseek",
+    "max_candidates": 6,
+    "max_repairs": 2,
+    "use_graph": true,
+    "use_retrieval": true,
+    "orchestration": "multi_role",
+    "search": "beam",
+    "inject_failure": true,
+    "max_seconds": 900
+  },
+  "task_spec": {
+    "task_type": "tabular_binary_classification",
+    "dataset_id": "bank",
+    "positive_label": "yes",
+    "feature_names": [
+      "age",
+      "job",
+      "marital",
+      "education",
+      "default",
+      "housing",
+      "loan",
+      "pdays",
+      "previous",
+      "poutcome"
+    ],
+    "numeric_features": [
+      "age",
+      "pdays",
+      "previous"
+    ],
+    "categorical_features": [
+      "job",
+      "marital",
+      "education",
+      "default",
+      "housing",
+      "loan",
+      "poutcome"
+    ],
+    "seed": 42,
+    "primary_metric": "average_precision",
+    "limits": {
+      "cpu": 2,
+      "memory_mib": 2048,
+      "timeout_s": 120
+    },
+    "feature_policy": "precontact_conservative_v1"
+  },
+  "model": "deepseek-flash",
+  "provenance": {
+    "prompt_version": "algoforge-roles-v2",
+    "sealed_test_scored": false,
+    "dataset": {
+      "schema_version": "1.0",
+      "dataset_id": "uci-bank-additional-full",
+      "source_url": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+      "license": "CC BY 4.0",
+      "raw_sha256": "74adfc578bf77a7ff4bb1ba4a9f8709d9e3c6907342959c2c8416847e0afb4d8",
+      "split_policy": "original_order_60_20_20",
+      "split_seed": 42,
+      "train_rows": 24712,
+      "validation_rows": 8238,
+      "sealed_test_rows": 8238,
+      "sealed_test_exported": false,
+      "sealed_test_scored": false,
+      "validation_labels_visible_to_generated_code": false,
+      "preprocessing_fit_split": "train_only",
+      "feature_policy": "precontact_conservative_v1",
+      "feature_names": [
+        "age",
+        "job",
+        "marital",
+        "education",
+        "default",
+        "housing",
+        "loan",
+        "pdays",
+        "previous",
+        "poutcome"
+      ],
+      "numeric_features": [
+        "age",
+        "pdays",
+        "previous"
+      ],
+      "file_sha256": {
+        "train": "860058ef9a7a6869e9c129277967ca5699fdb249202917201da4991a7c2b3a0c",
+        "validation_features": "62b188cf7c57553585006e3b20f4364d41cd8f567b04513fcdc3358429c1986a",
+        "validation_labels": "8c505a2f2ed47d04c62c6d182097535f09e9ccab901576fc0727acfe5f882816"
+      }
+    }
+  },
+  "candidates": [
+    {
+      "candidate_id": "bank_logistic_balanced",
+      "plan": {
+        "candidate_id": "bank_logistic_balanced",
+        "algorithm": "logistic",
+        "variant": "balanced",
+        "rationale": "Logistic regression with class_weight balanced suits the imbalanced precontact bank target and provides calibrated probabilities for average_precision; fits the conservative precontact feature policy and training-only pipeline.",
+        "evidence_ids": [
+          "probability-logistic",
+          "bank-precontact-policy",
+          "bank-target",
+          "training-only-pipeline",
+          "average-precision"
+        ],
+        "parent_id": null
+      },
+      "status": "passed",
+      "metrics": {
+        "average_precision": 0.1807589966629477,
+        "roc_auc": 0.6093179752719227,
+        "f1_threshold_0_5": 0.22881855710634952,
+        "precision_at_10pct": 0.2196601941747573,
+        "recall_at_10pct": 0.19846491228070176,
+        "lift_at_10pct": 1.9841674118548802,
+        "validation_positive_rate": 0.11070648215586307,
+        "top_10pct_count": 824,
+        "validation_rows": 8238,
+        "classification_threshold": 0.5,
+        "evaluation_split": "validation_only",
+        "sealed_test_scored": false,
+        "ranking_tie_break": "original_validation_row_order",
+        "dummy_average_precision": 0.11070648215586307,
+        "ap_improvement_over_dummy": 0.07005251450708463
+      },
+      "checks": [
+        {
+          "name": "source_policy",
+          "passed": true,
+          "mandatory": true,
+          "detail": "AST parsed as approved constructors without exec/eval"
+        },
+        {
+          "name": "plan_consistency",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Final classifier matches planned logistic"
+        },
+        {
+          "name": "dataset_integrity",
+          "passed": true,
+          "mandatory": true,
+          "detail": "SHA256, split disjointness, row alignment, feature policy"
+        },
+        {
+          "name": "labels_withheld",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Worker receives no validation labels or final test"
+        },
+        {
+          "name": "worker_execution",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Resource-limited fresh process exited successfully"
+        },
+        {
+          "name": "prediction_contract",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+        },
+        {
+          "name": "single_row",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "repeat_prediction",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "empty_batch_wrapper",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "unknown_category",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "missing_numeric",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "clean_environment",
+          "passed": true,
+          "mandatory": true,
+          "detail": "No API keys/tokens passed to worker"
+        },
+        {
+          "name": "ap_above_dummy",
+          "passed": true,
+          "mandatory": false,
+          "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+        },
+        {
+          "name": "host_evaluation",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Metrics computed only by trusted host using validation labels"
+        }
+      ],
+      "resources": {
+        "limits": {
+          "timeout_s": 120.0,
+          "memory_mib": 2048,
+          "cpu_cores": 2
+        },
+        "worker_pid": 29212,
+        "wall_seconds": 1.0531703701708466,
+        "fit_seconds": 0.11114056594669819,
+        "predict_seconds": 0.014005573932081461,
+        "worker_wall_seconds": 0.8916570330038667,
+        "peak_rss_mib": 308.828125,
+        "cpu_seconds": 1.205927,
+        "sklearn_version": "1.7.2",
+        "python_version": "3.10.8",
+        "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+        "joblib_backend": "threading",
+        "repeat_prediction_max_abs_delta": 0.0,
+        "total_seconds": 1.2103691340889782
+      },
+      "repairs": [
+        {
+          "error_type": "plan_consistency",
+          "diagnosis": "The generated code defines a function named broken_pipeline that returns a Pipeline, but it does not match the expected constructor-program interface: the plan requires a function that builds and returns the estimator/pipeline under the expected entrypoint name, and the source policy rejected the code before execution because the generated program is inconsistent with its plan. The code itself is otherwise a valid sklearn pipeline using only allowed preprocessing and LogisticRegression, but the entrypoint/name mismatch prevents plan-consistency validation.",
+          "fix": "Rename the function to the expected entrypoint name required by the task plan (e.g., build_pipeline or the exact name specified in the plan) and ensure it accepts task_spec and returns the constructed Pipeline. Keep the same ColumnTransformer, SimpleImputer, OneHotEncoder, StandardScaler, and LogisticRegression configuration; do not alter the runner, task_spec, feature lists, or metric.",
+          "repairable": true,
+          "attempt": 1,
+          "before_hash": "cc07e64cd15c707c0406495d0645215563715aef9420ca33261ab0593c2c24b0",
+          "after_hash": "947d99a392f9e2bce4faf292cb534304ba1b4734e5620d2844e9ba5d55cd15fe",
+          "validated": true
+        }
+      ],
+      "attempts": [
+        {
+          "attempt": 0,
+          "code_sha256": "cc07e64cd15c707c0406495d0645215563715aef9420ca33261ab0593c2c24b0",
+          "code_path": "candidates/bank_logistic_balanced/attempt_0/model.py",
+          "status": "failed",
+          "error": {
+            "type": "plan_consistency",
+            "stage": "source_policy",
+            "repairable": true,
+            "message": "Generated code could not be checked against its plan: CodePolicyError"
+          },
+          "checks": [],
+          "metrics": {},
+          "resources": {},
+          "containment": {},
+          "model_metadata": null
+        },
+        {
+          "attempt": 1,
+          "code_sha256": "947d99a392f9e2bce4faf292cb534304ba1b4734e5620d2844e9ba5d55cd15fe",
+          "code_path": "candidates/bank_logistic_balanced/attempt_1/model.py",
+          "status": "passed",
+          "error": null,
+          "checks": [
+            {
+              "name": "source_policy",
+              "passed": true,
+              "mandatory": true,
+              "detail": "AST parsed as approved constructors without exec/eval"
+            },
+            {
+              "name": "plan_consistency",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Final classifier matches planned logistic"
+            },
+            {
+              "name": "dataset_integrity",
+              "passed": true,
+              "mandatory": true,
+              "detail": "SHA256, split disjointness, row alignment, feature policy"
+            },
+            {
+              "name": "labels_withheld",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Worker receives no validation labels or final test"
+            },
+            {
+              "name": "worker_execution",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Resource-limited fresh process exited successfully"
+            },
+            {
+              "name": "prediction_contract",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+            },
+            {
+              "name": "single_row",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "repeat_prediction",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "empty_batch_wrapper",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "unknown_category",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "missing_numeric",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "clean_environment",
+              "passed": true,
+              "mandatory": true,
+              "detail": "No API keys/tokens passed to worker"
+            },
+            {
+              "name": "ap_above_dummy",
+              "passed": true,
+              "mandatory": false,
+              "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+            },
+            {
+              "name": "host_evaluation",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Metrics computed only by trusted host using validation labels"
+            }
+          ],
+          "metrics": {
+            "average_precision": 0.1807589966629477,
+            "roc_auc": 0.6093179752719227,
+            "f1_threshold_0_5": 0.22881855710634952,
+            "precision_at_10pct": 0.2196601941747573,
+            "recall_at_10pct": 0.19846491228070176,
+            "lift_at_10pct": 1.9841674118548802,
+            "validation_positive_rate": 0.11070648215586307,
+            "top_10pct_count": 824,
+            "validation_rows": 8238,
+            "classification_threshold": 0.5,
+            "evaluation_split": "validation_only",
+            "sealed_test_scored": false,
+            "ranking_tie_break": "original_validation_row_order",
+            "dummy_average_precision": 0.11070648215586307,
+            "ap_improvement_over_dummy": 0.07005251450708463
+          },
+          "resources": {
+            "limits": {
+              "timeout_s": 120.0,
+              "memory_mib": 2048,
+              "cpu_cores": 2
+            },
+            "worker_pid": 29212,
+            "wall_seconds": 1.0531703701708466,
+            "fit_seconds": 0.11114056594669819,
+            "predict_seconds": 0.014005573932081461,
+            "worker_wall_seconds": 0.8916570330038667,
+            "peak_rss_mib": 308.828125,
+            "cpu_seconds": 1.205927,
+            "sklearn_version": "1.7.2",
+            "python_version": "3.10.8",
+            "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+            "joblib_backend": "threading",
+            "repeat_prediction_max_abs_delta": 0.0,
+            "total_seconds": 1.2103691340889782
+          },
+          "containment": {
+            "backend": "constrained_ast_subprocess",
+            "arbitrary_python_execution": false,
+            "os_sandbox": false,
+            "network_namespace": false,
+            "filesystem_namespace": false,
+            "source_evaluated_with_exec_or_eval": false,
+            "constructors_allowlisted": true,
+            "resource_limited_fresh_process": true,
+            "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+          },
+          "model_metadata": {
+            "actual_algorithm": "logistic",
+            "classifier_class": "LogisticRegression",
+            "classifier_path": [
+              "model"
+            ],
+            "classifier_parameters": {
+              "max_iter": 1000,
+              "class_weight": "balanced",
+              "random_state": 42
+            },
+            "constructor_classes": [
+              "Pipeline",
+              "ColumnTransformer",
+              "Pipeline",
+              "SimpleImputer",
+              "StandardScaler",
+              "OneHotEncoder",
+              "LogisticRegression"
+            ],
+            "constructor_count": 7,
+            "source": "independently_parsed_constructor_plan"
+          }
+        }
+      ],
+      "artifact_id": "bank_logistic_balanced",
+      "parent_id": null,
+      "injected_failure": true,
+      "error": null,
+      "quality_status": "above_prevalence",
+      "model_metadata": {
+        "actual_algorithm": "logistic",
+        "classifier_class": "LogisticRegression",
+        "classifier_path": [
+          "model"
+        ],
+        "classifier_parameters": {
+          "max_iter": 1000,
+          "class_weight": "balanced",
+          "random_state": 42
+        },
+        "constructor_classes": [
+          "Pipeline",
+          "ColumnTransformer",
+          "Pipeline",
+          "SimpleImputer",
+          "StandardScaler",
+          "OneHotEncoder",
+          "LogisticRegression"
+        ],
+        "constructor_count": 7,
+        "source": "independently_parsed_constructor_plan"
+      },
+      "containment": {
+        "backend": "constrained_ast_subprocess",
+        "arbitrary_python_execution": false,
+        "os_sandbox": false,
+        "network_namespace": false,
+        "filesystem_namespace": false,
+        "source_evaluated_with_exec_or_eval": false,
+        "constructors_allowlisted": true,
+        "resource_limited_fresh_process": true,
+        "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+      },
+      "code_sha256": "947d99a392f9e2bce4faf292cb534304ba1b4734e5620d2844e9ba5d55cd15fe",
+      "code_path": "candidates/bank_logistic_balanced/attempt_1/model.py",
+      "explanation": "Renamed the entrypoint to build_pipeline per the plan-consistency fix while keeping the balanced logistic regression with median-imputed/scaled numeric features and unknown-tolerant one-hot categorical encoding, matching the precontact policy and training-only pipeline evidence."
+    },
+    {
+      "candidate_id": "bank_forest_balanced",
+      "plan": {
+        "candidate_id": "bank_forest_balanced",
+        "algorithm": "forest",
+        "variant": "balanced",
+        "rationale": "Random forest with balanced class weights captures nonlinear interactions among precontact categorical and numeric features while handling class imbalance; complements the linear baseline for candidate comparison.",
+        "evidence_ids": [
+          "bank-precontact-policy",
+          "bank-target",
+          "bank-ordered-split",
+          "average-precision"
+        ],
+        "parent_id": null
+      },
+      "status": "passed",
+      "metrics": {
+        "average_precision": 0.12825103811039737,
+        "roc_auc": 0.5524364825351668,
+        "f1_threshold_0_5": 0.1808199121522694,
+        "precision_at_10pct": 0.14563106796116504,
+        "recall_at_10pct": 0.13157894736842105,
+        "lift_at_10pct": 1.3154701073071027,
+        "validation_positive_rate": 0.11070648215586307,
+        "top_10pct_count": 824,
+        "validation_rows": 8238,
+        "classification_threshold": 0.5,
+        "evaluation_split": "validation_only",
+        "sealed_test_scored": false,
+        "ranking_tie_break": "original_validation_row_order",
+        "dummy_average_precision": 0.11070648215586307,
+        "ap_improvement_over_dummy": 0.017544555954534302
+      },
+      "checks": [
+        {
+          "name": "source_policy",
+          "passed": true,
+          "mandatory": true,
+          "detail": "AST parsed as approved constructors without exec/eval"
+        },
+        {
+          "name": "plan_consistency",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Final classifier matches planned forest"
+        },
+        {
+          "name": "dataset_integrity",
+          "passed": true,
+          "mandatory": true,
+          "detail": "SHA256, split disjointness, row alignment, feature policy"
+        },
+        {
+          "name": "labels_withheld",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Worker receives no validation labels or final test"
+        },
+        {
+          "name": "worker_execution",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Resource-limited fresh process exited successfully"
+        },
+        {
+          "name": "prediction_contract",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+        },
+        {
+          "name": "single_row",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "repeat_prediction",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "empty_batch_wrapper",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "unknown_category",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "missing_numeric",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "clean_environment",
+          "passed": true,
+          "mandatory": true,
+          "detail": "No API keys/tokens passed to worker"
+        },
+        {
+          "name": "ap_above_dummy",
+          "passed": true,
+          "mandatory": false,
+          "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+        },
+        {
+          "name": "host_evaluation",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Metrics computed only by trusted host using validation labels"
+        }
+      ],
+      "resources": {
+        "limits": {
+          "timeout_s": 120.0,
+          "memory_mib": 2048,
+          "cpu_cores": 2
+        },
+        "worker_pid": 29275,
+        "wall_seconds": 3.457556915935129,
+        "fit_seconds": 2.3495752660091966,
+        "predict_seconds": 0.08108640392310917,
+        "worker_wall_seconds": 3.3166701360605657,
+        "peak_rss_mib": 308.828125,
+        "cpu_seconds": 5.72016,
+        "sklearn_version": "1.7.2",
+        "python_version": "3.10.8",
+        "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+        "joblib_backend": "threading",
+        "repeat_prediction_max_abs_delta": 0.0,
+        "total_seconds": 3.6093374209012836
+      },
+      "repairs": [],
+      "attempts": [
+        {
+          "attempt": 0,
+          "code_sha256": "f0b81f732bdb5a29a344d2567ea68e71b564d8a083d9fb27a006968bd6c89112",
+          "code_path": "candidates/bank_forest_balanced/attempt_0/model.py",
+          "status": "passed",
+          "error": null,
+          "checks": [
+            {
+              "name": "source_policy",
+              "passed": true,
+              "mandatory": true,
+              "detail": "AST parsed as approved constructors without exec/eval"
+            },
+            {
+              "name": "plan_consistency",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Final classifier matches planned forest"
+            },
+            {
+              "name": "dataset_integrity",
+              "passed": true,
+              "mandatory": true,
+              "detail": "SHA256, split disjointness, row alignment, feature policy"
+            },
+            {
+              "name": "labels_withheld",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Worker receives no validation labels or final test"
+            },
+            {
+              "name": "worker_execution",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Resource-limited fresh process exited successfully"
+            },
+            {
+              "name": "prediction_contract",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+            },
+            {
+              "name": "single_row",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "repeat_prediction",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "empty_batch_wrapper",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "unknown_category",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "missing_numeric",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "clean_environment",
+              "passed": true,
+              "mandatory": true,
+              "detail": "No API keys/tokens passed to worker"
+            },
+            {
+              "name": "ap_above_dummy",
+              "passed": true,
+              "mandatory": false,
+              "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+            },
+            {
+              "name": "host_evaluation",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Metrics computed only by trusted host using validation labels"
+            }
+          ],
+          "metrics": {
+            "average_precision": 0.12825103811039737,
+            "roc_auc": 0.5524364825351668,
+            "f1_threshold_0_5": 0.1808199121522694,
+            "precision_at_10pct": 0.14563106796116504,
+            "recall_at_10pct": 0.13157894736842105,
+            "lift_at_10pct": 1.3154701073071027,
+            "validation_positive_rate": 0.11070648215586307,
+            "top_10pct_count": 824,
+            "validation_rows": 8238,
+            "classification_threshold": 0.5,
+            "evaluation_split": "validation_only",
+            "sealed_test_scored": false,
+            "ranking_tie_break": "original_validation_row_order",
+            "dummy_average_precision": 0.11070648215586307,
+            "ap_improvement_over_dummy": 0.017544555954534302
+          },
+          "resources": {
+            "limits": {
+              "timeout_s": 120.0,
+              "memory_mib": 2048,
+              "cpu_cores": 2
+            },
+            "worker_pid": 29275,
+            "wall_seconds": 3.457556915935129,
+            "fit_seconds": 2.3495752660091966,
+            "predict_seconds": 0.08108640392310917,
+            "worker_wall_seconds": 3.3166701360605657,
+            "peak_rss_mib": 308.828125,
+            "cpu_seconds": 5.72016,
+            "sklearn_version": "1.7.2",
+            "python_version": "3.10.8",
+            "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+            "joblib_backend": "threading",
+            "repeat_prediction_max_abs_delta": 0.0,
+            "total_seconds": 3.6093374209012836
+          },
+          "containment": {
+            "backend": "constrained_ast_subprocess",
+            "arbitrary_python_execution": false,
+            "os_sandbox": false,
+            "network_namespace": false,
+            "filesystem_namespace": false,
+            "source_evaluated_with_exec_or_eval": false,
+            "constructors_allowlisted": true,
+            "resource_limited_fresh_process": true,
+            "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+          },
+          "model_metadata": {
+            "actual_algorithm": "forest",
+            "classifier_class": "RandomForestClassifier",
+            "classifier_path": [
+              "model"
+            ],
+            "classifier_parameters": {
+              "n_estimators": 200,
+              "max_depth": 12,
+              "min_samples_leaf": 5,
+              "class_weight": "balanced",
+              "n_jobs": 2,
+              "random_state": 42
+            },
+            "constructor_classes": [
+              "Pipeline",
+              "ColumnTransformer",
+              "Pipeline",
+              "SimpleImputer",
+              "StandardScaler",
+              "OneHotEncoder",
+              "RandomForestClassifier"
+            ],
+            "constructor_count": 7,
+            "source": "independently_parsed_constructor_plan"
+          }
+        }
+      ],
+      "artifact_id": "bank_forest_balanced",
+      "parent_id": null,
+      "error": null,
+      "quality_status": "above_prevalence",
+      "model_metadata": {
+        "actual_algorithm": "forest",
+        "classifier_class": "RandomForestClassifier",
+        "classifier_path": [
+          "model"
+        ],
+        "classifier_parameters": {
+          "n_estimators": 200,
+          "max_depth": 12,
+          "min_samples_leaf": 5,
+          "class_weight": "balanced",
+          "n_jobs": 2,
+          "random_state": 42
+        },
+        "constructor_classes": [
+          "Pipeline",
+          "ColumnTransformer",
+          "Pipeline",
+          "SimpleImputer",
+          "StandardScaler",
+          "OneHotEncoder",
+          "RandomForestClassifier"
+        ],
+        "constructor_count": 7,
+        "source": "independently_parsed_constructor_plan"
+      },
+      "containment": {
+        "backend": "constrained_ast_subprocess",
+        "arbitrary_python_execution": false,
+        "os_sandbox": false,
+        "network_namespace": false,
+        "filesystem_namespace": false,
+        "source_evaluated_with_exec_or_eval": false,
+        "constructors_allowlisted": true,
+        "resource_limited_fresh_process": true,
+        "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+      },
+      "code_sha256": "f0b81f732bdb5a29a344d2567ea68e71b564d8a083d9fb27a006968bd6c89112",
+      "code_path": "candidates/bank_forest_balanced/attempt_0/model.py",
+      "explanation": "Uses the plan's balanced random forest with class_weight='balanced', precontact-only numeric/categorical features (no duration), median imputation plus scaling and unknown-safe one-hot encoding, and explicit random_state=42 for the classifier only."
+    },
+    {
+      "candidate_id": "bank_logistic_balanced_default",
+      "plan": {
+        "candidate_id": "bank_logistic_balanced_default",
+        "algorithm": "logistic",
+        "variant": "default",
+        "rationale": "Child of bank_logistic_balanced exploring the default (unregularized-by-class-weight) logistic configuration; keeps the linear probability baseline for the imbalanced precontact bank target and the training-only pipeline, differing from the parent's balanced weighting.",
+        "evidence_ids": [
+          "probability-logistic",
+          "bank-precontact-policy",
+          "bank-target",
+          "training-only-pipeline",
+          "average-precision"
+        ],
+        "parent_id": "bank_logistic_balanced"
+      },
+      "status": "passed",
+      "metrics": {
+        "average_precision": 0.18287735589367637,
+        "roc_auc": 0.6131271073705284,
+        "f1_threshold_0_5": 0.0,
+        "precision_at_10pct": 0.23179611650485438,
+        "recall_at_10pct": 0.20942982456140352,
+        "lift_at_10pct": 2.0937899207971387,
+        "validation_positive_rate": 0.11070648215586307,
+        "top_10pct_count": 824,
+        "validation_rows": 8238,
+        "classification_threshold": 0.5,
+        "evaluation_split": "validation_only",
+        "sealed_test_scored": false,
+        "ranking_tie_break": "original_validation_row_order",
+        "dummy_average_precision": 0.11070648215586307,
+        "ap_improvement_over_dummy": 0.07217087373781331
+      },
+      "checks": [
+        {
+          "name": "source_policy",
+          "passed": true,
+          "mandatory": true,
+          "detail": "AST parsed as approved constructors without exec/eval"
+        },
+        {
+          "name": "plan_consistency",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Final classifier matches planned logistic"
+        },
+        {
+          "name": "dataset_integrity",
+          "passed": true,
+          "mandatory": true,
+          "detail": "SHA256, split disjointness, row alignment, feature policy"
+        },
+        {
+          "name": "labels_withheld",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Worker receives no validation labels or final test"
+        },
+        {
+          "name": "worker_execution",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Resource-limited fresh process exited successfully"
+        },
+        {
+          "name": "prediction_contract",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+        },
+        {
+          "name": "single_row",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "repeat_prediction",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "empty_batch_wrapper",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "unknown_category",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "missing_numeric",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "clean_environment",
+          "passed": true,
+          "mandatory": true,
+          "detail": "No API keys/tokens passed to worker"
+        },
+        {
+          "name": "ap_above_dummy",
+          "passed": true,
+          "mandatory": false,
+          "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+        },
+        {
+          "name": "host_evaluation",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Metrics computed only by trusted host using validation labels"
+        }
+      ],
+      "resources": {
+        "limits": {
+          "timeout_s": 120.0,
+          "memory_mib": 2048,
+          "cpu_cores": 2
+        },
+        "worker_pid": 29426,
+        "wall_seconds": 1.0031202000100166,
+        "fit_seconds": 0.07132311700843275,
+        "predict_seconds": 0.014495880110189319,
+        "worker_wall_seconds": 0.8480925192125142,
+        "peak_rss_mib": 308.828125,
+        "cpu_seconds": 1.135454,
+        "sklearn_version": "1.7.2",
+        "python_version": "3.10.8",
+        "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+        "joblib_backend": "threading",
+        "repeat_prediction_max_abs_delta": 0.0,
+        "total_seconds": 1.1526222189422697
+      },
+      "repairs": [],
+      "attempts": [
+        {
+          "attempt": 0,
+          "code_sha256": "8678b726c956b35f08898a792ec5022f6d4f6da76d2611be63eca4d4889dc4d6",
+          "code_path": "candidates/bank_logistic_balanced_default/attempt_0/model.py",
+          "status": "passed",
+          "error": null,
+          "checks": [
+            {
+              "name": "source_policy",
+              "passed": true,
+              "mandatory": true,
+              "detail": "AST parsed as approved constructors without exec/eval"
+            },
+            {
+              "name": "plan_consistency",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Final classifier matches planned logistic"
+            },
+            {
+              "name": "dataset_integrity",
+              "passed": true,
+              "mandatory": true,
+              "detail": "SHA256, split disjointness, row alignment, feature policy"
+            },
+            {
+              "name": "labels_withheld",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Worker receives no validation labels or final test"
+            },
+            {
+              "name": "worker_execution",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Resource-limited fresh process exited successfully"
+            },
+            {
+              "name": "prediction_contract",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+            },
+            {
+              "name": "single_row",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "repeat_prediction",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "empty_batch_wrapper",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "unknown_category",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "missing_numeric",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "clean_environment",
+              "passed": true,
+              "mandatory": true,
+              "detail": "No API keys/tokens passed to worker"
+            },
+            {
+              "name": "ap_above_dummy",
+              "passed": true,
+              "mandatory": false,
+              "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+            },
+            {
+              "name": "host_evaluation",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Metrics computed only by trusted host using validation labels"
+            }
+          ],
+          "metrics": {
+            "average_precision": 0.18287735589367637,
+            "roc_auc": 0.6131271073705284,
+            "f1_threshold_0_5": 0.0,
+            "precision_at_10pct": 0.23179611650485438,
+            "recall_at_10pct": 0.20942982456140352,
+            "lift_at_10pct": 2.0937899207971387,
+            "validation_positive_rate": 0.11070648215586307,
+            "top_10pct_count": 824,
+            "validation_rows": 8238,
+            "classification_threshold": 0.5,
+            "evaluation_split": "validation_only",
+            "sealed_test_scored": false,
+            "ranking_tie_break": "original_validation_row_order",
+            "dummy_average_precision": 0.11070648215586307,
+            "ap_improvement_over_dummy": 0.07217087373781331
+          },
+          "resources": {
+            "limits": {
+              "timeout_s": 120.0,
+              "memory_mib": 2048,
+              "cpu_cores": 2
+            },
+            "worker_pid": 29426,
+            "wall_seconds": 1.0031202000100166,
+            "fit_seconds": 0.07132311700843275,
+            "predict_seconds": 0.014495880110189319,
+            "worker_wall_seconds": 0.8480925192125142,
+            "peak_rss_mib": 308.828125,
+            "cpu_seconds": 1.135454,
+            "sklearn_version": "1.7.2",
+            "python_version": "3.10.8",
+            "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+            "joblib_backend": "threading",
+            "repeat_prediction_max_abs_delta": 0.0,
+            "total_seconds": 1.1526222189422697
+          },
+          "containment": {
+            "backend": "constrained_ast_subprocess",
+            "arbitrary_python_execution": false,
+            "os_sandbox": false,
+            "network_namespace": false,
+            "filesystem_namespace": false,
+            "source_evaluated_with_exec_or_eval": false,
+            "constructors_allowlisted": true,
+            "resource_limited_fresh_process": true,
+            "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+          },
+          "model_metadata": {
+            "actual_algorithm": "logistic",
+            "classifier_class": "LogisticRegression",
+            "classifier_path": [
+              "model"
+            ],
+            "classifier_parameters": {
+              "max_iter": 1000,
+              "random_state": 42
+            },
+            "constructor_classes": [
+              "Pipeline",
+              "ColumnTransformer",
+              "Pipeline",
+              "SimpleImputer",
+              "StandardScaler",
+              "OneHotEncoder",
+              "LogisticRegression"
+            ],
+            "constructor_count": 7,
+            "source": "independently_parsed_constructor_plan"
+          }
+        }
+      ],
+      "artifact_id": "bank_logistic_balanced_default",
+      "parent_id": "bank_logistic_balanced",
+      "error": null,
+      "quality_status": "above_prevalence",
+      "model_metadata": {
+        "actual_algorithm": "logistic",
+        "classifier_class": "LogisticRegression",
+        "classifier_path": [
+          "model"
+        ],
+        "classifier_parameters": {
+          "max_iter": 1000,
+          "random_state": 42
+        },
+        "constructor_classes": [
+          "Pipeline",
+          "ColumnTransformer",
+          "Pipeline",
+          "SimpleImputer",
+          "StandardScaler",
+          "OneHotEncoder",
+          "LogisticRegression"
+        ],
+        "constructor_count": 7,
+        "source": "independently_parsed_constructor_plan"
+      },
+      "containment": {
+        "backend": "constrained_ast_subprocess",
+        "arbitrary_python_execution": false,
+        "os_sandbox": false,
+        "network_namespace": false,
+        "filesystem_namespace": false,
+        "source_evaluated_with_exec_or_eval": false,
+        "constructors_allowlisted": true,
+        "resource_limited_fresh_process": true,
+        "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+      },
+      "code_sha256": "8678b726c956b35f08898a792ec5022f6d4f6da76d2611be63eca4d4889dc4d6",
+      "code_path": "candidates/bank_logistic_balanced_default/attempt_0/model.py",
+      "explanation": "Follows the plan's default logistic variant (no class_weight) while keeping the precontact numeric median-impute/scale and categorical one-hot pipeline with handle_unknown='ignore', max_iter=1000, and seed 42, excluding duration per the leakage policy."
+    },
+    {
+      "candidate_id": "bank_logistic_balanced_regularized",
+      "plan": {
+        "candidate_id": "bank_logistic_balanced_regularized",
+        "algorithm": "logistic",
+        "variant": "regularized",
+        "rationale": "Child of bank_logistic_balanced adding stronger regularization to the linear model, which can stabilize coefficients on the conservative precontact feature set and provide a complementary probability ranking for average_precision.",
+        "evidence_ids": [
+          "probability-logistic",
+          "bank-precontact-policy",
+          "bank-target",
+          "training-only-pipeline",
+          "average-precision"
+        ],
+        "parent_id": "bank_logistic_balanced"
+      },
+      "status": "passed",
+      "metrics": {
+        "average_precision": 0.18135827556266604,
+        "roc_auc": 0.6085013691921586,
+        "f1_threshold_0_5": 0.22774408139307376,
+        "precision_at_10pct": 0.2220873786407767,
+        "recall_at_10pct": 0.20065789473684212,
+        "lift_at_10pct": 2.0060919136433317,
+        "validation_positive_rate": 0.11070648215586307,
+        "top_10pct_count": 824,
+        "validation_rows": 8238,
+        "classification_threshold": 0.5,
+        "evaluation_split": "validation_only",
+        "sealed_test_scored": false,
+        "ranking_tie_break": "original_validation_row_order",
+        "dummy_average_precision": 0.11070648215586307,
+        "ap_improvement_over_dummy": 0.07065179340680297
+      },
+      "checks": [
+        {
+          "name": "source_policy",
+          "passed": true,
+          "mandatory": true,
+          "detail": "AST parsed as approved constructors without exec/eval"
+        },
+        {
+          "name": "plan_consistency",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Final classifier matches planned logistic"
+        },
+        {
+          "name": "dataset_integrity",
+          "passed": true,
+          "mandatory": true,
+          "detail": "SHA256, split disjointness, row alignment, feature policy"
+        },
+        {
+          "name": "labels_withheld",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Worker receives no validation labels or final test"
+        },
+        {
+          "name": "worker_execution",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Resource-limited fresh process exited successfully"
+        },
+        {
+          "name": "prediction_contract",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+        },
+        {
+          "name": "single_row",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "repeat_prediction",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "empty_batch_wrapper",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "unknown_category",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "missing_numeric",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "clean_environment",
+          "passed": true,
+          "mandatory": true,
+          "detail": "No API keys/tokens passed to worker"
+        },
+        {
+          "name": "ap_above_dummy",
+          "passed": true,
+          "mandatory": false,
+          "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+        },
+        {
+          "name": "host_evaluation",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Metrics computed only by trusted host using validation labels"
+        }
+      ],
+      "resources": {
+        "limits": {
+          "timeout_s": 120.0,
+          "memory_mib": 2048,
+          "cpu_cores": 2
+        },
+        "worker_pid": 29497,
+        "wall_seconds": 1.0532927489839494,
+        "fit_seconds": 0.09937094198539853,
+        "predict_seconds": 0.0282342538703233,
+        "worker_wall_seconds": 0.8943757112137973,
+        "peak_rss_mib": 308.828125,
+        "cpu_seconds": 1.18974,
+        "sklearn_version": "1.7.2",
+        "python_version": "3.10.8",
+        "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+        "joblib_backend": "threading",
+        "repeat_prediction_max_abs_delta": 0.0,
+        "total_seconds": 1.2438045740127563
+      },
+      "repairs": [],
+      "attempts": [
+        {
+          "attempt": 0,
+          "code_sha256": "91fe00522a2ff39664eadf1814587ba3a451378dda3511461d6c2ad90a981958",
+          "code_path": "candidates/bank_logistic_balanced_regularized/attempt_0/model.py",
+          "status": "passed",
+          "error": null,
+          "checks": [
+            {
+              "name": "source_policy",
+              "passed": true,
+              "mandatory": true,
+              "detail": "AST parsed as approved constructors without exec/eval"
+            },
+            {
+              "name": "plan_consistency",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Final classifier matches planned logistic"
+            },
+            {
+              "name": "dataset_integrity",
+              "passed": true,
+              "mandatory": true,
+              "detail": "SHA256, split disjointness, row alignment, feature policy"
+            },
+            {
+              "name": "labels_withheld",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Worker receives no validation labels or final test"
+            },
+            {
+              "name": "worker_execution",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Resource-limited fresh process exited successfully"
+            },
+            {
+              "name": "prediction_contract",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+            },
+            {
+              "name": "single_row",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "repeat_prediction",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "empty_batch_wrapper",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "unknown_category",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "missing_numeric",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "clean_environment",
+              "passed": true,
+              "mandatory": true,
+              "detail": "No API keys/tokens passed to worker"
+            },
+            {
+              "name": "ap_above_dummy",
+              "passed": true,
+              "mandatory": false,
+              "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+            },
+            {
+              "name": "host_evaluation",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Metrics computed only by trusted host using validation labels"
+            }
+          ],
+          "metrics": {
+            "average_precision": 0.18135827556266604,
+            "roc_auc": 0.6085013691921586,
+            "f1_threshold_0_5": 0.22774408139307376,
+            "precision_at_10pct": 0.2220873786407767,
+            "recall_at_10pct": 0.20065789473684212,
+            "lift_at_10pct": 2.0060919136433317,
+            "validation_positive_rate": 0.11070648215586307,
+            "top_10pct_count": 824,
+            "validation_rows": 8238,
+            "classification_threshold": 0.5,
+            "evaluation_split": "validation_only",
+            "sealed_test_scored": false,
+            "ranking_tie_break": "original_validation_row_order",
+            "dummy_average_precision": 0.11070648215586307,
+            "ap_improvement_over_dummy": 0.07065179340680297
+          },
+          "resources": {
+            "limits": {
+              "timeout_s": 120.0,
+              "memory_mib": 2048,
+              "cpu_cores": 2
+            },
+            "worker_pid": 29497,
+            "wall_seconds": 1.0532927489839494,
+            "fit_seconds": 0.09937094198539853,
+            "predict_seconds": 0.0282342538703233,
+            "worker_wall_seconds": 0.8943757112137973,
+            "peak_rss_mib": 308.828125,
+            "cpu_seconds": 1.18974,
+            "sklearn_version": "1.7.2",
+            "python_version": "3.10.8",
+            "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+            "joblib_backend": "threading",
+            "repeat_prediction_max_abs_delta": 0.0,
+            "total_seconds": 1.2438045740127563
+          },
+          "containment": {
+            "backend": "constrained_ast_subprocess",
+            "arbitrary_python_execution": false,
+            "os_sandbox": false,
+            "network_namespace": false,
+            "filesystem_namespace": false,
+            "source_evaluated_with_exec_or_eval": false,
+            "constructors_allowlisted": true,
+            "resource_limited_fresh_process": true,
+            "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+          },
+          "model_metadata": {
+            "actual_algorithm": "logistic",
+            "classifier_class": "LogisticRegression",
+            "classifier_path": [
+              "model"
+            ],
+            "classifier_parameters": {
+              "C": 0.1,
+              "max_iter": 1000,
+              "class_weight": "balanced",
+              "random_state": 42
+            },
+            "constructor_classes": [
+              "Pipeline",
+              "ColumnTransformer",
+              "Pipeline",
+              "SimpleImputer",
+              "StandardScaler",
+              "OneHotEncoder",
+              "LogisticRegression"
+            ],
+            "constructor_count": 7,
+            "source": "independently_parsed_constructor_plan"
+          }
+        }
+      ],
+      "artifact_id": "bank_logistic_balanced_regularized",
+      "parent_id": "bank_logistic_balanced",
+      "error": null,
+      "quality_status": "above_prevalence",
+      "model_metadata": {
+        "actual_algorithm": "logistic",
+        "classifier_class": "LogisticRegression",
+        "classifier_path": [
+          "model"
+        ],
+        "classifier_parameters": {
+          "C": 0.1,
+          "max_iter": 1000,
+          "class_weight": "balanced",
+          "random_state": 42
+        },
+        "constructor_classes": [
+          "Pipeline",
+          "ColumnTransformer",
+          "Pipeline",
+          "SimpleImputer",
+          "StandardScaler",
+          "OneHotEncoder",
+          "LogisticRegression"
+        ],
+        "constructor_count": 7,
+        "source": "independently_parsed_constructor_plan"
+      },
+      "containment": {
+        "backend": "constrained_ast_subprocess",
+        "arbitrary_python_execution": false,
+        "os_sandbox": false,
+        "network_namespace": false,
+        "filesystem_namespace": false,
+        "source_evaluated_with_exec_or_eval": false,
+        "constructors_allowlisted": true,
+        "resource_limited_fresh_process": true,
+        "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+      },
+      "code_sha256": "91fe00522a2ff39664eadf1814587ba3a451378dda3511461d6c2ad90a981958",
+      "code_path": "candidates/bank_logistic_balanced_regularized/attempt_0/model.py",
+      "explanation": "Child of bank_logistic_balanced with stronger L2 regularization (C=0.1) while keeping class_weight='balanced', median imputation, scaling, and OneHotEncoder(handle_unknown='ignore') on the conservative precontact feature set, matching the regularized variant plan and probability-logistic evidence."
+    },
+    {
+      "candidate_id": "bank_forest_balanced_default",
+      "plan": {
+        "candidate_id": "bank_forest_balanced_default",
+        "algorithm": "forest",
+        "variant": "default",
+        "rationale": "Child of bank_forest_balanced using default forest configuration to test whether unweighted tree averaging captures nonlinear precontact interactions differently from the balanced-weight parent.",
+        "evidence_ids": [
+          "bank-precontact-policy",
+          "bank-target",
+          "bank-ordered-split",
+          "average-precision"
+        ],
+        "parent_id": "bank_forest_balanced"
+      },
+      "status": "passed",
+      "metrics": {
+        "average_precision": 0.1478612204016905,
+        "roc_auc": 0.5773083190846349,
+        "f1_threshold_0_5": 0.0,
+        "precision_at_10pct": 0.1808252427184466,
+        "recall_at_10pct": 0.16337719298245615,
+        "lift_at_10pct": 1.6333753832396527,
+        "validation_positive_rate": 0.11070648215586307,
+        "top_10pct_count": 824,
+        "validation_rows": 8238,
+        "classification_threshold": 0.5,
+        "evaluation_split": "validation_only",
+        "sealed_test_scored": false,
+        "ranking_tie_break": "original_validation_row_order",
+        "dummy_average_precision": 0.11070648215586307,
+        "ap_improvement_over_dummy": 0.037154738245827434
+      },
+      "checks": [
+        {
+          "name": "source_policy",
+          "passed": true,
+          "mandatory": true,
+          "detail": "AST parsed as approved constructors without exec/eval"
+        },
+        {
+          "name": "plan_consistency",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Final classifier matches planned forest"
+        },
+        {
+          "name": "dataset_integrity",
+          "passed": true,
+          "mandatory": true,
+          "detail": "SHA256, split disjointness, row alignment, feature policy"
+        },
+        {
+          "name": "labels_withheld",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Worker receives no validation labels or final test"
+        },
+        {
+          "name": "worker_execution",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Resource-limited fresh process exited successfully"
+        },
+        {
+          "name": "prediction_contract",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+        },
+        {
+          "name": "single_row",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "repeat_prediction",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "empty_batch_wrapper",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "unknown_category",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "missing_numeric",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "clean_environment",
+          "passed": true,
+          "mandatory": true,
+          "detail": "No API keys/tokens passed to worker"
+        },
+        {
+          "name": "ap_above_dummy",
+          "passed": true,
+          "mandatory": false,
+          "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+        },
+        {
+          "name": "host_evaluation",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Metrics computed only by trusted host using validation labels"
+        }
+      ],
+      "resources": {
+        "limits": {
+          "timeout_s": 120.0,
+          "memory_mib": 2048,
+          "cpu_cores": 2
+        },
+        "worker_pid": 29600,
+        "wall_seconds": 2.205662660067901,
+        "fit_seconds": 1.166618422139436,
+        "predict_seconds": 0.050756569020450115,
+        "worker_wall_seconds": 2.061992487171665,
+        "peak_rss_mib": 308.828125,
+        "cpu_seconds": 3.311118,
+        "sklearn_version": "1.7.2",
+        "python_version": "3.10.8",
+        "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+        "joblib_backend": "threading",
+        "repeat_prediction_max_abs_delta": 3.469446951953614e-18,
+        "total_seconds": 2.353120927931741
+      },
+      "repairs": [],
+      "attempts": [
+        {
+          "attempt": 0,
+          "code_sha256": "565415ebef85550bb41802757f799af825d176c1d8690b2264c8f315a5ff4bc9",
+          "code_path": "candidates/bank_forest_balanced_default/attempt_0/model.py",
+          "status": "passed",
+          "error": null,
+          "checks": [
+            {
+              "name": "source_policy",
+              "passed": true,
+              "mandatory": true,
+              "detail": "AST parsed as approved constructors without exec/eval"
+            },
+            {
+              "name": "plan_consistency",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Final classifier matches planned forest"
+            },
+            {
+              "name": "dataset_integrity",
+              "passed": true,
+              "mandatory": true,
+              "detail": "SHA256, split disjointness, row alignment, feature policy"
+            },
+            {
+              "name": "labels_withheld",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Worker receives no validation labels or final test"
+            },
+            {
+              "name": "worker_execution",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Resource-limited fresh process exited successfully"
+            },
+            {
+              "name": "prediction_contract",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+            },
+            {
+              "name": "single_row",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "repeat_prediction",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "empty_batch_wrapper",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "unknown_category",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "missing_numeric",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "clean_environment",
+              "passed": true,
+              "mandatory": true,
+              "detail": "No API keys/tokens passed to worker"
+            },
+            {
+              "name": "ap_above_dummy",
+              "passed": true,
+              "mandatory": false,
+              "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+            },
+            {
+              "name": "host_evaluation",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Metrics computed only by trusted host using validation labels"
+            }
+          ],
+          "metrics": {
+            "average_precision": 0.1478612204016905,
+            "roc_auc": 0.5773083190846349,
+            "f1_threshold_0_5": 0.0,
+            "precision_at_10pct": 0.1808252427184466,
+            "recall_at_10pct": 0.16337719298245615,
+            "lift_at_10pct": 1.6333753832396527,
+            "validation_positive_rate": 0.11070648215586307,
+            "top_10pct_count": 824,
+            "validation_rows": 8238,
+            "classification_threshold": 0.5,
+            "evaluation_split": "validation_only",
+            "sealed_test_scored": false,
+            "ranking_tie_break": "original_validation_row_order",
+            "dummy_average_precision": 0.11070648215586307,
+            "ap_improvement_over_dummy": 0.037154738245827434
+          },
+          "resources": {
+            "limits": {
+              "timeout_s": 120.0,
+              "memory_mib": 2048,
+              "cpu_cores": 2
+            },
+            "worker_pid": 29600,
+            "wall_seconds": 2.205662660067901,
+            "fit_seconds": 1.166618422139436,
+            "predict_seconds": 0.050756569020450115,
+            "worker_wall_seconds": 2.061992487171665,
+            "peak_rss_mib": 308.828125,
+            "cpu_seconds": 3.311118,
+            "sklearn_version": "1.7.2",
+            "python_version": "3.10.8",
+            "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+            "joblib_backend": "threading",
+            "repeat_prediction_max_abs_delta": 3.469446951953614e-18,
+            "total_seconds": 2.353120927931741
+          },
+          "containment": {
+            "backend": "constrained_ast_subprocess",
+            "arbitrary_python_execution": false,
+            "os_sandbox": false,
+            "network_namespace": false,
+            "filesystem_namespace": false,
+            "source_evaluated_with_exec_or_eval": false,
+            "constructors_allowlisted": true,
+            "resource_limited_fresh_process": true,
+            "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+          },
+          "model_metadata": {
+            "actual_algorithm": "forest",
+            "classifier_class": "RandomForestClassifier",
+            "classifier_path": [
+              "model"
+            ],
+            "classifier_parameters": {
+              "n_estimators": 100,
+              "max_depth": 12,
+              "min_samples_leaf": 5,
+              "n_jobs": 2,
+              "random_state": 42
+            },
+            "constructor_classes": [
+              "Pipeline",
+              "ColumnTransformer",
+              "Pipeline",
+              "SimpleImputer",
+              "StandardScaler",
+              "OneHotEncoder",
+              "RandomForestClassifier"
+            ],
+            "constructor_count": 7,
+            "source": "independently_parsed_constructor_plan"
+          }
+        }
+      ],
+      "artifact_id": "bank_forest_balanced_default",
+      "parent_id": "bank_forest_balanced",
+      "error": null,
+      "quality_status": "above_prevalence",
+      "model_metadata": {
+        "actual_algorithm": "forest",
+        "classifier_class": "RandomForestClassifier",
+        "classifier_path": [
+          "model"
+        ],
+        "classifier_parameters": {
+          "n_estimators": 100,
+          "max_depth": 12,
+          "min_samples_leaf": 5,
+          "n_jobs": 2,
+          "random_state": 42
+        },
+        "constructor_classes": [
+          "Pipeline",
+          "ColumnTransformer",
+          "Pipeline",
+          "SimpleImputer",
+          "StandardScaler",
+          "OneHotEncoder",
+          "RandomForestClassifier"
+        ],
+        "constructor_count": 7,
+        "source": "independently_parsed_constructor_plan"
+      },
+      "containment": {
+        "backend": "constrained_ast_subprocess",
+        "arbitrary_python_execution": false,
+        "os_sandbox": false,
+        "network_namespace": false,
+        "filesystem_namespace": false,
+        "source_evaluated_with_exec_or_eval": false,
+        "constructors_allowlisted": true,
+        "resource_limited_fresh_process": true,
+        "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+      },
+      "code_sha256": "565415ebef85550bb41802757f799af825d176c1d8690b2264c8f315a5ff4bc9",
+      "code_path": "candidates/bank_forest_balanced_default/attempt_0/model.py",
+      "explanation": "Follows the default-variant forest plan (unweighted RandomForestClassifier, n_estimators=100, max_depth=12, min_samples_leaf=5, n_jobs=2, random_state=seed) with median-imputed/scaled numeric features and ignore-unknown one-hot categoricals, excluding duration per the precontact leakage policy."
+    },
+    {
+      "candidate_id": "bank_forest_balanced_shallower",
+      "plan": {
+        "candidate_id": "bank_forest_balanced_shallower",
+        "algorithm": "forest",
+        "variant": "shallower",
+        "rationale": "Child of bank_forest_balanced with reduced depth to limit variance on the small precontact feature set, offering a lower-capacity tree alternative for candidate comparison under the ordered split protocol.",
+        "evidence_ids": [
+          "bank-precontact-policy",
+          "bank-target",
+          "bank-ordered-split",
+          "average-precision"
+        ],
+        "parent_id": "bank_forest_balanced"
+      },
+      "status": "passed",
+      "metrics": {
+        "average_precision": 0.13485763127441014,
+        "roc_auc": 0.5643766523700734,
+        "f1_threshold_0_5": 0.20286776420605418,
+        "precision_at_10pct": 0.15898058252427186,
+        "recall_at_10pct": 0.14364035087719298,
+        "lift_at_10pct": 1.4360548671435873,
+        "validation_positive_rate": 0.11070648215586307,
+        "top_10pct_count": 824,
+        "validation_rows": 8238,
+        "classification_threshold": 0.5,
+        "evaluation_split": "validation_only",
+        "sealed_test_scored": false,
+        "ranking_tie_break": "original_validation_row_order",
+        "dummy_average_precision": 0.11070648215586307,
+        "ap_improvement_over_dummy": 0.02415114911854707
+      },
+      "checks": [
+        {
+          "name": "source_policy",
+          "passed": true,
+          "mandatory": true,
+          "detail": "AST parsed as approved constructors without exec/eval"
+        },
+        {
+          "name": "plan_consistency",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Final classifier matches planned forest"
+        },
+        {
+          "name": "dataset_integrity",
+          "passed": true,
+          "mandatory": true,
+          "detail": "SHA256, split disjointness, row alignment, feature policy"
+        },
+        {
+          "name": "labels_withheld",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Worker receives no validation labels or final test"
+        },
+        {
+          "name": "worker_execution",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Resource-limited fresh process exited successfully"
+        },
+        {
+          "name": "prediction_contract",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+        },
+        {
+          "name": "single_row",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "repeat_prediction",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "empty_batch_wrapper",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "unknown_category",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "missing_numeric",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "clean_environment",
+          "passed": true,
+          "mandatory": true,
+          "detail": "No API keys/tokens passed to worker"
+        },
+        {
+          "name": "ap_above_dummy",
+          "passed": true,
+          "mandatory": false,
+          "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+        },
+        {
+          "name": "host_evaluation",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Metrics computed only by trusted host using validation labels"
+        }
+      ],
+      "resources": {
+        "limits": {
+          "timeout_s": 120.0,
+          "memory_mib": 2048,
+          "cpu_cores": 2
+        },
+        "worker_pid": 29696,
+        "wall_seconds": 2.5057006359566003,
+        "fit_seconds": 1.351759834913537,
+        "predict_seconds": 0.09597889496944845,
+        "worker_wall_seconds": 2.3287849959451705,
+        "peak_rss_mib": 308.828125,
+        "cpu_seconds": 3.729666,
+        "sklearn_version": "1.7.2",
+        "python_version": "3.10.8",
+        "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+        "joblib_backend": "threading",
+        "repeat_prediction_max_abs_delta": 5.551115123125783e-17,
+        "total_seconds": 2.6539397360756993
+      },
+      "repairs": [],
+      "attempts": [
+        {
+          "attempt": 0,
+          "code_sha256": "2ca25212672acdb64d86a94fb95f80c8b3f7b3a4c689e04b897f840d8cf51b09",
+          "code_path": "candidates/bank_forest_balanced_shallower/attempt_0/model.py",
+          "status": "passed",
+          "error": null,
+          "checks": [
+            {
+              "name": "source_policy",
+              "passed": true,
+              "mandatory": true,
+              "detail": "AST parsed as approved constructors without exec/eval"
+            },
+            {
+              "name": "plan_consistency",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Final classifier matches planned forest"
+            },
+            {
+              "name": "dataset_integrity",
+              "passed": true,
+              "mandatory": true,
+              "detail": "SHA256, split disjointness, row alignment, feature policy"
+            },
+            {
+              "name": "labels_withheld",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Worker receives no validation labels or final test"
+            },
+            {
+              "name": "worker_execution",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Resource-limited fresh process exited successfully"
+            },
+            {
+              "name": "prediction_contract",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+            },
+            {
+              "name": "single_row",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "repeat_prediction",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "empty_batch_wrapper",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "unknown_category",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "missing_numeric",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "clean_environment",
+              "passed": true,
+              "mandatory": true,
+              "detail": "No API keys/tokens passed to worker"
+            },
+            {
+              "name": "ap_above_dummy",
+              "passed": true,
+              "mandatory": false,
+              "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+            },
+            {
+              "name": "host_evaluation",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Metrics computed only by trusted host using validation labels"
+            }
+          ],
+          "metrics": {
+            "average_precision": 0.13485763127441014,
+            "roc_auc": 0.5643766523700734,
+            "f1_threshold_0_5": 0.20286776420605418,
+            "precision_at_10pct": 0.15898058252427186,
+            "recall_at_10pct": 0.14364035087719298,
+            "lift_at_10pct": 1.4360548671435873,
+            "validation_positive_rate": 0.11070648215586307,
+            "top_10pct_count": 824,
+            "validation_rows": 8238,
+            "classification_threshold": 0.5,
+            "evaluation_split": "validation_only",
+            "sealed_test_scored": false,
+            "ranking_tie_break": "original_validation_row_order",
+            "dummy_average_precision": 0.11070648215586307,
+            "ap_improvement_over_dummy": 0.02415114911854707
+          },
+          "resources": {
+            "limits": {
+              "timeout_s": 120.0,
+              "memory_mib": 2048,
+              "cpu_cores": 2
+            },
+            "worker_pid": 29696,
+            "wall_seconds": 2.5057006359566003,
+            "fit_seconds": 1.351759834913537,
+            "predict_seconds": 0.09597889496944845,
+            "worker_wall_seconds": 2.3287849959451705,
+            "peak_rss_mib": 308.828125,
+            "cpu_seconds": 3.729666,
+            "sklearn_version": "1.7.2",
+            "python_version": "3.10.8",
+            "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+            "joblib_backend": "threading",
+            "repeat_prediction_max_abs_delta": 5.551115123125783e-17,
+            "total_seconds": 2.6539397360756993
+          },
+          "containment": {
+            "backend": "constrained_ast_subprocess",
+            "arbitrary_python_execution": false,
+            "os_sandbox": false,
+            "network_namespace": false,
+            "filesystem_namespace": false,
+            "source_evaluated_with_exec_or_eval": false,
+            "constructors_allowlisted": true,
+            "resource_limited_fresh_process": true,
+            "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+          },
+          "model_metadata": {
+            "actual_algorithm": "forest",
+            "classifier_class": "RandomForestClassifier",
+            "classifier_path": [
+              "model"
+            ],
+            "classifier_parameters": {
+              "n_estimators": 200,
+              "max_depth": 8,
+              "min_samples_leaf": 5,
+              "class_weight": "balanced",
+              "n_jobs": 2,
+              "random_state": 42
+            },
+            "constructor_classes": [
+              "Pipeline",
+              "ColumnTransformer",
+              "Pipeline",
+              "SimpleImputer",
+              "StandardScaler",
+              "OneHotEncoder",
+              "RandomForestClassifier"
+            ],
+            "constructor_count": 7,
+            "source": "independently_parsed_constructor_plan"
+          }
+        }
+      ],
+      "artifact_id": "bank_forest_balanced_shallower",
+      "parent_id": "bank_forest_balanced",
+      "error": null,
+      "quality_status": "above_prevalence",
+      "model_metadata": {
+        "actual_algorithm": "forest",
+        "classifier_class": "RandomForestClassifier",
+        "classifier_path": [
+          "model"
+        ],
+        "classifier_parameters": {
+          "n_estimators": 200,
+          "max_depth": 8,
+          "min_samples_leaf": 5,
+          "class_weight": "balanced",
+          "n_jobs": 2,
+          "random_state": 42
+        },
+        "constructor_classes": [
+          "Pipeline",
+          "ColumnTransformer",
+          "Pipeline",
+          "SimpleImputer",
+          "StandardScaler",
+          "OneHotEncoder",
+          "RandomForestClassifier"
+        ],
+        "constructor_count": 7,
+        "source": "independently_parsed_constructor_plan"
+      },
+      "containment": {
+        "backend": "constrained_ast_subprocess",
+        "arbitrary_python_execution": false,
+        "os_sandbox": false,
+        "network_namespace": false,
+        "filesystem_namespace": false,
+        "source_evaluated_with_exec_or_eval": false,
+        "constructors_allowlisted": true,
+        "resource_limited_fresh_process": true,
+        "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+      },
+      "code_sha256": "2ca25212672acdb64d86a94fb95f80c8b3f7b3a4c689e04b897f840d8cf51b09",
+      "code_path": "candidates/bank_forest_balanced_shallower/attempt_0/model.py",
+      "explanation": "Adheres to the forest/shallower plan by lowering max_depth from the parent's 12 to 8 while keeping balanced class weights, precontact-only features, and the median-impute/scale plus one-hot ColumnTransformer pipeline."
+    }
+  ],
+  "selected_candidate_id": "bank_logistic_balanced_default",
+  "events": [
+    {
+      "sequence": 0,
+      "event_type": "RECEIVED",
+      "type": "RECEIVED",
+      "created_at": "2026-09-29T15:35:39.922823+00:00",
+      "data": {
+        "mode": "real",
+        "model": "deepseek-flash"
+      }
+    },
+    {
+      "sequence": 1,
+      "event_type": "LLM_RESPONSE",
+      "type": "LLM_RESPONSE",
+      "created_at": "2026-09-29T15:35:47.033251+00:00",
+      "data": {
+        "role": "interpreter",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "ba6e44c1-3aa2-4c69-bfa3-44289ff8c3e3",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "e90c60adaefac9b5d524dbbdee99ff57d1cdc1e3a3fb6dec1dcfd5cf49e6223a",
+        "response_sha256": "3aa860ab8d5fb4c14c722c74ca2df554af14bd9b07a9d836bc171161df39d9d2",
+        "input_tokens": 450,
+        "output_tokens": 257,
+        "seconds": 6.59,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "sequence": 2,
+      "event_type": "SPEC_VALIDATED",
+      "type": "SPEC_VALIDATED",
+      "created_at": "2026-09-29T15:35:47.355512+00:00",
+      "data": {
+        "task_type": "tabular_binary_classification",
+        "assumptions": [
+          "数据集 bank 已提供且包含上述特征与目标标签。",
+          "任务为表格二分类，评估使用 average_precision。",
+          "未指定额外运行时长，因此使用宿主默认超时 120 秒。"
+        ]
+      }
+    },
+    {
+      "sequence": 3,
+      "event_type": "KNOWLEDGE_RETRIEVED",
+      "type": "KNOWLEDGE_RETRIEVED",
+      "created_at": "2026-09-29T15:35:47.589016+00:00",
+      "data": {
+        "count": 6,
+        "use_graph": true,
+        "capability_ids": [
+          "bank-precontact-policy",
+          "bank-target",
+          "bank-ordered-split",
+          "average-precision",
+          "probability-logistic",
+          "training-only-pipeline"
+        ]
+      }
+    },
+    {
+      "sequence": 4,
+      "event_type": "LLM_RESPONSE",
+      "type": "LLM_RESPONSE",
+      "created_at": "2026-09-29T15:35:49.065356+00:00",
+      "data": {
+        "role": "planner",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "cd8c2bcc-ea9d-4688-9ce5-3280d223e6c2",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "5fee7665c31530ec654ae2722f8eeb748483c782654aed4ad0212011f8b9812c",
+        "response_sha256": "0967ddc1053d00cce312a86db1bbbf836c711a452dc534d8e4391ba3388c485a",
+        "input_tokens": 9001,
+        "output_tokens": 177,
+        "seconds": 1.231,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "sequence": 5,
+      "event_type": "CANDIDATE_PLANNED",
+      "type": "CANDIDATE_PLANNED",
+      "created_at": "2026-09-29T15:35:49.292267+00:00",
+      "data": {
+        "candidate_id": "bank_logistic_balanced",
+        "algorithm": "logistic",
+        "variant": "balanced",
+        "rationale": "Logistic regression with class_weight balanced suits the imbalanced precontact bank target and provides calibrated probabilities for average_precision; fits the conservative precontact feature policy and training-only pipeline.",
+        "evidence_ids": [
+          "probability-logistic",
+          "bank-precontact-policy",
+          "bank-target",
+          "training-only-pipeline",
+          "average-precision"
+        ],
+        "parent_id": null
+      }
+    },
+    {
+      "sequence": 6,
+      "event_type": "LLM_RESPONSE",
+      "type": "LLM_RESPONSE",
+      "created_at": "2026-09-29T15:35:51.263728+00:00",
+      "data": {
+        "role": "coder",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "c731a5f1-0a9e-42b3-9777-3897ca36c845",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "8be46d52992f0cdb20cda154976e682da353db24bca36094588941cd3c2eb498",
+        "response_sha256": "7540dd00cd1afa9dc053347a0dbe9ce043ed446238fc2784940b5f30a2763621",
+        "input_tokens": 9561,
+        "output_tokens": 250,
+        "seconds": 1.717,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "sequence": 7,
+      "event_type": "FAILURE_INJECTED",
+      "type": "FAILURE_INJECTED",
+      "created_at": "2026-09-29T15:35:51.743368+00:00",
+      "data": {
+        "candidate_id": "bank_logistic_balanced",
+        "kind": "missing_interface",
+        "injected": true
+      }
+    },
+    {
+      "sequence": 8,
+      "event_type": "VALIDATING",
+      "type": "VALIDATING",
+      "created_at": "2026-09-29T15:35:52.077276+00:00",
+      "data": {
+        "candidate_id": "bank_logistic_balanced",
+        "attempt": 0,
+        "code_sha256": "cc07e64cd15c707c0406495d0645215563715aef9420ca33261ab0593c2c24b0"
+      }
+    },
+    {
+      "sequence": 9,
+      "event_type": "VERIFIED",
+      "type": "VERIFIED",
+      "created_at": "2026-09-29T15:35:52.301392+00:00",
+      "data": {
+        "candidate_id": "bank_logistic_balanced",
+        "attempt": 0,
+        "status": "failed",
+        "metrics": {},
+        "error": {
+          "type": "plan_consistency",
+          "stage": "source_policy",
+          "repairable": true,
+          "message": "Generated code could not be checked against its plan: CodePolicyError"
+        }
+      }
+    },
+    {
+      "sequence": 10,
+      "event_type": "LLM_RESPONSE",
+      "type": "LLM_RESPONSE",
+      "created_at": "2026-09-29T15:35:54.809628+00:00",
+      "data": {
+        "role": "reviewer",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "b4d8cf89-46af-4159-a874-e5e9239fd06c",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "5b2fac7a949f61cb9eca03be6badf0055e0ed96a2bdf0bf7eecdcc6f05f0660a",
+        "response_sha256": "98f04ea459a690c9eea86325b43458c6d11dd8cfd6573bee4fc4a9450ae58aef",
+        "input_tokens": 602,
+        "output_tokens": 201,
+        "seconds": 2.215,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "sequence": 11,
+      "event_type": "REPAIR_PLANNED",
+      "type": "REPAIR_PLANNED",
+      "created_at": "2026-09-29T15:35:55.142426+00:00",
+      "data": {
+        "candidate_id": "bank_logistic_balanced",
+        "error_type": "plan_consistency",
+        "diagnosis": "The generated code defines a function named broken_pipeline that returns a Pipeline, but it does not match the expected constructor-program interface: the plan requires a function that builds and returns the estimator/pipeline under the expected entrypoint name, and the source policy rejected the code before execution because the generated program is inconsistent with its plan. The code itself is otherwise a valid sklearn pipeline using only allowed preprocessing and LogisticRegression, but the entrypoint/name mismatch prevents plan-consistency validation.",
+        "fix": "Rename the function to the expected entrypoint name required by the task plan (e.g., build_pipeline or the exact name specified in the plan) and ensure it accepts task_spec and returns the constructed Pipeline. Keep the same ColumnTransformer, SimpleImputer, OneHotEncoder, StandardScaler, and LogisticRegression configuration; do not alter the runner, task_spec, feature lists, or metric.",
+        "repairable": true
+      }
+    },
+    {
+      "sequence": 12,
+      "event_type": "LLM_RESPONSE",
+      "type": "LLM_RESPONSE",
+      "created_at": "2026-09-29T15:36:01.699155+00:00",
+      "data": {
+        "role": "repair_coder",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "1cae40ff-632a-4678-8aeb-997170b01843",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "7df41a7424f49c9e6145c6d5ce3990388743fea9283eda032a03bde1e1cf562b",
+        "response_sha256": "36150ad7cdac680421ae3cfed393815606fc8163b09c5390c76f7f4fbc5db02f",
+        "input_tokens": 9963,
+        "output_tokens": 252,
+        "seconds": 6.285,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "sequence": 13,
+      "event_type": "VALIDATING",
+      "type": "VALIDATING",
+      "created_at": "2026-09-29T15:36:02.020566+00:00",
+      "data": {
+        "candidate_id": "bank_logistic_balanced",
+        "attempt": 1,
+        "code_sha256": "947d99a392f9e2bce4faf292cb534304ba1b4734e5620d2844e9ba5d55cd15fe"
+      }
+    },
+    {
+      "sequence": 14,
+      "event_type": "VERIFIED",
+      "type": "VERIFIED",
+      "created_at": "2026-09-29T15:36:03.407623+00:00",
+      "data": {
+        "candidate_id": "bank_logistic_balanced",
+        "attempt": 1,
+        "status": "passed",
+        "metrics": {
+          "average_precision": 0.1807589966629477,
+          "roc_auc": 0.6093179752719227,
+          "f1_threshold_0_5": 0.22881855710634952,
+          "precision_at_10pct": 0.2196601941747573,
+          "recall_at_10pct": 0.19846491228070176,
+          "lift_at_10pct": 1.9841674118548802,
+          "validation_positive_rate": 0.11070648215586307,
+          "top_10pct_count": 824,
+          "validation_rows": 8238,
+          "classification_threshold": 0.5,
+          "evaluation_split": "validation_only",
+          "sealed_test_scored": false,
+          "ranking_tie_break": "original_validation_row_order",
+          "dummy_average_precision": 0.11070648215586307,
+          "ap_improvement_over_dummy": 0.07005251450708463
+        },
+        "error": null
+      }
+    },
+    {
+      "sequence": 15,
+      "event_type": "CANDIDATE_PLANNED",
+      "type": "CANDIDATE_PLANNED",
+      "created_at": "2026-09-29T15:36:03.722569+00:00",
+      "data": {
+        "candidate_id": "bank_forest_balanced",
+        "algorithm": "forest",
+        "variant": "balanced",
+        "rationale": "Random forest with balanced class weights captures nonlinear interactions among precontact categorical and numeric features while handling class imbalance; complements the linear baseline for candidate comparison.",
+        "evidence_ids": [
+          "bank-precontact-policy",
+          "bank-target",
+          "bank-ordered-split",
+          "average-precision"
+        ],
+        "parent_id": null
+      }
+    },
+    {
+      "sequence": 16,
+      "event_type": "LLM_RESPONSE",
+      "type": "LLM_RESPONSE",
+      "created_at": "2026-09-29T15:36:05.282981+00:00",
+      "data": {
+        "role": "coder",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "71f81bb1-b3d7-4abf-a658-c6197bd10b9c",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "5dc86d8d6059ea0e241af638d701e919052104810d703213b2f02ca2c1e1bc41",
+        "response_sha256": "cca82d7fa371eb10d47a8e09a70d6986f8ed51a88b80b8d45bdd5278c22bbdfb",
+        "input_tokens": 9569,
+        "output_tokens": 264,
+        "seconds": 1.307,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "sequence": 17,
+      "event_type": "VALIDATING",
+      "type": "VALIDATING",
+      "created_at": "2026-09-29T15:36:05.556782+00:00",
+      "data": {
+        "candidate_id": "bank_forest_balanced",
+        "attempt": 0,
+        "code_sha256": "f0b81f732bdb5a29a344d2567ea68e71b564d8a083d9fb27a006968bd6c89112"
+      }
+    },
+    {
+      "sequence": 18,
+      "event_type": "VERIFIED",
+      "type": "VERIFIED",
+      "created_at": "2026-09-29T15:36:09.398966+00:00",
+      "data": {
+        "candidate_id": "bank_forest_balanced",
+        "attempt": 0,
+        "status": "passed",
+        "metrics": {
+          "average_precision": 0.12825103811039737,
+          "roc_auc": 0.5524364825351668,
+          "f1_threshold_0_5": 0.1808199121522694,
+          "precision_at_10pct": 0.14563106796116504,
+          "recall_at_10pct": 0.13157894736842105,
+          "lift_at_10pct": 1.3154701073071027,
+          "validation_positive_rate": 0.11070648215586307,
+          "top_10pct_count": 824,
+          "validation_rows": 8238,
+          "classification_threshold": 0.5,
+          "evaluation_split": "validation_only",
+          "sealed_test_scored": false,
+          "ranking_tie_break": "original_validation_row_order",
+          "dummy_average_precision": 0.11070648215586307,
+          "ap_improvement_over_dummy": 0.017544555954534302
+        },
+        "error": null
+      }
+    },
+    {
+      "sequence": 19,
+      "event_type": "LLM_RESPONSE",
+      "type": "LLM_RESPONSE",
+      "created_at": "2026-09-29T15:36:16.751769+00:00",
+      "data": {
+        "role": "planner",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "480312a1-ec15-4e34-b432-6fced403c55d",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "f3ab59bad14ea4b04dafab445eda0b120a796047e0a638a0aef33dd70e8bbffe",
+        "response_sha256": "85ae54860b512d0fbe41807e81f3557e129cfea7bb2992a17d398f6b571f5c14",
+        "input_tokens": 10255,
+        "output_tokens": 401,
+        "seconds": 7.05,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "sequence": 20,
+      "event_type": "BEAM_EXPANDED",
+      "type": "BEAM_EXPANDED",
+      "created_at": "2026-09-29T15:36:17.097558+00:00",
+      "data": {
+        "beam_width": 2,
+        "parents": [
+          "bank_logistic_balanced",
+          "bank_forest_balanced"
+        ],
+        "children": 4
+      }
+    },
+    {
+      "sequence": 21,
+      "event_type": "CANDIDATE_PLANNED",
+      "type": "CANDIDATE_PLANNED",
+      "created_at": "2026-09-29T15:36:17.365551+00:00",
+      "data": {
+        "candidate_id": "bank_logistic_balanced_default",
+        "algorithm": "logistic",
+        "variant": "default",
+        "rationale": "Child of bank_logistic_balanced exploring the default (unregularized-by-class-weight) logistic configuration; keeps the linear probability baseline for the imbalanced precontact bank target and the training-only pipeline, differing from the parent's balanced weighting.",
+        "evidence_ids": [
+          "probability-logistic",
+          "bank-precontact-policy",
+          "bank-target",
+          "training-only-pipeline",
+          "average-precision"
+        ],
+        "parent_id": "bank_logistic_balanced"
+      }
+    },
+    {
+      "sequence": 22,
+      "event_type": "LLM_RESPONSE",
+      "type": "LLM_RESPONSE",
+      "created_at": "2026-09-29T15:36:19.449244+00:00",
+      "data": {
+        "role": "coder",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "2f42a91a-a33c-4874-93d1-27508e7d6028",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "7626aa6b70d070d6e80716623f0b211cfa33e1fd1f36ab9e1c1408a9ad661e7c",
+        "response_sha256": "8f952677987c4c37f1f38951476611ce0b493ad248121374af5da47b502c17cf",
+        "input_tokens": 9896,
+        "output_tokens": 255,
+        "seconds": 1.837,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "sequence": 23,
+      "event_type": "VALIDATING",
+      "type": "VALIDATING",
+      "created_at": "2026-09-29T15:36:19.750801+00:00",
+      "data": {
+        "candidate_id": "bank_logistic_balanced_default",
+        "attempt": 0,
+        "code_sha256": "8678b726c956b35f08898a792ec5022f6d4f6da76d2611be63eca4d4889dc4d6"
+      }
+    },
+    {
+      "sequence": 24,
+      "event_type": "VERIFIED",
+      "type": "VERIFIED",
+      "created_at": "2026-09-29T15:36:21.102676+00:00",
+      "data": {
+        "candidate_id": "bank_logistic_balanced_default",
+        "attempt": 0,
+        "status": "passed",
+        "metrics": {
+          "average_precision": 0.18287735589367637,
+          "roc_auc": 0.6131271073705284,
+          "f1_threshold_0_5": 0.0,
+          "precision_at_10pct": 0.23179611650485438,
+          "recall_at_10pct": 0.20942982456140352,
+          "lift_at_10pct": 2.0937899207971387,
+          "validation_positive_rate": 0.11070648215586307,
+          "top_10pct_count": 824,
+          "validation_rows": 8238,
+          "classification_threshold": 0.5,
+          "evaluation_split": "validation_only",
+          "sealed_test_scored": false,
+          "ranking_tie_break": "original_validation_row_order",
+          "dummy_average_precision": 0.11070648215586307,
+          "ap_improvement_over_dummy": 0.07217087373781331
+        },
+        "error": null
+      }
+    },
+    {
+      "sequence": 25,
+      "event_type": "CANDIDATE_PLANNED",
+      "type": "CANDIDATE_PLANNED",
+      "created_at": "2026-09-29T15:36:21.768218+00:00",
+      "data": {
+        "candidate_id": "bank_logistic_balanced_regularized",
+        "algorithm": "logistic",
+        "variant": "regularized",
+        "rationale": "Child of bank_logistic_balanced adding stronger regularization to the linear model, which can stabilize coefficients on the conservative precontact feature set and provide a complementary probability ranking for average_precision.",
+        "evidence_ids": [
+          "probability-logistic",
+          "bank-precontact-policy",
+          "bank-target",
+          "training-only-pipeline",
+          "average-precision"
+        ],
+        "parent_id": "bank_logistic_balanced"
+      }
+    },
+    {
+      "sequence": 26,
+      "event_type": "LLM_RESPONSE",
+      "type": "LLM_RESPONSE",
+      "created_at": "2026-09-29T15:36:23.578287+00:00",
+      "data": {
+        "role": "coder",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "0f083c75-3b29-4ad0-a3eb-2d86e3c5ca0d",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "771fe00842747061957fd70b54c38d7ad99341159bf7540134653650441eb61a",
+        "response_sha256": "02e7bd86061f1b3dbc84e61cfdef0c444e60ae3185f37132cf79402717226e10",
+        "input_tokens": 9888,
+        "output_tokens": 272,
+        "seconds": 1.489,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "sequence": 27,
+      "event_type": "VALIDATING",
+      "type": "VALIDATING",
+      "created_at": "2026-09-29T15:36:23.874764+00:00",
+      "data": {
+        "candidate_id": "bank_logistic_balanced_regularized",
+        "attempt": 0,
+        "code_sha256": "91fe00522a2ff39664eadf1814587ba3a451378dda3511461d6c2ad90a981958"
+      }
+    },
+    {
+      "sequence": 28,
+      "event_type": "VERIFIED",
+      "type": "VERIFIED",
+      "created_at": "2026-09-29T15:36:25.330314+00:00",
+      "data": {
+        "candidate_id": "bank_logistic_balanced_regularized",
+        "attempt": 0,
+        "status": "passed",
+        "metrics": {
+          "average_precision": 0.18135827556266604,
+          "roc_auc": 0.6085013691921586,
+          "f1_threshold_0_5": 0.22774408139307376,
+          "precision_at_10pct": 0.2220873786407767,
+          "recall_at_10pct": 0.20065789473684212,
+          "lift_at_10pct": 2.0060919136433317,
+          "validation_positive_rate": 0.11070648215586307,
+          "top_10pct_count": 824,
+          "validation_rows": 8238,
+          "classification_threshold": 0.5,
+          "evaluation_split": "validation_only",
+          "sealed_test_scored": false,
+          "ranking_tie_break": "original_validation_row_order",
+          "dummy_average_precision": 0.11070648215586307,
+          "ap_improvement_over_dummy": 0.07065179340680297
+        },
+        "error": null
+      }
+    },
+    {
+      "sequence": 29,
+      "event_type": "CANDIDATE_PLANNED",
+      "type": "CANDIDATE_PLANNED",
+      "created_at": "2026-09-29T15:36:25.735639+00:00",
+      "data": {
+        "candidate_id": "bank_forest_balanced_default",
+        "algorithm": "forest",
+        "variant": "default",
+        "rationale": "Child of bank_forest_balanced using default forest configuration to test whether unweighted tree averaging captures nonlinear precontact interactions differently from the balanced-weight parent.",
+        "evidence_ids": [
+          "bank-precontact-policy",
+          "bank-target",
+          "bank-ordered-split",
+          "average-precision"
+        ],
+        "parent_id": "bank_forest_balanced"
+      }
+    },
+    {
+      "sequence": 30,
+      "event_type": "LLM_RESPONSE",
+      "type": "LLM_RESPONSE",
+      "created_at": "2026-09-29T15:36:32.440620+00:00",
+      "data": {
+        "role": "coder",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "feba0c34-38d4-4299-8337-b945b3e5fcc9",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "fe863dc9a5b60364e4a5cb731cc4ff8a7686278ae743dd286a3ce2442f0aede4",
+        "response_sha256": "e425acbe7867109eae81d31297d8f704c50164764028641dedc0cbf177de8b98",
+        "input_tokens": 9931,
+        "output_tokens": 283,
+        "seconds": 6.376,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "sequence": 31,
+      "event_type": "VALIDATING",
+      "type": "VALIDATING",
+      "created_at": "2026-09-29T15:36:32.765044+00:00",
+      "data": {
+        "candidate_id": "bank_forest_balanced_default",
+        "attempt": 0,
+        "code_sha256": "565415ebef85550bb41802757f799af825d176c1d8690b2264c8f315a5ff4bc9"
+      }
+    },
+    {
+      "sequence": 32,
+      "event_type": "VERIFIED",
+      "type": "VERIFIED",
+      "created_at": "2026-09-29T15:36:35.460021+00:00",
+      "data": {
+        "candidate_id": "bank_forest_balanced_default",
+        "attempt": 0,
+        "status": "passed",
+        "metrics": {
+          "average_precision": 0.1478612204016905,
+          "roc_auc": 0.5773083190846349,
+          "f1_threshold_0_5": 0.0,
+          "precision_at_10pct": 0.1808252427184466,
+          "recall_at_10pct": 0.16337719298245615,
+          "lift_at_10pct": 1.6333753832396527,
+          "validation_positive_rate": 0.11070648215586307,
+          "top_10pct_count": 824,
+          "validation_rows": 8238,
+          "classification_threshold": 0.5,
+          "evaluation_split": "validation_only",
+          "sealed_test_scored": false,
+          "ranking_tie_break": "original_validation_row_order",
+          "dummy_average_precision": 0.11070648215586307,
+          "ap_improvement_over_dummy": 0.037154738245827434
+        },
+        "error": null
+      }
+    },
+    {
+      "sequence": 33,
+      "event_type": "CANDIDATE_PLANNED",
+      "type": "CANDIDATE_PLANNED",
+      "created_at": "2026-09-29T15:36:35.776053+00:00",
+      "data": {
+        "candidate_id": "bank_forest_balanced_shallower",
+        "algorithm": "forest",
+        "variant": "shallower",
+        "rationale": "Child of bank_forest_balanced with reduced depth to limit variance on the small precontact feature set, offering a lower-capacity tree alternative for candidate comparison under the ordered split protocol.",
+        "evidence_ids": [
+          "bank-precontact-policy",
+          "bank-target",
+          "bank-ordered-split",
+          "average-precision"
+        ],
+        "parent_id": "bank_forest_balanced"
+      }
+    },
+    {
+      "sequence": 34,
+      "event_type": "LLM_RESPONSE",
+      "type": "LLM_RESPONSE",
+      "created_at": "2026-09-29T15:36:37.765026+00:00",
+      "data": {
+        "role": "coder",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "291fd52e-1e6e-4fd7-b066-abed07c58623",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "532de727c156cd50b14459bdff953e88714884b1def33f13519c43fafc0ea552",
+        "response_sha256": "4e618e4ff263ce0a9e02c7d9e4221fdaab7f0b180da52b64ccf37fd139155759",
+        "input_tokens": 9940,
+        "output_tokens": 263,
+        "seconds": 1.751,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "sequence": 35,
+      "event_type": "VALIDATING",
+      "type": "VALIDATING",
+      "created_at": "2026-09-29T15:36:38.073652+00:00",
+      "data": {
+        "candidate_id": "bank_forest_balanced_shallower",
+        "attempt": 0,
+        "code_sha256": "2ca25212672acdb64d86a94fb95f80c8b3f7b3a4c689e04b897f840d8cf51b09"
+      }
+    },
+    {
+      "sequence": 36,
+      "event_type": "VERIFIED",
+      "type": "VERIFIED",
+      "created_at": "2026-09-29T15:36:41.084333+00:00",
+      "data": {
+        "candidate_id": "bank_forest_balanced_shallower",
+        "attempt": 0,
+        "status": "passed",
+        "metrics": {
+          "average_precision": 0.13485763127441014,
+          "roc_auc": 0.5643766523700734,
+          "f1_threshold_0_5": 0.20286776420605418,
+          "precision_at_10pct": 0.15898058252427186,
+          "recall_at_10pct": 0.14364035087719298,
+          "lift_at_10pct": 1.4360548671435873,
+          "validation_positive_rate": 0.11070648215586307,
+          "top_10pct_count": 824,
+          "validation_rows": 8238,
+          "classification_threshold": 0.5,
+          "evaluation_split": "validation_only",
+          "sealed_test_scored": false,
+          "ranking_tie_break": "original_validation_row_order",
+          "dummy_average_precision": 0.11070648215586307,
+          "ap_improvement_over_dummy": 0.02415114911854707
+        },
+        "error": null
+      }
+    },
+    {
+      "sequence": 37,
+      "event_type": "LLM_RESPONSE",
+      "type": "LLM_RESPONSE",
+      "created_at": "2026-09-29T15:36:44.903403+00:00",
+      "data": {
+        "role": "curator",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "5ae7ba2b-2960-4671-9d3f-b96826de444a",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "f3fcf17f4f44c295c3d4db1146e3e732e486d0a3b9fabd5547b041960f1f28a4",
+        "response_sha256": "4b8b8c054a3cfd751593ea1c842b165c23f1195b68e572a35d368c75d9163e24",
+        "input_tokens": 1696,
+        "output_tokens": 622,
+        "seconds": 3.356,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "sequence": 38,
+      "event_type": "COMPARED",
+      "type": "COMPARED",
+      "created_at": "2026-09-29T15:36:45.240919+00:00",
+      "data": {
+        "selected_candidate_id": "bank_logistic_balanced_default"
+      }
+    },
+    {
+      "sequence": 39,
+      "event_type": "RECORDED",
+      "type": "RECORDED",
+      "created_at": "2026-09-29T15:36:45.893565+00:00",
+      "data": {
+        "intended_status": "passed",
+        "experiences": 1
+      }
+    }
+  ],
+  "usage": {
+    "calls": 12,
+    "input_tokens": 90752,
+    "output_tokens": 3497,
+    "cached_input_tokens": 55296,
+    "records": [
+      {
+        "role": "interpreter",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "ba6e44c1-3aa2-4c69-bfa3-44289ff8c3e3",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "e90c60adaefac9b5d524dbbdee99ff57d1cdc1e3a3fb6dec1dcfd5cf49e6223a",
+        "response_sha256": "3aa860ab8d5fb4c14c722c74ca2df554af14bd9b07a9d836bc171161df39d9d2",
+        "input_tokens": 450,
+        "output_tokens": 257,
+        "seconds": 6.59,
+        "finish_reason": "stop"
+      },
+      {
+        "role": "planner",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "cd8c2bcc-ea9d-4688-9ce5-3280d223e6c2",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "5fee7665c31530ec654ae2722f8eeb748483c782654aed4ad0212011f8b9812c",
+        "response_sha256": "0967ddc1053d00cce312a86db1bbbf836c711a452dc534d8e4391ba3388c485a",
+        "input_tokens": 9001,
+        "output_tokens": 177,
+        "seconds": 1.231,
+        "finish_reason": "stop"
+      },
+      {
+        "role": "coder",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "c731a5f1-0a9e-42b3-9777-3897ca36c845",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "8be46d52992f0cdb20cda154976e682da353db24bca36094588941cd3c2eb498",
+        "response_sha256": "7540dd00cd1afa9dc053347a0dbe9ce043ed446238fc2784940b5f30a2763621",
+        "input_tokens": 9561,
+        "output_tokens": 250,
+        "seconds": 1.717,
+        "finish_reason": "stop"
+      },
+      {
+        "role": "reviewer",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "b4d8cf89-46af-4159-a874-e5e9239fd06c",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "5b2fac7a949f61cb9eca03be6badf0055e0ed96a2bdf0bf7eecdcc6f05f0660a",
+        "response_sha256": "98f04ea459a690c9eea86325b43458c6d11dd8cfd6573bee4fc4a9450ae58aef",
+        "input_tokens": 602,
+        "output_tokens": 201,
+        "seconds": 2.215,
+        "finish_reason": "stop"
+      },
+      {
+        "role": "repair_coder",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "1cae40ff-632a-4678-8aeb-997170b01843",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "7df41a7424f49c9e6145c6d5ce3990388743fea9283eda032a03bde1e1cf562b",
+        "response_sha256": "36150ad7cdac680421ae3cfed393815606fc8163b09c5390c76f7f4fbc5db02f",
+        "input_tokens": 9963,
+        "output_tokens": 252,
+        "seconds": 6.285,
+        "finish_reason": "stop"
+      },
+      {
+        "role": "coder",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "71f81bb1-b3d7-4abf-a658-c6197bd10b9c",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "5dc86d8d6059ea0e241af638d701e919052104810d703213b2f02ca2c1e1bc41",
+        "response_sha256": "cca82d7fa371eb10d47a8e09a70d6986f8ed51a88b80b8d45bdd5278c22bbdfb",
+        "input_tokens": 9569,
+        "output_tokens": 264,
+        "seconds": 1.307,
+        "finish_reason": "stop"
+      },
+      {
+        "role": "planner",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "480312a1-ec15-4e34-b432-6fced403c55d",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "f3ab59bad14ea4b04dafab445eda0b120a796047e0a638a0aef33dd70e8bbffe",
+        "response_sha256": "85ae54860b512d0fbe41807e81f3557e129cfea7bb2992a17d398f6b571f5c14",
+        "input_tokens": 10255,
+        "output_tokens": 401,
+        "seconds": 7.05,
+        "finish_reason": "stop"
+      },
+      {
+        "role": "coder",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "2f42a91a-a33c-4874-93d1-27508e7d6028",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "7626aa6b70d070d6e80716623f0b211cfa33e1fd1f36ab9e1c1408a9ad661e7c",
+        "response_sha256": "8f952677987c4c37f1f38951476611ce0b493ad248121374af5da47b502c17cf",
+        "input_tokens": 9896,
+        "output_tokens": 255,
+        "seconds": 1.837,
+        "finish_reason": "stop"
+      },
+      {
+        "role": "coder",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "0f083c75-3b29-4ad0-a3eb-2d86e3c5ca0d",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "771fe00842747061957fd70b54c38d7ad99341159bf7540134653650441eb61a",
+        "response_sha256": "02e7bd86061f1b3dbc84e61cfdef0c444e60ae3185f37132cf79402717226e10",
+        "input_tokens": 9888,
+        "output_tokens": 272,
+        "seconds": 1.489,
+        "finish_reason": "stop"
+      },
+      {
+        "role": "coder",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "feba0c34-38d4-4299-8337-b945b3e5fcc9",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "fe863dc9a5b60364e4a5cb731cc4ff8a7686278ae743dd286a3ce2442f0aede4",
+        "response_sha256": "e425acbe7867109eae81d31297d8f704c50164764028641dedc0cbf177de8b98",
+        "input_tokens": 9931,
+        "output_tokens": 283,
+        "seconds": 6.376,
+        "finish_reason": "stop"
+      },
+      {
+        "role": "coder",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "291fd52e-1e6e-4fd7-b066-abed07c58623",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "532de727c156cd50b14459bdff953e88714884b1def33f13519c43fafc0ea552",
+        "response_sha256": "4e618e4ff263ce0a9e02c7d9e4221fdaab7f0b180da52b64ccf37fd139155759",
+        "input_tokens": 9940,
+        "output_tokens": 263,
+        "seconds": 1.751,
+        "finish_reason": "stop"
+      },
+      {
+        "role": "curator",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com",
+        "response_id": "5ae7ba2b-2960-4671-9d3f-b96826de444a",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "f3fcf17f4f44c295c3d4db1146e3e732e486d0a3b9fabd5547b041960f1f28a4",
+        "response_sha256": "4b8b8c054a3cfd751593ea1c842b165c23f1195b68e572a35d368c75d9163e24",
+        "input_tokens": 1696,
+        "output_tokens": 622,
+        "seconds": 3.356,
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "warnings": [
+    "验证集成绩，不是最终测试成绩。",
+    "受限AST构造器程序，不是任意Python或Docker操作系统沙箱。",
+    "未提供客户端 ID，无法承诺或评估按客户分组的分离。",
+    "不得使用 task_spec 之外的特征或联系后信息。"
+  ],
+  "search_tree": [
+    {
+      "candidate_id": "bank_logistic_balanced",
+      "parent_id": null,
+      "status": "passed",
+      "average_precision": 0.1807589966629477,
+      "pruned": true,
+      "pruned_reason": "outside_final_beam_or_failed_hard_checks"
+    },
+    {
+      "candidate_id": "bank_forest_balanced",
+      "parent_id": null,
+      "status": "passed",
+      "average_precision": 0.12825103811039737,
+      "pruned": true,
+      "pruned_reason": "outside_final_beam_or_failed_hard_checks"
+    },
+    {
+      "candidate_id": "bank_logistic_balanced_default",
+      "parent_id": "bank_logistic_balanced",
+      "status": "passed",
+      "average_precision": 0.18287735589367637,
+      "pruned": false,
+      "pruned_reason": null
+    },
+    {
+      "candidate_id": "bank_logistic_balanced_regularized",
+      "parent_id": "bank_logistic_balanced",
+      "status": "passed",
+      "average_precision": 0.18135827556266604,
+      "pruned": false,
+      "pruned_reason": null
+    },
+    {
+      "candidate_id": "bank_forest_balanced_default",
+      "parent_id": "bank_forest_balanced",
+      "status": "passed",
+      "average_precision": 0.1478612204016905,
+      "pruned": true,
+      "pruned_reason": "outside_final_beam_or_failed_hard_checks"
+    },
+    {
+      "candidate_id": "bank_forest_balanced_shallower",
+      "parent_id": "bank_forest_balanced",
+      "status": "passed",
+      "average_precision": 0.13485763127441014,
+      "pruned": true,
+      "pruned_reason": "outside_final_beam_or_failed_hard_checks"
+    }
+  ],
+  "knowledge_writeback": {
+    "run_saved": true,
+    "experiences": [
+      {
+        "failure_id": "failure-35a3252d93dcd0b448505767",
+        "fingerprint": "6f14146fc409ea8e86944f2b1399ee4c253198c17ffe24d0ccfba10a246eaa9d",
+        "run_id": "98ec1b47ceb74162b9def5335cc3b465",
+        "error_type": "plan_consistency",
+        "diagnosis": "The generated code defines a function named broken_pipeline that returns a Pipeline, but it does not match the expected constructor-program interface: the plan requires a function that builds and returns the estimator/pipeline under the expected entrypoint name, and the source policy rejected the code before execution because the generated program is inconsistent with its plan. The code itself is otherwise a valid sklearn pipeline using only allowed preprocessing and LogisticRegression, but the entrypoint/name mismatch prevents plan-consistency validation.",
+        "fix": "Rename the function to the expected entrypoint name required by the task plan (e.g., build_pipeline or the exact name specified in the plan) and ensure it accepts task_spec and returns the constructed Pipeline. Keep the same ColumnTransformer, SimpleImputer, OneHotEncoder, StandardScaler, and LogisticRegression configuration; do not alter the runner, task_spec, feature lists, or metric.",
+        "task_type": "tabular_binary_classification",
+        "validated": true,
+        "status": "validated",
+        "origin": "runtime_experience"
+      }
+    ]
+  },
+  "provider_metadata": {
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "base_url": "https://api.deepseek.com",
+    "base_urls": [
+      "https://api.deepseek.com"
+    ],
+    "authorization": "bearer",
+    "local_profile": null,
+    "deployment": "official_api"
+  },
+  "data_summary": {
+    "train_rows": 24712,
+    "validation_rows": 8238
+  },
+  "interpretation": {
+    "objective": "预测银行客户购买定期存款的可能性，输出二分类概率/标签，以 average_precision 为主指标。",
+    "constraints": [
+      "仅使用 task_spec 中列出的特征：age, job, marital, education, default, housing, loan, pdays, previous, poutcome。",
+      "遵循 precontact_conservative_v1 特征策略，不使用联系后信息。",
+      "类别特征：job, marital, education, default, housing, loan, poutcome；数值特征：age, pdays, previous。",
+      "正类标签为 yes，主指标为 average_precision，随机种子为 42。",
+      "资源限制：CPU 2 核，内存 2048 MiB，超时 120 秒。"
+    ],
+    "assumptions": [
+      "数据集 bank 已提供且包含上述特征与目标标签。",
+      "任务为表格二分类，评估使用 average_precision。",
+      "未指定额外运行时长，因此使用宿主默认超时 120 秒。"
+    ],
+    "warnings": [
+      "未提供客户端 ID，无法承诺或评估按客户分组的分离。",
+      "不得使用 task_spec 之外的特征或联系后信息。"
+    ],
+    "incompatible_requests": [],
+    "requested_run_seconds": null
+  },
+  "evidence": [
+    {
+      "capability_id": "bank-precontact-policy",
+      "confidence": 1.0,
+      "created_at": "2026-09-29T15:08:50.631548+00:00",
+      "dependencies": [
+        "Python >=3.10",
+        "scikit-learn"
+      ],
+      "evidence": [
+        {
+          "content_sha256": "10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+          "license": "CC-BY-4.0",
+          "locator": {
+            "line_end": 58,
+            "line_start": 56,
+            "path": "/root/algorithm-capability-factory/data/raw/bank-additional-names.txt"
+          },
+          "revision": "sha256:10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+          "source_id": "src-036a9125a071ef6a1ae3c21f",
+          "uri": "https://archive.ics.uci.edu/dataset/222/bank+marketing"
+        },
+        {
+          "content_sha256": "aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23",
+          "license": "original-project-notes",
+          "locator": {
+            "line_end": 34,
+            "line_start": 18,
+            "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md"
+          },
+          "revision": "sha256:aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23",
+          "source_id": "src-df2a53ac66a4c0255b59ad3b",
+          "uri": "file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md"
+        }
+      ],
+      "extraction_method": "curated-source-grounded",
+      "id": "bank-precontact-policy",
+      "input_schema": {
+        "task_types": [
+          "tabular_binary_classification"
+        ],
+        "type": "features"
+      },
+      "name": "银行营销通话前特征与泄漏防护",
+      "origin": "manual_seed",
+      "output_schema": {
+        "type": "implementation-guidance"
+      },
+      "preconditions": [],
+      "related": [
+        "bank-target",
+        "bank-ordered-split"
+      ],
+      "status": "extracted",
+      "summary": "预测银行客户是否订购定期存款。通话前预测禁止使用 duration：官方字段说明指出通话结束前无法知道时长。主协议使用项目定义的保守字段白名单；它是项目设计约束，不是 UCI 原始数据唯一允许的协议。",
+      "tags": [
+        "银行",
+        "通话前",
+        "duration",
+        "泄漏",
+        "precontact"
+      ],
+      "task_types": [
+        "tabular_binary_classification"
+      ],
+      "uses": [],
+      "version": 2,
+      "score": 2.969848,
+      "lexical_score": 2.12132,
+      "graph_score": 0.848528,
+      "evidence_path": [
+        {
+          "seed": "capability:bank-target:v2",
+          "hops": [
+            {
+              "from": "capability:bank-target:v2",
+              "relation": "REQUIRES",
+              "to": "capability:bank-precontact-policy:v2"
+            }
+          ],
+          "bonus": 0.5656854249492381
+        },
+        {
+          "seed": "capability:bank-ordered-split:v2",
+          "hops": [
+            {
+              "from": "capability:bank-ordered-split:v2",
+              "relation": "REQUIRES",
+              "to": "capability:bank-precontact-policy:v2"
+            }
+          ],
+          "bonus": 0.28284271247461906
+        }
+      ],
+      "graph_used": true,
+      "source_locator": [
+        {
+          "line_end": 58,
+          "line_start": 56,
+          "path": "/root/algorithm-capability-factory/data/raw/bank-additional-names.txt"
+        },
+        {
+          "line_end": 34,
+          "line_start": 18,
+          "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md"
+        }
+      ],
+      "matched_constraints": [
+        "task_type=tabular_binary_classification"
+      ],
+      "rejected_reason": null
+    },
+    {
+      "capability_id": "bank-target",
+      "confidence": 1.0,
+      "created_at": "2026-09-29T15:08:50.631826+00:00",
+      "dependencies": [
+        "Python >=3.10",
+        "scikit-learn"
+      ],
+      "evidence": [
+        {
+          "content_sha256": "10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+          "license": "CC-BY-4.0",
+          "locator": {
+            "line_end": 72,
+            "line_start": 70,
+            "path": "/root/algorithm-capability-factory/data/raw/bank-additional-names.txt"
+          },
+          "revision": "sha256:10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+          "source_id": "src-9e74f92e3a9cf01663fecfe4",
+          "uri": "https://archive.ics.uci.edu/dataset/222/bank+marketing"
+        },
+        {
+          "content_sha256": "aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23",
+          "license": "original-project-notes",
+          "locator": {
+            "line_end": 34,
+            "line_start": 18,
+            "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md"
+          },
+          "revision": "sha256:aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23",
+          "source_id": "src-df2a53ac66a4c0255b59ad3b",
+          "uri": "file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md"
+        }
+      ],
+      "extraction_method": "curated-source-grounded",
+      "id": "bank-target",
+      "input_schema": {
+        "task_types": [
+          "tabular_binary_classification"
+        ],
+        "type": "features"
+      },
+      "name": "银行订购响应二分类的正类定义",
+      "origin": "manual_seed",
+      "output_schema": {
+        "type": "implementation-guidance"
+      },
+      "preconditions": [],
+      "related": [
+        "probability-logistic",
+        "average-precision"
+      ],
+      "status": "extracted",
+      "summary": "UCI Bank Marketing 的 y 表示客户是否订购定期存款，yes 是本项目正类，no 是负类。该标签不是流失、信用违约或营销因果增量。",
+      "tags": [
+        "y",
+        "yes",
+        "正类",
+        "银行",
+        "目标"
+      ],
+      "task_types": [
+        "tabular_binary_classification"
+      ],
+      "uses": [],
+      "version": 2,
+      "score": 2.404163,
+      "lexical_score": 1.414214,
+      "graph_score": 0.989949,
+      "evidence_path": [
+        {
+          "seed": "capability:bank-precontact-policy:v2",
+          "hops": [
+            {
+              "from": "capability:bank-precontact-policy:v2",
+              "relation": "REQUIRES",
+              "to": "capability:bank-target:v2"
+            }
+          ],
+          "bonus": 0.8485281374238571
+        },
+        {
+          "seed": "capability:bank-ordered-split:v2",
+          "hops": [
+            {
+              "from": "capability:bank-ordered-split:v2",
+              "relation": "REQUIRES",
+              "to": "capability:bank-precontact-policy:v2"
+            },
+            {
+              "from": "capability:bank-precontact-policy:v2",
+              "relation": "REQUIRES",
+              "to": "capability:bank-target:v2"
+            }
+          ],
+          "bonus": 0.14142135623730953
+        }
+      ],
+      "graph_used": true,
+      "source_locator": [
+        {
+          "line_end": 72,
+          "line_start": 70,
+          "path": "/root/algorithm-capability-factory/data/raw/bank-additional-names.txt"
+        },
+        {
+          "line_end": 34,
+          "line_start": 18,
+          "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md"
+        }
+      ],
+      "matched_constraints": [
+        "task_type=tabular_binary_classification"
+      ],
+      "rejected_reason": null
+    },
+    {
+      "capability_id": "bank-ordered-split",
+      "confidence": 1.0,
+      "created_at": "2026-09-29T15:08:50.632098+00:00",
+      "dependencies": [
+        "Python >=3.10",
+        "scikit-learn"
+      ],
+      "evidence": [
+        {
+          "content_sha256": "aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23",
+          "license": "original-project-notes",
+          "locator": {
+            "line_end": 50,
+            "line_start": 35,
+            "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md"
+          },
+          "revision": "sha256:aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23",
+          "source_id": "src-a12ccd822a93af321f34ad70",
+          "uri": "file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md"
+        }
+      ],
+      "extraction_method": "curated-source-grounded",
+      "id": "bank-ordered-split",
+      "input_schema": {
+        "task_types": [
+          "tabular_binary_classification"
+        ],
+        "type": "features"
+      },
+      "name": "银行原始顺序留出与测试封存",
+      "origin": "manual_seed",
+      "output_schema": {
+        "type": "implementation-guidance"
+      },
+      "preconditions": [],
+      "related": [
+        "training-only-pipeline"
+      ],
+      "status": "extracted",
+      "summary": "本项目主协议按原始行位置作 60/20/20 顺序划分。训练和验证可用于候选选择；最终测试在代码、提示词和阈值冻结后使用。CSV 没有完整时间戳或可靠客户 ID，不声称精确日期边界或客户级隔离。",
+      "tags": [
+        "顺序",
+        "切分",
+        "测试",
+        "泄漏",
+        "ordered",
+        "split"
+      ],
+      "task_types": [
+        "tabular_binary_classification"
+      ],
+      "uses": [],
+      "version": 2,
+      "score": 1.838478,
+      "lexical_score": 0.707107,
+      "graph_score": 1.131371,
+      "evidence_path": [
+        {
+          "seed": "capability:bank-precontact-policy:v2",
+          "hops": [
+            {
+              "from": "capability:bank-precontact-policy:v2",
+              "relation": "REQUIRES",
+              "to": "capability:bank-ordered-split:v2"
+            }
+          ],
+          "bonus": 0.8485281374238571
+        },
+        {
+          "seed": "capability:bank-target:v2",
+          "hops": [
+            {
+              "from": "capability:bank-target:v2",
+              "relation": "REQUIRES",
+              "to": "capability:bank-precontact-policy:v2"
+            },
+            {
+              "from": "capability:bank-precontact-policy:v2",
+              "relation": "REQUIRES",
+              "to": "capability:bank-ordered-split:v2"
+            }
+          ],
+          "bonus": 0.28284271247461906
+        }
+      ],
+      "graph_used": true,
+      "source_locator": [
+        {
+          "line_end": 50,
+          "line_start": 35,
+          "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md"
+        }
+      ],
+      "matched_constraints": [
+        "task_type=tabular_binary_classification"
+      ],
+      "rejected_reason": null
+    },
+    {
+      "capability_id": "average-precision",
+      "confidence": 1.0,
+      "created_at": "2026-09-28T11:23:24.518754+00:00",
+      "dependencies": [
+        "Python >=3.10",
+        "scikit-learn"
+      ],
+      "evidence": [
+        {
+          "content_sha256": "a1fc02f0b042a3945c37692c9377a746800dd2a90cdc227df5268f218bea3f74",
+          "license": "BSD-3-Clause",
+          "locator": {
+            "imports": [
+              "import warnings",
+              "from functools import partial",
+              "from numbers import Integral, Real",
+              "import numpy as np",
+              "from scipy.integrate import trapezoid",
+              "from scipy.sparse import csr_matrix, issparse",
+              "from scipy.stats import rankdata",
+              "from ..exceptions import UndefinedMetricWarning",
+              "from ..preprocessing import label_binarize",
+              "from ..utils import assert_all_finite, check_array, check_consistent_length, column_or_1d",
+              "from ..utils._encode import _encode, _unique",
+              "from ..utils._param_validation import Interval, StrOptions, validate_params",
+              "from ..utils.extmath import stable_cumsum",
+              "from ..utils.multiclass import type_of_target",
+              "from ..utils.sparsefuncs import count_nonzero",
+              "from ..utils.validation import _check_pos_label_consistency, _check_sample_weight",
+              "from ._base import _average_binary_score, _average_multiclass_ovo_score"
+            ],
+            "line_end": 268,
+            "line_start": 118,
+            "methods": [
+              "_binary_uninterpolated_average_precision"
+            ],
+            "parse_mode": "ast-only",
+            "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/metrics/_ranking.py",
+            "relative_path": "sklearn/metrics/_ranking.py",
+            "signature": "def average_precision_score(y_true, y_score, *, average='macro', pos_label=1, sample_weight=None)",
+            "symbol": "average_precision_score"
+          },
+          "revision": "1.7.2",
+          "source_id": "src-9ca2de7b8493fff6ad94d779",
+          "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/metrics/_ranking.py"
+        }
+      ],
+      "extraction_method": "curated-source-grounded",
+      "id": "average-precision",
+      "input_schema": {
+        "task_types": [
+          "tabular_binary_classification",
+          "text_binary_classification"
+        ],
+        "type": "features"
+      },
+      "name": "不平衡二分类 Average Precision",
+      "origin": "manual_seed",
+      "output_schema": {
+        "type": "implementation-guidance"
+      },
+      "preconditions": [
+        "由可信验证器计算，使用同一分割协议。"
+      ],
+      "related": [],
+      "status": "extracted",
+      "summary": "average_precision_score 根据预测分数汇总精确率召回率曲线，定义为召回增量对 precision 的加权和。输入真实二值标签和正类预测分数；本项目以 AP 为主指标，并记录正类率基线。不得将其等同于梯形插值 PR-AUC。",
+      "tags": [
+        "average_precision",
+        "AP",
+        "排序",
+        "不平衡",
+        "precision",
+        "recall",
+        "正类"
+      ],
+      "task_types": [
+        "tabular_binary_classification",
+        "text_binary_classification"
+      ],
+      "uses": [
+        {
+          "kind": "Metric",
+          "label": "average_precision"
+        }
+      ],
+      "version": 1,
+      "score": 1.225652,
+      "lexical_score": 0.235702,
+      "graph_score": 0.989949,
+      "evidence_path": [
+        {
+          "seed": "capability:bank-precontact-policy:v2",
+          "hops": [
+            {
+              "from": "capability:bank-precontact-policy:v2",
+              "relation": "REQUIRES",
+              "to": "capability:bank-target:v2"
+            },
+            {
+              "from": "capability:bank-target:v2",
+              "relation": "REQUIRES",
+              "to": "capability:average-precision:v1"
+            }
+          ],
+          "bonus": 0.42426406871192857
+        },
+        {
+          "seed": "capability:bank-target:v2",
+          "hops": [
+            {
+              "from": "capability:bank-target:v2",
+              "relation": "REQUIRES",
+              "to": "capability:average-precision:v1"
+            }
+          ],
+          "bonus": 0.5656854249492381
+        }
+      ],
+      "graph_used": true,
+      "source_locator": [
+        {
+          "imports": [
+            "import warnings",
+            "from functools import partial",
+            "from numbers import Integral, Real",
+            "import numpy as np",
+            "from scipy.integrate import trapezoid",
+            "from scipy.sparse import csr_matrix, issparse",
+            "from scipy.stats import rankdata",
+            "from ..exceptions import UndefinedMetricWarning",
+            "from ..preprocessing import label_binarize",
+            "from ..utils import assert_all_finite, check_array, check_consistent_length, column_or_1d",
+            "from ..utils._encode import _encode, _unique",
+            "from ..utils._param_validation import Interval, StrOptions, validate_params",
+            "from ..utils.extmath import stable_cumsum",
+            "from ..utils.multiclass import type_of_target",
+            "from ..utils.sparsefuncs import count_nonzero",
+            "from ..utils.validation import _check_pos_label_consistency, _check_sample_weight",
+            "from ._base import _average_binary_score, _average_multiclass_ovo_score"
+          ],
+          "line_end": 268,
+          "line_start": 118,
+          "methods": [
+            "_binary_uninterpolated_average_precision"
+          ],
+          "parse_mode": "ast-only",
+          "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/metrics/_ranking.py",
+          "relative_path": "sklearn/metrics/_ranking.py",
+          "signature": "def average_precision_score(y_true, y_score, *, average='macro', pos_label=1, sample_weight=None)",
+          "symbol": "average_precision_score"
+        }
+      ],
+      "matched_constraints": [
+        "task_type=tabular_binary_classification"
+      ],
+      "rejected_reason": null
+    },
+    {
+      "capability_id": "probability-logistic",
+      "confidence": 1.0,
+      "created_at": "2026-09-28T11:23:24.517906+00:00",
+      "dependencies": [
+        "Python >=3.10",
+        "scikit-learn"
+      ],
+      "evidence": [
+        {
+          "content_sha256": "981f4e11c9a6fc2b02cd9322f2926849143e4a8bf1819e3a4159a9fce615a00c",
+          "license": "BSD-3-Clause",
+          "locator": {
+            "imports": [
+              "import numbers",
+              "import warnings",
+              "from numbers import Integral, Real",
+              "import numpy as np",
+              "from joblib import effective_n_jobs",
+              "from scipy import optimize",
+              "from sklearn.metrics import get_scorer_names",
+              "from .._loss.loss import HalfBinomialLoss, HalfMultinomialLoss",
+              "from ..base import _fit_context",
+              "from ..metrics import get_scorer",
+              "from ..model_selection import check_cv",
+              "from ..preprocessing import LabelBinarizer, LabelEncoder",
+              "from ..svm._base import _fit_liblinear",
+              "from ..utils import Bunch, check_array, check_consistent_length, check_random_state, compute_class_weight",
+              "from ..utils._param_validation import Hidden, Interval, StrOptions",
+              "from ..utils.extmath import row_norms, softmax",
+              "from ..utils.fixes import _get_additional_lbfgs_options_dict",
+              "from ..utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, process_routing",
+              "from ..utils.multiclass import check_classification_targets",
+              "from ..utils.optimize import _check_optimize_result, _newton_cg",
+              "from ..utils.parallel import Parallel, delayed",
+              "from ..utils.validation import _check_method_params, _check_sample_weight, check_is_fitted, validate_data",
+              "from ._base import BaseEstimator, LinearClassifierMixin, SparseCoefMixin",
+              "from ._glm.glm import NewtonCholeskySolver",
+              "from ._linear_loss import LinearModelLoss",
+              "from ._sag import sag_solver"
+            ],
+            "line_end": 1497,
+            "line_start": 829,
+            "methods": [
+              "__init__",
+              "fit",
+              "predict_proba",
+              "predict_log_proba",
+              "__sklearn_tags__"
+            ],
+            "parse_mode": "ast-only",
+            "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/linear_model/_logistic.py",
+            "relative_path": "sklearn/linear_model/_logistic.py",
+            "signature": "class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):\n    def __init__(self, penalty='l2', *, dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1, class_weight=None, random_state=None, solver='lbfgs', max_iter=100, multi_class='deprecated', verbose=0, warm_start=False, n_jobs=None, l1_ratio=None)",
+            "symbol": "LogisticRegression"
+          },
+          "revision": "1.7.2",
+          "source_id": "src-584b66a31950a968f84ef11b",
+          "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/linear_model/_logistic.py"
+        }
+      ],
+      "extraction_method": "curated-source-grounded",
+      "id": "probability-logistic",
+      "input_schema": {
+        "task_types": [
+          "tabular_binary_classification",
+          "text_binary_classification"
+        ],
+        "type": "features"
+      },
+      "name": "逻辑回归二分类概率接口",
+      "origin": "manual_seed",
+      "output_schema": {
+        "type": "implementation-guidance"
+      },
+      "preconditions": [],
+      "related": [
+        "average-precision"
+      ],
+      "status": "extracted",
+      "summary": "LogisticRegression 提供 predict_proba，输出列顺序由 classes_ 决定。必须根据正类标签映射提取正确一列，不能把 predict 的类别标签当概率。适合经过编码的表格特征及 TF-IDF 稀疏文本特征。",
+      "tags": [
+        "LogisticRegression",
+        "predict_proba",
+        "概率",
+        "二分类",
+        "classes_"
+      ],
+      "task_types": [
+        "tabular_binary_classification",
+        "text_binary_classification"
+      ],
+      "uses": [
+        {
+          "kind": "Algorithm",
+          "label": "LogisticRegression"
+        }
+      ],
+      "version": 1,
+      "score": 1.131371,
+      "lexical_score": 0.0,
+      "graph_score": 1.131371,
+      "evidence_path": [
+        {
+          "seed": "capability:bank-precontact-policy:v2",
+          "hops": [
+            {
+              "from": "capability:bank-precontact-policy:v2",
+              "relation": "REQUIRES",
+              "to": "capability:bank-target:v2"
+            },
+            {
+              "from": "capability:bank-target:v2",
+              "relation": "REQUIRES",
+              "to": "capability:probability-logistic:v1"
+            }
+          ],
+          "bonus": 0.42426406871192857
+        },
+        {
+          "seed": "capability:bank-target:v2",
+          "hops": [
+            {
+              "from": "capability:bank-target:v2",
+              "relation": "REQUIRES",
+              "to": "capability:probability-logistic:v1"
+            }
+          ],
+          "bonus": 0.5656854249492381
+        },
+        {
+          "seed": "capability:bank-ordered-split:v2",
+          "hops": [
+            {
+              "from": "capability:bank-ordered-split:v2",
+              "relation": "REQUIRES",
+              "to": "capability:training-only-pipeline:v2"
+            },
+            {
+              "from": "capability:training-only-pipeline:v2",
+              "relation": "REQUIRES",
+              "to": "capability:probability-logistic:v1"
+            }
+          ],
+          "bonus": 0.14142135623730953
+        }
+      ],
+      "graph_used": true,
+      "source_locator": [
+        {
+          "imports": [
+            "import numbers",
+            "import warnings",
+            "from numbers import Integral, Real",
+            "import numpy as np",
+            "from joblib import effective_n_jobs",
+            "from scipy import optimize",
+            "from sklearn.metrics import get_scorer_names",
+            "from .._loss.loss import HalfBinomialLoss, HalfMultinomialLoss",
+            "from ..base import _fit_context",
+            "from ..metrics import get_scorer",
+            "from ..model_selection import check_cv",
+            "from ..preprocessing import LabelBinarizer, LabelEncoder",
+            "from ..svm._base import _fit_liblinear",
+            "from ..utils import Bunch, check_array, check_consistent_length, check_random_state, compute_class_weight",
+            "from ..utils._param_validation import Hidden, Interval, StrOptions",
+            "from ..utils.extmath import row_norms, softmax",
+            "from ..utils.fixes import _get_additional_lbfgs_options_dict",
+            "from ..utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, process_routing",
+            "from ..utils.multiclass import check_classification_targets",
+            "from ..utils.optimize import _check_optimize_result, _newton_cg",
+            "from ..utils.parallel import Parallel, delayed",
+            "from ..utils.validation import _check_method_params, _check_sample_weight, check_is_fitted, validate_data",
+            "from ._base import BaseEstimator, LinearClassifierMixin, SparseCoefMixin",
+            "from ._glm.glm import NewtonCholeskySolver",
+            "from ._linear_loss import LinearModelLoss",
+            "from ._sag import sag_solver"
+          ],
+          "line_end": 1497,
+          "line_start": 829,
+          "methods": [
+            "__init__",
+            "fit",
+            "predict_proba",
+            "predict_log_proba",
+            "__sklearn_tags__"
+          ],
+          "parse_mode": "ast-only",
+          "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/linear_model/_logistic.py",
+          "relative_path": "sklearn/linear_model/_logistic.py",
+          "signature": "class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):\n    def __init__(self, penalty='l2', *, dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1, class_weight=None, random_state=None, solver='lbfgs', max_iter=100, multi_class='deprecated', verbose=0, warm_start=False, n_jobs=None, l1_ratio=None)",
+          "symbol": "LogisticRegression"
+        }
+      ],
+      "matched_constraints": [
+        "task_type=tabular_binary_classification"
+      ],
+      "rejected_reason": null
+    },
+    {
+      "capability_id": "training-only-pipeline",
+      "confidence": 1.0,
+      "created_at": "2026-09-29T15:08:50.632611+00:00",
+      "dependencies": [
+        "Python >=3.10",
+        "scikit-learn"
+      ],
+      "evidence": [
+        {
+          "content_sha256": "06f7ccb74a31ab9d3c900d87c814b7ce81b8acbd938ad74fe9cc674075f07869",
+          "license": "BSD-3-Clause",
+          "locator": {
+            "imports": [
+              "import warnings",
+              "from collections import Counter, defaultdict",
+              "from contextlib import contextmanager",
+              "from copy import deepcopy",
+              "from itertools import chain, islice",
+              "import numpy as np",
+              "from scipy import sparse",
+              "from .base import TransformerMixin, _fit_context, clone",
+              "from .exceptions import NotFittedError",
+              "from .preprocessing import FunctionTransformer",
+              "from .utils import Bunch",
+              "from .utils._metadata_requests import METHODS",
+              "from .utils._param_validation import HasMethods, Hidden",
+              "from .utils._repr_html.estimator import _VisualBlock",
+              "from .utils._set_output import _get_container_adapter, _safe_set_output",
+              "from .utils._tags import get_tags",
+              "from .utils._user_interface import _print_elapsed_time",
+              "from .utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, get_routing_for_object, process_routing",
+              "from .utils.metaestimators import _BaseComposition, available_if",
+              "from .utils.parallel import Parallel, delayed",
+              "from .utils.validation import check_is_fitted, check_memory"
+            ],
+            "line_end": 1407,
+            "line_start": 123,
+            "methods": [
+              "__init__",
+              "set_output",
+              "get_params",
+              "set_params",
+              "_validate_steps",
+              "_iter",
+              "__len__",
+              "__getitem__",
+              "_estimator_type",
+              "named_steps",
+              "_final_estimator",
+              "_log_message",
+              "_check_method_params",
+              "_get_metadata_for_step",
+              "_fit",
+              "fit",
+              "_can_fit_transform",
+              "fit_transform",
+              "predict",
+              "fit_predict",
+              "predict_proba",
+              "decision_function",
+              "score_samples",
+              "predict_log_proba",
+              "_can_transform",
+              "transform",
+              "_can_inverse_transform",
+              "inverse_transform",
+              "score",
+              "classes_",
+              "__sklearn_tags__",
+              "get_feature_names_out",
+              "n_features_in_",
+              "feature_names_in_",
+              "__sklearn_is_fitted__",
+              "_sk_visual_block_",
+              "get_metadata_routing"
+            ],
+            "parse_mode": "ast-only",
+            "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/pipeline.py",
+            "relative_path": "sklearn/pipeline.py",
+            "signature": "class Pipeline(_BaseComposition):\n    def __init__(self, steps, *, transform_input=None, memory=None, verbose=False)",
+            "symbol": "Pipeline"
+          },
+          "revision": "1.7.2",
+          "source_id": "src-8a2d3c4ad618f98dc3d974e1",
+          "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/pipeline.py"
+        },
+        {
+          "content_sha256": "aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23",
+          "license": "original-project-notes",
+          "locator": {
+            "line_end": 50,
+            "line_start": 35,
+            "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md"
+          },
+          "revision": "sha256:aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23",
+          "source_id": "src-a12ccd822a93af321f34ad70",
+          "uri": "file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md"
+        },
+        {
+          "content_sha256": "aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23",
+          "license": "original-project-notes",
+          "locator": {
+            "line_end": 62,
+            "line_start": 51,
+            "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md"
+          },
+          "revision": "sha256:aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23",
+          "source_id": "src-b78d3450109d520074cd321f",
+          "uri": "file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md"
+        }
+      ],
+      "extraction_method": "curated-source-grounded",
+      "id": "training-only-pipeline",
+      "input_schema": {
+        "task_types": [
+          "tabular_binary_classification",
+          "text_binary_classification"
+        ],
+        "type": "features"
+      },
+      "name": "只在训练集拟合的 Pipeline",
+      "origin": "manual_seed",
+      "output_schema": {
+        "type": "implementation-guidance"
+      },
+      "preconditions": [],
+      "related": [
+        "probability-logistic"
+      ],
+      "status": "extracted",
+      "summary": "Pipeline 顺序连接变换器和最终估计器，使训练和推理使用相同变换链。仅将训练集传给 fit；验证和测试只调用 transform 或 predict_proba。Pipeline 本身不会阻止调用者错误地传入测试数据。",
+      "tags": [
+        "Pipeline",
+        "fit",
+        "训练",
+        "泄漏",
+        "概率"
+      ],
+      "task_types": [
+        "tabular_binary_classification",
+        "text_binary_classification"
+      ],
+      "uses": [
+        {
+          "kind": "Transform",
+          "label": "Pipeline"
+        }
+      ],
+      "version": 2,
+      "score": 0.989949,
+      "lexical_score": 0.0,
+      "graph_score": 0.989949,
+      "evidence_path": [
+        {
+          "seed": "capability:bank-precontact-policy:v2",
+          "hops": [
+            {
+              "from": "capability:bank-precontact-policy:v2",
+              "relation": "REQUIRES",
+              "to": "capability:bank-ordered-split:v2"
+            },
+            {
+              "from": "capability:bank-ordered-split:v2",
+              "relation": "REQUIRES",
+              "to": "capability:training-only-pipeline:v2"
+            }
+          ],
+          "bonus": 0.42426406871192857
+        },
+        {
+          "seed": "capability:bank-target:v2",
+          "hops": [
+            {
+              "from": "capability:bank-target:v2",
+              "relation": "REQUIRES",
+              "to": "capability:probability-logistic:v1"
+            },
+            {
+              "from": "capability:probability-logistic:v1",
+              "relation": "REQUIRES",
+              "to": "capability:training-only-pipeline:v2"
+            }
+          ],
+          "bonus": 0.28284271247461906
+        },
+        {
+          "seed": "capability:bank-ordered-split:v2",
+          "hops": [
+            {
+              "from": "capability:bank-ordered-split:v2",
+              "relation": "REQUIRES",
+              "to": "capability:training-only-pipeline:v2"
+            }
+          ],
+          "bonus": 0.28284271247461906
+        }
+      ],
+      "graph_used": true,
+      "source_locator": [
+        {
+          "imports": [
+            "import warnings",
+            "from collections import Counter, defaultdict",
+            "from contextlib import contextmanager",
+            "from copy import deepcopy",
+            "from itertools import chain, islice",
+            "import numpy as np",
+            "from scipy import sparse",
+            "from .base import TransformerMixin, _fit_context, clone",
+            "from .exceptions import NotFittedError",
+            "from .preprocessing import FunctionTransformer",
+            "from .utils import Bunch",
+            "from .utils._metadata_requests import METHODS",
+            "from .utils._param_validation import HasMethods, Hidden",
+            "from .utils._repr_html.estimator import _VisualBlock",
+            "from .utils._set_output import _get_container_adapter, _safe_set_output",
+            "from .utils._tags import get_tags",
+            "from .utils._user_interface import _print_elapsed_time",
+            "from .utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, get_routing_for_object, process_routing",
+            "from .utils.metaestimators import _BaseComposition, available_if",
+            "from .utils.parallel import Parallel, delayed",
+            "from .utils.validation import check_is_fitted, check_memory"
+          ],
+          "line_end": 1407,
+          "line_start": 123,
+          "methods": [
+            "__init__",
+            "set_output",
+            "get_params",
+            "set_params",
+            "_validate_steps",
+            "_iter",
+            "__len__",
+            "__getitem__",
+            "_estimator_type",
+            "named_steps",
+            "_final_estimator",
+            "_log_message",
+            "_check_method_params",
+            "_get_metadata_for_step",
+            "_fit",
+            "fit",
+            "_can_fit_transform",
+            "fit_transform",
+            "predict",
+            "fit_predict",
+            "predict_proba",
+            "decision_function",
+            "score_samples",
+            "predict_log_proba",
+            "_can_transform",
+            "transform",
+            "_can_inverse_transform",
+            "inverse_transform",
+            "score",
+            "classes_",
+            "__sklearn_tags__",
+            "get_feature_names_out",
+            "n_features_in_",
+            "feature_names_in_",
+            "__sklearn_is_fitted__",
+            "_sk_visual_block_",
+            "get_metadata_routing"
+          ],
+          "parse_mode": "ast-only",
+          "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/pipeline.py",
+          "relative_path": "sklearn/pipeline.py",
+          "signature": "class Pipeline(_BaseComposition):\n    def __init__(self, steps, *, transform_input=None, memory=None, verbose=False)",
+          "symbol": "Pipeline"
+        },
+        {
+          "line_end": 50,
+          "line_start": 35,
+          "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md"
+        },
+        {
+          "line_end": 62,
+          "line_start": 51,
+          "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md"
+        }
+      ],
+      "matched_constraints": [
+        "task_type=tabular_binary_classification"
+      ],
+      "rejected_reason": null
+    }
+  ],
+  "quality_status": "above_prevalence",
+  "explanation": {
+    "summary": "在仅使用验证集（validation_only，8238 行，正例率 0.1107）的独立测量中，六个候选均通过。逻辑回归族整体优于随机森林族：bank_logistic_balanced_default（AP 0.1829，AP 相对 dummy 提升 0.0722，lift@10% 2.094，ROC-AUC 0.6131）与 bank_logistic_balanced_regularized（AP 0.1814，提升 0.0707，lift@10% 2.006，ROC-AUC 0.6085）、bank_logistic_balanced（AP 0.1808，提升 0.0701，lift@10% 1.984，ROC-AUC 0.6093）表现接近，其中 bank_logistic_balanced_default 在 AP、lift@10% 与 ROC-AUC 上均为最高，故被选为 selected_candidate_id。随机森林族较弱：bank_forest_balanced_default（AP 0.1479，提升 0.0372，lift@10% 1.633）、bank_forest_balanced_shallower（AP 0.1349，提升 0.0242，lift@10% 1.436）、bank_forest_balanced（AP 0.1283，提升 0.0175，lift@10% 1.315）。需注意 bank_logistic_balanced_default 与 bank_forest_balanced_default 在阈值 0.5 下 F1 为 0.0，说明默认阈值下无正例被判定，排序指标与阈值分类指标不一致。相关检索能力证据包括 bank-precontact-policy、bank-target、bank-ordered-split、average-precision、probability-logistic、training-only-pipeline。",
+    "limitations": [
+      "所有指标均为 validation_only，sealed_test_scored 为 false，验证集表现不代表最终测试集性能，不能据此宣称泛化效果。",
+      "约束式 AST 执行仅为受控评测环境，不等同于通用操作系统沙箱，不能推断任意代码或生产环境下的安全性。",
+      "模型选择（如 bank_logistic_balanced_default 优于随机森林候选）仅反映该数据集与协议下的预测指标，不构成因果营销增益证明。",
+      "bank_logistic_balanced_default 与 bank_forest_balanced_default 在阈值 0.5 下 F1 为 0.0，说明阈值未校准，分类阈值相关结论不可靠。",
+      "排序并列采用 original_validation_row_order，top_10pct_count 固定为 824，lift/precision/recall@10% 对并列处理方式敏感。",
+      "未提供置信区间、显著性检验或重复随机种子结果，候选间小幅差异（如逻辑回归族内部）可能不稳定。",
+      "未报告失败候选，本次输入中所有候选状态均为 passed，无法评估被淘汰方案的风险。"
+    ]
+  },
+  "finished_at": "2026-09-29T15:36:45.511000+00:00",
+  "timing": {
+    "wall_seconds": 65.756,
+    "budget_seconds": 900.0,
+    "request_ceiling_seconds": 900
+  },
+  "report_paths": {
+    "json": "/root/algorithm-capability-factory/artifacts/runs/98ec1b47ceb74162b9def5335cc3b465/report.json",
+    "html": "/root/algorithm-capability-factory/artifacts/runs/98ec1b47ceb74162b9def5335cc3b465/report.html",
+    "markdown": "/root/algorithm-capability-factory/artifacts/runs/98ec1b47ceb74162b9def5335cc3b465/report.md"
+  }
+}

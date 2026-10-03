@@ -1,0 +1,31 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "bank_logistic_balanced",
+      "algorithm": "logistic",
+      "variant": "balanced",
+      "rationale": "Logistic regression with class_weight balanced suits the imbalanced precontact bank target and provides calibrated probabilities for average_precision; fits the conservative precontact feature policy and training-only pipeline.",
+      "evidence_ids": [
+        "probability-logistic",
+        "bank-precontact-policy",
+        "bank-target",
+        "training-only-pipeline",
+        "average-precision"
+      ],
+      "parent_id": null
+    },
+    {
+      "candidate_id": "bank_forest_balanced",
+      "algorithm": "forest",
+      "variant": "balanced",
+      "rationale": "Random forest with balanced class weights captures nonlinear interactions among precontact categorical and numeric features while handling class imbalance; complements the linear baseline for candidate comparison.",
+      "evidence_ids": [
+        "bank-precontact-policy",
+        "bank-target",
+        "bank-ordered-split",
+        "average-precision"
+      ],
+      "parent_id": null
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+﻿profile,dataset,planned_runs,attempted_runs,completed_runs,passed_runs,failed_runs,cancelled_runs,harness_error_runs,pass_rate_completed,scored_passed_runs,mean_selected_validation_ap,sample_std_selected_validation_ap,metric_aggregation,usage_missing_runs,observed_api_calls,api_calls_observed_runs,observed_input_tokens,input_tokens_observed_runs,observed_output_tokens,output_tokens_observed_runs,observed_cached_input_tokens,cached_input_tokens_observed_runs,observed_workflow_wall_seconds,workflow_wall_seconds_observed_runs,observed_harness_wall_seconds,harness_wall_seconds_observed_runs,observed_repair_attempts,repair_attempts_observed_runs
+A,bank,1,0,0,0,0,0,0,,0,,,within_single_dataset,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+A,sms,1,0,0,0,0,0,0,,0,,,within_single_dataset,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+B,bank,1,0,0,0,0,0,0,,0,,,within_single_dataset,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+B,sms,1,0,0,0,0,0,0,,0,,,within_single_dataset,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+C,bank,1,0,0,0,0,0,0,,0,,,within_single_dataset,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+C,sms,1,0,0,0,0,0,0,,0,,,within_single_dataset,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+D,bank,1,0,0,0,0,0,0,,0,,,within_single_dataset,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+D,sms,1,0,0,0,0,0,0,,0,,,within_single_dataset,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

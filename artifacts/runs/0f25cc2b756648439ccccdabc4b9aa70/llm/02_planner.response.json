@@ -1,0 +1,32 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "bank_logistic_default",
+      "algorithm": "logistic",
+      "variant": "default",
+      "rationale": "初始比较的逻辑回归基线，使用 predict_proba 输出正类概率，配合通话前保守特征白名单与顺序留出协议，以 AP 为主指标。",
+      "evidence_ids": [
+        "probability-logistic",
+        "bank-precontact-policy",
+        "bank-target",
+        "average-precision",
+        "bank-ordered-split"
+      ],
+      "parent_id": null
+    },
+    {
+      "candidate_id": "bank_forest_default",
+      "algorithm": "forest",
+      "variant": "default",
+      "rationale": "初始比较的随机森林基线，固定 random_state 并限制树数量与 n_jobs 以适配 CPU/内存预算，作为非线性对照候选。",
+      "evidence_ids": [
+        "random-forest",
+        "bank-precontact-policy",
+        "bank-target",
+        "average-precision",
+        "bank-ordered-split"
+      ],
+      "parent_id": null
+    }
+  ]
+}

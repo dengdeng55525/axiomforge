@@ -1,0 +1,11 @@
+{
+  "summary": "在仅验证集（validation_only，8238 行，正例率 0.1107）上，六个候选均通过且未在封存测试集评分（sealed_test_scored=false）。按平均精度（average_precision）排序：bank_logistic_default 最高（0.1829，较 dummy 提升 0.0722，lift@10% 2.094，precision@10% 0.2318，recall@10% 0.2094，ROC-AUC 0.6131）；bank_logistic_regularized 次之（0.1815，提升 0.0708）；bank_logistic_balanced 为 0.1808（提升 0.0701，且阈值 0.5 下 F1 为 0.2288，其余逻辑回归候选该 F1 为 0）。森林类候选整体较弱：bank_forest_shallower 0.1499（提升 0.0391），bank_forest_default 0.1278（提升 0.0171），bank_forest_balanced 最低 0.1231（提升 0.0124）。因此选定 bank_logistic_default 作为当前验证集上的首选候选，依据检索到的能力条目 bank-precontact-policy、bank-target、average-precision、probability-logistic、random-forest、bank-ordered-split。",
+  "limitations": [
+    "所有指标均为验证集结果（evaluation_split=validation_only），并非最终测试集表现；封存测试集未评分（sealed_test_scored=false），因此不能据此推断泛化性能。",
+    "候选间差距较小（如 bank_logistic_default 与 bank_logistic_regularized 的 AP 差约 0.0013），在单一验证集上可能不稳定，需独立复现或交叉验证确认。",
+    "排序并列按原始验证行顺序打破（ranking_tie_break=original_validation_row_order），该规则会影响 top-10% 指标，属于评估约定而非模型能力。",
+    "约束式 AST 执行仅用于受控的候选评估，不等同于通用操作系统沙箱，不能据此声称具备通用隔离或安全保证。",
+    "模型选择（如逻辑回归优于随机森林）只反映本数据集与当前特征/划分下的验证表现，不构成因果性的营销提升证据。",
+    "未提供置信区间、显著性检验或校准指标，且部分候选在阈值 0.5 下 F1 为 0，说明默认阈值不适合直接用于业务决策。"
+  ]
+}

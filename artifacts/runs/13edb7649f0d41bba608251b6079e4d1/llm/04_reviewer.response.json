@@ -1,0 +1,6 @@
+{
+  "error_type": "CodePolicyError",
+  "diagnosis": "The source policy requires exactly one function named build_pipeline(task_spec), but the submitted code defines a function named broken_pipeline instead. The pipeline construction logic itself is otherwise consistent with the task spec.",
+  "fix": "Rename the function definition from 'def broken_pipeline(task_spec):' to 'def build_pipeline(task_spec):' so the module exposes exactly one function with the required name.",
+  "repairable": true
+}

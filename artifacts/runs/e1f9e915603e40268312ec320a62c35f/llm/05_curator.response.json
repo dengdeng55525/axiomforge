@@ -1,0 +1,10 @@
+{
+  "summary": "在仅使用验证集（validation_only，8238 行，正例率 0.1107）的独立测量中，候选 bank_logistic_balanced_v1 与 bank_forest_balanced_v1 均通过状态检查，且均未在封存测试集上评分（sealed_test_scored=false）。bank_logistic_balanced_v1 的 average_precision 为 0.1808，较 dummy 基线 0.1107 提升 0.0701，roc_auc 为 0.6093，top 10% 的 lift 为 1.9842（precision 0.2197、recall 0.1985）；bank_forest_balanced_v1 的 average_precision 为 0.1283，提升 0.0175，roc_auc 为 0.5524，top 10% 的 lift 为 1.3155（precision 0.1456、recall 0.1316）。两者排序均采用 original_validation_row_order 作为并列打破规则，top_10pct_count 均为 824。基于上述验证指标，选定 bank_logistic_balanced_v1 作为当前候选，相关能力证据包括 bank-precontact-policy、bank-target、bank-ordered-split、average-precision、probability-logistic 与 hist-gradient-boosting。",
+  "limitations": [
+    "以上数值均为验证集（validation_only）结果，并非最终测试集表现；两个候选的 sealed_test_scored 均为 false，因此不能据此推断泛化或上线效果。",
+    "约束式 AST 执行仅用于受控的候选评估流程，不等同于通用操作系统级沙箱，不能提供完整隔离或安全保证。",
+    "模型选择（bank_logistic_balanced_v1 优于 bank_forest_balanced_v1）只反映本验证协议下的排序指标差异，不构成因果营销提升的证据，也不证明该模型在业务干预中带来增量收益。",
+    "验证集正例率 0.1107 且类别不平衡，average_precision、lift@10% 等指标对阈值与排序并列规则敏感；本次并列打破采用 original_validation_row_order，可能影响 top 10% 的构成。",
+    "未报告置信区间、重复随机种子或统计显著性检验，候选间差异的稳健性尚未确认。"
+  ]
+}

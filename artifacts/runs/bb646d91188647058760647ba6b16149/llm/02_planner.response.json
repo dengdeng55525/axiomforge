@@ -1,0 +1,30 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "bank_logistic_balanced_v1",
+      "algorithm": "logistic",
+      "variant": "balanced",
+      "rationale": "逻辑回归在通话前表格特征上提供校准概率接口，class_weight=balanced 缓解正类稀有；与 AP 主指标和 bank-precontact-policy 的保守特征白名单兼容，作为线性基线候选。",
+      "evidence_ids": [
+        "bank-precontact-policy",
+        "bank-target",
+        "probability-logistic",
+        "average-precision"
+      ],
+      "parent_id": null
+    },
+    {
+      "candidate_id": "bank_forest_balanced_v1",
+      "algorithm": "forest",
+      "variant": "balanced",
+      "rationale": "随机森林可捕捉非线性与类别交互，class_weight=balanced 处理类别不平衡；作为与线性模型互补的树集成候选，在同一验证协议下用 AP 比较。",
+      "evidence_ids": [
+        "bank-precontact-policy",
+        "bank-target",
+        "average-precision",
+        "hist-gradient-boosting"
+      ],
+      "parent_id": null
+    }
+  ]
+}

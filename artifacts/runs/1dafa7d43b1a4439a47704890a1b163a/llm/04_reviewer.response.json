@@ -1,0 +1,6 @@
+{
+  "error_type": "CodePolicyError",
+  "diagnosis": "候选未通过独立验证",
+  "fix": "按照受限接口重新生成合法Pipeline",
+  "repairable": true
+}

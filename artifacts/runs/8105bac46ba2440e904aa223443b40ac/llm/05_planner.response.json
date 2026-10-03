@@ -1,0 +1,30 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "logistic_regularized",
+      "algorithm": "logistic",
+      "variant": "regularized",
+      "rationale": "Regularization can help prevent overfitting and improve model generalization.",
+      "evidence_ids": [
+        "bank-precontact-policy",
+        "bank-target",
+        "average-precision",
+        "probability-logistic"
+      ],
+      "parent_id": "logistic_default"
+    },
+    {
+      "candidate_id": "logistic_balanced_regularized",
+      "algorithm": "logistic",
+      "variant": "regularized",
+      "rationale": "Combining class balancing with regularization can further enhance model performance on imbalanced datasets.",
+      "evidence_ids": [
+        "bank-precontact-policy",
+        "bank-target",
+        "average-precision",
+        "probability-logistic"
+      ],
+      "parent_id": "logistic_balanced"
+    }
+  ]
+}

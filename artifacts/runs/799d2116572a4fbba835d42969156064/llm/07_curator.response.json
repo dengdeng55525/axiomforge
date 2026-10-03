@@ -1,0 +1,10 @@
+{
+  "summary": "在仅验证集（validation_only，1032 行，正例率 0.125）上，两个候选均通过。sms_logreg_default 的平均精度 AP=0.9584、AP 相对 dummy 提升 0.8334、ROC-AUC=0.9881、F1(阈值0.5)=0.8056、top 10% 精确率 0.9904、召回率 0.7984、lift=7.9231；sms_nb_default 的 AP=0.9459、AP 提升 0.8209、ROC-AUC=0.9781、F1=0.9024、top 10% 精确率 1.0、召回率 0.8062、lift=8.0。两者 top 10% 计数均为 104，排序并列按原始验证行顺序处理。综合 AP 与 ROC-AUC，选择 sms_logreg_default 为当前候选；该结论基于检索到的能力项 text-tfidf、probability-logistic、complement-naive-bayes、average-precision、sms-format、sms-grouped-split。",
+  "limitations": [
+    "所有指标均为 validation_only，sealed_test_scored=false，验证集表现不等于最终测试集表现，不能据此推断泛化性能。",
+    "候选执行环境为受限 AST 执行，并非通用操作系统沙箱，不能据此声称具备通用隔离或安全保证。",
+    "模型选择仅反映离线排序与分类指标差异，不构成因果营销提升证据；lift 与 precision@10% 是相关性度量，非因果效应。",
+    "两个候选的排序并列均按 original_validation_row_order 处理，可能影响 top 10% 相关指标的稳定性。",
+    "未提供失败候选或错误案例明细，无法评估鲁棒性、校准与子群差异。"
+  ]
+}

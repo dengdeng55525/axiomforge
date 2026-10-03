@@ -1,0 +1,28 @@
+{
+  "objective": "在银行定期存款订购的二分类任务中，仅使用通话前可得特征（排除 duration），比较两个候选方案，并以验证集平均精度（AP）选择最终方案，同时输出来源、检查、资源和修复记录。",
+  "constraints": [
+    "任务类型为表格二分类，正类标签为 yes。",
+    "主指标为验证集 average_precision（AP）。",
+    "特征仅限 task_spec 指定的 precontact_conservative_v1 策略字段：age、job、marital、education、default、housing、loan、pdays、previous、poutcome。",
+    "禁止使用 duration 或任何通话后信息。",
+    "类别特征为 job、marital、education、default、housing、loan、poutcome；数值特征为 age、pdays、previous。",
+    "随机种子固定为 42。",
+    "资源上限：CPU 2、内存 2048 MiB、超时 120 秒。",
+    "不得修改 task_spec、评估标签或切分协议。",
+    "输出需包含来源、检查、资源和修复记录。",
+    "仅返回符合指定 JSON 对象的决策，不包含私有推理或密钥。"
+  ],
+  "assumptions": [
+    "两个候选方案均可在给定资源与超时内完成训练和验证。",
+    "验证集 AP 可基于固定种子 42 的确定性切分计算。",
+    "数据集中存在 task_spec 列出的全部特征，且目标列可映射为 yes/no。",
+    "来源、检查、资源和修复记录可作为结构化元数据随结果输出。"
+  ],
+  "warnings": [
+    "未提供客户端 ID，因此不能承诺或评估按客户端分离的泛化能力。",
+    "若候选方案需要超出 2 CPU、2048 MiB 或 120 秒的资源，则不可执行。",
+    "pdays 中可能存在特殊值（如 -1），需在预处理中按通话前可得信息处理，不得引入未来信息。"
+  ],
+  "incompatible_requests": [],
+  "requested_run_seconds": null
+}

@@ -1,0 +1,13 @@
+{
+  "status": "failed",
+  "model_metadata": null,
+  "error": {
+    "type": "plan_consistency",
+    "stage": "source_policy",
+    "repairable": true,
+    "message": "Generated code could not be checked against its plan: CodePolicyError"
+  },
+  "checks": [],
+  "resources": {},
+  "metrics": {}
+}

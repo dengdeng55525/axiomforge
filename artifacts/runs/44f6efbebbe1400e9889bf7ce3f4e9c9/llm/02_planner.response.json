@@ -1,0 +1,16 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "logistic_default",
+      "algorithm": "logistic",
+      "variant": "default",
+      "rationale": "Logistic regression is a suitable choice for binary classification tasks and provides a good baseline for comparison.",
+      "evidence_ids": [
+        "bank-precontact-policy",
+        "bank-target",
+        "probability-logistic"
+      ],
+      "parent_id": null
+    }
+  ]
+}

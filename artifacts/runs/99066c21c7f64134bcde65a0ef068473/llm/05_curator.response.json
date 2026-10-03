@@ -1,0 +1,8 @@
+{
+  "summary": "候选模型 sms_complement_nb 在验证集上表现优于 sms_logistic_regression，主要体现在更高的平均精度（average_precision）和 F1 值（f1_threshold_0_5）。sms_complement_nb 的平均精度为 0.9598，F1 值为 0.9147，而 sms_logistic_regression 的平均精度为 0.9584，F1 值为 0.8056。",
+  "limitations": [
+    "所有评估指标均基于验证集，未在密封测试集上进行验证。",
+    "模型选择结果不能直接证明因果营销提升。",
+    "评估过程中使用了受限的 AST 运行器，执行范围有限。"
+  ]
+}

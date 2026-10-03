@@ -1,0 +1,23 @@
+{
+  "code_path": "/root/algorithm-capability-factory/artifacts/runs/660682f3cf324bf1938b78c70f2fce8c/candidates/sms_tfidf_nb_default/attempt_0/model.py",
+  "train_path": "/root/algorithm-capability-factory/artifacts/runs/660682f3cf324bf1938b78c70f2fce8c/dataset/worker/train.json",
+  "validation_features_path": "/root/algorithm-capability-factory/artifacts/runs/660682f3cf324bf1938b78c70f2fce8c/dataset/worker/validation_features.json",
+  "output_path": "/root/algorithm-capability-factory/artifacts/runs/660682f3cf324bf1938b78c70f2fce8c/candidates/sms_tfidf_nb_default/attempt_0/predictions.json",
+  "task_spec": {
+    "task_type": "text_binary_classification",
+    "feature_names": [
+      "text"
+    ],
+    "numeric_features": [],
+    "categorical_features": [
+      "text"
+    ],
+    "positive_label": "spam",
+    "seed": 42
+  },
+  "limits": {
+    "timeout_s": 120.0,
+    "memory_mib": 2048,
+    "cpu_cores": 2
+  }
+}

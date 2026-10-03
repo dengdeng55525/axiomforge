@@ -1,0 +1,162 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "name": "source_policy",
+      "passed": true,
+      "mandatory": true,
+      "detail": "AST parsed as approved constructors without exec/eval"
+    },
+    {
+      "name": "plan_consistency",
+      "passed": true,
+      "mandatory": true,
+      "detail": "Final classifier matches planned logistic"
+    },
+    {
+      "name": "dataset_integrity",
+      "passed": true,
+      "mandatory": true,
+      "detail": "SHA256, split disjointness, row alignment, feature policy"
+    },
+    {
+      "name": "labels_withheld",
+      "passed": true,
+      "mandatory": true,
+      "detail": "Worker receives no validation labels or final test"
+    },
+    {
+      "name": "worker_execution",
+      "passed": true,
+      "mandatory": true,
+      "detail": "Resource-limited fresh process exited successfully"
+    },
+    {
+      "name": "prediction_contract",
+      "passed": true,
+      "mandatory": true,
+      "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+    },
+    {
+      "name": "single_row",
+      "passed": true,
+      "mandatory": true,
+      "detail": ""
+    },
+    {
+      "name": "repeat_prediction",
+      "passed": true,
+      "mandatory": true,
+      "detail": ""
+    },
+    {
+      "name": "empty_batch_wrapper",
+      "passed": true,
+      "mandatory": true,
+      "detail": ""
+    },
+    {
+      "name": "empty_text",
+      "passed": true,
+      "mandatory": true,
+      "detail": ""
+    },
+    {
+      "name": "clean_environment",
+      "passed": true,
+      "mandatory": true,
+      "detail": "No API keys/tokens passed to worker"
+    },
+    {
+      "name": "ap_above_dummy",
+      "passed": true,
+      "mandatory": false,
+      "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+    },
+    {
+      "name": "host_evaluation",
+      "passed": true,
+      "mandatory": true,
+      "detail": "Metrics computed only by trusted host using validation labels"
+    }
+  ],
+  "metrics": {
+    "average_precision": 0.9583895772337544,
+    "roc_auc": 0.9880587533372823,
+    "f1_threshold_0_5": 0.8055555555555556,
+    "precision_at_10pct": 0.9903846153846154,
+    "recall_at_10pct": 0.7984496124031008,
+    "lift_at_10pct": 7.923076923076923,
+    "validation_positive_rate": 0.125,
+    "top_10pct_count": 104,
+    "validation_rows": 1032,
+    "classification_threshold": 0.5,
+    "evaluation_split": "validation_only",
+    "sealed_test_scored": false,
+    "ranking_tie_break": "original_validation_row_order",
+    "dummy_average_precision": 0.125,
+    "ap_improvement_over_dummy": 0.8333895772337544
+  },
+  "resources": {
+    "limits": {
+      "timeout_s": 120.0,
+      "memory_mib": 2048,
+      "cpu_cores": 2
+    },
+    "worker_pid": 29120,
+    "wall_seconds": 0.852957027964294,
+    "fit_seconds": 0.11099209706299007,
+    "predict_seconds": 0.012778023956343532,
+    "worker_wall_seconds": 0.7359846739564091,
+    "peak_rss_mib": 198.0,
+    "cpu_seconds": 0.972872,
+    "sklearn_version": "1.7.2",
+    "python_version": "3.10.8",
+    "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+    "joblib_backend": "threading",
+    "repeat_prediction_max_abs_delta": 0.0,
+    "total_seconds": 0.8787160720676184
+  },
+  "error": null,
+  "artifact_paths": {
+    "source": "/root/algorithm-capability-factory/artifacts/runs/cb4b86e9449f429887455adff3c55e0d/candidates/c1/attempt_0/model.py",
+    "constructor_plan": "/root/algorithm-capability-factory/artifacts/runs/cb4b86e9449f429887455adff3c55e0d/candidates/c1/attempt_0/constructor_plan.json",
+    "model_metadata": "/root/algorithm-capability-factory/artifacts/runs/cb4b86e9449f429887455adff3c55e0d/candidates/c1/attempt_0/model_metadata.json",
+    "predictions": "/root/algorithm-capability-factory/artifacts/runs/cb4b86e9449f429887455adff3c55e0d/candidates/c1/attempt_0/predictions.json",
+    "request": "/root/algorithm-capability-factory/artifacts/runs/cb4b86e9449f429887455adff3c55e0d/candidates/c1/attempt_0/worker_request.json",
+    "stdout": "/root/algorithm-capability-factory/artifacts/runs/cb4b86e9449f429887455adff3c55e0d/candidates/c1/attempt_0/worker.stdout.log",
+    "stderr": "/root/algorithm-capability-factory/artifacts/runs/cb4b86e9449f429887455adff3c55e0d/candidates/c1/attempt_0/worker.stderr.log",
+    "result": "/root/algorithm-capability-factory/artifacts/runs/cb4b86e9449f429887455adff3c55e0d/candidates/c1/attempt_0/validation_result.json"
+  },
+  "containment": {
+    "backend": "constrained_ast_subprocess",
+    "arbitrary_python_execution": false,
+    "os_sandbox": false,
+    "network_namespace": false,
+    "filesystem_namespace": false,
+    "source_evaluated_with_exec_or_eval": false,
+    "constructors_allowlisted": true,
+    "resource_limited_fresh_process": true,
+    "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+  },
+  "quality_status": "above_prevalence",
+  "source_sha256": "61a2be7f2f64180c0a0f1056c661abfa8e8ae5f91be4d126c200ce6eedd9101a",
+  "model_metadata": {
+    "actual_algorithm": "logistic",
+    "classifier_class": "LogisticRegression",
+    "classifier_path": [
+      "model"
+    ],
+    "classifier_parameters": {
+      "max_iter": 1000,
+      "random_state": 42
+    },
+    "constructor_classes": [
+      "Pipeline",
+      "TfidfVectorizer",
+      "LogisticRegression"
+    ],
+    "constructor_count": 3,
+    "source": "independently_parsed_constructor_plan"
+  }
+}

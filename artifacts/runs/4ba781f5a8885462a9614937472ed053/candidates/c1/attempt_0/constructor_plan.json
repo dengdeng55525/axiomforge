@@ -1,0 +1,49 @@
+{
+  "kind": "constructor",
+  "name": "Pipeline",
+  "args": [
+    {
+      "kind": "list",
+      "items": [
+        {
+          "kind": "tuple",
+          "items": [
+            "text",
+            {
+              "kind": "constructor",
+              "name": "TfidfVectorizer",
+              "args": [],
+              "kwargs": {
+                "ngram_range": {
+                  "kind": "tuple",
+                  "items": [
+                    1,
+                    2
+                  ]
+                },
+                "min_df": 2,
+                "max_features": 30000
+              }
+            }
+          ]
+        },
+        {
+          "kind": "tuple",
+          "items": [
+            "model",
+            {
+              "kind": "constructor",
+              "name": "LogisticRegression",
+              "args": [],
+              "kwargs": {
+                "max_iter": 1000,
+                "random_state": 42
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "kwargs": {}
+}

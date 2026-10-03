@@ -1,0 +1,32 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "sms_logreg_tfidf_default",
+      "algorithm": "logistic",
+      "variant": "default",
+      "rationale": "TF-IDF 稀疏文本特征配合逻辑回归概率输出，按 classes_ 映射 spam 正类分数，在规范化分组划分的验证集上计算 AP；词表与 IDF 仅用训练集拟合。",
+      "evidence_ids": [
+        "text-tfidf",
+        "probability-logistic",
+        "average-precision",
+        "sms-grouped-split",
+        "sms-format"
+      ],
+      "parent_id": null
+    },
+    {
+      "candidate_id": "sms_nb_tfidf_default",
+      "algorithm": "nb",
+      "variant": "default",
+      "rationale": "TF-IDF 非负稀疏特征配合朴素贝叶斯作为互补基线，与逻辑回归形成不同归纳偏置的对照；同样在验证集上以 AP 评估，不使用封存测试集。",
+      "evidence_ids": [
+        "text-tfidf",
+        "complement-naive-bayes",
+        "average-precision",
+        "sms-grouped-split",
+        "sms-format"
+      ],
+      "parent_id": null
+    }
+  ]
+}

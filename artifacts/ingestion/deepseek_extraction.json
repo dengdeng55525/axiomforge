@@ -1,0 +1,1535 @@
+{
+  "created_at": "2026-09-28T12:28:36.421649+00:00",
+  "summary": {
+    "sources": 22,
+    "manual_seed_cards": 21,
+    "llm_extracted_cards": 8,
+    "new_capability_versions": 8,
+    "total_capabilities": 41,
+    "issues": [],
+    "source_manifest": [
+      {
+        "source_id": "src-036a9125a071ef6a1ae3c21f",
+        "source_key": "bank-duration",
+        "uri": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+        "revision": "sha256:10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+        "license": "CC-BY-4.0",
+        "content_sha256": "10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+        "excerpt_sha256": "3ca41d3d44d1a02e22a4331fe8f8eebcaa1a1a168b3b5e74ceda2d5fa0a57446",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/data/raw/bank-additional-names.txt",
+          "line_start": 56,
+          "line_end": 58
+        },
+        "kind": "document"
+      },
+      {
+        "source_id": "src-b474b223d810ba493ecf945e",
+        "source_key": "bank-pdays",
+        "uri": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+        "revision": "sha256:10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+        "license": "CC-BY-4.0",
+        "content_sha256": "10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+        "excerpt_sha256": "51b9e95ad1bd8e3c12848e5d9ae54f82903a91ece1033d25bc222e8b390eaa34",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/data/raw/bank-additional-names.txt",
+          "line_start": 59,
+          "line_end": 61
+        },
+        "kind": "document"
+      },
+      {
+        "source_id": "src-9e74f92e3a9cf01663fecfe4",
+        "source_key": "bank-target",
+        "uri": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+        "revision": "sha256:10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+        "license": "CC-BY-4.0",
+        "content_sha256": "10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+        "excerpt_sha256": "6af5b823b351ccf4f7afd10803bc9e6ddfe26e9866f78376d5d2f415d66aa02b",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/data/raw/bank-additional-names.txt",
+          "line_start": 70,
+          "line_end": 72
+        },
+        "kind": "document"
+      },
+      {
+        "source_id": "src-e51b99ee0ad007282e9ecf74",
+        "source_key": "bank-unknown",
+        "uri": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+        "revision": "sha256:10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+        "license": "CC-BY-4.0",
+        "content_sha256": "10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+        "excerpt_sha256": "be576f959a5401ca45583fea6d54636c90557b8fbb23da8af1a5e16b124f2756",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/data/raw/bank-additional-names.txt",
+          "line_start": 72,
+          "line_end": 72
+        },
+        "kind": "document"
+      },
+      {
+        "source_id": "src-4f8bdb3589548b6b90312e82",
+        "source_key": "sms-format",
+        "uri": "https://archive.ics.uci.edu/dataset/228/sms+spam+collection",
+        "revision": "sha256:8753cd2d3cab68f80c8257851b8c2037778c267f55accb6fd1b5a2e32d36a84e",
+        "license": "CC-BY-4.0",
+        "content_sha256": "8753cd2d3cab68f80c8257851b8c2037778c267f55accb6fd1b5a2e32d36a84e",
+        "excerpt_sha256": "12dbdfbc95e91934708054d54fea569a26ca0be87e54799b5cba32902214a076",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/data/raw/sms-readme.txt",
+          "line_start": 28,
+          "line_end": 31
+        },
+        "kind": "document"
+      },
+      {
+        "source_id": "src-9d912fa3bc826e2bfd7f1aff",
+        "source_key": "project-bank-policy",
+        "uri": "file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md",
+        "revision": "sha256:10bbedb7d1e5d03c92860a5aef348cb020e7a385a5ce520677bd95790881a970",
+        "license": "original-project-notes",
+        "content_sha256": "10bbedb7d1e5d03c92860a5aef348cb020e7a385a5ce520677bd95790881a970",
+        "excerpt_sha256": "5fee2b6ab7a01e4baaed0ae3fdf0df5977680cf24adc258ff41b7ad4f2b33feb",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md",
+          "line_start": 18,
+          "line_end": 34
+        },
+        "kind": "document"
+      },
+      {
+        "source_id": "src-60c9bfae88dcf21b0c74bc3e",
+        "source_key": "project-bank-split",
+        "uri": "file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md",
+        "revision": "sha256:10bbedb7d1e5d03c92860a5aef348cb020e7a385a5ce520677bd95790881a970",
+        "license": "original-project-notes",
+        "content_sha256": "10bbedb7d1e5d03c92860a5aef348cb020e7a385a5ce520677bd95790881a970",
+        "excerpt_sha256": "4378b3207a9ed21955c1e651092f08c19f40096650b91a7354ce058924a9b5f2",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md",
+          "line_start": 35,
+          "line_end": 50
+        },
+        "kind": "document"
+      },
+      {
+        "source_id": "src-df4abddd7280ca49a8328ee6",
+        "source_key": "project-sms-split",
+        "uri": "file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md",
+        "revision": "sha256:10bbedb7d1e5d03c92860a5aef348cb020e7a385a5ce520677bd95790881a970",
+        "license": "original-project-notes",
+        "content_sha256": "10bbedb7d1e5d03c92860a5aef348cb020e7a385a5ce520677bd95790881a970",
+        "excerpt_sha256": "b5f2f429b374f3aff65bba02e8b2e0e7a16b230ae6c0762b81d264b04e1f5e21",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md",
+          "line_start": 51,
+          "line_end": 62
+        },
+        "kind": "document"
+      },
+      {
+        "source_id": "src-b52e82e61408112700218281",
+        "source_key": "project-evidence",
+        "uri": "file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md",
+        "revision": "sha256:10bbedb7d1e5d03c92860a5aef348cb020e7a385a5ce520677bd95790881a970",
+        "license": "original-project-notes",
+        "content_sha256": "10bbedb7d1e5d03c92860a5aef348cb020e7a385a5ce520677bd95790881a970",
+        "excerpt_sha256": "57d67035b4e4563cead2a1b03717260ee7542ac003537e99046d45075815ff68",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md",
+          "line_start": 82,
+          "line_end": 89
+        },
+        "kind": "document"
+      },
+      {
+        "source_id": "src-8a2d3c4ad618f98dc3d974e1",
+        "source_key": "sklearn-pipeline",
+        "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/pipeline.py",
+        "revision": "1.7.2",
+        "license": "BSD-3-Clause",
+        "content_sha256": "06f7ccb74a31ab9d3c900d87c814b7ce81b8acbd938ad74fe9cc674075f07869",
+        "excerpt_sha256": "88dc0f2553332c5bad65ca3f45bcd9d88bdda2376ac8c0972a11aebaeaa654da",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/pipeline.py",
+          "line_start": 123,
+          "line_end": 1407,
+          "symbol": "Pipeline",
+          "relative_path": "sklearn/pipeline.py",
+          "imports": [
+            "import warnings",
+            "from collections import Counter, defaultdict",
+            "from contextlib import contextmanager",
+            "from copy import deepcopy",
+            "from itertools import chain, islice",
+            "import numpy as np",
+            "from scipy import sparse",
+            "from .base import TransformerMixin, _fit_context, clone",
+            "from .exceptions import NotFittedError",
+            "from .preprocessing import FunctionTransformer",
+            "from .utils import Bunch",
+            "from .utils._metadata_requests import METHODS",
+            "from .utils._param_validation import HasMethods, Hidden",
+            "from .utils._repr_html.estimator import _VisualBlock",
+            "from .utils._set_output import _get_container_adapter, _safe_set_output",
+            "from .utils._tags import get_tags",
+            "from .utils._user_interface import _print_elapsed_time",
+            "from .utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, get_routing_for_object, process_routing",
+            "from .utils.metaestimators import _BaseComposition, available_if",
+            "from .utils.parallel import Parallel, delayed",
+            "from .utils.validation import check_is_fitted, check_memory"
+          ],
+          "methods": [
+            "__init__",
+            "set_output",
+            "get_params",
+            "set_params",
+            "_validate_steps",
+            "_iter",
+            "__len__",
+            "__getitem__",
+            "_estimator_type",
+            "named_steps",
+            "_final_estimator",
+            "_log_message",
+            "_check_method_params",
+            "_get_metadata_for_step",
+            "_fit",
+            "fit",
+            "_can_fit_transform",
+            "fit_transform",
+            "predict",
+            "fit_predict",
+            "predict_proba",
+            "decision_function",
+            "score_samples",
+            "predict_log_proba",
+            "_can_transform",
+            "transform",
+            "_can_inverse_transform",
+            "inverse_transform",
+            "score",
+            "classes_",
+            "__sklearn_tags__",
+            "get_feature_names_out",
+            "n_features_in_",
+            "feature_names_in_",
+            "__sklearn_is_fitted__",
+            "_sk_visual_block_",
+            "get_metadata_routing"
+          ],
+          "signature": "class Pipeline(_BaseComposition):\n    def __init__(self, steps, *, transform_input=None, memory=None, verbose=False)",
+          "parse_mode": "ast-only"
+        },
+        "kind": "python_ast"
+      },
+      {
+        "source_id": "src-edb49349edd5d01d96366d15",
+        "source_key": "sklearn-columns",
+        "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/compose/_column_transformer.py",
+        "revision": "1.7.2",
+        "license": "BSD-3-Clause",
+        "content_sha256": "e0fcb314512c8a487f48dfb7f52df5cda7e1a5b1fbc00c9121c2e337b5faac94",
+        "excerpt_sha256": "bc65bf1f577de02cd9a043640d2e3074e27c93fb0a736e597dcf8799ec9b3a39",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/compose/_column_transformer.py",
+          "line_start": 63,
+          "line_end": 1327,
+          "symbol": "ColumnTransformer",
+          "relative_path": "sklearn/compose/_column_transformer.py",
+          "imports": [
+            "import warnings",
+            "from collections import Counter",
+            "from functools import partial",
+            "from itertools import chain",
+            "from numbers import Integral, Real",
+            "import numpy as np",
+            "from scipy import sparse",
+            "from ..base import TransformerMixin, _fit_context, clone",
+            "from ..pipeline import _fit_transform_one, _name_estimators, _transform_one",
+            "from ..preprocessing import FunctionTransformer",
+            "from ..utils import Bunch",
+            "from ..utils._indexing import _determine_key_type, _get_column_indices, _safe_indexing",
+            "from ..utils._metadata_requests import METHODS",
+            "from ..utils._param_validation import HasMethods, Hidden, Interval, StrOptions",
+            "from ..utils._repr_html.estimator import _VisualBlock",
+            "from ..utils._set_output import _get_container_adapter, _get_output_config, _safe_set_output",
+            "from ..utils._tags import get_tags",
+            "from ..utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, process_routing",
+            "from ..utils.metaestimators import _BaseComposition",
+            "from ..utils.parallel import Parallel, delayed",
+            "from ..utils.validation import _check_feature_names, _check_feature_names_in, _check_n_features, _get_feature_names, _is_pandas_df, _num_samples, check_array, check_is_fitted"
+          ],
+          "methods": [
+            "__init__",
+            "_transformers",
+            "_transformers",
+            "set_output",
+            "get_params",
+            "set_params",
+            "_iter",
+            "_validate_transformers",
+            "_validate_column_callables",
+            "_validate_remainder",
+            "_get_remainder_cols_dtype",
+            "_get_remainder_cols",
+            "named_transformers_",
+            "_get_feature_name_out_for_transformer",
+            "get_feature_names_out",
+            "_add_prefix_for_feature_names_out",
+            "_update_fitted_transformers",
+            "_validate_output",
+            "_record_output_indices",
+            "_log_message",
+            "_call_func_on_transformers",
+            "fit",
+            "fit_transform",
+            "transform",
+            "_hstack",
+            "_sk_visual_block_",
+            "__getitem__",
+            "_get_empty_routing",
+            "get_metadata_routing",
+            "__sklearn_tags__"
+          ],
+          "signature": "class ColumnTransformer(TransformerMixin, _BaseComposition):\n    def __init__(self, transformers, *, remainder='drop', sparse_threshold=0.3, n_jobs=None, transformer_weights=None, verbose=False, verbose_feature_names_out=True, force_int_remainder_cols='deprecated')",
+          "parse_mode": "ast-only"
+        },
+        "kind": "python_ast"
+      },
+      {
+        "source_id": "src-57ad627bd0c9f7e3e2b0f4c4",
+        "source_key": "sklearn-onehot",
+        "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/preprocessing/_encoders.py",
+        "revision": "1.7.2",
+        "license": "BSD-3-Clause",
+        "content_sha256": "182ad858c63cf28c26d6b332250006c052a502e483740b5b236a3c8e7493db97",
+        "excerpt_sha256": "e1dd2e94708eb514f6ae54063da04568cb3457a8a34891be1d49e058cba7e42a",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/preprocessing/_encoders.py",
+          "line_start": 465,
+          "line_end": 1251,
+          "symbol": "OneHotEncoder",
+          "relative_path": "sklearn/preprocessing/_encoders.py",
+          "imports": [
+            "import numbers",
+            "import warnings",
+            "from numbers import Integral",
+            "import numpy as np",
+            "from scipy import sparse",
+            "from ..base import BaseEstimator, OneToOneFeatureMixin, TransformerMixin, _fit_context",
+            "from ..utils import _safe_indexing, check_array",
+            "from ..utils._encode import _check_unknown, _encode, _get_counts, _unique",
+            "from ..utils._mask import _get_mask",
+            "from ..utils._missing import is_scalar_nan",
+            "from ..utils._param_validation import Interval, RealNotInt, StrOptions",
+            "from ..utils._set_output import _get_output_config",
+            "from ..utils.validation import _check_feature_names, _check_feature_names_in, _check_n_features, check_is_fitted"
+          ],
+          "methods": [
+            "__init__",
+            "_map_drop_idx_to_infrequent",
+            "_set_drop_idx",
+            "_compute_transformed_categories",
+            "_remove_dropped_categories",
+            "_compute_n_features_outs",
+            "fit",
+            "transform",
+            "inverse_transform",
+            "get_feature_names_out",
+            "_check_get_feature_name_combiner"
+          ],
+          "signature": "class OneHotEncoder(_BaseEncoder):\n    def __init__(self, *, categories='auto', drop=None, sparse_output=True, dtype=np.float64, handle_unknown='error', min_frequency=None, max_categories=None, feature_name_combiner='concat')",
+          "parse_mode": "ast-only"
+        },
+        "kind": "python_ast"
+      },
+      {
+        "source_id": "src-d449b36555785d788d970e04",
+        "source_key": "sklearn-scaler",
+        "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/preprocessing/_data.py",
+        "revision": "1.7.2",
+        "license": "BSD-3-Clause",
+        "content_sha256": "1255040a0eb9c99f58775d55cf34f675cf61539f7c0a0dd0d6a36cb1f0da1e15",
+        "excerpt_sha256": "3b1758d43b35aa1710082c55fee023bc7e46b4ac8945921f9194db12eb3f9766",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/preprocessing/_data.py",
+          "line_start": 723,
+          "line_end": 1149,
+          "symbol": "StandardScaler",
+          "relative_path": "sklearn/preprocessing/_data.py",
+          "imports": [
+            "import warnings",
+            "from numbers import Integral, Real",
+            "import numpy as np",
+            "from scipy import sparse, stats",
+            "from scipy.special import boxcox, inv_boxcox",
+            "from sklearn.utils import metadata_routing",
+            "from ..base import BaseEstimator, ClassNamePrefixFeaturesOutMixin, OneToOneFeatureMixin, TransformerMixin, _fit_context",
+            "from ..utils import _array_api, check_array, resample",
+            "from ..utils._array_api import _find_matching_floating_dtype, _modify_in_place_if_numpy, device, get_namespace, get_namespace_and_device",
+            "from ..utils._param_validation import Interval, Options, StrOptions, validate_params",
+            "from ..utils.extmath import _incremental_mean_and_var, row_norms",
+            "from ..utils.fixes import _yeojohnson_lambda",
+            "from ..utils.sparsefuncs import incr_mean_variance_axis, inplace_column_scale, mean_variance_axis, min_max_axis",
+            "from ..utils.sparsefuncs_fast import inplace_csr_row_normalize_l1, inplace_csr_row_normalize_l2",
+            "from ..utils.validation import FLOAT_DTYPES, _check_sample_weight, check_is_fitted, check_random_state, validate_data",
+            "from ._encoders import OneHotEncoder"
+          ],
+          "methods": [
+            "__init__",
+            "_reset",
+            "fit",
+            "partial_fit",
+            "transform",
+            "inverse_transform",
+            "__sklearn_tags__"
+          ],
+          "signature": "class StandardScaler(OneToOneFeatureMixin, TransformerMixin, BaseEstimator):\n    def __init__(self, *, copy=True, with_mean=True, with_std=True)",
+          "parse_mode": "ast-only"
+        },
+        "kind": "python_ast"
+      },
+      {
+        "source_id": "src-d3bbe7a469e7a71a6ec591de",
+        "source_key": "sklearn-imputer",
+        "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/impute/_base.py",
+        "revision": "1.7.2",
+        "license": "BSD-3-Clause",
+        "content_sha256": "f3549cbe4235a5c3e0b5f5695384dc481ee910f6098ced7c30d50805d0504447",
+        "excerpt_sha256": "993f8d9be128e8fc8950a12176f7f72f7440daa3af0a1abf69f490e707387aed",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/impute/_base.py",
+          "line_start": 170,
+          "line_end": 790,
+          "symbol": "SimpleImputer",
+          "relative_path": "sklearn/impute/_base.py",
+          "imports": [
+            "import numbers",
+            "import warnings",
+            "from collections import Counter",
+            "from functools import partial",
+            "from typing import Callable",
+            "import numpy as np",
+            "import numpy.ma as ma",
+            "from scipy import sparse as sp",
+            "from ..base import BaseEstimator, TransformerMixin, _fit_context",
+            "from ..utils._mask import _get_mask",
+            "from ..utils._missing import is_pandas_na, is_scalar_nan",
+            "from ..utils._param_validation import MissingValues, StrOptions",
+            "from ..utils.fixes import _mode",
+            "from ..utils.sparsefuncs import _get_median",
+            "from ..utils.validation import FLOAT_DTYPES, _check_feature_names_in, _check_n_features, check_is_fitted, validate_data"
+          ],
+          "methods": [
+            "__init__",
+            "_validate_input",
+            "fit",
+            "_sparse_fit",
+            "_dense_fit",
+            "transform",
+            "inverse_transform",
+            "__sklearn_tags__",
+            "get_feature_names_out"
+          ],
+          "signature": "class SimpleImputer(_BaseImputer):\n    def __init__(self, *, missing_values=np.nan, strategy='mean', fill_value=None, copy=True, add_indicator=False, keep_empty_features=False)",
+          "parse_mode": "ast-only"
+        },
+        "kind": "python_ast"
+      },
+      {
+        "source_id": "src-584b66a31950a968f84ef11b",
+        "source_key": "sklearn-logistic",
+        "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/linear_model/_logistic.py",
+        "revision": "1.7.2",
+        "license": "BSD-3-Clause",
+        "content_sha256": "981f4e11c9a6fc2b02cd9322f2926849143e4a8bf1819e3a4159a9fce615a00c",
+        "excerpt_sha256": "470b3000a8f09ccfbb82bf99a4a181ffb17d7cdf3024861b6acdac2d48a058a4",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/linear_model/_logistic.py",
+          "line_start": 829,
+          "line_end": 1497,
+          "symbol": "LogisticRegression",
+          "relative_path": "sklearn/linear_model/_logistic.py",
+          "imports": [
+            "import numbers",
+            "import warnings",
+            "from numbers import Integral, Real",
+            "import numpy as np",
+            "from joblib import effective_n_jobs",
+            "from scipy import optimize",
+            "from sklearn.metrics import get_scorer_names",
+            "from .._loss.loss import HalfBinomialLoss, HalfMultinomialLoss",
+            "from ..base import _fit_context",
+            "from ..metrics import get_scorer",
+            "from ..model_selection import check_cv",
+            "from ..preprocessing import LabelBinarizer, LabelEncoder",
+            "from ..svm._base import _fit_liblinear",
+            "from ..utils import Bunch, check_array, check_consistent_length, check_random_state, compute_class_weight",
+            "from ..utils._param_validation import Hidden, Interval, StrOptions",
+            "from ..utils.extmath import row_norms, softmax",
+            "from ..utils.fixes import _get_additional_lbfgs_options_dict",
+            "from ..utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, process_routing",
+            "from ..utils.multiclass import check_classification_targets",
+            "from ..utils.optimize import _check_optimize_result, _newton_cg",
+            "from ..utils.parallel import Parallel, delayed",
+            "from ..utils.validation import _check_method_params, _check_sample_weight, check_is_fitted, validate_data",
+            "from ._base import BaseEstimator, LinearClassifierMixin, SparseCoefMixin",
+            "from ._glm.glm import NewtonCholeskySolver",
+            "from ._linear_loss import LinearModelLoss",
+            "from ._sag import sag_solver"
+          ],
+          "methods": [
+            "__init__",
+            "fit",
+            "predict_proba",
+            "predict_log_proba",
+            "__sklearn_tags__"
+          ],
+          "signature": "class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):\n    def __init__(self, penalty='l2', *, dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1, class_weight=None, random_state=None, solver='lbfgs', max_iter=100, multi_class='deprecated', verbose=0, warm_start=False, n_jobs=None, l1_ratio=None)",
+          "parse_mode": "ast-only"
+        },
+        "kind": "python_ast"
+      },
+      {
+        "source_id": "src-65a2ca3df537050020eb73b5",
+        "source_key": "sklearn-forest",
+        "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/ensemble/_forest.py",
+        "revision": "1.7.2",
+        "license": "BSD-3-Clause",
+        "content_sha256": "c5a4230e63753d964674363bdbc47179340f28433133172dce1ecef4e73b6ee4",
+        "excerpt_sha256": "34aad8687622e0184b45aae36c6119f8012b9dc205b4b7c975fbe46efc60afd3",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/ensemble/_forest.py",
+          "line_start": 1174,
+          "line_end": 1568,
+          "symbol": "RandomForestClassifier",
+          "relative_path": "sklearn/ensemble/_forest.py",
+          "imports": [
+            "import threading",
+            "from abc import ABCMeta, abstractmethod",
+            "from numbers import Integral, Real",
+            "from warnings import catch_warnings, simplefilter, warn",
+            "import numpy as np",
+            "from scipy.sparse import hstack as sparse_hstack",
+            "from scipy.sparse import issparse",
+            "from ..base import ClassifierMixin, MultiOutputMixin, RegressorMixin, TransformerMixin, _fit_context, is_classifier",
+            "from ..exceptions import DataConversionWarning",
+            "from ..metrics import accuracy_score, r2_score",
+            "from ..preprocessing import OneHotEncoder",
+            "from ..tree import BaseDecisionTree, DecisionTreeClassifier, DecisionTreeRegressor, ExtraTreeClassifier, ExtraTreeRegressor",
+            "from ..tree._tree import DOUBLE, DTYPE",
+            "from ..utils import check_random_state, compute_sample_weight",
+            "from ..utils._param_validation import Interval, RealNotInt, StrOptions",
+            "from ..utils._tags import get_tags",
+            "from ..utils.multiclass import check_classification_targets, type_of_target",
+            "from ..utils.parallel import Parallel, delayed",
+            "from ..utils.validation import _check_feature_names_in, _check_sample_weight, _num_samples, check_is_fitted, validate_data",
+            "from ._base import BaseEnsemble, _partition_estimators"
+          ],
+          "methods": [
+            "__init__"
+          ],
+          "signature": "class RandomForestClassifier(ForestClassifier):\n    def __init__(self, n_estimators=100, *, criterion='gini', max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features='sqrt', max_leaf_nodes=None, min_impurity_decrease=0.0, bootstrap=True, oob_score=False, n_jobs=None, random_state=None, verbose=0, warm_start=False, class_weight=None, ccp_alpha=0.0, max_samples=None, monotonic_cst=None)",
+          "parse_mode": "ast-only"
+        },
+        "kind": "python_ast"
+      },
+      {
+        "source_id": "src-8bb03b8a4d6fcff5a1d76293",
+        "source_key": "sklearn-histgb",
+        "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py",
+        "revision": "1.7.2",
+        "license": "BSD-3-Clause",
+        "content_sha256": "f88ec15b1f861d6ac8517b8e3e5348bb4522ebe3127c5d89127502078b427fdc",
+        "excerpt_sha256": "dcb960175d4aade197976dcb7f82caf50e3a718e0cbcc21bbaa9a60227f22e96",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py",
+          "line_start": 1873,
+          "line_end": 2371,
+          "symbol": "HistGradientBoostingClassifier",
+          "relative_path": "sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py",
+          "imports": [
+            "import itertools",
+            "from abc import ABC, abstractmethod",
+            "from contextlib import contextmanager, nullcontext, suppress",
+            "from functools import partial",
+            "from numbers import Integral, Real",
+            "from time import time",
+            "import numpy as np",
+            "from ..._loss.loss import _LOSSES, BaseLoss, HalfBinomialLoss, HalfGammaLoss, HalfMultinomialLoss, HalfPoissonLoss, PinballLoss",
+            "from ...base import BaseEstimator, ClassifierMixin, RegressorMixin, _fit_context, is_classifier",
+            "from ...compose import ColumnTransformer",
+            "from ...metrics import check_scoring",
+            "from ...metrics._scorer import _SCORERS",
+            "from ...model_selection import train_test_split",
+            "from ...preprocessing import FunctionTransformer, LabelEncoder, OrdinalEncoder",
+            "from ...utils import check_random_state, compute_sample_weight, resample",
+            "from ...utils._missing import is_scalar_nan",
+            "from ...utils._openmp_helpers import _openmp_effective_n_threads",
+            "from ...utils._param_validation import Interval, RealNotInt, StrOptions",
+            "from ...utils.multiclass import check_classification_targets",
+            "from ...utils.validation import _check_monotonic_cst, _check_sample_weight, _check_y, _is_pandas_df, check_array, check_consistent_length, check_is_fitted, validate_data",
+            "from ._gradient_boosting import _update_raw_predictions",
+            "from .binning import _BinMapper",
+            "from .common import G_H_DTYPE, X_DTYPE, Y_DTYPE",
+            "from .grower import TreeGrower"
+          ],
+          "methods": [
+            "__init__",
+            "_finalize_sample_weight",
+            "predict",
+            "staged_predict",
+            "predict_proba",
+            "staged_predict_proba",
+            "decision_function",
+            "staged_decision_function",
+            "_encode_y",
+            "_encode_y_val",
+            "_get_loss"
+          ],
+          "signature": "class HistGradientBoostingClassifier(ClassifierMixin, BaseHistGradientBoosting):\n    def __init__(self, loss='log_loss', *, learning_rate=0.1, max_iter=100, max_leaf_nodes=31, max_depth=None, min_samples_leaf=20, l2_regularization=0.0, max_features=1.0, max_bins=255, categorical_features='from_dtype', monotonic_cst=None, interaction_cst=None, warm_start=False, early_stopping='auto', scoring='loss', validation_fraction=0.1, n_iter_no_change=10, tol=1e-07, verbose=0, random_state=None, class_weight=None)",
+          "parse_mode": "ast-only"
+        },
+        "kind": "python_ast"
+      },
+      {
+        "source_id": "src-ecb336a2fa483eb3b4f26d0b",
+        "source_key": "sklearn-tfidf",
+        "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/feature_extraction/text.py",
+        "revision": "1.7.2",
+        "license": "BSD-3-Clause",
+        "content_sha256": "876f0d334735f77174822fabff287fab5602ccff8973a5430ebc70548916da62",
+        "excerpt_sha256": "68ee510b687944e9e6e501bd142c2040942833f8952c80b5e01291e8527b0f7b",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/feature_extraction/text.py",
+          "line_start": 1735,
+          "line_end": 2137,
+          "symbol": "TfidfVectorizer",
+          "relative_path": "sklearn/feature_extraction/text.py",
+          "imports": [
+            "import array",
+            "import re",
+            "import unicodedata",
+            "import warnings",
+            "from collections import defaultdict",
+            "from collections.abc import Mapping",
+            "from functools import partial",
+            "from numbers import Integral",
+            "from operator import itemgetter",
+            "import numpy as np",
+            "import scipy.sparse as sp",
+            "from sklearn.utils import metadata_routing",
+            "from ..base import BaseEstimator, OneToOneFeatureMixin, TransformerMixin, _fit_context",
+            "from ..exceptions import NotFittedError",
+            "from ..preprocessing import normalize",
+            "from ..utils._param_validation import HasMethods, Interval, RealNotInt, StrOptions",
+            "from ..utils.fixes import _IS_32BIT",
+            "from ..utils.validation import FLOAT_DTYPES, check_array, check_is_fitted, validate_data",
+            "from ._hash import FeatureHasher",
+            "from ._stop_words import ENGLISH_STOP_WORDS"
+          ],
+          "methods": [
+            "__init__",
+            "idf_",
+            "idf_",
+            "_check_params",
+            "fit",
+            "fit_transform",
+            "transform",
+            "__sklearn_tags__"
+          ],
+          "signature": "class TfidfVectorizer(CountVectorizer):\n    def __init__(self, *, input='content', encoding='utf-8', decode_error='strict', strip_accents=None, lowercase=True, preprocessor=None, tokenizer=None, analyzer='word', stop_words=None, token_pattern='(?u)\\\\b\\\\w\\\\w+\\\\b', ngram_range=(1, 1), max_df=1.0, min_df=1, max_features=None, vocabulary=None, binary=False, dtype=np.float64, norm='l2', use_idf=True, smooth_idf=True, sublinear_tf=False)",
+          "parse_mode": "ast-only"
+        },
+        "kind": "python_ast"
+      },
+      {
+        "source_id": "src-01e94fa0e553de89c2a7a671",
+        "source_key": "sklearn-complementnb",
+        "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/naive_bayes.py",
+        "revision": "1.7.2",
+        "license": "BSD-3-Clause",
+        "content_sha256": "ee265c08217b2b4a0543bd984cb11a962b4d2f4c9a8150332e84f1364b5d37ec",
+        "excerpt_sha256": "f3c9cec2e98c0d8b6fe1ddaa666a30b4ee51feba78ffdf853727cbcdde59a328",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/naive_bayes.py",
+          "line_start": 907,
+          "line_end": 1059,
+          "symbol": "ComplementNB",
+          "relative_path": "sklearn/naive_bayes.py",
+          "imports": [
+            "import warnings",
+            "from abc import ABCMeta, abstractmethod",
+            "from numbers import Integral, Real",
+            "import numpy as np",
+            "from scipy.special import logsumexp",
+            "from .base import BaseEstimator, ClassifierMixin, _fit_context",
+            "from .preprocessing import LabelBinarizer, binarize, label_binarize",
+            "from .utils._param_validation import Interval",
+            "from .utils.extmath import safe_sparse_dot",
+            "from .utils.multiclass import _check_partial_fit_first_call",
+            "from .utils.validation import _check_n_features, _check_sample_weight, check_is_fitted, check_non_negative, validate_data"
+          ],
+          "methods": [
+            "__init__",
+            "__sklearn_tags__",
+            "_count",
+            "_update_feature_log_prob",
+            "_joint_log_likelihood"
+          ],
+          "signature": "class ComplementNB(_BaseDiscreteNB):\n    def __init__(self, *, alpha=1.0, force_alpha=True, fit_prior=True, class_prior=None, norm=False)",
+          "parse_mode": "ast-only"
+        },
+        "kind": "python_ast"
+      },
+      {
+        "source_id": "src-3ffc9e28ebb19e6bea23cac4",
+        "source_key": "sklearn-multinomialnb",
+        "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/naive_bayes.py",
+        "revision": "1.7.2",
+        "license": "BSD-3-Clause",
+        "content_sha256": "ee265c08217b2b4a0543bd984cb11a962b4d2f4c9a8150332e84f1364b5d37ec",
+        "excerpt_sha256": "e4c09dd5071c2181b54b2fff2cef627587ee19120b67537017de32b9f49f7921",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/naive_bayes.py",
+          "line_start": 779,
+          "line_end": 904,
+          "symbol": "MultinomialNB",
+          "relative_path": "sklearn/naive_bayes.py",
+          "imports": [
+            "import warnings",
+            "from abc import ABCMeta, abstractmethod",
+            "from numbers import Integral, Real",
+            "import numpy as np",
+            "from scipy.special import logsumexp",
+            "from .base import BaseEstimator, ClassifierMixin, _fit_context",
+            "from .preprocessing import LabelBinarizer, binarize, label_binarize",
+            "from .utils._param_validation import Interval",
+            "from .utils.extmath import safe_sparse_dot",
+            "from .utils.multiclass import _check_partial_fit_first_call",
+            "from .utils.validation import _check_n_features, _check_sample_weight, check_is_fitted, check_non_negative, validate_data"
+          ],
+          "methods": [
+            "__init__",
+            "__sklearn_tags__",
+            "_count",
+            "_update_feature_log_prob",
+            "_joint_log_likelihood"
+          ],
+          "signature": "class MultinomialNB(_BaseDiscreteNB):\n    def __init__(self, *, alpha=1.0, force_alpha=True, fit_prior=True, class_prior=None)",
+          "parse_mode": "ast-only"
+        },
+        "kind": "python_ast"
+      },
+      {
+        "source_id": "src-9ca2de7b8493fff6ad94d779",
+        "source_key": "sklearn-ap",
+        "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/metrics/_ranking.py",
+        "revision": "1.7.2",
+        "license": "BSD-3-Clause",
+        "content_sha256": "a1fc02f0b042a3945c37692c9377a746800dd2a90cdc227df5268f218bea3f74",
+        "excerpt_sha256": "0e57d9babe5c6b5a2c7d10e1324922fe2b4da60c87231b3082f7048f2cfc3ff9",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/metrics/_ranking.py",
+          "line_start": 118,
+          "line_end": 268,
+          "symbol": "average_precision_score",
+          "relative_path": "sklearn/metrics/_ranking.py",
+          "imports": [
+            "import warnings",
+            "from functools import partial",
+            "from numbers import Integral, Real",
+            "import numpy as np",
+            "from scipy.integrate import trapezoid",
+            "from scipy.sparse import csr_matrix, issparse",
+            "from scipy.stats import rankdata",
+            "from ..exceptions import UndefinedMetricWarning",
+            "from ..preprocessing import label_binarize",
+            "from ..utils import assert_all_finite, check_array, check_consistent_length, column_or_1d",
+            "from ..utils._encode import _encode, _unique",
+            "from ..utils._param_validation import Interval, StrOptions, validate_params",
+            "from ..utils.extmath import stable_cumsum",
+            "from ..utils.multiclass import type_of_target",
+            "from ..utils.sparsefuncs import count_nonzero",
+            "from ..utils.validation import _check_pos_label_consistency, _check_sample_weight",
+            "from ._base import _average_binary_score, _average_multiclass_ovo_score"
+          ],
+          "methods": [
+            "_binary_uninterpolated_average_precision"
+          ],
+          "signature": "def average_precision_score(y_true, y_score, *, average='macro', pos_label=1, sample_weight=None)",
+          "parse_mode": "ast-only"
+        },
+        "kind": "python_ast"
+      },
+      {
+        "source_id": "src-d3763791783869c635f954f3",
+        "source_key": "sklearn-rocauc",
+        "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/metrics/_ranking.py",
+        "revision": "1.7.2",
+        "license": "BSD-3-Clause",
+        "content_sha256": "a1fc02f0b042a3945c37692c9377a746800dd2a90cdc227df5268f218bea3f74",
+        "excerpt_sha256": "e1defd1db3e08e8eb135d035b647ed3e86e70f70ac925a7623039af10d4363d8",
+        "locator": {
+          "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/metrics/_ranking.py",
+          "line_start": 466,
+          "line_end": 700,
+          "symbol": "roc_auc_score",
+          "relative_path": "sklearn/metrics/_ranking.py",
+          "imports": [
+            "import warnings",
+            "from functools import partial",
+            "from numbers import Integral, Real",
+            "import numpy as np",
+            "from scipy.integrate import trapezoid",
+            "from scipy.sparse import csr_matrix, issparse",
+            "from scipy.stats import rankdata",
+            "from ..exceptions import UndefinedMetricWarning",
+            "from ..preprocessing import label_binarize",
+            "from ..utils import assert_all_finite, check_array, check_consistent_length, column_or_1d",
+            "from ..utils._encode import _encode, _unique",
+            "from ..utils._param_validation import Interval, StrOptions, validate_params",
+            "from ..utils.extmath import stable_cumsum",
+            "from ..utils.multiclass import type_of_target",
+            "from ..utils.sparsefuncs import count_nonzero",
+            "from ..utils.validation import _check_pos_label_consistency, _check_sample_weight",
+            "from ._base import _average_binary_score, _average_multiclass_ovo_score"
+          ],
+          "methods": [],
+          "signature": "def roc_auc_score(y_true, y_score, *, average='macro', sample_weight=None, max_fpr=None, multi_class='raise', labels=None)",
+          "parse_mode": "ast-only"
+        },
+        "kind": "python_ast"
+      }
+    ],
+    "extraction_performed": true,
+    "mode": "real_extraction",
+    "usage": {
+      "calls": 1,
+      "input_tokens": 13783,
+      "output_tokens": 2031,
+      "cached_input_tokens": 13568,
+      "records": [
+        {
+          "role": "extractor",
+          "requested_model": "deepseek-flash",
+          "returned_model": "deepseek-flash",
+          "response_id": "a6ec8d84-a0be-407a-8570-a52593411713",
+          "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+          "prompt_sha256": "d68e68a28b91d81198fe1eca2941298a5fe370d6598e0f765714066a72813ebe",
+          "response_sha256": "e5d96e1ddad7d6e0fa706ab3f3b34f4725384bc33e4097f3c1febca5f89b7c17",
+          "input_tokens": 13783,
+          "output_tokens": 2031,
+          "seconds": 8.338,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "mode": "real",
+  "model": "deepseek-flash",
+  "sources": [
+    {
+      "source_id": "src-036a9125a071ef6a1ae3c21f",
+      "source_key": "bank-duration",
+      "uri": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+      "revision": "sha256:10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26",
+      "locator": {
+        "path": "/root/algorithm-capability-factory/data/raw/bank-additional-names.txt",
+        "line_start": 56,
+        "line_end": 58
+      },
+      "content": "  11 - duration: last contact duration, in seconds (numeric). Important note:  this attribute highly affects the output target (e.g., if duration=0 then y=\"no\"). Yet, the duration is not known before a call is performed. Also, after the end of the call y is obviously known. Thus, this input should only be included for benchmark purposes and should be discarded if the intention is to have a realistic predictive model.\n   # other attributes:\n  12 - campaign: number of contacts performed during this campaign and for this client (numeric, includes last contact)"
+    },
+    {
+      "source_id": "src-9d912fa3bc826e2bfd7f1aff",
+      "source_key": "project-bank-policy",
+      "uri": "file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md",
+      "revision": "sha256:10bbedb7d1e5d03c92860a5aef348cb020e7a385a5ce520677bd95790881a970",
+      "locator": {
+        "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md",
+        "line_start": 18,
+        "line_end": 34
+      },
+      "content": "## 2. 主场景的业务定义\n\n目标：在发起一次营销联系前，基于可用客户属性和既往营销历史，给出订购倾向概率及联系优先级。y=yes 为正类。这不是信用违约、客户流失或营销因果效果预测。\n\n主协议先采用保守的 10 个输入字段：age、job、marital、education、default、housing、loan、pdays、previous、poutcome。\n\n以下字段不进入主协议：\n\n- duration：本次/最后联系的实际通话时长；预测前不可取得，作为明确的业务泄漏禁用字段。\n- campaign：统计包含当前联系；不能直接视为发起联系前已知的计数。\n- contact、month、day_of_week：原数据描述与实际联系有关；如果业务有已知排程，可以另外定义“计划渠道/计划日期”协议，但不能自动替代。\n- emp.var.rate、cons.price.idx、cons.conf.idx、euribor3m、nr.employed：不同频率的经济指标，公开数据没有完整的发布时点与可用时点记录。作为补充研究协议可以使用，主协议不宣称已完成 point-in-time 对齐。\n\n保留 unknown 作为有意义的类别；pdays=999 表示此前未联系，不当作普通的极端天数填平。生产插件建议派生 previously_contacted 与 days_since_previous，并且只在训练集拟合变换。基线探针目前只是原字段的保守基线，这个派生逻辑仍待插件实现。\n\n模型可输出风险/倾向排序，但不能声称提高了真实营销收入，也不能用观察性数据直接证明营销增量。若要估算净收益，单次联系成本和转化收益须由用户输入并明确标成情景假设。\n"
+    },
+    {
+      "source_id": "src-df4abddd7280ca49a8328ee6",
+      "source_key": "project-sms-split",
+      "uri": "file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md",
+      "revision": "sha256:10bbedb7d1e5d03c92860a5aef348cb020e7a385a5ce520677bd95790881a970",
+      "locator": {
+        "path": "/root/algorithm-capability-factory/docs/02_数据与知识来源.md",
+        "line_start": 51,
+        "line_end": 62
+      },
+      "content": "## 4. SMS 划分\n\n1. UTF-8 读取，每行只按首个 tab 切分标签和原文本，避免引号解析吞行。\n2. 生成用于分组的“大小写归一化 + 连续空白折叠”哈希，模型输入仍用原文本。\n3. 同哈希但标签冲突的组隔离审查。本次未发现冲突组。\n4. 主协议每个规范化组保留第一条，排序组 ID 后，用 seed=42 分层切成 60/20/20。\n5. 本次有效组划分为 3,095 / 1,032 / 1,032。训练词表、TF-IDF 的 IDF 和调参均不接触验证/测试拟合。\n6. 报告正类是 spam；不能把所有样本判 ham 后用较高 accuracy 充当成功。\n7. 不声称简单哈希解决了全部近重复问题；可增加近重复模板分析作为敏感性检查。\n\n原始短信可能含电话号码等文本；演示只显示脱敏摘要。发送到外部 LLM 的是 schema、统计与少量脱敏例子，不上传整个数据集。\n"
+    },
+    {
+      "source_id": "src-8a2d3c4ad618f98dc3d974e1",
+      "source_key": "sklearn-pipeline",
+      "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/pipeline.py",
+      "revision": "1.7.2",
+      "locator": {
+        "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/pipeline.py",
+        "line_start": 123,
+        "line_end": 1407,
+        "symbol": "Pipeline",
+        "relative_path": "sklearn/pipeline.py",
+        "imports": [
+          "import warnings",
+          "from collections import Counter, defaultdict",
+          "from contextlib import contextmanager",
+          "from copy import deepcopy",
+          "from itertools import chain, islice",
+          "import numpy as np",
+          "from scipy import sparse",
+          "from .base import TransformerMixin, _fit_context, clone",
+          "from .exceptions import NotFittedError",
+          "from .preprocessing import FunctionTransformer",
+          "from .utils import Bunch",
+          "from .utils._metadata_requests import METHODS",
+          "from .utils._param_validation import HasMethods, Hidden",
+          "from .utils._repr_html.estimator import _VisualBlock",
+          "from .utils._set_output import _get_container_adapter, _safe_set_output",
+          "from .utils._tags import get_tags",
+          "from .utils._user_interface import _print_elapsed_time",
+          "from .utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, get_routing_for_object, process_routing",
+          "from .utils.metaestimators import _BaseComposition, available_if",
+          "from .utils.parallel import Parallel, delayed",
+          "from .utils.validation import check_is_fitted, check_memory"
+        ],
+        "methods": [
+          "__init__",
+          "set_output",
+          "get_params",
+          "set_params",
+          "_validate_steps",
+          "_iter",
+          "__len__",
+          "__getitem__",
+          "_estimator_type",
+          "named_steps",
+          "_final_estimator",
+          "_log_message",
+          "_check_method_params",
+          "_get_metadata_for_step",
+          "_fit",
+          "fit",
+          "_can_fit_transform",
+          "fit_transform",
+          "predict",
+          "fit_predict",
+          "predict_proba",
+          "decision_function",
+          "score_samples",
+          "predict_log_proba",
+          "_can_transform",
+          "transform",
+          "_can_inverse_transform",
+          "inverse_transform",
+          "score",
+          "classes_",
+          "__sklearn_tags__",
+          "get_feature_names_out",
+          "n_features_in_",
+          "feature_names_in_",
+          "__sklearn_is_fitted__",
+          "_sk_visual_block_",
+          "get_metadata_routing"
+        ],
+        "signature": "class Pipeline(_BaseComposition):\n    def __init__(self, steps, *, transform_input=None, memory=None, verbose=False)",
+        "parse_mode": "ast-only"
+      },
+      "content": "class Pipeline(_BaseComposition):\n    def __init__(self, steps, *, transform_input=None, memory=None, verbose=False)\n\nA sequence of data transformers with an optional final predictor.\n\n`Pipeline` allows you to sequentially apply a list of transformers to\npreprocess the data and, if desired, conclude the sequence with a final\n:term:`predictor` for predictive modeling.\n\nIntermediate steps of the pipeline must be transformers, that is, they\nmust implement `fit` and `transform` methods.\nThe final :term:`estimator` only needs to implement `fit`.\nThe transformers in the pipeline can be cached using ``memory`` argument.\n\nThe purpose of the pipeline is to assemble several steps that can be\ncross-validated together while setting different parameters. For this, it\nenables setting parameters of the various steps using their names and the\nparameter name separated by a `'__'`, as in the example below. A step's\nestimator may be replaced entirely by setting the parameter with its name\nto another estimator, or a transformer removed by setting it to\n`'passthrough'` or `None`.\n\nFor an example use case of `Pipeline` combined with\n:class:`~sklearn.model_selection.GridSearchCV`, refer to\n:ref:`sphx_glr_auto_examples_compose_plot_compare_reduction.py`. The\nexample :ref:`sphx_glr_auto_examples_compose_plot_digits_pipe.py` shows how\nto grid search on a pipeline using `'__'` as a separator in the parameter names.\n\nRead more in the :ref:`User Guide <pipeline>`.\n\n.. versionadded:: 0.5\n\nParameters\n----------\nsteps : list of tuples\n    List of (name of step, estimator) tuples that are to be chained in\n    sequential order. To be compatible with the scikit-learn API, all steps\n    must define `fit`. All non-last steps must also define `transform`. See\n    :ref:`Combining Estimators <combining_estimators>` for more details.\n\ntransform_input : list of str, default=None\n    The names of the :term:`metadata` parameters that should be transformed by the\n    pipeline before passing it to the step consuming it.\n\n    This enables transforming some input arguments to ``fit`` (other than ``X``)\n    to be transformed by the steps of the pipeline up to the step which requires\n    them. Requirement is defined via :ref:`metadata routing <metadata_routing>`.\n    For instance, this can be used to pass a validation set through the pipeline.\n\n    You can only set this if metadata routing is enabled, which you\n    can enable using ``sklearn.set_config(enable_metadata_routing=True)``.\n\n    .. versionadded:: 1.6\n\nmemory : str or object with the joblib.Memory interface, default=None\n    Used to cache the fitted transformers of the pipeline. The last step\n    will never be cached, even if it is a transformer. By default, no\n    caching is performed. If a string is given, it is the path to the\n    caching directory. Enabling caching triggers a clone of the transformers\n    before fitting. Therefore, the transformer instance given to the\n    pipeline cannot be inspected directly. Use the attribute ``named_steps``\n    or ``steps`` to inspect estimators within the pipeline. Caching the\n    transformers is advantageous when fitting is time consuming. See\n    :ref:`sphx_glr_auto_examples_neighbors_plot_caching_nearest_neighbors.py`\n    for an example on how to enable caching.\n\nverbose : bool, default=False\n    If True, the time elapsed while fitting each step will be printed as it\n    is completed.\n\nAttributes\n----------\nnamed_steps : :class:`~sklearn.utils.Bunch`\n    Dictionary-like object, with the following attributes.\n    Read-only attribute to access any step parameter by user given name.\n    Keys are step names and values are steps parameters.\n\nclasses_ : ndarray of shape (n_classes,)\n    The classes labels. Only exist if the last step of the pipeline is a\n    classifier.\n\nn_features_in_ : int\n    Number of features seen during :term:`fit`. Only defined if the\n    underlying first estimator in `steps` exposes such an attribute\n    when fit.\n\n    .. versionadded:: 0.24\n\nfeature_names_in_ : ndarray of shape (`n_features_in_`,)\n    Names of features seen during :term:`fit`. Only defined if the\n    underlying estimator exposes such an attribute when fit.\n\n    .. versionadded:: 1.0\n\nSee Also\n--------\nmake_pipeline : Convenience function for simplified pipeline construction.\n\nExamples\n--------\n>>\n\nSelected parameter notes:\n"
+    },
+    {
+      "source_id": "src-edb49349edd5d01d96366d15",
+      "source_key": "sklearn-columns",
+      "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/compose/_column_transformer.py",
+      "revision": "1.7.2",
+      "locator": {
+        "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/compose/_column_transformer.py",
+        "line_start": 63,
+        "line_end": 1327,
+        "symbol": "ColumnTransformer",
+        "relative_path": "sklearn/compose/_column_transformer.py",
+        "imports": [
+          "import warnings",
+          "from collections import Counter",
+          "from functools import partial",
+          "from itertools import chain",
+          "from numbers import Integral, Real",
+          "import numpy as np",
+          "from scipy import sparse",
+          "from ..base import TransformerMixin, _fit_context, clone",
+          "from ..pipeline import _fit_transform_one, _name_estimators, _transform_one",
+          "from ..preprocessing import FunctionTransformer",
+          "from ..utils import Bunch",
+          "from ..utils._indexing import _determine_key_type, _get_column_indices, _safe_indexing",
+          "from ..utils._metadata_requests import METHODS",
+          "from ..utils._param_validation import HasMethods, Hidden, Interval, StrOptions",
+          "from ..utils._repr_html.estimator import _VisualBlock",
+          "from ..utils._set_output import _get_container_adapter, _get_output_config, _safe_set_output",
+          "from ..utils._tags import get_tags",
+          "from ..utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, process_routing",
+          "from ..utils.metaestimators import _BaseComposition",
+          "from ..utils.parallel import Parallel, delayed",
+          "from ..utils.validation import _check_feature_names, _check_feature_names_in, _check_n_features, _get_feature_names, _is_pandas_df, _num_samples, check_array, check_is_fitted"
+        ],
+        "methods": [
+          "__init__",
+          "_transformers",
+          "_transformers",
+          "set_output",
+          "get_params",
+          "set_params",
+          "_iter",
+          "_validate_transformers",
+          "_validate_column_callables",
+          "_validate_remainder",
+          "_get_remainder_cols_dtype",
+          "_get_remainder_cols",
+          "named_transformers_",
+          "_get_feature_name_out_for_transformer",
+          "get_feature_names_out",
+          "_add_prefix_for_feature_names_out",
+          "_update_fitted_transformers",
+          "_validate_output",
+          "_record_output_indices",
+          "_log_message",
+          "_call_func_on_transformers",
+          "fit",
+          "fit_transform",
+          "transform",
+          "_hstack",
+          "_sk_visual_block_",
+          "__getitem__",
+          "_get_empty_routing",
+          "get_metadata_routing",
+          "__sklearn_tags__"
+        ],
+        "signature": "class ColumnTransformer(TransformerMixin, _BaseComposition):\n    def __init__(self, transformers, *, remainder='drop', sparse_threshold=0.3, n_jobs=None, transformer_weights=None, verbose=False, verbose_feature_names_out=True, force_int_remainder_cols='deprecated')",
+        "parse_mode": "ast-only"
+      },
+      "content": "class ColumnTransformer(TransformerMixin, _BaseComposition):\n    def __init__(self, transformers, *, remainder='drop', sparse_threshold=0.3, n_jobs=None, transformer_weights=None, verbose=False, verbose_feature_names_out=True, force_int_remainder_cols='deprecated')\n\nApplies transformers to columns of an array or pandas DataFrame.\n\nThis estimator allows different columns or column subsets of the input\nto be transformed separately and the features generated by each transformer\nwill be concatenated to form a single feature space.\nThis is useful for heterogeneous or columnar data, to combine several\nfeature extraction mechanisms or transformations into a single transformer.\n\nRead more in the :ref:`User Guide <column_transformer>`.\n\n.. versionadded:: 0.20\n\nParameters\n----------\ntransformers : list of tuples\n    List of (name, transformer, columns) tuples specifying the\n    transformer objects to be applied to subsets of the data.\n\n    name : str\n        Like in Pipeline and FeatureUnion, this allows the transformer and\n        its parameters to be set using ``set_params`` and searched in grid\n        search.\n    transformer : {'drop', 'passthrough'} or estimator\n        Estimator must support :term:`fit` and :term:`transform`.\n        Special-cased strings 'drop' and 'passthrough' are accepted as\n        well, to indicate to drop the columns or to pass them through\n        untransformed, respectively.\n    columns :  str, array-like of str, int, array-like of int,                 array-like of bool, slice or callable\n        Indexes the data on its second axis. Integers are interpreted as\n        positional columns, while strings can reference DataFrame columns\n        by name.  A scalar string or int should be used where\n        ``transformer`` expects X to be a 1d array-like (vector),\n        otherwise a 2d array will be passed to the transformer.\n        A callable is passed the input data `X` and can return any of the\n        above. To select multiple columns by name or dtype, you can use\n        :obj:`make_column_selector`.\n\nremainder : {'drop', 'passthrough'} or estimator, default='drop'\n    By default, only the specified columns in `transformers` are\n    transformed and combined in the output, and the non-specified\n    columns are dropped. (default of ``'drop'``).\n    By specifying ``remainder='passthrough'``, all remaining columns that\n    were not specified in `transformers`, but present in the data passed\n    to `fit` will be automatically passed through. This subset of columns\n    is concatenated with the output of the transformers. For dataframes,\n    extra columns not seen during `fit` will be excluded from the output\n    of `transform`.\n    By setting ``remainder`` to be an estimator, the remaining\n    non-specified columns will use the ``remainder`` estimator. The\n    estimator must support :term:`fit` and :term:`transform`.\n    Note that using this feature requires that the DataFrame columns\n    input at :term:`fit` and :term:`transform` have identical order.\n\nsparse_threshold : float, default=0.3\n    If the output of the different transformers contains sparse matrices,\n    these will be stacked as a sparse matrix if the overall density is\n    lower than this value. Use ``sparse_threshold=0`` to always return\n    dense.  When the transformed output consists of all dense data, the\n    stacked result will be dense, and this keyword will be ignored.\n\nn_jobs : int, default=None\n    Number of jobs to run in parallel.\n    ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n    ``-1`` means using all processors. See :term:`Glossary <n_jobs>`\n    for more details.\n\ntransformer_weights : dict, default=None\n    Multiplicative weights for features per transformer. The output of the\n    transformer is multiplied by these weights. Keys are transformer names,\n    values the weights.\n\nverbose : bool, default=False\n    If True, the time elapsed while fitting each transformer will be\n    printed as it is completed.\n\nverbose_feature_names_out : bool, str or Callable[[str, str], str], default=True\n\n    - If True, :meth:`ColumnTransformer.get_feature_names_out` will prefix\n      all feature names with the name of the transformer that generated that\n      feature. It is equivalent to setting\n      `verbose_feature_names_out=\"{transformer_name}__{feature_name}\"`.\n    - If False, :meth:`ColumnTransformer.get_feature_names_out` will not\n      prefix any feature names and will error\n\nSelected parameter notes:\nsparse_output_ : bool"
+    },
+    {
+      "source_id": "src-57ad627bd0c9f7e3e2b0f4c4",
+      "source_key": "sklearn-onehot",
+      "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/preprocessing/_encoders.py",
+      "revision": "1.7.2",
+      "locator": {
+        "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/preprocessing/_encoders.py",
+        "line_start": 465,
+        "line_end": 1251,
+        "symbol": "OneHotEncoder",
+        "relative_path": "sklearn/preprocessing/_encoders.py",
+        "imports": [
+          "import numbers",
+          "import warnings",
+          "from numbers import Integral",
+          "import numpy as np",
+          "from scipy import sparse",
+          "from ..base import BaseEstimator, OneToOneFeatureMixin, TransformerMixin, _fit_context",
+          "from ..utils import _safe_indexing, check_array",
+          "from ..utils._encode import _check_unknown, _encode, _get_counts, _unique",
+          "from ..utils._mask import _get_mask",
+          "from ..utils._missing import is_scalar_nan",
+          "from ..utils._param_validation import Interval, RealNotInt, StrOptions",
+          "from ..utils._set_output import _get_output_config",
+          "from ..utils.validation import _check_feature_names, _check_feature_names_in, _check_n_features, check_is_fitted"
+        ],
+        "methods": [
+          "__init__",
+          "_map_drop_idx_to_infrequent",
+          "_set_drop_idx",
+          "_compute_transformed_categories",
+          "_remove_dropped_categories",
+          "_compute_n_features_outs",
+          "fit",
+          "transform",
+          "inverse_transform",
+          "get_feature_names_out",
+          "_check_get_feature_name_combiner"
+        ],
+        "signature": "class OneHotEncoder(_BaseEncoder):\n    def __init__(self, *, categories='auto', drop=None, sparse_output=True, dtype=np.float64, handle_unknown='error', min_frequency=None, max_categories=None, feature_name_combiner='concat')",
+        "parse_mode": "ast-only"
+      },
+      "content": "class OneHotEncoder(_BaseEncoder):\n    def __init__(self, *, categories='auto', drop=None, sparse_output=True, dtype=np.float64, handle_unknown='error', min_frequency=None, max_categories=None, feature_name_combiner='concat')\n\nEncode categorical features as a one-hot numeric array.\n\nThe input to this transformer should be an array-like of integers or\nstrings, denoting the values taken on by categorical (discrete) features.\nThe features are encoded using a one-hot (aka 'one-of-K' or 'dummy')\nencoding scheme. This creates a binary column for each category and\nreturns a sparse matrix or dense array (depending on the ``sparse_output``\nparameter).\n\nBy default, the encoder derives the categories based on the unique values\nin each feature. Alternatively, you can also specify the `categories`\nmanually.\n\nThis encoding is needed for feeding categorical data to many scikit-learn\nestimators, notably linear models and SVMs with the standard kernels.\n\nNote: a one-hot encoding of y labels should use a LabelBinarizer\ninstead.\n\nRead more in the :ref:`User Guide <preprocessing_categorical_features>`.\nFor a comparison of different encoders, refer to:\n:ref:`sphx_glr_auto_examples_preprocessing_plot_target_encoder.py`.\n\nParameters\n----------\ncategories : 'auto' or a list of array-like, default='auto'\n    Categories (unique values) per feature:\n\n    - 'auto' : Determine categories automatically from the training data.\n    - list : ``categories[i]`` holds the categories expected in the ith\n      column. The passed categories should not mix strings and numeric\n      values within a single feature, and should be sorted in case of\n      numeric values.\n\n    The used categories can be found in the ``categories_`` attribute.\n\n    .. versionadded:: 0.20\n\ndrop : {'first', 'if_binary'} or an array-like of shape (n_features,),             default=None\n    Specifies a methodology to use to drop one of the categories per\n    feature. This is useful in situations where perfectly collinear\n    features cause problems, such as when feeding the resulting data\n    into an unregularized linear regression model.\n\n    However, dropping one category breaks the symmetry of the original\n    representation and can therefore induce a bias in downstream models,\n    for instance for penalized linear classification or regression models.\n\n    - None : retain all features (the default).\n    - 'first' : drop the first category in each feature. If only one\n      category is present, the feature will be dropped entirely.\n    - 'if_binary' : drop the first category in each feature with two\n      categories. Features with 1 or more than 2 categories are\n      left intact.\n    - array : ``drop[i]`` is the category in feature ``X[:, i]`` that\n      should be dropped.\n\n    When `max_categories` or `min_frequency` is configured to group\n    infrequent categories, the dropping behavior is handled after the\n    grouping.\n\n    .. versionadded:: 0.21\n       The parameter `drop` was added in 0.21.\n\n    .. versionchanged:: 0.23\n       The option `drop='if_binary'` was added in 0.23.\n\n    .. versionchanged:: 1.1\n        Support for dropping infrequent categories.\n\nsparse_output : bool, default=True\n    When ``True``, it returns a :class:`scipy.sparse.csr_matrix`,\n    i.e. a sparse matrix in \"Compressed Sparse Row\" (CSR) format.\n\n    .. versionadded:: 1.2\n       `sparse` was renamed to `sparse_output`\n\ndtype : number type, default=np.float64\n    Desired dtype of output.\n\nhandle_unknown : {'error', 'ignore', 'infrequent_if_exist', 'warn'},                      default='error'\n    Specifies the way unknown categories are handled during :meth:`transform`.\n\n    - 'error' : Raise an error if an unknown category is present during transform.\n    - 'ignore' : When an unknown category is encountered during\n      transform, the resulting one-hot encoded columns for this feature\n      will be all zeros. In the inverse transform, an unknown category\n      will be denoted as None.\n    - 'infrequent_if_exist' : When an unknown category is encountered\n      during transform, the resulting one-hot encoded columns for this\n      feature will map to the infrequent category if it exists. The\n      infrequent category will be mapped to the last position in the\n      encoding. During inverse transform, an unknown category will be\n      mapped to the category denoted `'infrequent'` if it exists. If the\n      `'infrequent'` category do\n\nSelected parameter notes:\nencoding scheme. This creates a binary column for each category and\nreturns a sparse matrix or dense array (depending on the ``sparse_output``\ndrop : {'first', 'if_binary'} or an array-like of shape (n_features,),             default=None\n    - 'if_binary' : drop the first category in each feature with two\n       The option `drop='if_binary'` was added in 0.23.\nsparse_output : bool, default=True\n       `sparse` was renamed to `sparse_output`\nhandle_unknown : {'error', 'ignore', 'infrequent_if_exist', 'warn'},                      default='error'\n      `handle_unknown='ignore'`. Infrequent categories exist based on\n      `handle_unknown=\"infrequent_if_exist\"`.\n      feature with index ``i``, e.g. when `drop='if_binary'` and the\n      feature isn't binary.\n  iterables and a multilabel format, e.g. a (samples x classes) binary\nvalues per feature and transform the data to a binary one-hot encoding.\n>>> enc = OneHotEncoder(handle_unknown='ignore')\nOneHotEncoder(handle_unknown='ignore')"
+    },
+    {
+      "source_id": "src-584b66a31950a968f84ef11b",
+      "source_key": "sklearn-logistic",
+      "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/linear_model/_logistic.py",
+      "revision": "1.7.2",
+      "locator": {
+        "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/linear_model/_logistic.py",
+        "line_start": 829,
+        "line_end": 1497,
+        "symbol": "LogisticRegression",
+        "relative_path": "sklearn/linear_model/_logistic.py",
+        "imports": [
+          "import numbers",
+          "import warnings",
+          "from numbers import Integral, Real",
+          "import numpy as np",
+          "from joblib import effective_n_jobs",
+          "from scipy import optimize",
+          "from sklearn.metrics import get_scorer_names",
+          "from .._loss.loss import HalfBinomialLoss, HalfMultinomialLoss",
+          "from ..base import _fit_context",
+          "from ..metrics import get_scorer",
+          "from ..model_selection import check_cv",
+          "from ..preprocessing import LabelBinarizer, LabelEncoder",
+          "from ..svm._base import _fit_liblinear",
+          "from ..utils import Bunch, check_array, check_consistent_length, check_random_state, compute_class_weight",
+          "from ..utils._param_validation import Hidden, Interval, StrOptions",
+          "from ..utils.extmath import row_norms, softmax",
+          "from ..utils.fixes import _get_additional_lbfgs_options_dict",
+          "from ..utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, process_routing",
+          "from ..utils.multiclass import check_classification_targets",
+          "from ..utils.optimize import _check_optimize_result, _newton_cg",
+          "from ..utils.parallel import Parallel, delayed",
+          "from ..utils.validation import _check_method_params, _check_sample_weight, check_is_fitted, validate_data",
+          "from ._base import BaseEstimator, LinearClassifierMixin, SparseCoefMixin",
+          "from ._glm.glm import NewtonCholeskySolver",
+          "from ._linear_loss import LinearModelLoss",
+          "from ._sag import sag_solver"
+        ],
+        "methods": [
+          "__init__",
+          "fit",
+          "predict_proba",
+          "predict_log_proba",
+          "__sklearn_tags__"
+        ],
+        "signature": "class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):\n    def __init__(self, penalty='l2', *, dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1, class_weight=None, random_state=None, solver='lbfgs', max_iter=100, multi_class='deprecated', verbose=0, warm_start=False, n_jobs=None, l1_ratio=None)",
+        "parse_mode": "ast-only"
+      },
+      "content": "class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):\n    def __init__(self, penalty='l2', *, dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1, class_weight=None, random_state=None, solver='lbfgs', max_iter=100, multi_class='deprecated', verbose=0, warm_start=False, n_jobs=None, l1_ratio=None)\n\nLogistic Regression (aka logit, MaxEnt) classifier.\n\nThis class implements regularized logistic regression using the\n'liblinear' library, 'newton-cg', 'sag', 'saga' and 'lbfgs' solvers. **Note\nthat regularization is applied by default**. It can handle both dense\nand sparse input. Use C-ordered arrays or CSR matrices containing 64-bit\nfloats for optimal performance; any other input format will be converted\n(and copied).\n\nThe 'newton-cg', 'sag', and 'lbfgs' solvers support only L2 regularization\nwith primal formulation, or no regularization. The 'liblinear' solver\nsupports both L1 and L2 regularization, with a dual formulation only for\nthe L2 penalty. The Elastic-Net regularization is only supported by the\n'saga' solver.\n\nFor :term:`multiclass` problems, all solvers but 'liblinear' optimize the\n(penalized) multinomial loss. 'liblinear' only handle binary classification but can\nbe extended to handle multiclass by using\n:class:`~sklearn.multiclass.OneVsRestClassifier`.\n\nRead more in the :ref:`User Guide <logistic_regression>`.\n\nParameters\n----------\npenalty : {'l1', 'l2', 'elasticnet', None}, default='l2'\n    Specify the norm of the penalty:\n\n    - `None`: no penalty is added;\n    - `'l2'`: add a L2 penalty term and it is the default choice;\n    - `'l1'`: add a L1 penalty term;\n    - `'elasticnet'`: both L1 and L2 penalty terms are added.\n\n    .. warning::\n       Some penalties may not work with some solvers. See the parameter\n       `solver` below, to know the compatibility between the penalty and\n       solver.\n\n    .. versionadded:: 0.19\n       l1 penalty with SAGA solver (allowing 'multinomial' + L1)\n\ndual : bool, default=False\n    Dual (constrained) or primal (regularized, see also\n    :ref:`this equation <regularized-logistic-loss>`) formulation. Dual formulation\n    is only implemented for l2 penalty with liblinear solver. Prefer dual=False when\n    n_samples > n_features.\n\ntol : float, default=1e-4\n    Tolerance for stopping criteria.\n\nC : float, default=1.0\n    Inverse of regularization strength; must be a positive float.\n    Like in support vector machines, smaller values specify stronger\n    regularization.\n\nfit_intercept : bool, default=True\n    Specifies if a constant (a.k.a. bias or intercept) should be\n    added to the decision function.\n\nintercept_scaling : float, default=1\n    Useful only when the solver `liblinear` is used\n    and `self.fit_intercept` is set to `True`. In this case, `x` becomes\n    `[x, self.intercept_scaling]`,\n    i.e. a \"synthetic\" feature with constant value equal to\n    `intercept_scaling` is appended to the instance vector.\n    The intercept becomes\n    ``intercept_scaling * synthetic_feature_weight``.\n\n    .. note::\n        The synthetic feature weight is subject to L1 or L2\n        regularization as all other features.\n        To lessen the effect of regularization on synthetic feature weight\n        (and therefore on the intercept) `intercept_scaling` has to be increased.\n\nclass_weight : dict or 'balanced', default=None\n    Weights associated with classes in the form ``{class_label: weight}``.\n    If not given, all classes are supposed to have weight one.\n\n    The \"balanced\" mode uses the values of y to automatically adjust\n    weights inversely proportional to class frequencies in the input data\n    as ``n_samples / (n_classes * np.bincount(y))``.\n\n    Note that these weights will be multiplied with sample_weight (passed\n    through the fit method) if sample_weight is specified.\n\n    .. versionadded:: 0.17\n       *class_weight='balanced'*\n\nrandom_state : int, RandomState instance, default=None\n    Used when ``solver`` == 'sag', 'saga' or 'liblinear' to shuffle the\n    data. See :term:`Glossary <random_state>` for details.\n\nsolver : {'lbfgs', 'liblinear', 'newton-cg', 'newton-cholesky', 'sag', 'saga'},             default='lbfgs'\n\n    Algorithm to use in the optimization problem. Default is 'lbfgs'.\n    To choose a solver, you might want to consider the following aspects:\n\n    - For small datasets, 'liblinear' is a good choice, whereas 'sag'\n      and 'saga' are faster for large ones;\n    - For :term:`multiclass` problems, all solvers except 'liblinear' minimize the\n      full multin\n\nSelected parameter notes:\n(penalized) multinomial loss. 'liblinear' only handle binary classification but can\n    - 'liblinear' can only handle binary classification by default. To apply a\n    If the option chosen is 'ovr', then a binary problem is fit for each\n    across the entire probability distribution, *even when the data is\n    binary*. 'multinomial' is unavailable when solver='liblinear'.\n    'auto' selects 'ovr' if the data is binary, or if solver='liblinear',\n    `coef_` is of shape (1, n_features) when the given problem is binary.\n    `intercept_` is of shape (1,) when the given problem is binary.\n    Actual number of iterations for all classes. If binary or multinomial,\n>>> clf.predict_proba(X[:2, :])\n:ref:`sphx_glr_auto_examples_classification_plot_classification_probability.py`."
+    },
+    {
+      "source_id": "src-ecb336a2fa483eb3b4f26d0b",
+      "source_key": "sklearn-tfidf",
+      "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/feature_extraction/text.py",
+      "revision": "1.7.2",
+      "locator": {
+        "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/feature_extraction/text.py",
+        "line_start": 1735,
+        "line_end": 2137,
+        "symbol": "TfidfVectorizer",
+        "relative_path": "sklearn/feature_extraction/text.py",
+        "imports": [
+          "import array",
+          "import re",
+          "import unicodedata",
+          "import warnings",
+          "from collections import defaultdict",
+          "from collections.abc import Mapping",
+          "from functools import partial",
+          "from numbers import Integral",
+          "from operator import itemgetter",
+          "import numpy as np",
+          "import scipy.sparse as sp",
+          "from sklearn.utils import metadata_routing",
+          "from ..base import BaseEstimator, OneToOneFeatureMixin, TransformerMixin, _fit_context",
+          "from ..exceptions import NotFittedError",
+          "from ..preprocessing import normalize",
+          "from ..utils._param_validation import HasMethods, Interval, RealNotInt, StrOptions",
+          "from ..utils.fixes import _IS_32BIT",
+          "from ..utils.validation import FLOAT_DTYPES, check_array, check_is_fitted, validate_data",
+          "from ._hash import FeatureHasher",
+          "from ._stop_words import ENGLISH_STOP_WORDS"
+        ],
+        "methods": [
+          "__init__",
+          "idf_",
+          "idf_",
+          "_check_params",
+          "fit",
+          "fit_transform",
+          "transform",
+          "__sklearn_tags__"
+        ],
+        "signature": "class TfidfVectorizer(CountVectorizer):\n    def __init__(self, *, input='content', encoding='utf-8', decode_error='strict', strip_accents=None, lowercase=True, preprocessor=None, tokenizer=None, analyzer='word', stop_words=None, token_pattern='(?u)\\\\b\\\\w\\\\w+\\\\b', ngram_range=(1, 1), max_df=1.0, min_df=1, max_features=None, vocabulary=None, binary=False, dtype=np.float64, norm='l2', use_idf=True, smooth_idf=True, sublinear_tf=False)",
+        "parse_mode": "ast-only"
+      },
+      "content": "class TfidfVectorizer(CountVectorizer):\n    def __init__(self, *, input='content', encoding='utf-8', decode_error='strict', strip_accents=None, lowercase=True, preprocessor=None, tokenizer=None, analyzer='word', stop_words=None, token_pattern='(?u)\\\\b\\\\w\\\\w+\\\\b', ngram_range=(1, 1), max_df=1.0, min_df=1, max_features=None, vocabulary=None, binary=False, dtype=np.float64, norm='l2', use_idf=True, smooth_idf=True, sublinear_tf=False)\n\nConvert a collection of raw documents to a matrix of TF-IDF features.\n\nEquivalent to :class:`CountVectorizer` followed by\n:class:`TfidfTransformer`.\n\nFor an example of usage, see\n:ref:`sphx_glr_auto_examples_text_plot_document_classification_20newsgroups.py`.\n\nFor an efficiency comparison of the different feature extractors, see\n:ref:`sphx_glr_auto_examples_text_plot_hashing_vs_dict_vectorizer.py`.\n\nFor an example of document clustering and comparison with\n:class:`~sklearn.feature_extraction.text.HashingVectorizer`, see\n:ref:`sphx_glr_auto_examples_text_plot_document_clustering.py`.\n\nRead more in the :ref:`User Guide <text_feature_extraction>`.\n\nParameters\n----------\ninput : {'filename', 'file', 'content'}, default='content'\n    - If `'filename'`, the sequence passed as an argument to fit is\n      expected to be a list of filenames that need reading to fetch\n      the raw content to analyze.\n\n    - If `'file'`, the sequence items must have a 'read' method (file-like\n      object) that is called to fetch the bytes in memory.\n\n    - If `'content'`, the input is expected to be a sequence of items that\n      can be of type string or byte.\n\nencoding : str, default='utf-8'\n    If bytes or files are given to analyze, this encoding is used to\n    decode.\n\ndecode_error : {'strict', 'ignore', 'replace'}, default='strict'\n    Instruction on what to do if a byte sequence is given to analyze that\n    contains characters not of the given `encoding`. By default, it is\n    'strict', meaning that a UnicodeDecodeError will be raised. Other\n    values are 'ignore' and 'replace'.\n\nstrip_accents : {'ascii', 'unicode'} or callable, default=None\n    Remove accents and perform other character normalization\n    during the preprocessing step.\n    'ascii' is a fast method that only works on characters that have\n    a direct ASCII mapping.\n    'unicode' is a slightly slower method that works on any characters.\n    None (default) means no character normalization is performed.\n\n    Both 'ascii' and 'unicode' use NFKD normalization from\n    :func:`unicodedata.normalize`.\n\nlowercase : bool, default=True\n    Convert all characters to lowercase before tokenizing.\n\npreprocessor : callable, default=None\n    Override the preprocessing (string transformation) stage while\n    preserving the tokenizing and n-grams generation steps.\n    Only applies if ``analyzer`` is not callable.\n\ntokenizer : callable, default=None\n    Override the string tokenization step while preserving the\n    preprocessing and n-grams generation steps.\n    Only applies if ``analyzer == 'word'``.\n\nanalyzer : {'word', 'char', 'char_wb'} or callable, default='word'\n    Whether the feature should be made of word or character n-grams.\n    Option 'char_wb' creates character n-grams only from text inside\n    word boundaries; n-grams at the edges of words are padded with space.\n\n    If a callable is passed it is used to extract the sequence of features\n    out of the raw, unprocessed input.\n\n    .. versionchanged:: 0.21\n        Since v0.21, if ``input`` is ``'filename'`` or ``'file'``, the data\n        is first read from the file and then passed to the given callable\n        analyzer.\n\nstop_words : {'english'}, list, default=None\n    If a string, it is passed to _check_stop_list and the appropriate stop\n    list is returned. 'english' is currently the only supported string\n    value.\n    There are several known issues with 'english' and you should\n    consider an alternative (see :ref:`stop_words`).\n\n    If a list, that list is assumed to contain stop words, all of which\n    will be removed from the resulting tokens.\n    Only applies if ``analyzer == 'word'``.\n\n    If None, no stop words will be used. In this case, setting `max_df`\n    to a higher value, such as in the range (0.7, 1.0), can automatically detect\n    and filter stop words based on intra corpus document frequency of terms.\n\ntoken_pattern : str, default=r\"(?u)\\\\b\\\\w\\\\w+\\\\b\"\n    Regular expression denoting what constitutes a \"token\", only used\n    if ``analyzer == 'word'``. The default regexp selects tokens of 2\n    or more alphanumeric characters (punctuation is completely ignored\n    and always treated as a token separator).\n\n    If \n\nSelected parameter notes:\nbinary : bool, default=False\n    is binary. (Set `binary` to True, `use_idf` to False and"
+    },
+    {
+      "source_id": "src-01e94fa0e553de89c2a7a671",
+      "source_key": "sklearn-complementnb",
+      "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/naive_bayes.py",
+      "revision": "1.7.2",
+      "locator": {
+        "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/naive_bayes.py",
+        "line_start": 907,
+        "line_end": 1059,
+        "symbol": "ComplementNB",
+        "relative_path": "sklearn/naive_bayes.py",
+        "imports": [
+          "import warnings",
+          "from abc import ABCMeta, abstractmethod",
+          "from numbers import Integral, Real",
+          "import numpy as np",
+          "from scipy.special import logsumexp",
+          "from .base import BaseEstimator, ClassifierMixin, _fit_context",
+          "from .preprocessing import LabelBinarizer, binarize, label_binarize",
+          "from .utils._param_validation import Interval",
+          "from .utils.extmath import safe_sparse_dot",
+          "from .utils.multiclass import _check_partial_fit_first_call",
+          "from .utils.validation import _check_n_features, _check_sample_weight, check_is_fitted, check_non_negative, validate_data"
+        ],
+        "methods": [
+          "__init__",
+          "__sklearn_tags__",
+          "_count",
+          "_update_feature_log_prob",
+          "_joint_log_likelihood"
+        ],
+        "signature": "class ComplementNB(_BaseDiscreteNB):\n    def __init__(self, *, alpha=1.0, force_alpha=True, fit_prior=True, class_prior=None, norm=False)",
+        "parse_mode": "ast-only"
+      },
+      "content": "class ComplementNB(_BaseDiscreteNB):\n    def __init__(self, *, alpha=1.0, force_alpha=True, fit_prior=True, class_prior=None, norm=False)\n\nThe Complement Naive Bayes classifier described in Rennie et al. (2003).\n\nThe Complement Naive Bayes classifier was designed to correct the \"severe\nassumptions\" made by the standard Multinomial Naive Bayes classifier. It is\nparticularly suited for imbalanced data sets.\n\nRead more in the :ref:`User Guide <complement_naive_bayes>`.\n\n.. versionadded:: 0.20\n\nParameters\n----------\nalpha : float or array-like of shape (n_features,), default=1.0\n    Additive (Laplace/Lidstone) smoothing parameter\n    (set alpha=0 and force_alpha=True, for no smoothing).\n\nforce_alpha : bool, default=True\n    If False and alpha is less than 1e-10, it will set alpha to\n    1e-10. If True, alpha will remain unchanged. This may cause\n    numerical errors if alpha is too close to 0.\n\n    .. versionadded:: 1.2\n    .. versionchanged:: 1.4\n       The default value of `force_alpha` changed to `True`.\n\nfit_prior : bool, default=True\n    Only used in edge case with a single class in the training set.\n\nclass_prior : array-like of shape (n_classes,), default=None\n    Prior probabilities of the classes. Not used.\n\nnorm : bool, default=False\n    Whether or not a second normalization of the weights is performed. The\n    default behavior mirrors the implementations found in Mahout and Weka,\n    which do not follow the full algorithm described in Table 9 of the\n    paper.\n\nAttributes\n----------\nclass_count_ : ndarray of shape (n_classes,)\n    Number of samples encountered for each class during fitting. This\n    value is weighted by the sample weight when provided.\n\nclass_log_prior_ : ndarray of shape (n_classes,)\n    Smoothed empirical log probability for each class. Only used in edge\n    case with a single class in the training set.\n\nclasses_ : ndarray of shape (n_classes,)\n    Class labels known to the classifier\n\nfeature_all_ : ndarray of shape (n_features,)\n    Number of samples encountered for each feature during fitting. This\n    value is weighted by the sample weight when provided.\n\nfeature_count_ : ndarray of shape (n_classes, n_features)\n    Number of samples encountered for each (class, feature) during fitting.\n    This value is weighted by the sample weight when provided.\n\nfeature_log_prob_ : ndarray of shape (n_classes, n_features)\n    Empirical weights for class complements.\n\nn_features_in_ : int\n    Number of features seen during :term:`fit`.\n\n    .. versionadded:: 0.24\n\nfeature_names_in_ : ndarray of shape (`n_features_in_`,)\n    Names of features seen during :term:`fit`. Defined only when `X`\n    has feature names that are all strings.\n\n    .. versionadded:: 1.0\n\nSee Also\n--------\nBernoulliNB : Naive Bayes classifier for multivariate Bernoulli models.\nCategoricalNB : Naive Bayes classifier for categorical features.\nGaussianNB : Gaussian Naive Bayes.\nMultinomialNB : Naive Bayes classifier for multinomial models.\n\nReferences\n----------\nRennie, J. D., Shih, L., Teevan, J., & Karger, D. R. (2003).\nTackling the poor assumptions of naive bayes text classifiers. In ICML\n(Vol. 3, pp. 616-623).\nhttps://people.csail.mit.edu/jrennie/papers/icml03-nb.pdf\n\nExamples\n--------\n>>> import numpy as np\n>>> rng = np.random.RandomState(1)\n>>> X = rng.randint(5, size=(6, 100))\n>>> y = np.array([1, 2, 3, 4, 5, 6])\n>>> from sklearn.naive_bayes import ComplementNB\n>>> clf = ComplementNB()\n>>> clf.fit(X, y)\nComplementNB()\n>>> print(clf.predict(X[2:3]))\n[3]\n\nSelected parameter notes:\n    Prior probabilities of the classes. Not used.\n    Smoothed empirical log probability for each class. Only used in edge"
+    },
+    {
+      "source_id": "src-9ca2de7b8493fff6ad94d779",
+      "source_key": "sklearn-ap",
+      "uri": "https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/metrics/_ranking.py",
+      "revision": "1.7.2",
+      "locator": {
+        "path": "/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/metrics/_ranking.py",
+        "line_start": 118,
+        "line_end": 268,
+        "symbol": "average_precision_score",
+        "relative_path": "sklearn/metrics/_ranking.py",
+        "imports": [
+          "import warnings",
+          "from functools import partial",
+          "from numbers import Integral, Real",
+          "import numpy as np",
+          "from scipy.integrate import trapezoid",
+          "from scipy.sparse import csr_matrix, issparse",
+          "from scipy.stats import rankdata",
+          "from ..exceptions import UndefinedMetricWarning",
+          "from ..preprocessing import label_binarize",
+          "from ..utils import assert_all_finite, check_array, check_consistent_length, column_or_1d",
+          "from ..utils._encode import _encode, _unique",
+          "from ..utils._param_validation import Interval, StrOptions, validate_params",
+          "from ..utils.extmath import stable_cumsum",
+          "from ..utils.multiclass import type_of_target",
+          "from ..utils.sparsefuncs import count_nonzero",
+          "from ..utils.validation import _check_pos_label_consistency, _check_sample_weight",
+          "from ._base import _average_binary_score, _average_multiclass_ovo_score"
+        ],
+        "methods": [
+          "_binary_uninterpolated_average_precision"
+        ],
+        "signature": "def average_precision_score(y_true, y_score, *, average='macro', pos_label=1, sample_weight=None)",
+        "parse_mode": "ast-only"
+      },
+      "content": "def average_precision_score(y_true, y_score, *, average='macro', pos_label=1, sample_weight=None)\n\nCompute average precision (AP) from prediction scores.\n\nAP summarizes a precision-recall curve as the weighted mean of precisions\nachieved at each threshold, with the increase in recall from the previous\nthreshold used as the weight:\n\n.. math::\n    \\text{AP} = \\sum_n (R_n - R_{n-1}) P_n\n\nwhere :math:`P_n` and :math:`R_n` are the precision and recall at the nth\nthreshold [1]_. This implementation is not interpolated and is different\nfrom computing the area under the precision-recall curve with the\ntrapezoidal rule, which uses linear interpolation and can be too\noptimistic.\n\nRead more in the :ref:`User Guide <precision_recall_f_measure_metrics>`.\n\nParameters\n----------\ny_true : array-like of shape (n_samples,) or (n_samples, n_classes)\n    True binary labels or binary label indicators.\n\ny_score : array-like of shape (n_samples,) or (n_samples, n_classes)\n    Target scores, can either be probability estimates of the positive\n    class, confidence values, or non-thresholded measure of decisions\n    (as returned by :term:`decision_function` on some classifiers).\n    For :term:`decision_function` scores, values greater than or equal to\n    zero should indicate the positive class.\n\naverage : {'micro', 'samples', 'weighted', 'macro'} or None,             default='macro'\n    If ``None``, the scores for each class are returned. Otherwise,\n    this determines the type of averaging performed on the data:\n\n    ``'micro'``:\n        Calculate metrics globally by considering each element of the label\n        indicator matrix as a label.\n    ``'macro'``:\n        Calculate metrics for each label, and find their unweighted\n        mean.  This does not take label imbalance into account.\n    ``'weighted'``:\n        Calculate metrics for each label, and find their average, weighted\n        by support (the number of true instances for each label).\n    ``'samples'``:\n        Calculate metrics for each instance, and find their average.\n\n    Will be ignored when ``y_true`` is binary.\n\npos_label : int, float, bool or str, default=1\n    The label of the positive class. Only applied to binary ``y_true``.\n    For multilabel-indicator ``y_true``, ``pos_label`` is fixed to 1.\n\nsample_weight : array-like of shape (n_samples,), default=None\n    Sample weights.\n\nReturns\n-------\naverage_precision : float\n    Average precision score.\n\nSee Also\n--------\nroc_auc_score : Compute the area under the ROC curve.\nprecision_recall_curve : Compute precision-recall pairs for different\n    probability thresholds.\nPrecisionRecallDisplay.from_estimator : Plot the precision recall curve\n    using an estimator and data.\nPrecisionRecallDisplay.from_predictions : Plot the precision recall curve\n    using true and predicted labels.\n\nNotes\n-----\n.. versionchanged:: 0.19\n  Instead of linearly interpolating between operating points, precisions\n  are weighted by the change in recall since the last operating point.\n\nReferences\n----------\n.. [1] `Wikipedia entry for the Average precision\n       <https://en.wikipedia.org/w/index.php?title=Information_retrieval&\n       oldid=793358396#Average_precision>`_\n\nExamples\n--------\n>>> import numpy as np\n>>> from sklearn.metrics import average_precision_score\n>>> y_true = np.array([0, 0, 1, 1])\n>>> y_scores = np.array([0.1, 0.4, 0.35, 0.8])\n>>> average_precision_score(y_true, y_scores)\n0.83\n>>> y_true = np.array([0, 0, 1, 1, 2, 2])\n>>> y_scores = np.array([\n...     [0.7, 0.2, 0.1],\n...     [0.4, 0.3, 0.3],\n...     [0.1, 0.8, 0.1],\n...     [0.2, 0.3, 0.5],\n...     [0.4, 0.4, 0.2],\n...     [0.1, 0.2, 0.7],\n... ])\n>>> average_precision_score(y_true, y_scores)\n0.77\n\nSelected parameter notes:\n    True binary labels or binary label indicators.\n    Target scores, can either be probability estimates of the positive\n    Will be ignored when ``y_true`` is binary.\n    The label of the positive class. Only applied to binary ``y_true``.\n    probability thresholds."
+    }
+  ],
+  "result": {
+    "capabilities": [
+      {
+        "capability_id": "extracted_bank_marketing_tabular_binary_classifier",
+        "name": "Bank marketing subscription propensity classifier",
+        "summary": "Binary classifier predicting whether a client subscribes to a term deposit (y=yes positive) from pre-contact customer attributes and prior campaign history, producing a propensity score and contact priority ranking.",
+        "task_types": [
+          "tabular_binary_classification"
+        ],
+        "inputs": [
+          "age",
+          "job",
+          "marital",
+          "education",
+          "default",
+          "housing",
+          "loan",
+          "pdays",
+          "previous",
+          "poutcome"
+        ],
+        "outputs": [
+          "subscription propensity probability",
+          "contact priority ranking"
+        ],
+        "preconditions": [
+          "duration must be excluded as a business leakage field (unknown before the call)",
+          "campaign excluded from main protocol (includes current contact)",
+          "contact, month, day_of_week excluded from main protocol",
+          "economic indicators excluded from main protocol (no point-in-time alignment)",
+          "pdays=999 treated as 'not previously contacted', not imputed as an extreme day count",
+          "unknown retained as a meaningful category",
+          "derived features (previously_contacted, days_since_previous) fitted on training set only"
+        ],
+        "metrics": [
+          "average_precision_score"
+        ],
+        "dependencies": [
+          "sklearn.pipeline.Pipeline",
+          "sklearn.compose.ColumnTransformer",
+          "sklearn.preprocessing.OneHotEncoder",
+          "sklearn.linear_model.LogisticRegression"
+        ],
+        "source_ids": [
+          "src-036a9125a071ef6a1ae3c21f",
+          "src-9d912fa3bc826e2bfd7f1aff",
+          "src-8a2d3c4ad618f98dc3d974e1",
+          "src-edb49349edd5d01d96366d15",
+          "src-57ad627bd0c9f7e3e2b0f4c4",
+          "src-584b66a31950a968f84ef11b",
+          "src-9ca2de7b8493fff6ad94d779"
+        ]
+      },
+      {
+        "capability_id": "extracted_sms_spam_text_binary_classifier",
+        "name": "SMS spam text binary classifier",
+        "summary": "Binary text classifier distinguishing spam (positive) from ham on SMS messages, using TF-IDF features over raw text with group-aware splitting to avoid near-duplicate leakage.",
+        "task_types": [
+          "text_binary_classification"
+        ],
+        "inputs": [
+          "raw SMS message text"
+        ],
+        "outputs": [
+          "spam/ham label",
+          "spam probability score"
+        ],
+        "preconditions": [
+          "UTF-8 read, split each line on first tab only",
+          "grouping hash = case-normalized + whitespace-collapsed text; model input remains original text",
+          "conflicting-label groups isolated for review",
+          "one record per normalized group, groups sorted, stratified 60/20/20 split with seed=42",
+          "vocabulary, TF-IDF IDF and tuning must not touch validation/test",
+          "positive class is spam; all-ham predictions must not be reported as success"
+        ],
+        "metrics": [
+          "average_precision_score"
+        ],
+        "dependencies": [
+          "sklearn.feature_extraction.text.TfidfVectorizer",
+          "sklearn.naive_bayes.ComplementNB",
+          "sklearn.linear_model.LogisticRegression"
+        ],
+        "source_ids": [
+          "src-df4abddd7280ca49a8328ee6",
+          "src-ecb336a2fa483eb3b4f26d0b",
+          "src-01e94fa0e553de89c2a7a671",
+          "src-584b66a31950a968f84ef11b",
+          "src-9ca2de7b8493fff6ad94d779"
+        ]
+      },
+      {
+        "capability_id": "extracted_heterogeneous_column_preprocessing",
+        "name": "Heterogeneous column preprocessing pipeline",
+        "summary": "Applies distinct transformers to column subsets of tabular data and concatenates outputs into a single feature space, with optional remainder handling and sparse/dense output control.",
+        "task_types": [
+          "tabular_binary_classification"
+        ],
+        "inputs": [
+          "array or pandas DataFrame with heterogeneous columns",
+          "list of (name, transformer, columns) tuples"
+        ],
+        "outputs": [
+          "concatenated transformed feature matrix",
+          "feature names via get_feature_names_out"
+        ],
+        "preconditions": [
+          "each transformer must implement fit and transform",
+          "columns specified by name, index, boolean mask, slice or callable",
+          "remainder must be 'drop', 'passthrough' or an estimator supporting fit/transform",
+          "DataFrame column order must match between fit and transform when remainder is an estimator"
+        ],
+        "metrics": [],
+        "dependencies": [
+          "sklearn.compose.ColumnTransformer"
+        ],
+        "source_ids": [
+          "src-edb49349edd5d01d96366d15"
+        ]
+      },
+      {
+        "capability_id": "extracted_categorical_one_hot_encoding",
+        "name": "Categorical one-hot encoding",
+        "summary": "Encodes categorical integer or string features as one-hot numeric arrays, with configurable unknown-category handling and infrequent-category grouping.",
+        "task_types": [
+          "tabular_binary_classification"
+        ],
+        "inputs": [
+          "array-like of integers or strings for categorical features"
+        ],
+        "outputs": [
+          "sparse or dense one-hot encoded matrix",
+          "categories_ attribute",
+          "feature names via get_feature_names_out"
+        ],
+        "preconditions": [
+          "categories derived from training data or supplied explicitly",
+          "handle_unknown must be one of 'error','ignore','infrequent_if_exist','warn'",
+          "drop option ('first','if_binary' or array) applied after infrequent grouping"
+        ],
+        "metrics": [],
+        "dependencies": [
+          "sklearn.preprocessing.OneHotEncoder"
+        ],
+        "source_ids": [
+          "src-57ad627bd0c9f7e3e2b0f4c4"
+        ]
+      },
+      {
+        "capability_id": "extracted_regularized_logistic_binary_classifier",
+        "name": "Regularized logistic regression binary classifier",
+        "summary": "L1/L2/elastic-net regularized logistic regression supporting dense and sparse input, class weighting and probability outputs for binary classification.",
+        "task_types": [
+          "tabular_binary_classification",
+          "text_binary_classification"
+        ],
+        "inputs": [
+          "feature matrix (dense array or CSR sparse)",
+          "binary target labels"
+        ],
+        "outputs": [
+          "predicted class labels",
+          "predict_proba probabilities",
+          "predict_log_proba",
+          "decision_function scores"
+        ],
+        "preconditions": [
+          "regularization applied by default; C must be a positive float",
+          "penalty/solver compatibility: lbfgs, newton-cg, sag support L2 only; liblinear supports L1/L2; elasticnet requires saga",
+          "liblinear handles binary classification only",
+          "class_weight='balanced' adjusts weights inversely to class frequencies"
+        ],
+        "metrics": [
+          "average_precision_score"
+        ],
+        "dependencies": [
+          "sklearn.linear_model.LogisticRegression"
+        ],
+        "source_ids": [
+          "src-584b66a31950a968f84ef11b",
+          "src-9ca2de7b8493fff6ad94d779"
+        ]
+      },
+      {
+        "capability_id": "extracted_tfidf_text_feature_extraction",
+        "name": "TF-IDF text feature extraction",
+        "summary": "Converts raw documents into a TF-IDF feature matrix, equivalent to CountVectorizer followed by TfidfTransformer, with configurable tokenization, n-grams and vocabulary.",
+        "task_types": [
+          "text_binary_classification"
+        ],
+        "inputs": [
+          "sequence of strings or bytes (input='content')",
+          "filenames or file-like objects (input='filename'/'file')"
+        ],
+        "outputs": [
+          "sparse TF-IDF feature matrix",
+          "idf_ weights",
+          "vocabulary"
+        ],
+        "preconditions": [
+          "encoding defaults to utf-8 with configurable decode_error",
+          "analyzer in {'word','char','char_wb'} or callable",
+          "stop_words only applies when analyzer='word'",
+          "IDF and vocabulary must be fitted on training data only"
+        ],
+        "metrics": [],
+        "dependencies": [
+          "sklearn.feature_extraction.text.TfidfVectorizer"
+        ],
+        "source_ids": [
+          "src-ecb336a2fa483eb3b4f26d0b"
+        ]
+      },
+      {
+        "capability_id": "extracted_complement_naive_bayes_text_classifier",
+        "name": "Complement Naive Bayes classifier",
+        "summary": "Complement Naive Bayes classifier designed to correct Multinomial NB assumptions and particularly suited to imbalanced datasets, with additive smoothing and optional weight normalization.",
+        "task_types": [
+          "text_binary_classification"
+        ],
+        "inputs": [
+          "non-negative feature matrix (e.g. counts or TF-IDF)",
+          "class labels"
+        ],
+        "outputs": [
+          "predicted class labels",
+          "class log probabilities",
+          "feature_log_prob_ weights"
+        ],
+        "preconditions": [
+          "features must be non-negative",
+          "alpha is additive smoothing parameter; force_alpha controls clamping near zero",
+          "norm toggles second normalization of weights"
+        ],
+        "metrics": [
+          "average_precision_score"
+        ],
+        "dependencies": [
+          "sklearn.naive_bayes.ComplementNB"
+        ],
+        "source_ids": [
+          "src-01e94fa0e553de89c2a7a671",
+          "src-9ca2de7b8493fff6ad94d779"
+        ]
+      },
+      {
+        "capability_id": "extracted_average_precision_ranking_metric",
+        "name": "Average precision score for ranking evaluation",
+        "summary": "Computes non-interpolated average precision from prediction scores, summarizing the precision-recall curve as a weighted mean of precisions at each threshold.",
+        "task_types": [
+          "tabular_binary_classification",
+          "text_binary_classification"
+        ],
+        "inputs": [
+          "y_true binary labels",
+          "y_score probability estimates, confidence values or decision_function scores"
+        ],
+        "outputs": [
+          "average_precision float"
+        ],
+        "preconditions": [
+          "for decision_function scores, values >= 0 should indicate the positive class",
+          "pos_label applies only to binary y_true",
+          "average parameter ignored when y_true is binary"
+        ],
+        "metrics": [
+          "average_precision_score"
+        ],
+        "dependencies": [
+          "sklearn.metrics.average_precision_score"
+        ],
+        "source_ids": [
+          "src-9ca2de7b8493fff6ad94d779"
+        ]
+      }
+    ]
+  },
+  "usage": {
+    "calls": 1,
+    "input_tokens": 13783,
+    "output_tokens": 2031,
+    "cached_input_tokens": 13568,
+    "records": [
+      {
+        "role": "extractor",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "response_id": "a6ec8d84-a0be-407a-8570-a52593411713",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "d68e68a28b91d81198fe1eca2941298a5fe370d6598e0f765714066a72813ebe",
+        "response_sha256": "e5d96e1ddad7d6e0fa706ab3f3b34f4725384bc33e4097f3c1febca5f89b7c17",
+        "input_tokens": 13783,
+        "output_tokens": 2031,
+        "seconds": 8.338,
+        "finish_reason": "stop"
+      }
+    ]
+  }
+}

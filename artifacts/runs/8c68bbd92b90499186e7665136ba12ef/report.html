@@ -1,0 +1,1307 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'"><title>算法能力验证报告 · 8c68bbd92b90499186e7665136ba12ef</title><style>
+:root{color-scheme:light;--ink:#183047;--muted:#526578;--line:#dbe4ec;
+--accent:#076d77;--paper:#fff;--wash:#f3f7fa}
+*{box-sizing:border-box}body{margin:0;background:var(--wash);color:var(--ink);
+font:15px/1.65 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+main{max-width:1180px;margin:32px auto;padding:0 24px 48px}
+header{background:#16364b;color:white;padding:30px 32px;border-radius:14px}
+header h1{font-size:28px;margin:8px 0}header p{color:#d9e9f0;margin:8px 0}
+.eyebrow{text-transform:uppercase;font-size:12px;letter-spacing:.13em}
+.badge{display:inline-block;background:#e8f7f3;color:#125247;padding:4px 10px;
+border-radius:6px;font-weight:650;max-width:100%;overflow-wrap:anywhere}
+section{background:var(--paper);padding:24px 28px;margin:18px 0;border:1px solid
+var(--line);border-radius:12px}h2{font-size:20px;margin:0 0 14px}
+h3{font-size:16px;margin:22px 0 8px}.muted,footer{color:var(--muted)}
+.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:10px;text-align:left;
+vertical-align:top;overflow-wrap:anywhere}th{background:#eef4f7}tr.selected{background:#edf9f5}
+pre{background:#f4f7fa;border:1px solid var(--line);padding:15px;border-radius:7px;
+white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.6 ui-monospace,monospace}
+dl{display:grid;grid-template-columns:minmax(130px,1fr) 3fr;gap:7px 20px}
+dt{font-weight:650}dd{margin:0;overflow-wrap:anywhere}.warning{border-left:4px solid #b77c20}
+details{padding:10px 0;border-top:1px solid var(--line)}summary{cursor:pointer;font-weight:650}
+footer{font-size:12px;padding-top:10px}@media print{body{background:white}main{margin:0;
+max-width:none;padding:0}section{break-inside:avoid}details{display:block}}
+@media(max-width:640px){main{padding:0 12px}header,section{padding:20px}dl{grid-template-columns:1fr}}
+</style></head><body><main><header><div class="eyebrow">ALGORITHM CAPABILITY FACTORY</div><h1>算法能力验证报告</h1><span class="badge">真实 LLM 调用</span><p>运行 ID：8c68bbd92b90499186e7665136ba12ef</p></header><section><h2>运行概览</h2><dl><dt>运行状态</dt><dd>failed</dd><dt>质量门槛</dt><dd>未记录</dd><dt>模型与版本</dt><dd>coder14</dd><dt>选中候选</dt><dd>未记录</dd></dl><p class="muted">指标仅来自提供的验证记录。未记录项目显示为缺失，质量、安全和泛化能力分别查看对应检查与评估结果。</p></section><section><h2>需求与约束</h2><p>预测银行客户是否订购定期存款，使用可复现的表格分类流程，禁止使用 duration 字段，输出可运行代码。</p><pre>{
+  &quot;task_type&quot;: &quot;tabular_binary_classification&quot;,
+  &quot;dataset_id&quot;: &quot;bank&quot;,
+  &quot;positive_label&quot;: &quot;yes&quot;,
+  &quot;feature_names&quot;: [
+    &quot;age&quot;,
+    &quot;job&quot;,
+    &quot;marital&quot;,
+    &quot;education&quot;,
+    &quot;default&quot;,
+    &quot;housing&quot;,
+    &quot;loan&quot;,
+    &quot;pdays&quot;,
+    &quot;previous&quot;,
+    &quot;poutcome&quot;
+  ],
+  &quot;numeric_features&quot;: [
+    &quot;age&quot;,
+    &quot;pdays&quot;,
+    &quot;previous&quot;
+  ],
+  &quot;categorical_features&quot;: [
+    &quot;job&quot;,
+    &quot;marital&quot;,
+    &quot;education&quot;,
+    &quot;default&quot;,
+    &quot;housing&quot;,
+    &quot;loan&quot;,
+    &quot;poutcome&quot;
+  ],
+  &quot;seed&quot;: 42,
+  &quot;primary_metric&quot;: &quot;average_precision&quot;,
+  &quot;limits&quot;: {
+    &quot;cpu&quot;: 2,
+    &quot;memory_mib&quot;: 2048,
+    &quot;timeout_s&quot;: 120
+  },
+  &quot;feature_policy&quot;: &quot;precontact_conservative_v1&quot;
+}</pre></section><section><h2>数据、证据与来源</h2><pre>{
+  &quot;prompt_version&quot;: &quot;algoforge-roles-v2&quot;,
+  &quot;sealed_test_scored&quot;: false,
+  &quot;dataset&quot;: {
+    &quot;schema_version&quot;: &quot;1.0&quot;,
+    &quot;dataset_id&quot;: &quot;uci-bank-additional-full&quot;,
+    &quot;source_url&quot;: &quot;https://archive.ics.uci.edu/dataset/222/bank+marketing&quot;,
+    &quot;license&quot;: &quot;CC BY 4.0&quot;,
+    &quot;raw_sha256&quot;: &quot;74adfc578bf77a7ff4bb1ba4a9f8709d9e3c6907342959c2c8416847e0afb4d8&quot;,
+    &quot;split_policy&quot;: &quot;original_order_60_20_20&quot;,
+    &quot;split_seed&quot;: 42,
+    &quot;train_rows&quot;: 24712,
+    &quot;validation_rows&quot;: 8238,
+    &quot;sealed_test_rows&quot;: 8238,
+    &quot;sealed_test_exported&quot;: false,
+    &quot;sealed_test_scored&quot;: false,
+    &quot;validation_labels_visible_to_generated_code&quot;: false,
+    &quot;preprocessing_fit_split&quot;: &quot;train_only&quot;,
+    &quot;feature_policy&quot;: &quot;precontact_conservative_v1&quot;,
+    &quot;feature_names&quot;: [
+      &quot;age&quot;,
+      &quot;job&quot;,
+      &quot;marital&quot;,
+      &quot;education&quot;,
+      &quot;default&quot;,
+      &quot;housing&quot;,
+      &quot;loan&quot;,
+      &quot;pdays&quot;,
+      &quot;previous&quot;,
+      &quot;poutcome&quot;
+    ],
+    &quot;numeric_features&quot;: [
+      &quot;age&quot;,
+      &quot;pdays&quot;,
+      &quot;previous&quot;
+    ],
+    &quot;file_sha256&quot;: {
+      &quot;train&quot;: &quot;860058ef9a7a6869e9c129277967ca5699fdb249202917201da4991a7c2b3a0c&quot;,
+      &quot;validation_features&quot;: &quot;62b188cf7c57553585006e3b20f4364d41cd8f567b04513fcdc3358429c1986a&quot;,
+      &quot;validation_labels&quot;: &quot;8c505a2f2ed47d04c62c6d182097535f09e9ccab901576fc0727acfe5f882816&quot;
+    }
+  }
+}</pre></section><section><h2>验证结果与候选比较</h2><p class="muted">尚无候选验证记录。</p><p class="muted">仅同一任务、切分和预算下的指标适合直接比较。AP 指 average precision；候选选择依据验证集结果，最终测试集结果请结合 provenance 单独查看。</p></section><section><h2>资源、调用与耗时</h2><h3>LLM 用量</h3><pre>{
+  &quot;calls&quot;: 2,
+  &quot;input_tokens&quot;: 445,
+  &quot;output_tokens&quot;: 168,
+  &quot;cached_input_tokens&quot;: 0,
+  &quot;records&quot;: [
+    {
+      &quot;role&quot;: &quot;interpreter&quot;,
+      &quot;requested_model&quot;: &quot;coder14&quot;,
+      &quot;returned_model&quot;: &quot;coder14&quot;,
+      &quot;endpoint&quot;: &quot;http://127.0.0.1:8100/v1&quot;,
+      &quot;response_id&quot;: &quot;chatcmpl-aa9fe8b2070b3b5d&quot;,
+      &quot;system_fingerprint&quot;: &quot;vllm-0.29.0-9ec412e0&quot;,
+      &quot;prompt_sha256&quot;: &quot;0f48d43eebefbee6024bb55c2a3e0209f58b670d639808e0dc0b6554bd081972&quot;,
+      &quot;response_sha256&quot;: &quot;47a6d3134a17fe961daa978df57b4eaf076cb9a16ef54cd04bec194184030cbd&quot;,
+      &quot;input_tokens&quot;: 445,
+      &quot;output_tokens&quot;: 168,
+      &quot;seconds&quot;: 3.914,
+      &quot;finish_reason&quot;: &quot;stop&quot;
+    }
+  ]
+}</pre><h3>计时记录</h3><pre>{
+  &quot;wall_seconds&quot;: 5.692,
+  &quot;budget_seconds&quot;: 120.0,
+  &quot;request_ceiling_seconds&quot;: 900
+}</pre></section><section><h2>知识回写</h2><pre>{
+  &quot;run_saved&quot;: true,
+  &quot;experiences&quot;: []
+}</pre></section><section class="warning"><h2>警告与局限</h2><pre>[
+  &quot;指标来自 validation_only，封存测试集保持未评分。&quot;,
+  &quot;执行器采用受限 AST 构造器和资源限制子进程；生产隔离需要强化运行时。&quot;,
+  &quot;请求中未指定运行时间预算，将使用默认值 120 秒&quot;
+]</pre><p class="muted">mock 仅验证流程；replay 仅呈现历史记录。多卡配置提供接入规划；多卡部署结论以目标环境实测制品与验证证据为准。</p></section><section><h2>事件与复现证据</h2><pre>[
+  {
+    &quot;sequence&quot;: 0,
+    &quot;event_type&quot;: &quot;RECEIVED&quot;,
+    &quot;type&quot;: &quot;RECEIVED&quot;,
+    &quot;created_at&quot;: &quot;2026-09-29T17:40:36.608689+00:00&quot;,
+    &quot;data&quot;: {
+      &quot;mode&quot;: &quot;real&quot;,
+      &quot;model&quot;: &quot;coder14&quot;
+    }
+  },
+  {
+    &quot;sequence&quot;: 1,
+    &quot;event_type&quot;: &quot;LLM_RESPONSE&quot;,
+    &quot;type&quot;: &quot;LLM_RESPONSE&quot;,
+    &quot;created_at&quot;: &quot;2026-09-29T17:40:41.030056+00:00&quot;,
+    &quot;data&quot;: {
+      &quot;role&quot;: &quot;interpreter&quot;,
+      &quot;requested_model&quot;: &quot;coder14&quot;,
+      &quot;returned_model&quot;: &quot;coder14&quot;,
+      &quot;endpoint&quot;: &quot;http://127.0.0.1:8100/v1&quot;,
+      &quot;response_id&quot;: &quot;chatcmpl-aa9fe8b2070b3b5d&quot;,
+      &quot;system_fingerprint&quot;: &quot;vllm-0.29.0-9ec412e0&quot;,
+      &quot;prompt_sha256&quot;: &quot;0f48d43eebefbee6024bb55c2a3e0209f58b670d639808e0dc0b6554bd081972&quot;,
+      &quot;response_sha256&quot;: &quot;47a6d3134a17fe961daa978df57b4eaf076cb9a16ef54cd04bec194184030cbd&quot;,
+      &quot;input_tokens&quot;: 445,
+      &quot;output_tokens&quot;: 168,
+      &quot;seconds&quot;: 3.914,
+      &quot;finish_reason&quot;: &quot;stop&quot;
+    }
+  },
+  {
+    &quot;sequence&quot;: 2,
+    &quot;event_type&quot;: &quot;SPEC_VALIDATED&quot;,
+    &quot;type&quot;: &quot;SPEC_VALIDATED&quot;,
+    &quot;created_at&quot;: &quot;2026-09-29T17:40:41.483072+00:00&quot;,
+    &quot;data&quot;: {
+      &quot;task_type&quot;: &quot;tabular_binary_classification&quot;,
+      &quot;assumptions&quot;: [
+        &quot;数据集为 &#x27;bank&#x27;&quot;,
+        &quot;特征包括 &#x27;age&#x27;, &#x27;job&#x27;, &#x27;marital&#x27;, &#x27;education&#x27;, &#x27;default&#x27;, &#x27;housing&#x27;, &#x27;loan&#x27;, &#x27;pdays&#x27;, &#x27;previous&#x27;, &#x27;poutcome&#x27;&quot;,
+        &quot;分类任务为二元分类&quot;,
+        &quot;正类标签为 &#x27;yes&#x27;&quot;,
+        &quot;评估指标为平均精度&quot;
+      ]
+    }
+  },
+  {
+    &quot;sequence&quot;: 3,
+    &quot;event_type&quot;: &quot;KNOWLEDGE_RETRIEVED&quot;,
+    &quot;type&quot;: &quot;KNOWLEDGE_RETRIEVED&quot;,
+    &quot;created_at&quot;: &quot;2026-09-29T17:40:41.723363+00:00&quot;,
+    &quot;data&quot;: {
+      &quot;count&quot;: 6,
+      &quot;use_graph&quot;: true,
+      &quot;capability_ids&quot;: [
+        &quot;bank-precontact-policy&quot;,
+        &quot;bank-target&quot;,
+        &quot;average-precision&quot;,
+        &quot;probability-logistic&quot;,
+        &quot;bank-ordered-split&quot;,
+        &quot;random-forest&quot;
+      ]
+    }
+  },
+  {
+    &quot;sequence&quot;: 4,
+    &quot;event_type&quot;: &quot;RECORDED&quot;,
+    &quot;type&quot;: &quot;RECORDED&quot;,
+    &quot;created_at&quot;: &quot;2026-09-29T17:40:42.161329+00:00&quot;,
+    &quot;data&quot;: {
+      &quot;intended_status&quot;: &quot;failed&quot;,
+      &quot;experiences&quot;: 0
+    }
+  }
+]</pre></section><section><details><summary>完整原始报告</summary><pre>{
+  &quot;schema_version&quot;: &quot;1.0&quot;,
+  &quot;run_id&quot;: &quot;8c68bbd92b90499186e7665136ba12ef&quot;,
+  &quot;status&quot;: &quot;failed&quot;,
+  &quot;mode&quot;: &quot;real&quot;,
+  &quot;provider&quot;: &quot;local_http&quot;,
+  &quot;description&quot;: &quot;预测银行客户是否订购定期存款，使用可复现的表格分类流程，禁止使用 duration 字段，输出可运行代码。&quot;,
+  &quot;dataset_id&quot;: &quot;bank&quot;,
+  &quot;created_at&quot;: &quot;2026-09-29T17:40:36.335209+00:00&quot;,
+  &quot;request&quot;: {
+    &quot;description&quot;: &quot;预测银行客户是否订购定期存款，使用可复现的表格分类流程，禁止使用 duration 字段，输出可运行代码。&quot;,
+    &quot;dataset_id&quot;: &quot;bank&quot;,
+    &quot;provider&quot;: &quot;local_http&quot;,
+    &quot;max_candidates&quot;: 1,
+    &quot;max_repairs&quot;: 0,
+    &quot;use_graph&quot;: true,
+    &quot;use_retrieval&quot;: true,
+    &quot;orchestration&quot;: &quot;multi_role&quot;,
+    &quot;search&quot;: &quot;compare&quot;,
+    &quot;inject_failure&quot;: false,
+    &quot;max_seconds&quot;: 900
+  },
+  &quot;task_spec&quot;: {
+    &quot;task_type&quot;: &quot;tabular_binary_classification&quot;,
+    &quot;dataset_id&quot;: &quot;bank&quot;,
+    &quot;positive_label&quot;: &quot;yes&quot;,
+    &quot;feature_names&quot;: [
+      &quot;age&quot;,
+      &quot;job&quot;,
+      &quot;marital&quot;,
+      &quot;education&quot;,
+      &quot;default&quot;,
+      &quot;housing&quot;,
+      &quot;loan&quot;,
+      &quot;pdays&quot;,
+      &quot;previous&quot;,
+      &quot;poutcome&quot;
+    ],
+    &quot;numeric_features&quot;: [
+      &quot;age&quot;,
+      &quot;pdays&quot;,
+      &quot;previous&quot;
+    ],
+    &quot;categorical_features&quot;: [
+      &quot;job&quot;,
+      &quot;marital&quot;,
+      &quot;education&quot;,
+      &quot;default&quot;,
+      &quot;housing&quot;,
+      &quot;loan&quot;,
+      &quot;poutcome&quot;
+    ],
+    &quot;seed&quot;: 42,
+    &quot;primary_metric&quot;: &quot;average_precision&quot;,
+    &quot;limits&quot;: {
+      &quot;cpu&quot;: 2,
+      &quot;memory_mib&quot;: 2048,
+      &quot;timeout_s&quot;: 120
+    },
+    &quot;feature_policy&quot;: &quot;precontact_conservative_v1&quot;
+  },
+  &quot;model&quot;: &quot;coder14&quot;,
+  &quot;provenance&quot;: {
+    &quot;prompt_version&quot;: &quot;algoforge-roles-v2&quot;,
+    &quot;sealed_test_scored&quot;: false,
+    &quot;dataset&quot;: {
+      &quot;schema_version&quot;: &quot;1.0&quot;,
+      &quot;dataset_id&quot;: &quot;uci-bank-additional-full&quot;,
+      &quot;source_url&quot;: &quot;https://archive.ics.uci.edu/dataset/222/bank+marketing&quot;,
+      &quot;license&quot;: &quot;CC BY 4.0&quot;,
+      &quot;raw_sha256&quot;: &quot;74adfc578bf77a7ff4bb1ba4a9f8709d9e3c6907342959c2c8416847e0afb4d8&quot;,
+      &quot;split_policy&quot;: &quot;original_order_60_20_20&quot;,
+      &quot;split_seed&quot;: 42,
+      &quot;train_rows&quot;: 24712,
+      &quot;validation_rows&quot;: 8238,
+      &quot;sealed_test_rows&quot;: 8238,
+      &quot;sealed_test_exported&quot;: false,
+      &quot;sealed_test_scored&quot;: false,
+      &quot;validation_labels_visible_to_generated_code&quot;: false,
+      &quot;preprocessing_fit_split&quot;: &quot;train_only&quot;,
+      &quot;feature_policy&quot;: &quot;precontact_conservative_v1&quot;,
+      &quot;feature_names&quot;: [
+        &quot;age&quot;,
+        &quot;job&quot;,
+        &quot;marital&quot;,
+        &quot;education&quot;,
+        &quot;default&quot;,
+        &quot;housing&quot;,
+        &quot;loan&quot;,
+        &quot;pdays&quot;,
+        &quot;previous&quot;,
+        &quot;poutcome&quot;
+      ],
+      &quot;numeric_features&quot;: [
+        &quot;age&quot;,
+        &quot;pdays&quot;,
+        &quot;previous&quot;
+      ],
+      &quot;file_sha256&quot;: {
+        &quot;train&quot;: &quot;860058ef9a7a6869e9c129277967ca5699fdb249202917201da4991a7c2b3a0c&quot;,
+        &quot;validation_features&quot;: &quot;62b188cf7c57553585006e3b20f4364d41cd8f567b04513fcdc3358429c1986a&quot;,
+        &quot;validation_labels&quot;: &quot;8c505a2f2ed47d04c62c6d182097535f09e9ccab901576fc0727acfe5f882816&quot;
+      }
+    }
+  },
+  &quot;candidates&quot;: [],
+  &quot;selected_candidate_id&quot;: null,
+  &quot;events&quot;: [
+    {
+      &quot;sequence&quot;: 0,
+      &quot;event_type&quot;: &quot;RECEIVED&quot;,
+      &quot;type&quot;: &quot;RECEIVED&quot;,
+      &quot;created_at&quot;: &quot;2026-09-29T17:40:36.608689+00:00&quot;,
+      &quot;data&quot;: {
+        &quot;mode&quot;: &quot;real&quot;,
+        &quot;model&quot;: &quot;coder14&quot;
+      }
+    },
+    {
+      &quot;sequence&quot;: 1,
+      &quot;event_type&quot;: &quot;LLM_RESPONSE&quot;,
+      &quot;type&quot;: &quot;LLM_RESPONSE&quot;,
+      &quot;created_at&quot;: &quot;2026-09-29T17:40:41.030056+00:00&quot;,
+      &quot;data&quot;: {
+        &quot;role&quot;: &quot;interpreter&quot;,
+        &quot;requested_model&quot;: &quot;coder14&quot;,
+        &quot;returned_model&quot;: &quot;coder14&quot;,
+        &quot;endpoint&quot;: &quot;http://127.0.0.1:8100/v1&quot;,
+        &quot;response_id&quot;: &quot;chatcmpl-aa9fe8b2070b3b5d&quot;,
+        &quot;system_fingerprint&quot;: &quot;vllm-0.29.0-9ec412e0&quot;,
+        &quot;prompt_sha256&quot;: &quot;0f48d43eebefbee6024bb55c2a3e0209f58b670d639808e0dc0b6554bd081972&quot;,
+        &quot;response_sha256&quot;: &quot;47a6d3134a17fe961daa978df57b4eaf076cb9a16ef54cd04bec194184030cbd&quot;,
+        &quot;input_tokens&quot;: 445,
+        &quot;output_tokens&quot;: 168,
+        &quot;seconds&quot;: 3.914,
+        &quot;finish_reason&quot;: &quot;stop&quot;
+      }
+    },
+    {
+      &quot;sequence&quot;: 2,
+      &quot;event_type&quot;: &quot;SPEC_VALIDATED&quot;,
+      &quot;type&quot;: &quot;SPEC_VALIDATED&quot;,
+      &quot;created_at&quot;: &quot;2026-09-29T17:40:41.483072+00:00&quot;,
+      &quot;data&quot;: {
+        &quot;task_type&quot;: &quot;tabular_binary_classification&quot;,
+        &quot;assumptions&quot;: [
+          &quot;数据集为 &#x27;bank&#x27;&quot;,
+          &quot;特征包括 &#x27;age&#x27;, &#x27;job&#x27;, &#x27;marital&#x27;, &#x27;education&#x27;, &#x27;default&#x27;, &#x27;housing&#x27;, &#x27;loan&#x27;, &#x27;pdays&#x27;, &#x27;previous&#x27;, &#x27;poutcome&#x27;&quot;,
+          &quot;分类任务为二元分类&quot;,
+          &quot;正类标签为 &#x27;yes&#x27;&quot;,
+          &quot;评估指标为平均精度&quot;
+        ]
+      }
+    },
+    {
+      &quot;sequence&quot;: 3,
+      &quot;event_type&quot;: &quot;KNOWLEDGE_RETRIEVED&quot;,
+      &quot;type&quot;: &quot;KNOWLEDGE_RETRIEVED&quot;,
+      &quot;created_at&quot;: &quot;2026-09-29T17:40:41.723363+00:00&quot;,
+      &quot;data&quot;: {
+        &quot;count&quot;: 6,
+        &quot;use_graph&quot;: true,
+        &quot;capability_ids&quot;: [
+          &quot;bank-precontact-policy&quot;,
+          &quot;bank-target&quot;,
+          &quot;average-precision&quot;,
+          &quot;probability-logistic&quot;,
+          &quot;bank-ordered-split&quot;,
+          &quot;random-forest&quot;
+        ]
+      }
+    },
+    {
+      &quot;sequence&quot;: 4,
+      &quot;event_type&quot;: &quot;RECORDED&quot;,
+      &quot;type&quot;: &quot;RECORDED&quot;,
+      &quot;created_at&quot;: &quot;2026-09-29T17:40:42.161329+00:00&quot;,
+      &quot;data&quot;: {
+        &quot;intended_status&quot;: &quot;failed&quot;,
+        &quot;experiences&quot;: 0
+      }
+    }
+  ],
+  &quot;usage&quot;: {
+    &quot;calls&quot;: 2,
+    &quot;input_tokens&quot;: 445,
+    &quot;output_tokens&quot;: 168,
+    &quot;cached_input_tokens&quot;: 0,
+    &quot;records&quot;: [
+      {
+        &quot;role&quot;: &quot;interpreter&quot;,
+        &quot;requested_model&quot;: &quot;coder14&quot;,
+        &quot;returned_model&quot;: &quot;coder14&quot;,
+        &quot;endpoint&quot;: &quot;http://127.0.0.1:8100/v1&quot;,
+        &quot;response_id&quot;: &quot;chatcmpl-aa9fe8b2070b3b5d&quot;,
+        &quot;system_fingerprint&quot;: &quot;vllm-0.29.0-9ec412e0&quot;,
+        &quot;prompt_sha256&quot;: &quot;0f48d43eebefbee6024bb55c2a3e0209f58b670d639808e0dc0b6554bd081972&quot;,
+        &quot;response_sha256&quot;: &quot;47a6d3134a17fe961daa978df57b4eaf076cb9a16ef54cd04bec194184030cbd&quot;,
+        &quot;input_tokens&quot;: 445,
+        &quot;output_tokens&quot;: 168,
+        &quot;seconds&quot;: 3.914,
+        &quot;finish_reason&quot;: &quot;stop&quot;
+      }
+    ]
+  },
+  &quot;warnings&quot;: [
+    &quot;指标来自 validation_only，封存测试集保持未评分。&quot;,
+    &quot;执行器采用受限 AST 构造器和资源限制子进程；生产隔离需要强化运行时。&quot;,
+    &quot;请求中未指定运行时间预算，将使用默认值 120 秒&quot;
+  ],
+  &quot;search_tree&quot;: [],
+  &quot;knowledge_writeback&quot;: {
+    &quot;run_saved&quot;: true,
+    &quot;experiences&quot;: []
+  },
+  &quot;provider_metadata&quot;: {
+    &quot;provider&quot;: &quot;local_http&quot;,
+    &quot;model&quot;: &quot;coder14&quot;,
+    &quot;base_url&quot;: &quot;http://127.0.0.1:8100/v1&quot;,
+    &quot;base_urls&quot;: [
+      &quot;http://127.0.0.1:8100/v1&quot;
+    ],
+    &quot;authorization&quot;: &quot;none&quot;,
+    &quot;local_profile&quot;: &quot;single_gpu_14b&quot;,
+    &quot;deployment&quot;: &quot;external_local_http&quot;
+  },
+  &quot;data_summary&quot;: {
+    &quot;train_rows&quot;: 24712,
+    &quot;validation_rows&quot;: 8238
+  },
+  &quot;interpretation&quot;: {
+    &quot;objective&quot;: &quot;预测银行客户是否订购定期存款&quot;,
+    &quot;constraints&quot;: [
+      &quot;使用可复现的表格分类流程&quot;,
+      &quot;禁止使用 duration 字段&quot;
+    ],
+    &quot;assumptions&quot;: [
+      &quot;数据集为 &#x27;bank&#x27;&quot;,
+      &quot;特征包括 &#x27;age&#x27;, &#x27;job&#x27;, &#x27;marital&#x27;, &#x27;education&#x27;, &#x27;default&#x27;, &#x27;housing&#x27;, &#x27;loan&#x27;, &#x27;pdays&#x27;, &#x27;previous&#x27;, &#x27;poutcome&#x27;&quot;,
+      &quot;分类任务为二元分类&quot;,
+      &quot;正类标签为 &#x27;yes&#x27;&quot;,
+      &quot;评估指标为平均精度&quot;
+    ],
+    &quot;warnings&quot;: [
+      &quot;请求中未指定运行时间预算，将使用默认值 120 秒&quot;
+    ],
+    &quot;incompatible_requests&quot;: [],
+    &quot;requested_run_seconds&quot;: 120
+  },
+  &quot;evidence&quot;: [
+    {
+      &quot;capability_id&quot;: &quot;bank-precontact-policy&quot;,
+      &quot;confidence&quot;: 1.0,
+      &quot;created_at&quot;: &quot;2026-09-29T15:08:50.631548+00:00&quot;,
+      &quot;dependencies&quot;: [
+        &quot;Python &gt;=3.10&quot;,
+        &quot;scikit-learn&quot;
+      ],
+      &quot;evidence&quot;: [
+        {
+          &quot;content_sha256&quot;: &quot;10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26&quot;,
+          &quot;license&quot;: &quot;CC-BY-4.0&quot;,
+          &quot;locator&quot;: {
+            &quot;line_end&quot;: 58,
+            &quot;line_start&quot;: 56,
+            &quot;path&quot;: &quot;/root/algorithm-capability-factory/data/raw/bank-additional-names.txt&quot;
+          },
+          &quot;revision&quot;: &quot;sha256:10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26&quot;,
+          &quot;source_id&quot;: &quot;src-036a9125a071ef6a1ae3c21f&quot;,
+          &quot;uri&quot;: &quot;https://archive.ics.uci.edu/dataset/222/bank+marketing&quot;
+        },
+        {
+          &quot;content_sha256&quot;: &quot;aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23&quot;,
+          &quot;license&quot;: &quot;original-project-notes&quot;,
+          &quot;locator&quot;: {
+            &quot;line_end&quot;: 34,
+            &quot;line_start&quot;: 18,
+            &quot;path&quot;: &quot;/root/algorithm-capability-factory/docs/02_数据与知识来源.md&quot;
+          },
+          &quot;revision&quot;: &quot;sha256:aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23&quot;,
+          &quot;source_id&quot;: &quot;src-df2a53ac66a4c0255b59ad3b&quot;,
+          &quot;uri&quot;: &quot;file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md&quot;
+        }
+      ],
+      &quot;extraction_method&quot;: &quot;curated-source-grounded&quot;,
+      &quot;id&quot;: &quot;bank-precontact-policy&quot;,
+      &quot;input_schema&quot;: {
+        &quot;task_types&quot;: [
+          &quot;tabular_binary_classification&quot;
+        ],
+        &quot;type&quot;: &quot;features&quot;
+      },
+      &quot;name&quot;: &quot;银行营销通话前特征与泄漏防护&quot;,
+      &quot;origin&quot;: &quot;manual_seed&quot;,
+      &quot;output_schema&quot;: {
+        &quot;type&quot;: &quot;implementation-guidance&quot;
+      },
+      &quot;preconditions&quot;: [],
+      &quot;related&quot;: [
+        &quot;bank-target&quot;,
+        &quot;bank-ordered-split&quot;
+      ],
+      &quot;status&quot;: &quot;extracted&quot;,
+      &quot;summary&quot;: &quot;预测银行客户是否订购定期存款。通话前预测禁止使用 duration：官方字段说明指出通话结束前无法知道时长。主协议使用项目定义的保守字段白名单；它是项目设计约束，不是 UCI 原始数据唯一允许的协议。&quot;,
+      &quot;tags&quot;: [
+        &quot;银行&quot;,
+        &quot;通话前&quot;,
+        &quot;duration&quot;,
+        &quot;泄漏&quot;,
+        &quot;precontact&quot;
+      ],
+      &quot;task_types&quot;: [
+        &quot;tabular_binary_classification&quot;
+      ],
+      &quot;uses&quot;: [],
+      &quot;version&quot;: 2,
+      &quot;score&quot;: 4.704421,
+      &quot;lexical_score&quot;: 3.731093,
+      &quot;graph_score&quot;: 0.973329,
+      &quot;evidence_path&quot;: [
+        {
+          &quot;seed&quot;: &quot;capability:bank-target:v2&quot;,
+          &quot;hops&quot;: [
+            {
+              &quot;from&quot;: &quot;capability:bank-target:v2&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:bank-precontact-policy:v2&quot;
+            }
+          ],
+          &quot;bonus&quot;: 0.9733285267845754
+        }
+      ],
+      &quot;graph_used&quot;: true,
+      &quot;source_locator&quot;: [
+        {
+          &quot;line_end&quot;: 58,
+          &quot;line_start&quot;: 56,
+          &quot;path&quot;: &quot;/root/algorithm-capability-factory/data/raw/bank-additional-names.txt&quot;
+        },
+        {
+          &quot;line_end&quot;: 34,
+          &quot;line_start&quot;: 18,
+          &quot;path&quot;: &quot;/root/algorithm-capability-factory/docs/02_数据与知识来源.md&quot;
+        }
+      ],
+      &quot;matched_constraints&quot;: [
+        &quot;task_type=tabular_binary_classification&quot;
+      ],
+      &quot;rejected_reason&quot;: null
+    },
+    {
+      &quot;capability_id&quot;: &quot;bank-target&quot;,
+      &quot;confidence&quot;: 1.0,
+      &quot;created_at&quot;: &quot;2026-09-29T15:08:50.631826+00:00&quot;,
+      &quot;dependencies&quot;: [
+        &quot;Python &gt;=3.10&quot;,
+        &quot;scikit-learn&quot;
+      ],
+      &quot;evidence&quot;: [
+        {
+          &quot;content_sha256&quot;: &quot;10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26&quot;,
+          &quot;license&quot;: &quot;CC-BY-4.0&quot;,
+          &quot;locator&quot;: {
+            &quot;line_end&quot;: 72,
+            &quot;line_start&quot;: 70,
+            &quot;path&quot;: &quot;/root/algorithm-capability-factory/data/raw/bank-additional-names.txt&quot;
+          },
+          &quot;revision&quot;: &quot;sha256:10045462a4c026f858dffa159370c4270510230c1fc63c6c91ca51bba4b3df26&quot;,
+          &quot;source_id&quot;: &quot;src-9e74f92e3a9cf01663fecfe4&quot;,
+          &quot;uri&quot;: &quot;https://archive.ics.uci.edu/dataset/222/bank+marketing&quot;
+        },
+        {
+          &quot;content_sha256&quot;: &quot;aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23&quot;,
+          &quot;license&quot;: &quot;original-project-notes&quot;,
+          &quot;locator&quot;: {
+            &quot;line_end&quot;: 34,
+            &quot;line_start&quot;: 18,
+            &quot;path&quot;: &quot;/root/algorithm-capability-factory/docs/02_数据与知识来源.md&quot;
+          },
+          &quot;revision&quot;: &quot;sha256:aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23&quot;,
+          &quot;source_id&quot;: &quot;src-df2a53ac66a4c0255b59ad3b&quot;,
+          &quot;uri&quot;: &quot;file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md&quot;
+        }
+      ],
+      &quot;extraction_method&quot;: &quot;curated-source-grounded&quot;,
+      &quot;id&quot;: &quot;bank-target&quot;,
+      &quot;input_schema&quot;: {
+        &quot;task_types&quot;: [
+          &quot;tabular_binary_classification&quot;
+        ],
+        &quot;type&quot;: &quot;features&quot;
+      },
+      &quot;name&quot;: &quot;银行订购响应二分类的正类定义&quot;,
+      &quot;origin&quot;: &quot;manual_seed&quot;,
+      &quot;output_schema&quot;: {
+        &quot;type&quot;: &quot;implementation-guidance&quot;
+      },
+      &quot;preconditions&quot;: [],
+      &quot;related&quot;: [
+        &quot;probability-logistic&quot;,
+        &quot;average-precision&quot;
+      ],
+      &quot;status&quot;: &quot;extracted&quot;,
+      &quot;summary&quot;: &quot;UCI Bank Marketing 的 y 表示客户是否订购定期存款，yes 是本项目正类，no 是负类。该标签不是流失、信用违约或营销因果增量。&quot;,
+      &quot;tags&quot;: [
+        &quot;y&quot;,
+        &quot;yes&quot;,
+        &quot;正类&quot;,
+        &quot;银行&quot;,
+        &quot;目标&quot;
+      ],
+      &quot;task_types&quot;: [
+        &quot;tabular_binary_classification&quot;
+      ],
+      &quot;uses&quot;: [],
+      &quot;version&quot;: 2,
+      &quot;score&quot;: 3.827987,
+      &quot;lexical_score&quot;: 2.433321,
+      &quot;graph_score&quot;: 1.394666,
+      &quot;evidence_path&quot;: [
+        {
+          &quot;seed&quot;: &quot;capability:bank-precontact-policy:v2&quot;,
+          &quot;hops&quot;: [
+            {
+              &quot;from&quot;: &quot;capability:bank-precontact-policy:v2&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:bank-target:v2&quot;
+            }
+          ],
+          &quot;bonus&quot;: 1.2000000000000002
+        },
+        {
+          &quot;seed&quot;: &quot;capability:random-forest:v1&quot;,
+          &quot;hops&quot;: [
+            {
+              &quot;from&quot;: &quot;capability:random-forest:v1&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:average-precision:v1&quot;
+            },
+            {
+              &quot;from&quot;: &quot;capability:average-precision:v1&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:bank-target:v2&quot;
+            }
+          ],
+          &quot;bonus&quot;: 0.19466570535691508
+        }
+      ],
+      &quot;graph_used&quot;: true,
+      &quot;source_locator&quot;: [
+        {
+          &quot;line_end&quot;: 72,
+          &quot;line_start&quot;: 70,
+          &quot;path&quot;: &quot;/root/algorithm-capability-factory/data/raw/bank-additional-names.txt&quot;
+        },
+        {
+          &quot;line_end&quot;: 34,
+          &quot;line_start&quot;: 18,
+          &quot;path&quot;: &quot;/root/algorithm-capability-factory/docs/02_数据与知识来源.md&quot;
+        }
+      ],
+      &quot;matched_constraints&quot;: [
+        &quot;task_type=tabular_binary_classification&quot;
+      ],
+      &quot;rejected_reason&quot;: null
+    },
+    {
+      &quot;capability_id&quot;: &quot;average-precision&quot;,
+      &quot;confidence&quot;: 1.0,
+      &quot;created_at&quot;: &quot;2026-09-28T11:23:24.518754+00:00&quot;,
+      &quot;dependencies&quot;: [
+        &quot;Python &gt;=3.10&quot;,
+        &quot;scikit-learn&quot;
+      ],
+      &quot;evidence&quot;: [
+        {
+          &quot;content_sha256&quot;: &quot;a1fc02f0b042a3945c37692c9377a746800dd2a90cdc227df5268f218bea3f74&quot;,
+          &quot;license&quot;: &quot;BSD-3-Clause&quot;,
+          &quot;locator&quot;: {
+            &quot;imports&quot;: [
+              &quot;import warnings&quot;,
+              &quot;from functools import partial&quot;,
+              &quot;from numbers import Integral, Real&quot;,
+              &quot;import numpy as np&quot;,
+              &quot;from scipy.integrate import trapezoid&quot;,
+              &quot;from scipy.sparse import csr_matrix, issparse&quot;,
+              &quot;from scipy.stats import rankdata&quot;,
+              &quot;from ..exceptions import UndefinedMetricWarning&quot;,
+              &quot;from ..preprocessing import label_binarize&quot;,
+              &quot;from ..utils import assert_all_finite, check_array, check_consistent_length, column_or_1d&quot;,
+              &quot;from ..utils._encode import _encode, _unique&quot;,
+              &quot;from ..utils._param_validation import Interval, StrOptions, validate_params&quot;,
+              &quot;from ..utils.extmath import stable_cumsum&quot;,
+              &quot;from ..utils.multiclass import type_of_target&quot;,
+              &quot;from ..utils.sparsefuncs import count_nonzero&quot;,
+              &quot;from ..utils.validation import _check_pos_label_consistency, _check_sample_weight&quot;,
+              &quot;from ._base import _average_binary_score, _average_multiclass_ovo_score&quot;
+            ],
+            &quot;line_end&quot;: 268,
+            &quot;line_start&quot;: 118,
+            &quot;methods&quot;: [
+              &quot;_binary_uninterpolated_average_precision&quot;
+            ],
+            &quot;parse_mode&quot;: &quot;ast-only&quot;,
+            &quot;path&quot;: &quot;/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/metrics/_ranking.py&quot;,
+            &quot;relative_path&quot;: &quot;sklearn/metrics/_ranking.py&quot;,
+            &quot;signature&quot;: &quot;def average_precision_score(y_true, y_score, *, average=&#x27;macro&#x27;, pos_label=1, sample_weight=None)&quot;,
+            &quot;symbol&quot;: &quot;average_precision_score&quot;
+          },
+          &quot;revision&quot;: &quot;1.7.2&quot;,
+          &quot;source_id&quot;: &quot;src-9ca2de7b8493fff6ad94d779&quot;,
+          &quot;uri&quot;: &quot;https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/metrics/_ranking.py&quot;
+        }
+      ],
+      &quot;extraction_method&quot;: &quot;curated-source-grounded&quot;,
+      &quot;id&quot;: &quot;average-precision&quot;,
+      &quot;input_schema&quot;: {
+        &quot;task_types&quot;: [
+          &quot;tabular_binary_classification&quot;,
+          &quot;text_binary_classification&quot;
+        ],
+        &quot;type&quot;: &quot;features&quot;
+      },
+      &quot;name&quot;: &quot;不平衡二分类 Average Precision&quot;,
+      &quot;origin&quot;: &quot;manual_seed&quot;,
+      &quot;output_schema&quot;: {
+        &quot;type&quot;: &quot;implementation-guidance&quot;
+      },
+      &quot;preconditions&quot;: [
+        &quot;由可信验证器计算，使用同一分割协议。&quot;
+      ],
+      &quot;related&quot;: [],
+      &quot;status&quot;: &quot;extracted&quot;,
+      &quot;summary&quot;: &quot;average_precision_score 根据预测分数汇总精确率召回率曲线，定义为召回增量对 precision 的加权和。输入真实二值标签和正类预测分数；本项目以 AP 为主指标，并记录正类率基线。不得将其等同于梯形插值 PR-AUC。&quot;,
+      &quot;tags&quot;: [
+        &quot;average_precision&quot;,
+        &quot;AP&quot;,
+        &quot;排序&quot;,
+        &quot;不平衡&quot;,
+        &quot;precision&quot;,
+        &quot;recall&quot;,
+        &quot;正类&quot;
+      ],
+      &quot;task_types&quot;: [
+        &quot;tabular_binary_classification&quot;,
+        &quot;text_binary_classification&quot;
+      ],
+      &quot;uses&quot;: [
+        {
+          &quot;kind&quot;: &quot;Metric&quot;,
+          &quot;label&quot;: &quot;average_precision&quot;
+        }
+      ],
+      &quot;version&quot;: 1,
+      &quot;score&quot;: 2.611546,
+      &quot;lexical_score&quot;: 0.648886,
+      &quot;graph_score&quot;: 1.96266,
+      &quot;evidence_path&quot;: [
+        {
+          &quot;seed&quot;: &quot;capability:bank-precontact-policy:v2&quot;,
+          &quot;hops&quot;: [
+            {
+              &quot;from&quot;: &quot;capability:bank-precontact-policy:v2&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:bank-target:v2&quot;
+            },
+            {
+              &quot;from&quot;: &quot;capability:bank-target:v2&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:average-precision:v1&quot;
+            }
+          ],
+          &quot;bonus&quot;: 0.6000000000000001
+        },
+        {
+          &quot;seed&quot;: &quot;capability:bank-target:v2&quot;,
+          &quot;hops&quot;: [
+            {
+              &quot;from&quot;: &quot;capability:bank-target:v2&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:average-precision:v1&quot;
+            }
+          ],
+          &quot;bonus&quot;: 0.9733285267845754
+        },
+        {
+          &quot;seed&quot;: &quot;capability:random-forest:v1&quot;,
+          &quot;hops&quot;: [
+            {
+              &quot;from&quot;: &quot;capability:random-forest:v1&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:average-precision:v1&quot;
+            }
+          ],
+          &quot;bonus&quot;: 0.38933141071383015
+        }
+      ],
+      &quot;graph_used&quot;: true,
+      &quot;source_locator&quot;: [
+        {
+          &quot;imports&quot;: [
+            &quot;import warnings&quot;,
+            &quot;from functools import partial&quot;,
+            &quot;from numbers import Integral, Real&quot;,
+            &quot;import numpy as np&quot;,
+            &quot;from scipy.integrate import trapezoid&quot;,
+            &quot;from scipy.sparse import csr_matrix, issparse&quot;,
+            &quot;from scipy.stats import rankdata&quot;,
+            &quot;from ..exceptions import UndefinedMetricWarning&quot;,
+            &quot;from ..preprocessing import label_binarize&quot;,
+            &quot;from ..utils import assert_all_finite, check_array, check_consistent_length, column_or_1d&quot;,
+            &quot;from ..utils._encode import _encode, _unique&quot;,
+            &quot;from ..utils._param_validation import Interval, StrOptions, validate_params&quot;,
+            &quot;from ..utils.extmath import stable_cumsum&quot;,
+            &quot;from ..utils.multiclass import type_of_target&quot;,
+            &quot;from ..utils.sparsefuncs import count_nonzero&quot;,
+            &quot;from ..utils.validation import _check_pos_label_consistency, _check_sample_weight&quot;,
+            &quot;from ._base import _average_binary_score, _average_multiclass_ovo_score&quot;
+          ],
+          &quot;line_end&quot;: 268,
+          &quot;line_start&quot;: 118,
+          &quot;methods&quot;: [
+            &quot;_binary_uninterpolated_average_precision&quot;
+          ],
+          &quot;parse_mode&quot;: &quot;ast-only&quot;,
+          &quot;path&quot;: &quot;/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/metrics/_ranking.py&quot;,
+          &quot;relative_path&quot;: &quot;sklearn/metrics/_ranking.py&quot;,
+          &quot;signature&quot;: &quot;def average_precision_score(y_true, y_score, *, average=&#x27;macro&#x27;, pos_label=1, sample_weight=None)&quot;,
+          &quot;symbol&quot;: &quot;average_precision_score&quot;
+        }
+      ],
+      &quot;matched_constraints&quot;: [
+        &quot;task_type=tabular_binary_classification&quot;
+      ],
+      &quot;rejected_reason&quot;: null
+    },
+    {
+      &quot;capability_id&quot;: &quot;probability-logistic&quot;,
+      &quot;confidence&quot;: 1.0,
+      &quot;created_at&quot;: &quot;2026-09-28T11:23:24.517906+00:00&quot;,
+      &quot;dependencies&quot;: [
+        &quot;Python &gt;=3.10&quot;,
+        &quot;scikit-learn&quot;
+      ],
+      &quot;evidence&quot;: [
+        {
+          &quot;content_sha256&quot;: &quot;981f4e11c9a6fc2b02cd9322f2926849143e4a8bf1819e3a4159a9fce615a00c&quot;,
+          &quot;license&quot;: &quot;BSD-3-Clause&quot;,
+          &quot;locator&quot;: {
+            &quot;imports&quot;: [
+              &quot;import numbers&quot;,
+              &quot;import warnings&quot;,
+              &quot;from numbers import Integral, Real&quot;,
+              &quot;import numpy as np&quot;,
+              &quot;from joblib import effective_n_jobs&quot;,
+              &quot;from scipy import optimize&quot;,
+              &quot;from sklearn.metrics import get_scorer_names&quot;,
+              &quot;from .._loss.loss import HalfBinomialLoss, HalfMultinomialLoss&quot;,
+              &quot;from ..base import _fit_context&quot;,
+              &quot;from ..metrics import get_scorer&quot;,
+              &quot;from ..model_selection import check_cv&quot;,
+              &quot;from ..preprocessing import LabelBinarizer, LabelEncoder&quot;,
+              &quot;from ..svm._base import _fit_liblinear&quot;,
+              &quot;from ..utils import Bunch, check_array, check_consistent_length, check_random_state, compute_class_weight&quot;,
+              &quot;from ..utils._param_validation import Hidden, Interval, StrOptions&quot;,
+              &quot;from ..utils.extmath import row_norms, softmax&quot;,
+              &quot;from ..utils.fixes import _get_additional_lbfgs_options_dict&quot;,
+              &quot;from ..utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, process_routing&quot;,
+              &quot;from ..utils.multiclass import check_classification_targets&quot;,
+              &quot;from ..utils.optimize import _check_optimize_result, _newton_cg&quot;,
+              &quot;from ..utils.parallel import Parallel, delayed&quot;,
+              &quot;from ..utils.validation import _check_method_params, _check_sample_weight, check_is_fitted, validate_data&quot;,
+              &quot;from ._base import BaseEstimator, LinearClassifierMixin, SparseCoefMixin&quot;,
+              &quot;from ._glm.glm import NewtonCholeskySolver&quot;,
+              &quot;from ._linear_loss import LinearModelLoss&quot;,
+              &quot;from ._sag import sag_solver&quot;
+            ],
+            &quot;line_end&quot;: 1497,
+            &quot;line_start&quot;: 829,
+            &quot;methods&quot;: [
+              &quot;__init__&quot;,
+              &quot;fit&quot;,
+              &quot;predict_proba&quot;,
+              &quot;predict_log_proba&quot;,
+              &quot;__sklearn_tags__&quot;
+            ],
+            &quot;parse_mode&quot;: &quot;ast-only&quot;,
+            &quot;path&quot;: &quot;/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/linear_model/_logistic.py&quot;,
+            &quot;relative_path&quot;: &quot;sklearn/linear_model/_logistic.py&quot;,
+            &quot;signature&quot;: &quot;class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):\n    def __init__(self, penalty=&#x27;l2&#x27;, *, dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1, class_weight=None, random_state=None, solver=&#x27;lbfgs&#x27;, max_iter=100, multi_class=&#x27;deprecated&#x27;, verbose=0, warm_start=False, n_jobs=None, l1_ratio=None)&quot;,
+            &quot;symbol&quot;: &quot;LogisticRegression&quot;
+          },
+          &quot;revision&quot;: &quot;1.7.2&quot;,
+          &quot;source_id&quot;: &quot;src-584b66a31950a968f84ef11b&quot;,
+          &quot;uri&quot;: &quot;https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/linear_model/_logistic.py&quot;
+        }
+      ],
+      &quot;extraction_method&quot;: &quot;curated-source-grounded&quot;,
+      &quot;id&quot;: &quot;probability-logistic&quot;,
+      &quot;input_schema&quot;: {
+        &quot;task_types&quot;: [
+          &quot;tabular_binary_classification&quot;,
+          &quot;text_binary_classification&quot;
+        ],
+        &quot;type&quot;: &quot;features&quot;
+      },
+      &quot;name&quot;: &quot;逻辑回归二分类概率接口&quot;,
+      &quot;origin&quot;: &quot;manual_seed&quot;,
+      &quot;output_schema&quot;: {
+        &quot;type&quot;: &quot;implementation-guidance&quot;
+      },
+      &quot;preconditions&quot;: [],
+      &quot;related&quot;: [
+        &quot;average-precision&quot;
+      ],
+      &quot;status&quot;: &quot;extracted&quot;,
+      &quot;summary&quot;: &quot;LogisticRegression 提供 predict_proba，输出列顺序由 classes_ 决定。必须根据正类标签映射提取正确一列，不能把 predict 的类别标签当概率。适合经过编码的表格特征及 TF-IDF 稀疏文本特征。&quot;,
+      &quot;tags&quot;: [
+        &quot;LogisticRegression&quot;,
+        &quot;predict_proba&quot;,
+        &quot;概率&quot;,
+        &quot;二分类&quot;,
+        &quot;classes_&quot;
+      ],
+      &quot;task_types&quot;: [
+        &quot;tabular_binary_classification&quot;,
+        &quot;text_binary_classification&quot;
+      ],
+      &quot;uses&quot;: [
+        {
+          &quot;kind&quot;: &quot;Algorithm&quot;,
+          &quot;label&quot;: &quot;LogisticRegression&quot;
+        }
+      ],
+      &quot;version&quot;: 1,
+      &quot;score&quot;: 2.579101,
+      &quot;lexical_score&quot;: 0.811107,
+      &quot;graph_score&quot;: 1.767994,
+      &quot;evidence_path&quot;: [
+        {
+          &quot;seed&quot;: &quot;capability:bank-precontact-policy:v2&quot;,
+          &quot;hops&quot;: [
+            {
+              &quot;from&quot;: &quot;capability:bank-precontact-policy:v2&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:bank-target:v2&quot;
+            },
+            {
+              &quot;from&quot;: &quot;capability:bank-target:v2&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:probability-logistic:v1&quot;
+            }
+          ],
+          &quot;bonus&quot;: 0.6000000000000001
+        },
+        {
+          &quot;seed&quot;: &quot;capability:bank-target:v2&quot;,
+          &quot;hops&quot;: [
+            {
+              &quot;from&quot;: &quot;capability:bank-target:v2&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:probability-logistic:v1&quot;
+            }
+          ],
+          &quot;bonus&quot;: 0.9733285267845754
+        },
+        {
+          &quot;seed&quot;: &quot;capability:random-forest:v1&quot;,
+          &quot;hops&quot;: [
+            {
+              &quot;from&quot;: &quot;capability:random-forest:v1&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:average-precision:v1&quot;
+            },
+            {
+              &quot;from&quot;: &quot;capability:average-precision:v1&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:probability-logistic:v1&quot;
+            }
+          ],
+          &quot;bonus&quot;: 0.19466570535691508
+        }
+      ],
+      &quot;graph_used&quot;: true,
+      &quot;source_locator&quot;: [
+        {
+          &quot;imports&quot;: [
+            &quot;import numbers&quot;,
+            &quot;import warnings&quot;,
+            &quot;from numbers import Integral, Real&quot;,
+            &quot;import numpy as np&quot;,
+            &quot;from joblib import effective_n_jobs&quot;,
+            &quot;from scipy import optimize&quot;,
+            &quot;from sklearn.metrics import get_scorer_names&quot;,
+            &quot;from .._loss.loss import HalfBinomialLoss, HalfMultinomialLoss&quot;,
+            &quot;from ..base import _fit_context&quot;,
+            &quot;from ..metrics import get_scorer&quot;,
+            &quot;from ..model_selection import check_cv&quot;,
+            &quot;from ..preprocessing import LabelBinarizer, LabelEncoder&quot;,
+            &quot;from ..svm._base import _fit_liblinear&quot;,
+            &quot;from ..utils import Bunch, check_array, check_consistent_length, check_random_state, compute_class_weight&quot;,
+            &quot;from ..utils._param_validation import Hidden, Interval, StrOptions&quot;,
+            &quot;from ..utils.extmath import row_norms, softmax&quot;,
+            &quot;from ..utils.fixes import _get_additional_lbfgs_options_dict&quot;,
+            &quot;from ..utils.metadata_routing import MetadataRouter, MethodMapping, _raise_for_params, _routing_enabled, process_routing&quot;,
+            &quot;from ..utils.multiclass import check_classification_targets&quot;,
+            &quot;from ..utils.optimize import _check_optimize_result, _newton_cg&quot;,
+            &quot;from ..utils.parallel import Parallel, delayed&quot;,
+            &quot;from ..utils.validation import _check_method_params, _check_sample_weight, check_is_fitted, validate_data&quot;,
+            &quot;from ._base import BaseEstimator, LinearClassifierMixin, SparseCoefMixin&quot;,
+            &quot;from ._glm.glm import NewtonCholeskySolver&quot;,
+            &quot;from ._linear_loss import LinearModelLoss&quot;,
+            &quot;from ._sag import sag_solver&quot;
+          ],
+          &quot;line_end&quot;: 1497,
+          &quot;line_start&quot;: 829,
+          &quot;methods&quot;: [
+            &quot;__init__&quot;,
+            &quot;fit&quot;,
+            &quot;predict_proba&quot;,
+            &quot;predict_log_proba&quot;,
+            &quot;__sklearn_tags__&quot;
+          ],
+          &quot;parse_mode&quot;: &quot;ast-only&quot;,
+          &quot;path&quot;: &quot;/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/linear_model/_logistic.py&quot;,
+          &quot;relative_path&quot;: &quot;sklearn/linear_model/_logistic.py&quot;,
+          &quot;signature&quot;: &quot;class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):\n    def __init__(self, penalty=&#x27;l2&#x27;, *, dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1, class_weight=None, random_state=None, solver=&#x27;lbfgs&#x27;, max_iter=100, multi_class=&#x27;deprecated&#x27;, verbose=0, warm_start=False, n_jobs=None, l1_ratio=None)&quot;,
+          &quot;symbol&quot;: &quot;LogisticRegression&quot;
+        }
+      ],
+      &quot;matched_constraints&quot;: [
+        &quot;task_type=tabular_binary_classification&quot;
+      ],
+      &quot;rejected_reason&quot;: null
+    },
+    {
+      &quot;capability_id&quot;: &quot;bank-ordered-split&quot;,
+      &quot;confidence&quot;: 1.0,
+      &quot;created_at&quot;: &quot;2026-09-29T15:08:50.632098+00:00&quot;,
+      &quot;dependencies&quot;: [
+        &quot;Python &gt;=3.10&quot;,
+        &quot;scikit-learn&quot;
+      ],
+      &quot;evidence&quot;: [
+        {
+          &quot;content_sha256&quot;: &quot;aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23&quot;,
+          &quot;license&quot;: &quot;original-project-notes&quot;,
+          &quot;locator&quot;: {
+            &quot;line_end&quot;: 50,
+            &quot;line_start&quot;: 35,
+            &quot;path&quot;: &quot;/root/algorithm-capability-factory/docs/02_数据与知识来源.md&quot;
+          },
+          &quot;revision&quot;: &quot;sha256:aaebabc27eb0a531bce7f81b5dfb7eefe0e4b635935b5a2063c8ac8eb3c10a23&quot;,
+          &quot;source_id&quot;: &quot;src-a12ccd822a93af321f34ad70&quot;,
+          &quot;uri&quot;: &quot;file:///root/algorithm-capability-factory/docs/02_%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%9D%A5%E6%BA%90.md&quot;
+        }
+      ],
+      &quot;extraction_method&quot;: &quot;curated-source-grounded&quot;,
+      &quot;id&quot;: &quot;bank-ordered-split&quot;,
+      &quot;input_schema&quot;: {
+        &quot;task_types&quot;: [
+          &quot;tabular_binary_classification&quot;
+        ],
+        &quot;type&quot;: &quot;features&quot;
+      },
+      &quot;name&quot;: &quot;银行原始顺序留出与测试封存&quot;,
+      &quot;origin&quot;: &quot;manual_seed&quot;,
+      &quot;output_schema&quot;: {
+        &quot;type&quot;: &quot;implementation-guidance&quot;
+      },
+      &quot;preconditions&quot;: [],
+      &quot;related&quot;: [
+        &quot;training-only-pipeline&quot;
+      ],
+      &quot;status&quot;: &quot;extracted&quot;,
+      &quot;summary&quot;: &quot;本项目主协议按原始行位置作 60/20/20 顺序划分。训练和验证可用于候选选择；最终测试在代码、提示词和阈值冻结后使用。CSV 没有完整时间戳或可靠客户 ID，不声称精确日期边界或客户级隔离。&quot;,
+      &quot;tags&quot;: [
+        &quot;顺序&quot;,
+        &quot;切分&quot;,
+        &quot;测试&quot;,
+        &quot;泄漏&quot;,
+        &quot;ordered&quot;,
+        &quot;split&quot;
+      ],
+      &quot;task_types&quot;: [
+        &quot;tabular_binary_classification&quot;
+      ],
+      &quot;uses&quot;: [],
+      &quot;version&quot;: 2,
+      &quot;score&quot;: 2.497771,
+      &quot;lexical_score&quot;: 0.811107,
+      &quot;graph_score&quot;: 1.686664,
+      &quot;evidence_path&quot;: [
+        {
+          &quot;seed&quot;: &quot;capability:bank-precontact-policy:v2&quot;,
+          &quot;hops&quot;: [
+            {
+              &quot;from&quot;: &quot;capability:bank-precontact-policy:v2&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:bank-ordered-split:v2&quot;
+            }
+          ],
+          &quot;bonus&quot;: 1.2000000000000002
+        },
+        {
+          &quot;seed&quot;: &quot;capability:bank-target:v2&quot;,
+          &quot;hops&quot;: [
+            {
+              &quot;from&quot;: &quot;capability:bank-target:v2&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:bank-precontact-policy:v2&quot;
+            },
+            {
+              &quot;from&quot;: &quot;capability:bank-precontact-policy:v2&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:bank-ordered-split:v2&quot;
+            }
+          ],
+          &quot;bonus&quot;: 0.4866642633922877
+        }
+      ],
+      &quot;graph_used&quot;: true,
+      &quot;source_locator&quot;: [
+        {
+          &quot;line_end&quot;: 50,
+          &quot;line_start&quot;: 35,
+          &quot;path&quot;: &quot;/root/algorithm-capability-factory/docs/02_数据与知识来源.md&quot;
+        }
+      ],
+      &quot;matched_constraints&quot;: [
+        &quot;task_type=tabular_binary_classification&quot;
+      ],
+      &quot;rejected_reason&quot;: null
+    },
+    {
+      &quot;capability_id&quot;: &quot;random-forest&quot;,
+      &quot;confidence&quot;: 1.0,
+      &quot;created_at&quot;: &quot;2026-09-28T11:23:24.518056+00:00&quot;,
+      &quot;dependencies&quot;: [
+        &quot;Python &gt;=3.10&quot;,
+        &quot;scikit-learn&quot;
+      ],
+      &quot;evidence&quot;: [
+        {
+          &quot;content_sha256&quot;: &quot;c5a4230e63753d964674363bdbc47179340f28433133172dce1ecef4e73b6ee4&quot;,
+          &quot;license&quot;: &quot;BSD-3-Clause&quot;,
+          &quot;locator&quot;: {
+            &quot;imports&quot;: [
+              &quot;import threading&quot;,
+              &quot;from abc import ABCMeta, abstractmethod&quot;,
+              &quot;from numbers import Integral, Real&quot;,
+              &quot;from warnings import catch_warnings, simplefilter, warn&quot;,
+              &quot;import numpy as np&quot;,
+              &quot;from scipy.sparse import hstack as sparse_hstack&quot;,
+              &quot;from scipy.sparse import issparse&quot;,
+              &quot;from ..base import ClassifierMixin, MultiOutputMixin, RegressorMixin, TransformerMixin, _fit_context, is_classifier&quot;,
+              &quot;from ..exceptions import DataConversionWarning&quot;,
+              &quot;from ..metrics import accuracy_score, r2_score&quot;,
+              &quot;from ..preprocessing import OneHotEncoder&quot;,
+              &quot;from ..tree import BaseDecisionTree, DecisionTreeClassifier, DecisionTreeRegressor, ExtraTreeClassifier, ExtraTreeRegressor&quot;,
+              &quot;from ..tree._tree import DOUBLE, DTYPE&quot;,
+              &quot;from ..utils import check_random_state, compute_sample_weight&quot;,
+              &quot;from ..utils._param_validation import Interval, RealNotInt, StrOptions&quot;,
+              &quot;from ..utils._tags import get_tags&quot;,
+              &quot;from ..utils.multiclass import check_classification_targets, type_of_target&quot;,
+              &quot;from ..utils.parallel import Parallel, delayed&quot;,
+              &quot;from ..utils.validation import _check_feature_names_in, _check_sample_weight, _num_samples, check_is_fitted, validate_data&quot;,
+              &quot;from ._base import BaseEnsemble, _partition_estimators&quot;
+            ],
+            &quot;line_end&quot;: 1568,
+            &quot;line_start&quot;: 1174,
+            &quot;methods&quot;: [
+              &quot;__init__&quot;
+            ],
+            &quot;parse_mode&quot;: &quot;ast-only&quot;,
+            &quot;path&quot;: &quot;/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/ensemble/_forest.py&quot;,
+            &quot;relative_path&quot;: &quot;sklearn/ensemble/_forest.py&quot;,
+            &quot;signature&quot;: &quot;class RandomForestClassifier(ForestClassifier):\n    def __init__(self, n_estimators=100, *, criterion=&#x27;gini&#x27;, max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=&#x27;sqrt&#x27;, max_leaf_nodes=None, min_impurity_decrease=0.0, bootstrap=True, oob_score=False, n_jobs=None, random_state=None, verbose=0, warm_start=False, class_weight=None, ccp_alpha=0.0, max_samples=None, monotonic_cst=None)&quot;,
+            &quot;symbol&quot;: &quot;RandomForestClassifier&quot;
+          },
+          &quot;revision&quot;: &quot;1.7.2&quot;,
+          &quot;source_id&quot;: &quot;src-65a2ca3df537050020eb73b5&quot;,
+          &quot;uri&quot;: &quot;https://github.com/scikit-learn/scikit-learn/blob/1.7.2/sklearn/ensemble/_forest.py&quot;
+        }
+      ],
+      &quot;extraction_method&quot;: &quot;curated-source-grounded&quot;,
+      &quot;id&quot;: &quot;random-forest&quot;,
+      &quot;input_schema&quot;: {
+        &quot;task_types&quot;: [
+          &quot;tabular_binary_classification&quot;
+        ],
+        &quot;type&quot;: &quot;features&quot;
+      },
+      &quot;name&quot;: &quot;随机森林表格分类候选&quot;,
+      &quot;origin&quot;: &quot;manual_seed&quot;,
+      &quot;output_schema&quot;: {
+        &quot;type&quot;: &quot;implementation-guidance&quot;
+      },
+      &quot;preconditions&quot;: [],
+      &quot;related&quot;: [
+        &quot;mixed-type-columns&quot;,
+        &quot;average-precision&quot;
+      ],
+      &quot;status&quot;: &quot;extracted&quot;,
+      &quot;summary&quot;: &quot;RandomForestClassifier 集成多棵决策树并提供类别概率；固定 random_state，并用 n_jobs 和树数量限制 CPU 与内存。它是可比较的候选，不预设其性能优于逻辑回归。&quot;,
+      &quot;tags&quot;: [
+        &quot;RandomForestClassifier&quot;,
+        &quot;森林&quot;,
+        &quot;非线性&quot;,
+        &quot;random_state&quot;,
+        &quot;cpu&quot;
+      ],
+      &quot;task_types&quot;: [
+        &quot;tabular_binary_classification&quot;
+      ],
+      &quot;uses&quot;: [
+        {
+          &quot;kind&quot;: &quot;Algorithm&quot;,
+          &quot;label&quot;: &quot;RandomForestClassifier&quot;
+        }
+      ],
+      &quot;version&quot;: 1,
+      &quot;score&quot;: 1.459993,
+      &quot;lexical_score&quot;: 0.973329,
+      &quot;graph_score&quot;: 0.486664,
+      &quot;evidence_path&quot;: [
+        {
+          &quot;seed&quot;: &quot;capability:bank-target:v2&quot;,
+          &quot;hops&quot;: [
+            {
+              &quot;from&quot;: &quot;capability:bank-target:v2&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:average-precision:v1&quot;
+            },
+            {
+              &quot;from&quot;: &quot;capability:average-precision:v1&quot;,
+              &quot;relation&quot;: &quot;REQUIRES&quot;,
+              &quot;to&quot;: &quot;capability:random-forest:v1&quot;
+            }
+          ],
+          &quot;bonus&quot;: 0.4866642633922877
+        }
+      ],
+      &quot;graph_used&quot;: true,
+      &quot;source_locator&quot;: [
+        {
+          &quot;imports&quot;: [
+            &quot;import threading&quot;,
+            &quot;from abc import ABCMeta, abstractmethod&quot;,
+            &quot;from numbers import Integral, Real&quot;,
+            &quot;from warnings import catch_warnings, simplefilter, warn&quot;,
+            &quot;import numpy as np&quot;,
+            &quot;from scipy.sparse import hstack as sparse_hstack&quot;,
+            &quot;from scipy.sparse import issparse&quot;,
+            &quot;from ..base import ClassifierMixin, MultiOutputMixin, RegressorMixin, TransformerMixin, _fit_context, is_classifier&quot;,
+            &quot;from ..exceptions import DataConversionWarning&quot;,
+            &quot;from ..metrics import accuracy_score, r2_score&quot;,
+            &quot;from ..preprocessing import OneHotEncoder&quot;,
+            &quot;from ..tree import BaseDecisionTree, DecisionTreeClassifier, DecisionTreeRegressor, ExtraTreeClassifier, ExtraTreeRegressor&quot;,
+            &quot;from ..tree._tree import DOUBLE, DTYPE&quot;,
+            &quot;from ..utils import check_random_state, compute_sample_weight&quot;,
+            &quot;from ..utils._param_validation import Interval, RealNotInt, StrOptions&quot;,
+            &quot;from ..utils._tags import get_tags&quot;,
+            &quot;from ..utils.multiclass import check_classification_targets, type_of_target&quot;,
+            &quot;from ..utils.parallel import Parallel, delayed&quot;,
+            &quot;from ..utils.validation import _check_feature_names_in, _check_sample_weight, _num_samples, check_is_fitted, validate_data&quot;,
+            &quot;from ._base import BaseEnsemble, _partition_estimators&quot;
+          ],
+          &quot;line_end&quot;: 1568,
+          &quot;line_start&quot;: 1174,
+          &quot;methods&quot;: [
+            &quot;__init__&quot;
+          ],
+          &quot;parse_mode&quot;: &quot;ast-only&quot;,
+          &quot;path&quot;: &quot;/root/algorithm-capability-factory/.venv/lib/python3.10/site-packages/sklearn/ensemble/_forest.py&quot;,
+          &quot;relative_path&quot;: &quot;sklearn/ensemble/_forest.py&quot;,
+          &quot;signature&quot;: &quot;class RandomForestClassifier(ForestClassifier):\n    def __init__(self, n_estimators=100, *, criterion=&#x27;gini&#x27;, max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=&#x27;sqrt&#x27;, max_leaf_nodes=None, min_impurity_decrease=0.0, bootstrap=True, oob_score=False, n_jobs=None, random_state=None, verbose=0, warm_start=False, class_weight=None, ccp_alpha=0.0, max_samples=None, monotonic_cst=None)&quot;,
+          &quot;symbol&quot;: &quot;RandomForestClassifier&quot;
+        }
+      ],
+      &quot;matched_constraints&quot;: [
+        &quot;task_type=tabular_binary_classification&quot;
+      ],
+      &quot;rejected_reason&quot;: null
+    }
+  ],
+  &quot;failure_reason&quot;: &quot;ProviderError: Provider returned HTTP 400; no automatic model substitution&quot;,
+  &quot;finished_at&quot;: &quot;2026-09-29T17:40:42.027473+00:00&quot;,
+  &quot;timing&quot;: {
+    &quot;wall_seconds&quot;: 5.692,
+    &quot;budget_seconds&quot;: 120.0,
+    &quot;request_ceiling_seconds&quot;: 900
+  },
+  &quot;report_paths&quot;: {}
+}</pre></details></section><footer>本报告离线可读，不加载外部脚本、字体或 CDN。模型文本不会作为 HTML 执行。</footer></main></body></html>

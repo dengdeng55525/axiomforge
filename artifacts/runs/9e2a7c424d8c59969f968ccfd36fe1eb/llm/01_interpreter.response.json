@@ -1,0 +1,11 @@
+{
+  "objective": "用通话前客户信息预测是否订购，输出概率，比较两种算法。",
+  "constraints": [
+    "遵守固定数据与特征协议"
+  ],
+  "assumptions": [
+    "离线规则测试模式"
+  ],
+  "warnings": [],
+  "incompatible_requests": []
+}

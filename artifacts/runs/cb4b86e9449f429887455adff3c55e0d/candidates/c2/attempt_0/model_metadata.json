@@ -1,0 +1,17 @@
+{
+  "actual_algorithm": "nb",
+  "classifier_class": "ComplementNB",
+  "classifier_path": [
+    "model"
+  ],
+  "classifier_parameters": {
+    "alpha": 0.5
+  },
+  "constructor_classes": [
+    "Pipeline",
+    "TfidfVectorizer",
+    "ComplementNB"
+  ],
+  "constructor_count": 3,
+  "source": "independently_parsed_constructor_plan"
+}

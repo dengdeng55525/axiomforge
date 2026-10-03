@@ -1,0 +1,6 @@
+{
+  "error_type": "nondeterministic_worker_execution",
+  "diagnosis": "The pipeline sets random_state only on RandomForestClassifier, but the worker's repeated-prediction determinism check fails because the pipeline is not fully seeded: the OneHotEncoder and the overall estimator construction rely on global RNG state, and n_jobs=2 can introduce thread-scheduling nondeterminism in prediction. The constructor program must make every stochastic component explicitly seeded and avoid parallel nondeterminism.",
+  "fix": "In build_pipeline, set random_state=task_spec['seed'] on OneHotEncoder (and any other stochastic transformer), and set n_jobs=1 on RandomForestClassifier so prediction is single-threaded and reproducible. Keep the existing random_state on the classifier.",
+  "repairable": true
+}

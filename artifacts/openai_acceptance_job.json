@@ -1,0 +1,15 @@
+{
+  "request": {
+    "description": "比较 TF-IDF 逻辑回归与朴素贝叶斯的短信垃圾分类能力。按固定数据协议独立验证，输出可运行代码、验证指标、知识依据和资源分析，并保存验证结果。",
+    "dataset_id": "sms",
+    "provider": "openai",
+    "max_candidates": 2,
+    "max_repairs": 2,
+    "search": "compare",
+    "max_seconds": 900
+  },
+  "submission": {
+    "run_id": "660682f3cf324bf1938b78c70f2fce8c",
+    "status": "queued"
+  }
+}

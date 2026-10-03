@@ -1,0 +1,32 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "sms_logreg_default",
+      "algorithm": "logistic",
+      "variant": "default",
+      "rationale": "TF-IDF 稀疏文本特征配合逻辑回归概率接口，作为短信垃圾信息分类的线性基线；词表与 IDF 仅在训练集拟合，按 sms-grouped-split 协议保持训练/验证/测试隔离，以 AP 为主指标。",
+      "evidence_ids": [
+        "text-tfidf",
+        "probability-logistic",
+        "average-precision",
+        "sms-format",
+        "sms-grouped-split"
+      ],
+      "parent_id": null
+    },
+    {
+      "candidate_id": "sms_nb_default",
+      "algorithm": "nb",
+      "variant": "default",
+      "rationale": "ComplementNB 面向不平衡非负文本特征，与 TF-IDF 组合形成与线性模型不同的生成式对照方案；同样遵循分组去重分层划分与训练集内拟合词表，报告 AP 与 F1。",
+      "evidence_ids": [
+        "text-tfidf",
+        "complement-naive-bayes",
+        "average-precision",
+        "sms-format",
+        "sms-grouped-split"
+      ],
+      "parent_id": null
+    }
+  ]
+}

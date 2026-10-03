@@ -1,0 +1,23 @@
+{
+  "objective": "构建短信垃圾信息二分类能力，在固定数据集 sms 上比较 TF-IDF 结合逻辑回归与朴素贝叶斯方案，并报告平均精度（AP）、F1 及接口稳定性检查结果。",
+  "constraints": [
+    "仅使用 task_spec 指定的数据集 sms 与字段 text，标签正类为 spam。",
+    "任务类型为 text_binary_classification，主指标为 average_precision，同时报告 F1。",
+    "特征策略固定为 normalized_group_split_v1，必须保持训练、验证、测试隔离。",
+    "随机种子固定为 42。",
+    "资源上限：CPU 2、内存 2048 MiB、超时 120 秒。",
+    "不得修改 task_spec、评估标签、划分协议或安全约束。"
+  ],
+  "assumptions": [
+    "TF-IDF 作为文本特征化方法，逻辑回归与朴素贝叶斯作为候选分类器。",
+    "接口稳定性检查指对推理接口的输入输出契约与可重复性进行验证，而非承诺未见客户端分离。",
+    "AP 与 F1 在验证集与测试集上按固定协议计算并报告。"
+  ],
+  "warnings": [
+    "数据集中未提供客户端 ID，因此无法承诺或验证未见客户端分离，只能依赖 normalized_group_split_v1 的划分协议。",
+    "若请求的整轮墙钟预算低于 10 秒，将视为不兼容并回退到 10 秒。",
+    "未提供额外时长或不可用信息时，无法据此调整运行预算。"
+  ],
+  "incompatible_requests": [],
+  "requested_run_seconds": null
+}

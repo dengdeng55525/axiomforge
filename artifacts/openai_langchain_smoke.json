@@ -1,0 +1,67 @@
+{
+  "run_id": "ec6a9065fc9647b5b7bab1d59a2c760f",
+  "status": "failed",
+  "provider": "openai",
+  "model": "gpt-5.5",
+  "failure_reason": "ProviderError: Responses transport failure: APITimeoutError",
+  "selected_candidate_id": null,
+  "timing": {
+    "wall_seconds": 243.631,
+    "budget_seconds": 600,
+    "request_ceiling_seconds": 600
+  },
+  "provenance": {
+    "prompt_version": "algoforge-roles-v3",
+    "sealed_test_scored": false,
+    "agent_runtime": {
+      "framework": "langchain-core",
+      "version": "1.6.5",
+      "role_chain": [
+        "invoke_provider",
+        "persist_response",
+        "validate_contract"
+      ],
+      "retrieval_tool": "search_capabilities",
+      "external_tracing": false
+    },
+    "dataset": {
+      "schema_version": "1.0",
+      "dataset_id": "uci-sms-spam",
+      "source_url": "https://archive.ics.uci.edu/dataset/228/sms+spam+collection",
+      "license": "CC BY 4.0",
+      "raw_sha256": "7d039a24a6083ed9ef0f806ebad56bbb976e3aeb8de05669173bfdc4996c239d",
+      "split_policy": "normalized_text_group_dedup_stratified_60_20_20",
+      "split_seed": 42,
+      "train_rows": 3095,
+      "validation_rows": 1032,
+      "sealed_test_rows": 1032,
+      "sealed_test_exported": false,
+      "sealed_test_scored": false,
+      "validation_labels_visible_to_generated_code": false,
+      "preprocessing_fit_split": "train_only",
+      "feature_policy": "text_only_group_dedup_v1",
+      "feature_names": [
+        "text"
+      ],
+      "numeric_features": [],
+      "file_sha256": {
+        "train": "02e817b63d1687cba45abc15c3820c3748405fd185f09ee73c2b7854ea7117a6",
+        "validation_features": "b56334649c55b5873b8a94c0d0efcceb8710824808fba4900e639dcd782f343b",
+        "validation_labels": "71907784e61eabc1fff51e1e71293e9cc4ef0a8359d1923def4c0519185a7421"
+      },
+      "raw_rows": 5574,
+      "normalized_groups": 5159,
+      "conflicting_groups_excluded": 0,
+      "train_group_ids_sha256": "67b569ca179c2f301db65dea9f94b0ce90cb2ad6359b601a00ca38c1b567860c",
+      "validation_group_ids_sha256": "d7b9f23990ff4133c30b7b64ce309f75d9e1baea67c59ccfdf929cbe2330d31c",
+      "sealed_group_ids_sha256": "d9a436d8888da5cbd06d15795c909d935e7709cc7b4f7cd3dbbf357d7e60fd65"
+    }
+  },
+  "usage": {
+    "calls": 2,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cached_input_tokens": 0
+  },
+  "candidates": []
+}

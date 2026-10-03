@@ -1,0 +1,11 @@
+{
+  "objective": "演示 Agent 角色协作：检索短信分类能力，比较候选并验证接口稳定性，回写验证经验。",
+  "constraints": [
+    "遵守固定数据与特征协议"
+  ],
+  "assumptions": [
+    "离线规则测试模式"
+  ],
+  "warnings": [],
+  "incompatible_requests": []
+}

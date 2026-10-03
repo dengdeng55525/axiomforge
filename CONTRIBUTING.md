@@ -13,7 +13,7 @@ python scripts/verify_data.py
 cd web && npm ci
 ```
 
-不要提交 `.env`、API Key、本地 SQLite、完整运行日志、未脱敏模型请求响应或本机生成的 `artifacts/`。
+`.env`、API Key、私钥、模型权重和本地依赖环境永远不提交。公开数据、运行报告、验证制品与截图可以提交；提交前执行敏感信息扫描，并确认模型请求响应已经脱敏。
 
 ## 修改前先确定边界
 

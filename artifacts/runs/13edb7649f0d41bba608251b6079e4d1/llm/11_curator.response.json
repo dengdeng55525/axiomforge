@@ -1,0 +1,11 @@
+{
+  "summary": "在验证集（8238 行，正例率 0.1107）上，候选 bank_logreg_balanced 通过评估：平均精度 0.1808，较 dummy 基线 0.1107 提升 0.0701；ROC AUC 0.6093；阈值 0.5 时 F1 为 0.2288；前 10% 的 precision 为 0.2197、recall 为 0.1985、lift 为 1.9842（top_10pct_count=824）。候选 bank_forest_shallower 状态为 failed，未提供任何指标，因此无法与前者进行数值比较，也不应被隐去。相关能力证据包括 bank-precontact-policy、bank-target、average-precision、probability-logistic、random-forest、bank-ordered-split。基于上述验证结果，选定候选为 bank_logreg_balanced。",
+  "limitations": [
+    "所有数值均来自 validation_only 划分，sealed_test_scored=false，验证表现不等于最终测试集表现，不能据此推断泛化能力。",
+    "bank_forest_shallower 状态为 failed 且指标为空，无法评估其性能或与 bank_logreg_balanced 的差异，其失败原因未在给定字段中说明。",
+    "排序并列按 original_validation_row_order 处理，前 10% 指标对行序敏感，换序可能改变 precision/recall/lift。",
+    "该评估为受约束的 AST 执行环境，并非通用操作系统沙箱，不能据此推断任意代码或生产环境下的安全性。",
+    "模型选择本身不证明因果营销提升；lift 与 AP 提升仅为预测关联指标，未包含随机化实验或因果识别设计。",
+    "未提供置信区间、显著性检验或重复种子结果，0.0701 的 AP 提升与 1.9842 的 lift 的稳定性未知。"
+  ]
+}

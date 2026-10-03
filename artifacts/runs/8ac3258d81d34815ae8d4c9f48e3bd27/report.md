@@ -1,0 +1,607 @@
+# 算法能力验证报告
+
+指标与状态来自原始验证事实；缺失项不填零、不推断通过。
+
+模式由原始报告的 mode 字段说明：mock 为模拟，replay 为历史回放。
+
+````json
+{
+  "schema_version": "1.0",
+  "run_id": "8ac3258d81d34815ae8d4c9f48e3bd27",
+  "status": "passed",
+  "mode": "real",
+  "provider": "deepseek",
+  "description": "最终代码冒烟：生成短信垃圾分类概率管道并执行独立验证。",
+  "dataset_id": "sms",
+  "created_at": "2026-09-28T12:23:33.822127+00:00",
+  "request": {
+    "description": "最终代码冒烟：生成短信垃圾分类概率管道并执行独立验证。",
+    "dataset_id": "sms",
+    "provider": "deepseek",
+    "max_candidates": 1,
+    "max_repairs": 0,
+    "use_graph": false,
+    "use_retrieval": false,
+    "orchestration": "single_shot",
+    "search": "compare",
+    "inject_failure": false,
+    "max_seconds": 120
+  },
+  "task_spec": {
+    "task_type": "text_binary_classification",
+    "dataset_id": "sms",
+    "positive_label": "spam",
+    "feature_names": [
+      "text"
+    ],
+    "numeric_features": [],
+    "categorical_features": [
+      "text"
+    ],
+    "seed": 42,
+    "primary_metric": "average_precision",
+    "limits": {
+      "cpu": 2,
+      "memory_mib": 2048,
+      "timeout_s": 120
+    },
+    "feature_policy": "normalized_group_split_v1"
+  },
+  "model": "deepseek-flash",
+  "provenance": {
+    "prompt_version": "algoforge-roles-v2",
+    "sealed_test_scored": false,
+    "dataset": {
+      "schema_version": "1.0",
+      "dataset_id": "uci-sms-spam",
+      "source_url": "https://archive.ics.uci.edu/dataset/228/sms+spam+collection",
+      "license": "CC BY 4.0",
+      "raw_sha256": "7d039a24a6083ed9ef0f806ebad56bbb976e3aeb8de05669173bfdc4996c239d",
+      "split_policy": "normalized_text_group_dedup_stratified_60_20_20",
+      "split_seed": 42,
+      "train_rows": 3095,
+      "validation_rows": 1032,
+      "sealed_test_rows": 1032,
+      "sealed_test_exported": false,
+      "sealed_test_scored": false,
+      "validation_labels_visible_to_generated_code": false,
+      "preprocessing_fit_split": "train_only",
+      "feature_policy": "text_only_group_dedup_v1",
+      "feature_names": [
+        "text"
+      ],
+      "numeric_features": [],
+      "file_sha256": {
+        "train": "02e817b63d1687cba45abc15c3820c3748405fd185f09ee73c2b7854ea7117a6",
+        "validation_features": "b56334649c55b5873b8a94c0d0efcceb8710824808fba4900e639dcd782f343b",
+        "validation_labels": "71907784e61eabc1fff51e1e71293e9cc4ef0a8359d1923def4c0519185a7421"
+      },
+      "raw_rows": 5574,
+      "normalized_groups": 5159,
+      "conflicting_groups_excluded": 0,
+      "train_group_ids_sha256": "67b569ca179c2f301db65dea9f94b0ce90cb2ad6359b601a00ca38c1b567860c",
+      "validation_group_ids_sha256": "d7b9f23990ff4133c30b7b64ce309f75d9e1baea67c59ccfdf929cbe2330d31c",
+      "sealed_group_ids_sha256": "d9a436d8888da5cbd06d15795c909d935e7709cc7b4f7cd3dbbf357d7e60fd65"
+    }
+  },
+  "candidates": [
+    {
+      "candidate_id": "fixed_c1",
+      "plan": {
+        "candidate_id": "fixed_c1",
+        "algorithm": "logistic",
+        "variant": "default",
+        "rationale": "预注册消融采用固定线性算法计划，非LLM规划。",
+        "evidence_ids": [],
+        "parent_id": null
+      },
+      "status": "passed",
+      "metrics": {
+        "average_precision": 0.9583895772337544,
+        "roc_auc": 0.9880587533372823,
+        "f1_threshold_0_5": 0.8055555555555556,
+        "precision_at_10pct": 0.9903846153846154,
+        "recall_at_10pct": 0.7984496124031008,
+        "lift_at_10pct": 7.923076923076923,
+        "validation_positive_rate": 0.125,
+        "top_10pct_count": 104,
+        "validation_rows": 1032,
+        "classification_threshold": 0.5,
+        "evaluation_split": "validation_only",
+        "sealed_test_scored": false,
+        "ranking_tie_break": "original_validation_row_order",
+        "dummy_average_precision": 0.125,
+        "ap_improvement_over_dummy": 0.8333895772337544
+      },
+      "checks": [
+        {
+          "name": "source_policy",
+          "passed": true,
+          "mandatory": true,
+          "detail": "AST parsed as approved constructors without exec/eval"
+        },
+        {
+          "name": "plan_consistency",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Final classifier matches planned logistic"
+        },
+        {
+          "name": "dataset_integrity",
+          "passed": true,
+          "mandatory": true,
+          "detail": "SHA256, split disjointness, row alignment, feature policy"
+        },
+        {
+          "name": "labels_withheld",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Worker receives no validation labels or final test"
+        },
+        {
+          "name": "worker_execution",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Resource-limited fresh process exited successfully"
+        },
+        {
+          "name": "prediction_contract",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+        },
+        {
+          "name": "single_row",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "repeat_prediction",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "empty_batch_wrapper",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "empty_text",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "clean_environment",
+          "passed": true,
+          "mandatory": true,
+          "detail": "No API keys/tokens passed to worker"
+        },
+        {
+          "name": "ap_above_dummy",
+          "passed": true,
+          "mandatory": false,
+          "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+        },
+        {
+          "name": "host_evaluation",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Metrics computed only by trusted host using validation labels"
+        }
+      ],
+      "resources": {
+        "limits": {
+          "timeout_s": 116.0,
+          "memory_mib": 2048,
+          "cpu_cores": 2
+        },
+        "worker_pid": 28875,
+        "wall_seconds": 0.9030273908283561,
+        "fit_seconds": 0.12895922688767314,
+        "predict_seconds": 0.01370433415286243,
+        "worker_wall_seconds": 0.7612577059771866,
+        "peak_rss_mib": 189.0,
+        "cpu_seconds": 0.9997569999999999,
+        "sklearn_version": "1.7.2",
+        "python_version": "3.10.8",
+        "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+        "joblib_backend": "threading",
+        "repeat_prediction_max_abs_delta": 0.0,
+        "total_seconds": 0.9308504008222371
+      },
+      "repairs": [],
+      "attempts": [
+        {
+          "attempt": 0,
+          "code_sha256": "d81281a4e17a83d8e5afe948d7d160854a4099d75f3857c3aa09d3519e692f21",
+          "code_path": "candidates/fixed_c1/attempt_0/model.py",
+          "status": "passed",
+          "error": null,
+          "checks": [
+            {
+              "name": "source_policy",
+              "passed": true,
+              "mandatory": true,
+              "detail": "AST parsed as approved constructors without exec/eval"
+            },
+            {
+              "name": "plan_consistency",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Final classifier matches planned logistic"
+            },
+            {
+              "name": "dataset_integrity",
+              "passed": true,
+              "mandatory": true,
+              "detail": "SHA256, split disjointness, row alignment, feature policy"
+            },
+            {
+              "name": "labels_withheld",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Worker receives no validation labels or final test"
+            },
+            {
+              "name": "worker_execution",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Resource-limited fresh process exited successfully"
+            },
+            {
+              "name": "prediction_contract",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+            },
+            {
+              "name": "single_row",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "repeat_prediction",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "empty_batch_wrapper",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "empty_text",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "clean_environment",
+              "passed": true,
+              "mandatory": true,
+              "detail": "No API keys/tokens passed to worker"
+            },
+            {
+              "name": "ap_above_dummy",
+              "passed": true,
+              "mandatory": false,
+              "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+            },
+            {
+              "name": "host_evaluation",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Metrics computed only by trusted host using validation labels"
+            }
+          ],
+          "metrics": {
+            "average_precision": 0.9583895772337544,
+            "roc_auc": 0.9880587533372823,
+            "f1_threshold_0_5": 0.8055555555555556,
+            "precision_at_10pct": 0.9903846153846154,
+            "recall_at_10pct": 0.7984496124031008,
+            "lift_at_10pct": 7.923076923076923,
+            "validation_positive_rate": 0.125,
+            "top_10pct_count": 104,
+            "validation_rows": 1032,
+            "classification_threshold": 0.5,
+            "evaluation_split": "validation_only",
+            "sealed_test_scored": false,
+            "ranking_tie_break": "original_validation_row_order",
+            "dummy_average_precision": 0.125,
+            "ap_improvement_over_dummy": 0.8333895772337544
+          },
+          "resources": {
+            "limits": {
+              "timeout_s": 116.0,
+              "memory_mib": 2048,
+              "cpu_cores": 2
+            },
+            "worker_pid": 28875,
+            "wall_seconds": 0.9030273908283561,
+            "fit_seconds": 0.12895922688767314,
+            "predict_seconds": 0.01370433415286243,
+            "worker_wall_seconds": 0.7612577059771866,
+            "peak_rss_mib": 189.0,
+            "cpu_seconds": 0.9997569999999999,
+            "sklearn_version": "1.7.2",
+            "python_version": "3.10.8",
+            "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+            "joblib_backend": "threading",
+            "repeat_prediction_max_abs_delta": 0.0,
+            "total_seconds": 0.9308504008222371
+          },
+          "containment": {
+            "backend": "constrained_ast_subprocess",
+            "arbitrary_python_execution": false,
+            "os_sandbox": false,
+            "network_namespace": false,
+            "filesystem_namespace": false,
+            "source_evaluated_with_exec_or_eval": false,
+            "constructors_allowlisted": true,
+            "resource_limited_fresh_process": true,
+            "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+          },
+          "model_metadata": {
+            "actual_algorithm": "logistic",
+            "classifier_class": "LogisticRegression",
+            "classifier_path": [
+              "model"
+            ],
+            "classifier_parameters": {
+              "max_iter": 1000,
+              "random_state": 42
+            },
+            "constructor_classes": [
+              "Pipeline",
+              "TfidfVectorizer",
+              "LogisticRegression"
+            ],
+            "constructor_count": 3,
+            "source": "independently_parsed_constructor_plan"
+          }
+        }
+      ],
+      "artifact_id": "fixed_c1",
+      "parent_id": null,
+      "error": null,
+      "quality_status": "above_prevalence",
+      "model_metadata": {
+        "actual_algorithm": "logistic",
+        "classifier_class": "LogisticRegression",
+        "classifier_path": [
+          "model"
+        ],
+        "classifier_parameters": {
+          "max_iter": 1000,
+          "random_state": 42
+        },
+        "constructor_classes": [
+          "Pipeline",
+          "TfidfVectorizer",
+          "LogisticRegression"
+        ],
+        "constructor_count": 3,
+        "source": "independently_parsed_constructor_plan"
+      },
+      "containment": {
+        "backend": "constrained_ast_subprocess",
+        "arbitrary_python_execution": false,
+        "os_sandbox": false,
+        "network_namespace": false,
+        "filesystem_namespace": false,
+        "source_evaluated_with_exec_or_eval": false,
+        "constructors_allowlisted": true,
+        "resource_limited_fresh_process": true,
+        "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+      },
+      "code_sha256": "d81281a4e17a83d8e5afe948d7d160854a4099d75f3857c3aa09d3519e692f21",
+      "code_path": "candidates/fixed_c1/attempt_0/model.py",
+      "explanation": "SMS text task with default logistic plan: TfidfVectorizer(1-2 grams, max_features=30000, min_df=2) feeding LogisticRegression(max_iter=1000, random_state=seed), matching the reference and plan without class_weight since variant is default."
+    }
+  ],
+  "selected_candidate_id": "fixed_c1",
+  "events": [
+    {
+      "sequence": 0,
+      "event_type": "RECEIVED",
+      "type": "RECEIVED",
+      "created_at": "2026-09-28T12:23:34.003760+00:00",
+      "data": {
+        "mode": "real",
+        "model": "deepseek-flash"
+      }
+    },
+    {
+      "sequence": 1,
+      "event_type": "SPEC_VALIDATED",
+      "type": "SPEC_VALIDATED",
+      "created_at": "2026-09-28T12:23:34.852506+00:00",
+      "data": {
+        "task_type": "text_binary_classification",
+        "assumptions": [
+          "单次生成消融：采用冻结任务策略与固定算法计划，未调用解释/规划角色。"
+        ]
+      }
+    },
+    {
+      "sequence": 2,
+      "event_type": "KNOWLEDGE_RETRIEVED",
+      "type": "KNOWLEDGE_RETRIEVED",
+      "created_at": "2026-09-28T12:23:35.136252+00:00",
+      "data": {
+        "count": 0,
+        "use_graph": false,
+        "capability_ids": []
+      }
+    },
+    {
+      "sequence": 3,
+      "event_type": "CANDIDATE_PLANNED",
+      "type": "CANDIDATE_PLANNED",
+      "created_at": "2026-09-28T12:23:35.382522+00:00",
+      "data": {
+        "candidate_id": "fixed_c1",
+        "algorithm": "logistic",
+        "variant": "default",
+        "rationale": "预注册消融采用固定线性算法计划，非LLM规划。",
+        "evidence_ids": [],
+        "parent_id": null
+      }
+    },
+    {
+      "sequence": 4,
+      "event_type": "LLM_RESPONSE",
+      "type": "LLM_RESPONSE",
+      "created_at": "2026-09-28T12:23:37.158021+00:00",
+      "data": {
+        "role": "coder",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "response_id": "aa27d348-72f6-455b-9c4d-cf5a9a3f80bf",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "bca5c359a10b337fa10fcaf106e66a3d4c6db157c5862739b560f43dd35db0da",
+        "response_sha256": "15298e676b93c87992ae95f2539d680f817cc5e5bcae0645153e8f8ab49109db",
+        "input_tokens": 949,
+        "output_tokens": 177,
+        "seconds": 1.565,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "sequence": 5,
+      "event_type": "VALIDATING",
+      "type": "VALIDATING",
+      "created_at": "2026-09-28T12:23:37.447090+00:00",
+      "data": {
+        "candidate_id": "fixed_c1",
+        "attempt": 0,
+        "code_sha256": "d81281a4e17a83d8e5afe948d7d160854a4099d75f3857c3aa09d3519e692f21"
+      }
+    },
+    {
+      "sequence": 6,
+      "event_type": "VERIFIED",
+      "type": "VERIFIED",
+      "created_at": "2026-09-28T12:23:38.913804+00:00",
+      "data": {
+        "candidate_id": "fixed_c1",
+        "attempt": 0,
+        "status": "passed",
+        "metrics": {
+          "average_precision": 0.9583895772337544,
+          "roc_auc": 0.9880587533372823,
+          "f1_threshold_0_5": 0.8055555555555556,
+          "precision_at_10pct": 0.9903846153846154,
+          "recall_at_10pct": 0.7984496124031008,
+          "lift_at_10pct": 7.923076923076923,
+          "validation_positive_rate": 0.125,
+          "top_10pct_count": 104,
+          "validation_rows": 1032,
+          "classification_threshold": 0.5,
+          "evaluation_split": "validation_only",
+          "sealed_test_scored": false,
+          "ranking_tie_break": "original_validation_row_order",
+          "dummy_average_precision": 0.125,
+          "ap_improvement_over_dummy": 0.8333895772337544
+        },
+        "error": null
+      }
+    },
+    {
+      "sequence": 7,
+      "event_type": "COMPARED",
+      "type": "COMPARED",
+      "created_at": "2026-09-28T12:23:39.247044+00:00",
+      "data": {
+        "selected_candidate_id": "fixed_c1"
+      }
+    },
+    {
+      "sequence": 8,
+      "event_type": "RECORDED",
+      "type": "RECORDED",
+      "created_at": "2026-09-28T12:23:39.601436+00:00",
+      "data": {
+        "intended_status": "passed",
+        "experiences": 0
+      }
+    }
+  ],
+  "usage": {
+    "calls": 1,
+    "input_tokens": 949,
+    "output_tokens": 177,
+    "cached_input_tokens": 512,
+    "records": [
+      {
+        "role": "coder",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "response_id": "aa27d348-72f6-455b-9c4d-cf5a9a3f80bf",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "prompt_sha256": "bca5c359a10b337fa10fcaf106e66a3d4c6db157c5862739b560f43dd35db0da",
+        "response_sha256": "15298e676b93c87992ae95f2539d680f817cc5e5bcae0645153e8f8ab49109db",
+        "input_tokens": 949,
+        "output_tokens": 177,
+        "seconds": 1.565,
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "warnings": [
+    "验证集成绩，不是最终测试成绩。",
+    "受限AST构造器程序，不是任意Python或Docker操作系统沙箱。"
+  ],
+  "search_tree": [
+    {
+      "candidate_id": "fixed_c1",
+      "parent_id": null,
+      "status": "passed",
+      "average_precision": 0.9583895772337544,
+      "pruned": false,
+      "pruned_reason": null
+    }
+  ],
+  "knowledge_writeback": {
+    "run_saved": true,
+    "experiences": []
+  },
+  "data_summary": {
+    "train_rows": 3095,
+    "validation_rows": 1032
+  },
+  "interpretation": {
+    "objective": "最终代码冒烟：生成短信垃圾分类概率管道并执行独立验证。",
+    "constraints": [],
+    "assumptions": [
+      "单次生成消融：采用冻结任务策略与固定算法计划，未调用解释/规划角色。"
+    ],
+    "warnings": [],
+    "incompatible_requests": [],
+    "requested_run_seconds": null
+  },
+  "evidence": [],
+  "quality_status": "above_prevalence",
+  "explanation": {
+    "summary": "按固定AP排序规则选择已通过验证的候选；未调用总结角色。",
+    "limitations": [
+      "single_shot消融，非完整多角色编排"
+    ]
+  },
+  "finished_at": "2026-09-28T12:23:39.469070+00:00",
+  "timing": {
+    "wall_seconds": 5.647,
+    "budget_seconds": 120.0,
+    "request_ceiling_seconds": 120
+  },
+  "report_paths": {}
+}
+````

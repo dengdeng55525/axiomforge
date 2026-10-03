@@ -1,0 +1,11 @@
+{
+  "objective": "使用通话前字段预测银行营销响应，比较两个方案并保存验证结果",
+  "constraints": [
+    "遵守固定数据与特征协议"
+  ],
+  "assumptions": [
+    "离线规则测试模式"
+  ],
+  "warnings": [],
+  "incompatible_requests": []
+}

@@ -1,0 +1,60 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "bank_logistic_balanced",
+      "algorithm": "logistic",
+      "variant": "balanced",
+      "rationale": "Child of bank_logistic_default using class_weight balanced to counter the ~11% positive rate; keeps precontact whitelist, ordered split, and AP as primary metric.",
+      "evidence_ids": [
+        "probability-logistic",
+        "bank-precontact-policy",
+        "bank-target",
+        "average-precision",
+        "bank-ordered-split"
+      ],
+      "parent_id": "bank_logistic_default"
+    },
+    {
+      "candidate_id": "bank_logistic_regularized",
+      "algorithm": "logistic",
+      "variant": "regularized",
+      "rationale": "Child of bank_logistic_default with stronger regularization to control variance on the small precontact feature set; same protocol and AP evaluation.",
+      "evidence_ids": [
+        "probability-logistic",
+        "bank-precontact-policy",
+        "bank-target",
+        "average-precision",
+        "bank-ordered-split"
+      ],
+      "parent_id": "bank_logistic_default"
+    },
+    {
+      "candidate_id": "bank_forest_balanced",
+      "algorithm": "forest",
+      "variant": "balanced",
+      "rationale": "Child of bank_forest_default using class_weight balanced to address class imbalance while keeping fixed random_state and bounded n_jobs for CPU/memory limits.",
+      "evidence_ids": [
+        "random-forest",
+        "bank-precontact-policy",
+        "bank-target",
+        "average-precision",
+        "bank-ordered-split"
+      ],
+      "parent_id": "bank_forest_default"
+    },
+    {
+      "candidate_id": "bank_forest_shallower",
+      "algorithm": "forest",
+      "variant": "shallower",
+      "rationale": "Child of bank_forest_default with reduced depth to lower resource consumption and variance, providing a cheaper nonlinear comparison under the same protocol.",
+      "evidence_ids": [
+        "random-forest",
+        "bank-precontact-policy",
+        "bank-target",
+        "average-precision",
+        "bank-ordered-split"
+      ],
+      "parent_id": "bank_forest_default"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+INFO:     Started server process [66787]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:59992 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59992 - "GET /config/providers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44050 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44066 - "GET /capabilities HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44050 - "GET /runs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44074 - "GET /graph HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54370 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54370 - "GET /config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48588 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48588 - "GET /config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48590 - "GET /inference/profiles HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48588 - "GET /config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36084 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36084 - "GET /config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36094 - "GET /inference/profiles HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36084 - "GET /config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36084 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36084 - "GET /config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36094 - "GET /inference/profiles HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36084 - "GET /config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52942 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52942 - "GET /config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52958 - "GET /inference/profiles HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52942 - "GET /config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32892 - "GET /runs HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [66787]
+INFO:     Started server process [70963]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:33686 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33686 - "POST /runs HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:55940 - "GET /runs/660682f3cf324bf1938b78c70f2fce8c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58590 - "GET /runs/660682f3cf324bf1938b78c70f2fce8c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51462 - "GET /runs/660682f3cf324bf1938b78c70f2fce8c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34286 - "GET /runs/660682f3cf324bf1938b78c70f2fce8c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51600 - "GET /runs/660682f3cf324bf1938b78c70f2fce8c/agent-trace HTTP/1.1" 404 Not Found
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [70963]
+INFO:     Started server process [77202]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:50608 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50608 - "GET /runs/660682f3cf324bf1938b78c70f2fce8c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50608 - "GET /runs/660682f3cf324bf1938b78c70f2fce8c/agent-trace HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50608 - "GET /runs/660682f3cf324bf1938b78c70f2fce8c/agent-trace?through_sequence=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "POST /runs HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45834 - "GET /runs/2fbab3dbe43540f79e4fed07efe0fb53/agent-trace HTTP/1.1" 200 OK

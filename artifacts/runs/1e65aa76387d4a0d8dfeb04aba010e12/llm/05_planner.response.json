@@ -1,0 +1,16 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "logistic_regularized",
+      "algorithm": "logistic",
+      "variant": "regularized",
+      "rationale": "Regularization can help prevent overfitting and improve model generalization, especially useful when dealing with high-dimensional data.",
+      "evidence_ids": [
+        "bank-precontact-policy",
+        "bank-target",
+        "probability-logistic"
+      ],
+      "parent_id": "logistic_default"
+    }
+  ]
+}

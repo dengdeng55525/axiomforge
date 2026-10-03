@@ -1,0 +1,6 @@
+{
+  "error_type": "plan_consistency",
+  "diagnosis": "The generated code defines a function `broken_pipeline` that returns an unfitted sklearn Pipeline, but the task requires a constructor program that builds and returns a fitted estimator/pipeline for the text binary classification task. The code does not fit the pipeline on any training data, so it cannot be validated against the plan. Additionally, the function name and structure do not match the expected constructor-program interface (e.g., a `build_model` or `make_pipeline` function that returns a fitted model).",
+  "fix": "Replace the function with a constructor that accepts the task spec and training data, builds the TfidfVectorizer and LogisticRegression pipeline, fits it on the provided text and labels, and returns the fitted pipeline. For example: `def build_model(task_spec, X_train, y_train): ... return pipeline.fit(X_train, y_train)` using the same hyperparameters and `random_state=task_spec['seed']`.",
+  "repairable": true
+}

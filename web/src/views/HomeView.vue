@@ -17,9 +17,9 @@ import {
   BookOpenCheck,
   RefreshCw,
   ChevronRight,
-  Boxes,
 } from "@lucide/vue";
 import { api } from "../lib/api";
+import logoUrl from "../assets/logo.png";
 import {
   datasetLabel,
   stateLabel,
@@ -129,7 +129,8 @@ const stats = computed(() => [
       <div class="orbit orbit-one"></div>
       <div class="orbit orbit-two"></div>
       <div class="flow-center">
-        <Boxes :size="33" /><b>AxiomForge</b><small>知衡 · 能力编排引擎</small>
+        <img :src="logoUrl" alt="AxiomForge 标志" class="flow-logo" />
+        <b>AxiomForge</b><small>知衡 · 能力编排引擎</small>
       </div>
       <div class="flow-node node-one">
         <span><MessageSquareText :size="17" /></span>
@@ -390,6 +391,11 @@ const stats = computed(() => [
   justify-content: center;
   color: #2f8b70;
   z-index: 2;
+}
+.flow-logo {
+  width: 37px;
+  height: 37px;
+  object-fit: contain;
 }
 .flow-center b {
   font-size: 15px;

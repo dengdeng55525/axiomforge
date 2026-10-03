@@ -1,0 +1,16 @@
+{
+  "objective": "预测客户是否订购银行定期存款。",
+  "constraints": [
+    "仅使用通话前可得特征",
+    "禁止使用 duration"
+  ],
+  "assumptions": [
+    "使用提供的特征集进行模型训练",
+    "比较两个算法候选，按验证集 AP 选择方案"
+  ],
+  "warnings": [
+    "请求的特征集不包含 'duration'，因此无法使用该特征进行模型训练"
+  ],
+  "incompatible_requests": [],
+  "requested_run_seconds": null
+}

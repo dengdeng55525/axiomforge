@@ -1,0 +1,4 @@
+{
+  "code": "from sklearn.pipeline import Pipeline\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.linear_model import LogisticRegression\n\ndef build_pipeline(task_spec):\n    text = TfidfVectorizer(ngram_range=(1, 2), max_features=30000, min_df=2)\n    model = LogisticRegression(max_iter=1000, random_state=task_spec['seed'])\n    return Pipeline([('text', text), ('model', model)])\n",
+  "explanation": "The review's diagnosis is incorrect: the factory contract requires a constructor program returning an unfitted Pipeline (no training or data reading), so the only real defect was the function name `broken_pipeline`; renaming it to `build_pipeline` fixes the plan-consistency error while keeping the TF-IDF (ngram_range=(1,2), max_features=30000, min_df=2) plus LogisticRegression(max_iter=1000, random_state=seed) default variant from the plan."
+}

@@ -1,0 +1,6 @@
+{
+  "error_type": "plan_consistency",
+  "diagnosis": "The generated code defines a function `broken_pipeline` that returns an unfitted sklearn Pipeline, but the task requires a constructor-program that builds and fits a model on the provided dataset. The code never references the training data, never calls fit, and does not follow the expected constructor-program interface, so it cannot be checked against the plan.",
+  "fix": "Rewrite the function to accept the training data (e.g., X_train, y_train) and return a fitted Pipeline: `def build_model(task_spec, X_train, y_train): pipe = Pipeline([('text', TfidfVectorizer(ngram_range=(1,2), max_features=30000, min_df=2)), ('model', LogisticRegression(max_iter=1000, random_state=task_spec['seed']))]); pipe.fit(X_train, y_train); return pipe`. Ensure the function signature and return value match the constructor-program contract expected by the runner.",
+  "repairable": true
+}

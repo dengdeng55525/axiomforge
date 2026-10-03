@@ -1,0 +1,6 @@
+{
+  "error_type": "duplicate_candidate",
+  "diagnosis": "The constructor plan duplicates logistic_default; implement the planned parameter change.",
+  "fix": "Ensure that the logistic regression parameters are correctly set according to the task specification without duplicating the default configuration.",
+  "repairable": true
+}

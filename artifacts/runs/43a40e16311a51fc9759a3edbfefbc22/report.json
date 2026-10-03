@@ -1,0 +1,620 @@
+{
+  "schema_version": "1.0",
+  "run_id": "43a40e16311a51fc9759a3edbfefbc22",
+  "status": "passed",
+  "mode": "mock",
+  "provider": "mock",
+  "description": "用通话前客户信息预测是否订购，输出概率，比较两种算法。",
+  "dataset_id": "bank",
+  "created_at": "2026-09-28T11:41:20.295765+00:00",
+  "request": {
+    "description": "用通话前客户信息预测是否订购，输出概率，比较两种算法。",
+    "dataset_id": "bank",
+    "provider": "mock",
+    "max_candidates": 1,
+    "max_repairs": 0,
+    "use_graph": false,
+    "use_retrieval": false,
+    "orchestration": "single_shot",
+    "search": "compare",
+    "inject_failure": false,
+    "max_seconds": 900
+  },
+  "task_spec": {
+    "task_type": "tabular_binary_classification",
+    "dataset_id": "bank",
+    "positive_label": "yes",
+    "feature_names": [
+      "age",
+      "job",
+      "marital",
+      "education",
+      "default",
+      "housing",
+      "loan",
+      "pdays",
+      "previous",
+      "poutcome"
+    ],
+    "numeric_features": [
+      "age",
+      "pdays",
+      "previous"
+    ],
+    "categorical_features": [
+      "job",
+      "marital",
+      "education",
+      "default",
+      "housing",
+      "loan",
+      "poutcome"
+    ],
+    "seed": 42,
+    "primary_metric": "average_precision",
+    "limits": {
+      "cpu": 2,
+      "memory_mib": 2048,
+      "timeout_s": 120
+    },
+    "feature_policy": "precontact_conservative_v1"
+  },
+  "model": "deterministic-mock-v1",
+  "provenance": {
+    "prompt_version": "algoforge-roles-v2",
+    "sealed_test_scored": false,
+    "dataset": {
+      "schema_version": "1.0",
+      "dataset_id": "uci-bank-additional-full",
+      "source_url": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+      "license": "CC BY 4.0",
+      "raw_sha256": "74adfc578bf77a7ff4bb1ba4a9f8709d9e3c6907342959c2c8416847e0afb4d8",
+      "split_policy": "original_order_60_20_20",
+      "split_seed": 42,
+      "train_rows": 24712,
+      "validation_rows": 8238,
+      "sealed_test_rows": 8238,
+      "sealed_test_exported": false,
+      "sealed_test_scored": false,
+      "validation_labels_visible_to_generated_code": false,
+      "preprocessing_fit_split": "train_only",
+      "feature_policy": "precontact_conservative_v1",
+      "feature_names": [
+        "age",
+        "job",
+        "marital",
+        "education",
+        "default",
+        "housing",
+        "loan",
+        "pdays",
+        "previous",
+        "poutcome"
+      ],
+      "numeric_features": [
+        "age",
+        "pdays",
+        "previous"
+      ],
+      "file_sha256": {
+        "train": "860058ef9a7a6869e9c129277967ca5699fdb249202917201da4991a7c2b3a0c",
+        "validation_features": "62b188cf7c57553585006e3b20f4364d41cd8f567b04513fcdc3358429c1986a",
+        "validation_labels": "8c505a2f2ed47d04c62c6d182097535f09e9ccab901576fc0727acfe5f882816"
+      }
+    }
+  },
+  "candidates": [
+    {
+      "candidate_id": "fixed_c1",
+      "plan": {
+        "candidate_id": "fixed_c1",
+        "algorithm": "logistic",
+        "variant": "default",
+        "rationale": "预注册消融采用固定线性算法计划，非LLM规划。",
+        "evidence_ids": [],
+        "parent_id": null
+      },
+      "status": "passed",
+      "metrics": {
+        "average_precision": 0.18287735589367637,
+        "roc_auc": 0.6131271073705284,
+        "f1_threshold_0_5": 0.0,
+        "precision_at_10pct": 0.23179611650485438,
+        "recall_at_10pct": 0.20942982456140352,
+        "lift_at_10pct": 2.0937899207971387,
+        "validation_positive_rate": 0.11070648215586307,
+        "top_10pct_count": 824,
+        "validation_rows": 8238,
+        "classification_threshold": 0.5,
+        "evaluation_split": "validation_only",
+        "sealed_test_scored": false,
+        "ranking_tie_break": "original_validation_row_order",
+        "dummy_average_precision": 0.11070648215586307,
+        "ap_improvement_over_dummy": 0.07217087373781331
+      },
+      "checks": [
+        {
+          "name": "source_policy",
+          "passed": true,
+          "mandatory": true,
+          "detail": "AST parsed as approved constructors without exec/eval"
+        },
+        {
+          "name": "plan_consistency",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Final classifier matches planned logistic"
+        },
+        {
+          "name": "dataset_integrity",
+          "passed": true,
+          "mandatory": true,
+          "detail": "SHA256, split disjointness, row alignment, feature policy"
+        },
+        {
+          "name": "labels_withheld",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Worker receives no validation labels or final test"
+        },
+        {
+          "name": "worker_execution",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Resource-limited fresh process exited successfully"
+        },
+        {
+          "name": "prediction_contract",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+        },
+        {
+          "name": "single_row",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "repeat_prediction",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "empty_batch_wrapper",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "unknown_category",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "missing_numeric",
+          "passed": true,
+          "mandatory": true,
+          "detail": ""
+        },
+        {
+          "name": "clean_environment",
+          "passed": true,
+          "mandatory": true,
+          "detail": "No API keys/tokens passed to worker"
+        },
+        {
+          "name": "ap_above_dummy",
+          "passed": true,
+          "mandatory": false,
+          "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+        },
+        {
+          "name": "host_evaluation",
+          "passed": true,
+          "mandatory": true,
+          "detail": "Metrics computed only by trusted host using validation labels"
+        }
+      ],
+      "resources": {
+        "limits": {
+          "timeout_s": 120.0,
+          "memory_mib": 2048,
+          "cpu_cores": 2
+        },
+        "worker_pid": 21335,
+        "wall_seconds": 1.1539686701726168,
+        "fit_seconds": 0.07767395093105733,
+        "predict_seconds": 0.02722047409042716,
+        "worker_wall_seconds": 0.9368928610347211,
+        "peak_rss_mib": 225.796875,
+        "cpu_seconds": 1.2181950000000001,
+        "sklearn_version": "1.7.2",
+        "python_version": "3.10.8",
+        "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+        "joblib_backend": "threading",
+        "repeat_prediction_max_abs_delta": 0.0,
+        "total_seconds": 1.8232351990882307
+      },
+      "repairs": [],
+      "attempts": [
+        {
+          "attempt": 0,
+          "code_sha256": "daf5f0fe1e16551b05e6617bdc4b86b910fba776d9fb01f51791e01d85d81420",
+          "code_path": "candidates/fixed_c1/attempt_0/model.py",
+          "status": "passed",
+          "error": null,
+          "checks": [
+            {
+              "name": "source_policy",
+              "passed": true,
+              "mandatory": true,
+              "detail": "AST parsed as approved constructors without exec/eval"
+            },
+            {
+              "name": "plan_consistency",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Final classifier matches planned logistic"
+            },
+            {
+              "name": "dataset_integrity",
+              "passed": true,
+              "mandatory": true,
+              "detail": "SHA256, split disjointness, row alignment, feature policy"
+            },
+            {
+              "name": "labels_withheld",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Worker receives no validation labels or final test"
+            },
+            {
+              "name": "worker_execution",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Resource-limited fresh process exited successfully"
+            },
+            {
+              "name": "prediction_contract",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Exact row IDs, binary classes, finite normalized Nx2 probabilities"
+            },
+            {
+              "name": "single_row",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "repeat_prediction",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "empty_batch_wrapper",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "unknown_category",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "missing_numeric",
+              "passed": true,
+              "mandatory": true,
+              "detail": ""
+            },
+            {
+              "name": "clean_environment",
+              "passed": true,
+              "mandatory": true,
+              "detail": "No API keys/tokens passed to worker"
+            },
+            {
+              "name": "ap_above_dummy",
+              "passed": true,
+              "mandatory": false,
+              "detail": "Advisory quality gate; not a substitute for sealed-test evaluation"
+            },
+            {
+              "name": "host_evaluation",
+              "passed": true,
+              "mandatory": true,
+              "detail": "Metrics computed only by trusted host using validation labels"
+            }
+          ],
+          "metrics": {
+            "average_precision": 0.18287735589367637,
+            "roc_auc": 0.6131271073705284,
+            "f1_threshold_0_5": 0.0,
+            "precision_at_10pct": 0.23179611650485438,
+            "recall_at_10pct": 0.20942982456140352,
+            "lift_at_10pct": 2.0937899207971387,
+            "validation_positive_rate": 0.11070648215586307,
+            "top_10pct_count": 824,
+            "validation_rows": 8238,
+            "classification_threshold": 0.5,
+            "evaluation_split": "validation_only",
+            "sealed_test_scored": false,
+            "ranking_tie_break": "original_validation_row_order",
+            "dummy_average_precision": 0.11070648215586307,
+            "ap_improvement_over_dummy": 0.07217087373781331
+          },
+          "resources": {
+            "limits": {
+              "timeout_s": 120.0,
+              "memory_mib": 2048,
+              "cpu_cores": 2
+            },
+            "worker_pid": 21335,
+            "wall_seconds": 1.1539686701726168,
+            "fit_seconds": 0.07767395093105733,
+            "predict_seconds": 0.02722047409042716,
+            "worker_wall_seconds": 0.9368928610347211,
+            "peak_rss_mib": 225.796875,
+            "cpu_seconds": 1.2181950000000001,
+            "sklearn_version": "1.7.2",
+            "python_version": "3.10.8",
+            "memory_limit_kind": "virtual_address_space_RLIMIT_AS",
+            "joblib_backend": "threading",
+            "repeat_prediction_max_abs_delta": 0.0,
+            "total_seconds": 1.8232351990882307
+          },
+          "containment": {
+            "backend": "constrained_ast_subprocess",
+            "arbitrary_python_execution": false,
+            "os_sandbox": false,
+            "network_namespace": false,
+            "filesystem_namespace": false,
+            "source_evaluated_with_exec_or_eval": false,
+            "constructors_allowlisted": true,
+            "resource_limited_fresh_process": true,
+            "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+          },
+          "model_metadata": {
+            "actual_algorithm": "logistic",
+            "classifier_class": "LogisticRegression",
+            "classifier_path": [
+              "model"
+            ],
+            "classifier_parameters": {
+              "max_iter": 1000,
+              "random_state": 42
+            },
+            "constructor_classes": [
+              "Pipeline",
+              "ColumnTransformer",
+              "Pipeline",
+              "SimpleImputer",
+              "StandardScaler",
+              "OneHotEncoder",
+              "LogisticRegression"
+            ],
+            "constructor_count": 7,
+            "source": "independently_parsed_constructor_plan"
+          }
+        }
+      ],
+      "artifact_id": "fixed_c1",
+      "parent_id": null,
+      "error": null,
+      "quality_status": "above_prevalence",
+      "model_metadata": {
+        "actual_algorithm": "logistic",
+        "classifier_class": "LogisticRegression",
+        "classifier_path": [
+          "model"
+        ],
+        "classifier_parameters": {
+          "max_iter": 1000,
+          "random_state": 42
+        },
+        "constructor_classes": [
+          "Pipeline",
+          "ColumnTransformer",
+          "Pipeline",
+          "SimpleImputer",
+          "StandardScaler",
+          "OneHotEncoder",
+          "LogisticRegression"
+        ],
+        "constructor_count": 7,
+        "source": "independently_parsed_constructor_plan"
+      },
+      "containment": {
+        "backend": "constrained_ast_subprocess",
+        "arbitrary_python_execution": false,
+        "os_sandbox": false,
+        "network_namespace": false,
+        "filesystem_namespace": false,
+        "source_evaluated_with_exec_or_eval": false,
+        "constructors_allowlisted": true,
+        "resource_limited_fresh_process": true,
+        "security_scope": "Restricted sklearn constructor grammar; no generated methods, callbacks, file access, network calls, loops, or dynamic imports. Trusted sklearn/native dependencies remain in the trust boundary."
+      },
+      "code_sha256": "daf5f0fe1e16551b05e6617bdc4b86b910fba776d9fb01f51791e01d85d81420",
+      "code_path": "candidates/fixed_c1/attempt_0/model.py",
+      "explanation": "明确标记的离线模板输出"
+    }
+  ],
+  "selected_candidate_id": "fixed_c1",
+  "events": [
+    {
+      "sequence": 0,
+      "event_type": "RECEIVED",
+      "type": "RECEIVED",
+      "created_at": "2026-09-28T11:41:20.408348+00:00",
+      "data": {
+        "mode": "mock",
+        "model": "deterministic-mock-v1"
+      }
+    },
+    {
+      "sequence": 1,
+      "event_type": "SPEC_VALIDATED",
+      "type": "SPEC_VALIDATED",
+      "created_at": "2026-09-28T11:41:21.175466+00:00",
+      "data": {
+        "task_type": "tabular_binary_classification",
+        "assumptions": [
+          "单次生成消融：采用冻结任务策略与固定算法计划，未调用解释/规划角色。"
+        ]
+      }
+    },
+    {
+      "sequence": 2,
+      "event_type": "KNOWLEDGE_RETRIEVED",
+      "type": "KNOWLEDGE_RETRIEVED",
+      "created_at": "2026-09-28T11:41:21.480472+00:00",
+      "data": {
+        "count": 0,
+        "use_graph": false,
+        "capability_ids": []
+      }
+    },
+    {
+      "sequence": 3,
+      "event_type": "CANDIDATE_PLANNED",
+      "type": "CANDIDATE_PLANNED",
+      "created_at": "2026-09-28T11:41:21.656245+00:00",
+      "data": {
+        "candidate_id": "fixed_c1",
+        "algorithm": "logistic",
+        "variant": "default",
+        "rationale": "预注册消融采用固定线性算法计划，非LLM规划。",
+        "evidence_ids": [],
+        "parent_id": null
+      }
+    },
+    {
+      "sequence": 4,
+      "event_type": "MOCK_RESPONSE",
+      "type": "MOCK_RESPONSE",
+      "created_at": "2026-09-28T11:41:21.815439+00:00",
+      "data": {
+        "role": "coder",
+        "model": "deterministic-mock-v1"
+      }
+    },
+    {
+      "sequence": 5,
+      "event_type": "VALIDATING",
+      "type": "VALIDATING",
+      "created_at": "2026-09-28T11:41:21.996061+00:00",
+      "data": {
+        "candidate_id": "fixed_c1",
+        "attempt": 0,
+        "code_sha256": "daf5f0fe1e16551b05e6617bdc4b86b910fba776d9fb01f51791e01d85d81420"
+      }
+    },
+    {
+      "sequence": 6,
+      "event_type": "VERIFIED",
+      "type": "VERIFIED",
+      "created_at": "2026-09-28T11:41:24.072271+00:00",
+      "data": {
+        "candidate_id": "fixed_c1",
+        "attempt": 0,
+        "status": "passed",
+        "metrics": {
+          "average_precision": 0.18287735589367637,
+          "roc_auc": 0.6131271073705284,
+          "f1_threshold_0_5": 0.0,
+          "precision_at_10pct": 0.23179611650485438,
+          "recall_at_10pct": 0.20942982456140352,
+          "lift_at_10pct": 2.0937899207971387,
+          "validation_positive_rate": 0.11070648215586307,
+          "top_10pct_count": 824,
+          "validation_rows": 8238,
+          "classification_threshold": 0.5,
+          "evaluation_split": "validation_only",
+          "sealed_test_scored": false,
+          "ranking_tie_break": "original_validation_row_order",
+          "dummy_average_precision": 0.11070648215586307,
+          "ap_improvement_over_dummy": 0.07217087373781331
+        },
+        "error": null
+      }
+    },
+    {
+      "sequence": 7,
+      "event_type": "COMPARED",
+      "type": "COMPARED",
+      "created_at": "2026-09-28T11:41:24.339287+00:00",
+      "data": {
+        "selected_candidate_id": "fixed_c1"
+      }
+    },
+    {
+      "sequence": 8,
+      "event_type": "RECORDED",
+      "type": "RECORDED",
+      "created_at": "2026-09-28T11:41:24.656012+00:00",
+      "data": {
+        "intended_status": "passed",
+        "experiences": 0
+      }
+    }
+  ],
+  "usage": {
+    "calls": 1,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cached_input_tokens": 0,
+    "records": []
+  },
+  "warnings": [
+    "验证集成绩，不是最终测试成绩。",
+    "受限AST构造器程序，不是任意Python或Docker操作系统沙箱。"
+  ],
+  "search_tree": [
+    {
+      "candidate_id": "fixed_c1",
+      "parent_id": null,
+      "status": "passed",
+      "average_precision": 0.18287735589367637,
+      "pruned": false,
+      "pruned_reason": null
+    }
+  ],
+  "knowledge_writeback": {
+    "run_saved": true,
+    "experiences": []
+  },
+  "data_summary": {
+    "train_rows": 24712,
+    "validation_rows": 8238
+  },
+  "interpretation": {
+    "objective": "用通话前客户信息预测是否订购，输出概率，比较两种算法。",
+    "constraints": [],
+    "assumptions": [
+      "单次生成消融：采用冻结任务策略与固定算法计划，未调用解释/规划角色。"
+    ],
+    "warnings": [],
+    "incompatible_requests": []
+  },
+  "evidence": [],
+  "quality_status": "above_prevalence",
+  "explanation": {
+    "summary": "按固定AP排序规则选择已通过验证的候选；未调用总结角色。",
+    "limitations": [
+      "single_shot消融，非完整多角色编排"
+    ]
+  },
+  "finished_at": "2026-09-28T11:41:24.549201+00:00",
+  "timing": {
+    "wall_seconds": 4.253,
+    "budget_seconds": 900
+  },
+  "report_paths": {}
+}

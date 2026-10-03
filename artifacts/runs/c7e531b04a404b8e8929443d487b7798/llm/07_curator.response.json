@@ -1,0 +1,10 @@
+{
+  "summary": "在仅使用验证集（validation_only，1032 行，正例率 0.125）的独立测量中，两个候选均通过。sms_logreg_default 的平均精度（AP）为 0.9584，较 dummy 基线（0.125）提升 0.8334，ROC-AUC 为 0.9881，阈值 0.5 下 F1 为 0.8056，前 10% 的 precision/recall/lift 分别为 0.9904/0.7984/7.9231。sms_cnb_default 的 AP 为 0.9459，提升 0.8209，ROC-AUC 为 0.9781，阈值 0.5 下 F1 为 0.9024，前 10% 的 precision/recall/lift 分别为 1.0/0.8062/8.0。两者排序指标接近，logreg 在 AP 与 ROC-AUC 上略高，cnb 在 F1 与 top-10% 精确率上略高；最终选择 sms_logreg_default。相关能力证据包括 probability-logistic、complement-naive-bayes、text-tfidf、sms-format、average-precision 与 sms-grouped-split。",
+  "limitations": [
+    "所有数值均为验证集结果（evaluation_split=validation_only，sealed_test_scored=false），不代表最终测试集性能，不能据此推断泛化表现。",
+    "排序并列采用 original_validation_row_order 作为 tie-break，可能影响 top-10% 指标的稳定性。",
+    "约束式 AST 执行仅用于受控的候选评估，不等同于通用操作系统沙箱，不能提供完整隔离保证。",
+    "模型选择（sms_logreg_default 对比 sms_cnb_default）仅反映本数据集上的预测指标差异，不构成因果性的营销提升证明。",
+    "两个候选的指标差距较小，且未报告置信区间或多次重复实验，结论稳健性有限。"
+  ]
+}

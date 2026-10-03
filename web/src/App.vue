@@ -2,7 +2,6 @@
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import {
-  Boxes,
   LayoutDashboard,
   Sparkles,
   Network,
@@ -17,6 +16,7 @@ import {
 } from "@lucide/vue";
 import { api } from "./lib/api";
 import GpuStatusBar from "./components/GpuStatusBar.vue";
+import logoUrl from "./assets/logo.png";
 const route = useRoute(),
   router = useRouter(),
   mobileOpen = ref(false),
@@ -103,7 +103,9 @@ const pageTitle = computed(() => route.meta.title || "工作台概览");
   ></button>
   <aside class="sidebar" :class="{ open: mobileOpen }">
     <RouterLink to="/" class="brand" @click="mobileOpen = false"
-      ><span class="brand-mark"><Boxes :size="25" /></span>
+      ><span class="brand-mark"
+        ><img :src="logoUrl" alt="AxiomForge 标志"
+      /></span>
       <div><b>AxiomForge</b><span>知衡 · 算法能力工厂</span></div></RouterLink
     >
     <div class="workspace-label">

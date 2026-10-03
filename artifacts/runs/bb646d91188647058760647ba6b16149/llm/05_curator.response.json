@@ -1,0 +1,11 @@
+{
+  "summary": "在仅验证集（validation_only，8238 行，正例率 0.1107）上，候选 bank_logistic_balanced_v1 与 bank_forest_balanced_v1 均通过状态检查，且均未在封存测试集上评分（sealed_test_scored=false）。bank_logistic_balanced_v1 的 average_precision 为 0.1808，较 dummy 基线 0.1107 提升 0.0701，roc_auc 为 0.6093，lift_at_10pct 为 1.9842，precision_at_10pct 为 0.2197，recall_at_10pct 为 0.1985，f1（阈值 0.5）为 0.2288。bank_forest_balanced_v1 的 average_precision 为 0.1283，较 dummy 提升 0.0175，roc_auc 为 0.5524，lift_at_10pct 为 1.3155，precision_at_10pct 为 0.1456，recall_at_10pct 为 0.1316，f1（阈值 0.5）为 0.1808。基于这些独立测量指标，bank_logistic_balanced_v1 在排序与 top-10% 定位上优于 bank_forest_balanced_v1，因此被选为 selected_candidate_id。检索到的能力证据包括 bank-precontact-policy、bank-target、bank-ordered-split、average-precision、probability-logistic、hist-gradient-boosting，用于说明数据切分、目标定义与指标口径。",
+  "limitations": [
+    "以上数值均为验证集（validation_only）结果，不是最终测试集性能；两个候选的 sealed_test_scored 均为 false，因此不能据此推断泛化或上线表现。",
+    "约束式 AST 执行仅用于受控的候选代码评估，不等同于通用操作系统沙箱，不能保证对任意代码或外部依赖的隔离安全。",
+    "模型选择（bank_logistic_balanced_v1 优于 bank_forest_balanced_v1）只反映该验证协议下的排序指标差异，不证明任何营销因果提升或业务增量。",
+    "两个候选均使用 classification_threshold=0.5 与 original_validation_row_order 作为排名并列处理，阈值与并列策略变化可能改变 f1、precision、recall 等指标。",
+    "bank_forest_balanced_v1 虽通过状态检查，但其 average_precision 提升仅 0.0175、roc_auc 0.5524，接近随机水平，不应被隐藏或忽略。",
+    "验证集正例率 0.1107 且 top_10pct_count=824，样本规模有限，指标存在抽样波动，未提供置信区间或重复实验。"
+  ]
+}

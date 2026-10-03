@@ -1,0 +1,190 @@
+# 算法能力验证报告
+
+指标与状态来自原始验证事实；缺失项不填零、不推断通过。
+
+模式由原始报告的 mode 字段说明：mock 为模拟，replay 为历史回放。
+
+````json
+{
+  "schema_version": "1.0",
+  "run_id": "ec6a9065fc9647b5b7bab1d59a2c760f",
+  "status": "failed",
+  "mode": "real",
+  "provider": "openai",
+  "description": "使用 UCI SMS Spam Collection 构建垃圾短信分类能力。检索已有能力与失败经验，比较 TF-IDF 逻辑回归和朴素贝叶斯，再用 Beam Search 扩展一个合法参数候选。以验证集平均精度选择方案，保留封存测试集，输出接口检查、设计依据、资源分析和可复核报告。",
+  "dataset_id": "sms",
+  "created_at": "2026-09-30T16:31:56.960114+00:00",
+  "request": {
+    "description": "使用 UCI SMS Spam Collection 构建垃圾短信分类能力。检索已有能力与失败经验，比较 TF-IDF 逻辑回归和朴素贝叶斯，再用 Beam Search 扩展一个合法参数候选。以验证集平均精度选择方案，保留封存测试集，输出接口检查、设计依据、资源分析和可复核报告。",
+    "dataset_id": "sms",
+    "provider": "openai",
+    "max_candidates": 3,
+    "max_repairs": 2,
+    "use_graph": true,
+    "use_retrieval": true,
+    "orchestration": "multi_role",
+    "search": "beam",
+    "inject_failure": false,
+    "max_seconds": 600
+  },
+  "task_spec": {
+    "task_type": "text_binary_classification",
+    "dataset_id": "sms",
+    "positive_label": "spam",
+    "feature_names": [
+      "text"
+    ],
+    "numeric_features": [],
+    "categorical_features": [
+      "text"
+    ],
+    "seed": 42,
+    "primary_metric": "average_precision",
+    "limits": {
+      "cpu": 2,
+      "memory_mib": 2048,
+      "timeout_s": 120
+    },
+    "feature_policy": "normalized_group_split_v1"
+  },
+  "model": "gpt-5.5",
+  "provenance": {
+    "prompt_version": "algoforge-roles-v3",
+    "sealed_test_scored": false,
+    "agent_runtime": {
+      "framework": "langchain-core",
+      "version": "1.6.5",
+      "role_chain": [
+        "invoke_provider",
+        "persist_response",
+        "validate_contract"
+      ],
+      "retrieval_tool": "search_capabilities",
+      "external_tracing": false
+    },
+    "dataset": {
+      "schema_version": "1.0",
+      "dataset_id": "uci-sms-spam",
+      "source_url": "https://archive.ics.uci.edu/dataset/228/sms+spam+collection",
+      "license": "CC BY 4.0",
+      "raw_sha256": "7d039a24a6083ed9ef0f806ebad56bbb976e3aeb8de05669173bfdc4996c239d",
+      "split_policy": "normalized_text_group_dedup_stratified_60_20_20",
+      "split_seed": 42,
+      "train_rows": 3095,
+      "validation_rows": 1032,
+      "sealed_test_rows": 1032,
+      "sealed_test_exported": false,
+      "sealed_test_scored": false,
+      "validation_labels_visible_to_generated_code": false,
+      "preprocessing_fit_split": "train_only",
+      "feature_policy": "text_only_group_dedup_v1",
+      "feature_names": [
+        "text"
+      ],
+      "numeric_features": [],
+      "file_sha256": {
+        "train": "02e817b63d1687cba45abc15c3820c3748405fd185f09ee73c2b7854ea7117a6",
+        "validation_features": "b56334649c55b5873b8a94c0d0efcceb8710824808fba4900e639dcd782f343b",
+        "validation_labels": "71907784e61eabc1fff51e1e71293e9cc4ef0a8359d1923def4c0519185a7421"
+      },
+      "raw_rows": 5574,
+      "normalized_groups": 5159,
+      "conflicting_groups_excluded": 0,
+      "train_group_ids_sha256": "67b569ca179c2f301db65dea9f94b0ce90cb2ad6359b601a00ca38c1b567860c",
+      "validation_group_ids_sha256": "d7b9f23990ff4133c30b7b64ce309f75d9e1baea67c59ccfdf929cbe2330d31c",
+      "sealed_group_ids_sha256": "d9a436d8888da5cbd06d15795c909d935e7709cc7b4f7cd3dbbf357d7e60fd65"
+    }
+  },
+  "candidates": [],
+  "selected_candidate_id": null,
+  "events": [
+    {
+      "sequence": 0,
+      "event_type": "RECEIVED",
+      "type": "RECEIVED",
+      "created_at": "2026-09-30T16:31:57.177666+00:00",
+      "data": {
+        "mode": "real",
+        "model": "gpt-5.5"
+      }
+    },
+    {
+      "sequence": 1,
+      "event_type": "RECORDED",
+      "type": "RECORDED",
+      "created_at": "2026-09-30T16:36:01.049116+00:00",
+      "data": {
+        "intended_status": "failed",
+        "experiences": 0
+      }
+    }
+  ],
+  "usage": {
+    "calls": 2,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cached_input_tokens": 0,
+    "records": []
+  },
+  "warnings": [
+    "指标来自 validation_only，封存测试集保持未评分。",
+    "执行器采用受限 AST 构造器和资源限制子进程；生产隔离需要强化运行时。"
+  ],
+  "search_tree": [],
+  "knowledge_writeback": {
+    "run_saved": true,
+    "experiences": []
+  },
+  "provider_metadata": {
+    "provider": "openai",
+    "model": "gpt-5.5",
+    "base_url": "https://sub2api.luciferai.cc/v1",
+    "base_urls": [
+      "https://sub2api.luciferai.cc/v1"
+    ],
+    "authorization": "bearer",
+    "deployment": "openai_compatible_api",
+    "api": "responses",
+    "sdk": "openai",
+    "store": false,
+    "proxy_configured": true,
+    "reasoning_effort": "none"
+  },
+  "data_summary": {
+    "train_rows": 3095,
+    "validation_rows": 1032
+  },
+  "failure_reason": "ProviderError: Responses transport failure: APITimeoutError",
+  "optimization": {
+    "schema_version": "1.0",
+    "analysis_version": "pareto-observations-v1",
+    "run_id": "ec6a9065fc9647b5b7bab1d59a2c760f",
+    "scope": "within_run_validation_observations",
+    "objectives": {
+      "average_precision": "maximize",
+      "fit_seconds": "minimize",
+      "peak_rss_mib": "minimize"
+    },
+    "selected_candidate_id": null,
+    "selection_policy": "validation_ap_desc_then_candidate_wall_seconds_asc",
+    "frontier_candidate_ids": [],
+    "candidates": [],
+    "excluded": [],
+    "parent_child_changes": [],
+    "measurement_repetitions": 0,
+    "limitations": [
+      "同次运行的验证集 AP、训练耗时和 worker 峰值 RSS 观测，不能跨任务混排。",
+      "单次耗时受负载与测量噪声影响，不代表稳定加速或统计显著性。",
+      "Pareto 分析提供资源权衡依据，不改变原有 AP 优先选择规则。",
+      "worker RSS 不含 LLM 服务显存；封存测试集没有用于优化。"
+    ]
+  },
+  "finished_at": "2026-09-30T16:36:00.590743+00:00",
+  "timing": {
+    "wall_seconds": 243.631,
+    "budget_seconds": 600,
+    "request_ceiling_seconds": 600
+  },
+  "report_paths": {}
+}
+````

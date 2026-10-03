@@ -1,0 +1,19 @@
+{
+  "objective": "预测银行客户是否订购定期存款",
+  "constraints": [
+    "使用可复现的表格分类流程",
+    "禁止使用 duration 字段"
+  ],
+  "assumptions": [
+    "数据集为 'bank'",
+    "特征包括 'age', 'job', 'marital', 'education', 'default', 'housing', 'loan', 'pdays', 'previous', 'poutcome'",
+    "分类任务为二元分类",
+    "正类标签为 'yes'",
+    "评估指标为平均精度"
+  ],
+  "warnings": [
+    "请求中未指定运行时间预算，将使用默认值 120 秒"
+  ],
+  "incompatible_requests": [],
+  "requested_run_seconds": 120
+}

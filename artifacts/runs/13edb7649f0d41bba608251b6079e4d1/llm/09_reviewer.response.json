@@ -1,0 +1,6 @@
+{
+  "error_type": "TypeError",
+  "diagnosis": "OneHotEncoder does not accept a random_state argument in the installed scikit-learn version; the constructor call passes an unsupported keyword, causing worker execution to fail before fitting.",
+  "fix": "Remove random_state=task_spec['seed'] from the OneHotEncoder(...) call in the ColumnTransformer, leaving OneHotEncoder(handle_unknown='ignore').",
+  "repairable": true
+}

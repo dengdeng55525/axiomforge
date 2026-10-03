@@ -1,0 +1,9 @@
+{
+  "status": "failed",
+  "error": {
+    "type": "duplicate_candidate",
+    "stage": "search_policy",
+    "repairable": true,
+    "message": "Constructor plan duplicates logistic_default; implement the planned parameter change"
+  }
+}

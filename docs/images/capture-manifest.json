@@ -1,13 +1,17 @@
 {
   "schema_version": "documentation-capture.v1",
   "brand": "AxiomForge · 知衡",
-  "captured_at": "2026-10-02T15:36:24.050Z",
-  "source_base_commit": "f595c1ff15272b72e8707606b960a4e5e9c14bb4",
+  "captured_at": "2026-10-03T15:49:55.057Z",
+  "source_base_commit": "30eda6e432a0cdc0e36b477d734479cea6f7285b",
   "source_worktree_dirty": true,
   "source_inputs": [
     {
       "path": "web/src/App.vue",
-      "sha256": "bb080164ec4f22196d512762c621978bb83547645b4a0e0336745759df8e16b5"
+      "sha256": "119837fe57cffbf2b92e97b46b972c6c43f559d93df077f69883e93c76f5092d"
+    },
+    {
+      "path": "web/src/assets/logo.png",
+      "sha256": "18992228d250c999e1045a072af791945bb26f57eccee0e1eeac02a5fe68110e"
     },
     {
       "path": "web/src/components/AgentTracePanel.vue",
@@ -51,7 +55,7 @@
     },
     {
       "path": "web/src/style.css",
-      "sha256": "d42fd1a5e53aeee310aec4ad6c7fbef46f3f26f4e4fd9523f46a9c01c20d9908"
+      "sha256": "d56bcacaa6f7004090239e2fe2171455b2108408f832b5afe25ca09eedb69a97"
     },
     {
       "path": "web/src/views/HistoryView.vue",
@@ -59,7 +63,7 @@
     },
     {
       "path": "web/src/views/HomeView.vue",
-      "sha256": "c3b72e4de863b321496222d5148c84cd966fdaf53552634bca3c693347430797"
+      "sha256": "f828b3f0dcff66cfad85667d53ebf3cbdde315667d4b2f74a03f3e292ce162cc"
     },
     {
       "path": "web/src/views/KnowledgeView.vue",
@@ -79,7 +83,7 @@
     },
     {
       "path": "web/index.html",
-      "sha256": "fb2c1d99f4fc8c64436fea2b562d4032d9f2c7a4653160bea61b363fab3a8e0f"
+      "sha256": "2f6283393bb4011b1d995450c05dfc3e2103ad78018a09419b593c0090b07967"
     },
     {
       "path": "web/vite.config.ts",
@@ -98,7 +102,7 @@
       "sha256": "7d7f8c706dc4928635492c707baa542d37d69b63accb4b3021f9f210e5732a0f"
     }
   ],
-  "build_assets_sha256": "6cc3ea62d7b60c452171609502316d834ec306c80f46de40afe50104d56c7a23",
+  "build_assets_sha256": "43a12f3f5871fe8f7104cbf04d3ba72d6270bd89051f72e680f9b4357174b222",
   "reproduction": "npm --prefix web run build && node web/scripts/capture-docs.mjs",
   "policy": {
     "requests_intercepted": true,
@@ -969,7 +973,7 @@
         "width": 1440,
         "height": 1000
       },
-      "sha256": "bcc7972940d6e6ef9cf71871eec5b713103fd7e06c65c209981c217cb2c903d4",
+      "sha256": "6220702d145fbf55e15d459dbab985ea58bb47d1c37eb6a12ba44f48ffa0c67e",
       "historical_run_id": null,
       "gpu_fixture": "offline-cpu-configuration"
     },
@@ -981,7 +985,7 @@
         "width": 1440,
         "height": 1200
       },
-      "sha256": "9989d69e20646efe6b87a279dd98bbfa83b686c9f85dec425bd8181706afc965",
+      "sha256": "7ffb1f300c7e9e90be5362a706f32a4e1f825044d5c56e9abadfee072c3ab6d7",
       "historical_run_id": null,
       "gpu_fixture": "offline-cpu-configuration"
     },
@@ -993,7 +997,7 @@
         "width": 1440,
         "height": 1160
       },
-      "sha256": "90083d9b0023e4ef73d0e2cbb72b3ceb918600425f0d77c4a83d1d7aa06c532a",
+      "sha256": "abd56d0cfa18fca12f69d514b7ca5163a3332ea2015add9aba600fb5e8ea002c",
       "historical_run_id": null,
       "gpu_fixture": "offline-cpu-configuration"
     },
@@ -1005,7 +1009,7 @@
         "width": 1280,
         "height": 720
       },
-      "sha256": "738b4de6fba269b21477e3db12e1e83c8cd061936030bdf36a1690e2c591cbc8",
+      "sha256": "e4d1c45b46d056458b7ba325b9809cd48ed722d4ba0e3808020592cef396edc5",
       "historical_run_id": null,
       "gpu_fixture": "explicitly-labelled-2-of-4-simulation"
     },
@@ -1017,7 +1021,7 @@
         "width": 1440,
         "height": 1080
       },
-      "sha256": "1c6df5944ef320313dba851ab5b1d222387ff6bfee3f13035d987da86f70777a",
+      "sha256": "abfc87896d699fe81f8219aa11d26dff33d6b490bb10bf69bff9c657236640e2",
       "historical_run_id": "660682f3cf324bf1938b78c70f2fce8c",
       "gpu_fixture": "offline-cpu-configuration"
     },
@@ -1029,7 +1033,7 @@
         "width": 1440,
         "height": 1080
       },
-      "sha256": "a7178e73c80fcd5971fc7d4bb34651da5619532e44e9f1eea6f73d6aec6be650",
+      "sha256": "0d58ca9e71748bb01fc613606127861b89ee80b93512e999a23300a1209e7007",
       "historical_run_id": "660682f3cf324bf1938b78c70f2fce8c",
       "gpu_fixture": "offline-cpu-configuration"
     },
@@ -1041,7 +1045,7 @@
         "width": 1440,
         "height": 620
       },
-      "sha256": "74c19384de1b8ab0dc8d03ae9834d004c45979c4cf4bedda28b34761ece6aa67",
+      "sha256": "0764a59f8aa9821f4ad605df4d8de1b166e2cdb6ec7cfefc85047ea05faa4778",
       "historical_run_id": "99066c21c7f64134bcde65a0ef068473",
       "gpu_fixture": "offline-cpu-configuration"
     },
@@ -1053,7 +1057,7 @@
         "width": 1680,
         "height": 1100
       },
-      "sha256": "d9409f761d7e79b53d923cd122c842cdf25ba656b2f2e5b5ebc8ae1796e06f3c",
+      "sha256": "8bdd86b4505fb388fe83d38793669314659110f01915408141d5ef5e8d2e60a7",
       "historical_run_id": null,
       "gpu_fixture": "offline-cpu-configuration"
     }

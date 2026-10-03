@@ -1,0 +1,11 @@
+{
+  "objective": "预测客户是否订购银行定期存款。仅使用通话前可得特征，禁止使用 duration。比较两个算法候选，按验证集 AP 选择方案，并输出功能检查、来源依据、资源消耗和验证报告。",
+  "constraints": [
+    "遵守固定数据与特征协议"
+  ],
+  "assumptions": [
+    "离线规则测试模式"
+  ],
+  "warnings": [],
+  "incompatible_requests": []
+}

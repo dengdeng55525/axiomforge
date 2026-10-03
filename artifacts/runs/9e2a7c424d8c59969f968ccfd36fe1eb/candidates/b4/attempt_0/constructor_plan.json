@@ -1,0 +1,126 @@
+{
+  "kind": "constructor",
+  "name": "Pipeline",
+  "args": [
+    {
+      "kind": "list",
+      "items": [
+        {
+          "kind": "tuple",
+          "items": [
+            "prepare",
+            {
+              "kind": "constructor",
+              "name": "ColumnTransformer",
+              "args": [
+                {
+                  "kind": "list",
+                  "items": [
+                    {
+                      "kind": "tuple",
+                      "items": [
+                        "numeric",
+                        {
+                          "kind": "constructor",
+                          "name": "Pipeline",
+                          "args": [
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "tuple",
+                                  "items": [
+                                    "impute",
+                                    {
+                                      "kind": "constructor",
+                                      "name": "SimpleImputer",
+                                      "args": [],
+                                      "kwargs": {
+                                        "strategy": "median"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "kind": "tuple",
+                                  "items": [
+                                    "scale",
+                                    {
+                                      "kind": "constructor",
+                                      "name": "StandardScaler",
+                                      "args": [],
+                                      "kwargs": {}
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ],
+                          "kwargs": {}
+                        },
+                        {
+                          "kind": "list",
+                          "items": [
+                            "age",
+                            "pdays",
+                            "previous"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "tuple",
+                      "items": [
+                        "categorical",
+                        {
+                          "kind": "constructor",
+                          "name": "OneHotEncoder",
+                          "args": [],
+                          "kwargs": {
+                            "handle_unknown": "ignore"
+                          }
+                        },
+                        {
+                          "kind": "list",
+                          "items": [
+                            "job",
+                            "marital",
+                            "education",
+                            "default",
+                            "housing",
+                            "loan",
+                            "poutcome"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "kwargs": {}
+            }
+          ]
+        },
+        {
+          "kind": "tuple",
+          "items": [
+            "model",
+            {
+              "kind": "constructor",
+              "name": "RandomForestClassifier",
+              "args": [],
+              "kwargs": {
+                "n_estimators": 100,
+                "max_depth": 12,
+                "min_samples_leaf": 12,
+                "n_jobs": 2,
+                "random_state": 42
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "kwargs": {}
+}

@@ -1,0 +1,23 @@
+{
+  "actual_algorithm": "logistic",
+  "classifier_class": "LogisticRegression",
+  "classifier_path": [
+    "model"
+  ],
+  "classifier_parameters": {
+    "max_iter": 1000,
+    "random_state": 42,
+    "C": 0.25
+  },
+  "constructor_classes": [
+    "Pipeline",
+    "ColumnTransformer",
+    "Pipeline",
+    "SimpleImputer",
+    "StandardScaler",
+    "OneHotEncoder",
+    "LogisticRegression"
+  ],
+  "constructor_count": 7,
+  "source": "independently_parsed_constructor_plan"
+}

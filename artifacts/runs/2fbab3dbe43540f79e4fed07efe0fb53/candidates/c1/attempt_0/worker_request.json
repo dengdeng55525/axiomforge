@@ -1,0 +1,23 @@
+{
+  "code_path": "/root/algorithm-capability-factory/artifacts/runs/2fbab3dbe43540f79e4fed07efe0fb53/candidates/c1/attempt_0/model.py",
+  "train_path": "/root/algorithm-capability-factory/artifacts/runs/2fbab3dbe43540f79e4fed07efe0fb53/dataset/worker/train.json",
+  "validation_features_path": "/root/algorithm-capability-factory/artifacts/runs/2fbab3dbe43540f79e4fed07efe0fb53/dataset/worker/validation_features.json",
+  "output_path": "/root/algorithm-capability-factory/artifacts/runs/2fbab3dbe43540f79e4fed07efe0fb53/candidates/c1/attempt_0/predictions.json",
+  "task_spec": {
+    "task_type": "text_binary_classification",
+    "feature_names": [
+      "text"
+    ],
+    "numeric_features": [],
+    "categorical_features": [
+      "text"
+    ],
+    "positive_label": "spam",
+    "seed": 42
+  },
+  "limits": {
+    "timeout_s": 120.0,
+    "memory_mib": 2048,
+    "cpu_cores": 2
+  }
+}

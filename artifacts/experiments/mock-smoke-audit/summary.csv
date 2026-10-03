@@ -1,0 +1,9 @@
+﻿profile,dataset,planned_runs,attempted_runs,completed_runs,passed_runs,failed_runs,cancelled_runs,harness_error_runs,pass_rate_completed,scored_passed_runs,mean_selected_validation_ap,sample_std_selected_validation_ap,metric_aggregation,usage_missing_runs,observed_api_calls,api_calls_observed_runs,observed_input_tokens,input_tokens_observed_runs,observed_output_tokens,output_tokens_observed_runs,observed_cached_input_tokens,cached_input_tokens_observed_runs,observed_workflow_wall_seconds,workflow_wall_seconds_observed_runs,observed_harness_wall_seconds,harness_wall_seconds_observed_runs,observed_repair_attempts,repair_attempts_observed_runs
+A,bank,1,1,1,1,0,0,0,1.0,1,0.18287735589367637,,within_single_dataset,0,0,1,0,1,0,1,0,1,4.253,1,5.472267006058246,1,0,1
+A,sms,1,1,1,1,0,0,0,1.0,1,0.9583895772337544,,within_single_dataset,0,0,1,0,1,0,1,0,1,3.539,1,4.754187820944935,1,0,1
+B,bank,1,1,1,1,0,0,0,1.0,1,0.18287735589367637,,within_single_dataset,0,0,1,0,1,0,1,0,1,3.803,1,5.166392770130187,1,0,1
+B,sms,1,1,1,1,0,0,0,1.0,1,0.9583895772337544,,within_single_dataset,0,0,1,0,1,0,1,0,1,3.174,1,4.271375426091254,1,0,1
+C,bank,1,1,1,1,0,0,0,1.0,1,0.18287735589367637,,within_single_dataset,0,0,1,0,1,0,1,0,1,4.158,1,5.2918670368380845,1,0,1
+C,sms,1,1,1,1,0,0,0,1.0,1,0.9583895772337544,,within_single_dataset,0,0,1,0,1,0,1,0,1,3.498,1,4.737046874826774,1,0,1
+D,bank,1,1,1,1,0,0,0,1.0,1,0.18287735589367637,,within_single_dataset,0,0,1,0,1,0,1,0,1,20.551,1,21.683912538923323,1,0,1
+D,sms,1,1,1,1,0,0,0,1.0,1,0.960841632485474,,within_single_dataset,0,0,1,0,1,0,1,0,1,13.314,1,14.744213637895882,1,0,1

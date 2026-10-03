@@ -1,0 +1,31 @@
+{
+  "objective": "在通话前预测银行客户订购概率（正类为 yes），使用提供的预接触特征，先比较逻辑回归与随机森林，再用宽度为2的Beam Search扩展超参数，最多保留6个不同候选，并报告平均精度（AP）、前10%名单效果和资源消耗。",
+  "constraints": [
+    "禁止使用 duration 特征",
+    "仅使用 task_spec 中列出的特征：age, job, marital, education, default, housing, loan, pdays, previous, poutcome",
+    "分类特征：job, marital, education, default, housing, loan, poutcome",
+    "数值特征：age, pdays, previous",
+    "主指标为 average_precision",
+    "正类标签为 yes",
+    "随机种子为 42",
+    "资源限制：CPU 2，内存 2048 MiB，超时 120 秒",
+    "Beam Search 宽度为 2，最多 6 个不同候选",
+    "初始比较逻辑回归和随机森林"
+  ],
+  "assumptions": [
+    "数据来自 bank 数据集，且包含 task_spec 中列出的字段",
+    "前10%名单效果按预测概率排序后取前10%样本计算相关指标（如命中率、提升度等）",
+    "资源消耗报告包括训练/推理时间、CPU 和内存使用情况",
+    "Beam Search 在给定资源限制内进行，候选数不超过6个"
+  ],
+  "warnings": [
+    "若数据中缺少 task_spec 列出的特征，则无法按规范执行",
+    "若资源限制导致无法完成 Beam Search 或模型训练，需报告失败原因",
+    "前10%名单效果的具体指标未在 task_spec 中指定，需明确计算口径",
+    "无法承诺未见客户分离，因为数据中没有客户 ID 字段"
+  ],
+  "incompatible_requests": [
+    "使用 duration 特征（被 feature_policy 禁止）",
+    "请求客户级分离评估（无客户 ID 字段，无法实现）"
+  ]
+}

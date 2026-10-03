@@ -1,0 +1,4 @@
+{
+  "code": "from sklearn.pipeline import Pipeline\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.naive_bayes import ComplementNB\n\ndef build_pipeline(task_spec):\n    text = TfidfVectorizer(ngram_range=(1, 2), max_features=30000, min_df=2)\n    model = ComplementNB(alpha=1.0)\n    return Pipeline([('text', text), ('model', model)])\n",
+  "explanation": "Plan variant=default selects ComplementNB on TF-IDF (1,2)-grams with min_df=2 and max_features=30000 per the text-tfidf and complement-naive-bayes evidence, using default alpha=1.0 and no random_state since ComplementNB does not accept it."
+}

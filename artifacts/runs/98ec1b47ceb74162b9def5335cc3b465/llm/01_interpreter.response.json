@@ -1,0 +1,21 @@
+{
+  "objective": "预测银行客户购买定期存款的可能性，输出二分类概率/标签，以 average_precision 为主指标。",
+  "constraints": [
+    "仅使用 task_spec 中列出的特征：age, job, marital, education, default, housing, loan, pdays, previous, poutcome。",
+    "遵循 precontact_conservative_v1 特征策略，不使用联系后信息。",
+    "类别特征：job, marital, education, default, housing, loan, poutcome；数值特征：age, pdays, previous。",
+    "正类标签为 yes，主指标为 average_precision，随机种子为 42。",
+    "资源限制：CPU 2 核，内存 2048 MiB，超时 120 秒。"
+  ],
+  "assumptions": [
+    "数据集 bank 已提供且包含上述特征与目标标签。",
+    "任务为表格二分类，评估使用 average_precision。",
+    "未指定额外运行时长，因此使用宿主默认超时 120 秒。"
+  ],
+  "warnings": [
+    "未提供客户端 ID，无法承诺或评估按客户分组的分离。",
+    "不得使用 task_spec 之外的特征或联系后信息。"
+  ],
+  "incompatible_requests": [],
+  "requested_run_seconds": null
+}

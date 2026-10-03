@@ -1,0 +1,32 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "bank_logreg_balanced",
+      "algorithm": "logistic",
+      "variant": "balanced",
+      "rationale": "逻辑回归作为线性概率基线，class_weight=balanced 缓解正类稀少；仅使用通话前白名单特征，禁止 duration，输出 predict_proba 正类列用于 AP 与前10%名单评估。",
+      "evidence_ids": [
+        "bank-precontact-policy",
+        "bank-target",
+        "probability-logistic",
+        "average-precision",
+        "bank-ordered-split"
+      ],
+      "parent_id": null
+    },
+    {
+      "candidate_id": "bank_forest_shallower",
+      "algorithm": "forest",
+      "variant": "shallower",
+      "rationale": "随机森林作为非线性对照，限制深度与树数量以适配 CPU/内存与超时；固定 random_state，按原始顺序留出协议比较 AP 与前10%联系名单效果，不预设优于逻辑回归。",
+      "evidence_ids": [
+        "bank-precontact-policy",
+        "bank-target",
+        "random-forest",
+        "average-precision",
+        "bank-ordered-split"
+      ],
+      "parent_id": null
+    }
+  ]
+}
