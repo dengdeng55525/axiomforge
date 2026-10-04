@@ -14,7 +14,7 @@ Knowledge-grounded agents for reproducible algorithm engineering.
 
 [![CPU verification](https://github.com/dengdeng55525/axiomforge/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/dengdeng55525/axiomforge/actions/workflows/ci.yml) [![Web verification](https://github.com/dengdeng55525/axiomforge/actions/workflows/frontend.yml/badge.svg?branch=main)](https://github.com/dengdeng55525/axiomforge/actions/workflows/frontend.yml)
 
-[项目目标](#项目背景与目标) · [演示视频](#论文演示视频) · [框架图](#系统框架与模块设计) · [快速开始](#快速离线体验) · [验证报告](#验证报告与结果) · [Agent Harness](#agent-harness-离线评测) · [知识图谱](#知识图谱与能力资产) · [文档中心](docs/README.md)
+[项目目标](#项目背景与目标) · [演示视频](#项目演示视频) · [框架图](#系统框架与模块设计) · [快速开始](#快速离线体验) · [验证报告](#验证报告与结果) · [Agent Harness](#agent-harness-离线评测) · [知识图谱](#知识图谱与能力资产) · [文档中心](docs/README.md)
 
 ## 项目背景与目标
 
@@ -28,7 +28,13 @@ Knowledge-grounded agents for reproducible algorithm engineering.
 - 从结构化知识图谱、批准来源和历史失败经验中检索可复用依据。
 - 通过 Interpreter、Planner、Coder、Reviewer、Repair Coder 和 Curator 协作生成多个候选方案。
 - 在受限执行器中检查代码安全、接口规范、功能正确性、指标表现和运行稳定性。
-- 把运行报告、候选代码、失败诊断、修复结果和能力版本保存为下一次检索可以直接使用的证据。
+- 把运行报告、候选代码、失败诊断、修复结果和能力版本保存为下一次检索直接使用的证据。
+
+### 目标拆解
+
+1. **统一需求语言**：将行业描述转换为可校验的任务目标、输入输出、特征白名单、指标和资源预算。
+2. **统一算法交付**：让每个候选方案都产生代码、来源、执行事实、指标和制品哈希，交付内容可复现、可审查。
+3. **统一知识回写**：把验证通过的能力、失败指纹和修复路径写入版本化图谱，直接用于下一次检索和候选规划。
 
 ![知衡工作台：任务入口、运行历史与能力概览](docs/images/workbench-overview.png)
 
@@ -44,23 +50,33 @@ Knowledge-grounded agents for reproducible algorithm engineering.
 | 可复现知识资产 | 能力版本、来源哈希、验证记录、失败经验与按需制品完整性核验 |
 | API 与本地推理 | OpenAI Responses、DeepSeek、本地兼容 HTTP、Mock，配套单卡与四卡 14B 配置 |
 
-## 论文演示视频
+## 项目演示视频
 
-演示时长 **6 分 23 秒**，展示工作台、任务配置、验证报告与知识图谱交互。点击下方播放器即可在 GitHub 内观看，也可[下载原始 MP4](display/display.mp4)。
+第一段项目视频展示工作台、任务配置、验证报告与知识图谱交互。点击播放器即可在 GitHub 内观看，也可[下载项目演示视频](display/display.mp4)。
 
 https://github.com/user-attachments/assets/0716fbd6-675a-4dd8-863c-39e44db8545a
+
+第二段项目视频聚焦能力库：能力卡检索、来源定位、关系探索、版本详情和 Web 端能力关联。点击播放器即可在 GitHub 内观看，也可[下载能力库演示视频](display/display2.mp4)。
+
+https://github.com/user-attachments/assets/d7f21835-b554-4202-b7f1-7fc689542f15
 
 ## 系统框架与模块设计
 
 下面的框架图对应仓库的实际模块边界：用户从 Vue 工作台、FastAPI 或 Typer CLI 进入 Workflow；Agent 角色链负责理解、检索、规划、生成和修复；独立验证器负责算法事实；报告、图谱、Harness 和制品哈希共同形成可追溯的回写闭环。
 
 <p align="center">
-  <img src="AxiomForge_Framework.svg" alt="AxiomForge · 知衡系统框架与运行流程" width="1200" />
+  <img src="AxiomForge_Framework.svg" alt="AxiomForge · 知衡系统框架与运行流程" width="600" />
 </p>
 
-图中央的 ①–⑨ 展开主流程：需求理解 → 证据检索 → 方案规划 → 代码生成 → 受控执行 → 独立验证 → 汇总候选 → 比较与终态整理 → 结果交付。橙色支路由 Reviewer 与 Repair Coder 处理候选失败，紫色虚线表示运行期间的可选 Beam 扩展；两条支路都重新经过同一个验证器。底部反馈路径把运行与修复经验写回左侧知识底座，右侧的 Trace、Harness、知识治理和 SHA256 核验用于运行后的独立复核。[打开框架图原图](AxiomForge_Framework.svg)可放大查看模块连接。
+图中央的 ①–⑨ 展开主流程：需求理解 → 证据检索 → 方案规划 → 代码生成 → 受控执行 → 独立验证 → 汇总候选 → 比较与终态整理 → 结果交付。橙色支路由 Reviewer 与 Repair Coder 处理候选失败，紫色虚线表示运行期间的 Beam 扩展；两条支路都重新经过同一个验证器。底部反馈路径把运行与修复经验写回左侧知识底座，右侧的 Trace、Harness、知识治理和 SHA256 核验用于运行后的独立复核。[打开框架图原图](AxiomForge_Framework.svg)支持放大查看模块连接。
 
 模块之间通过明确合约连接：`contracts.py` 定义角色输出，`workflow.py` 管理状态、预算和终止，`agent_runtime.py` 组织 LangChain Runnable，`knowledge.py` 持久化能力图谱，`execution/` 执行受限算法，`reporting.py` 生成 JSON、Markdown 和 HTML，FastAPI、Vue 和 CLI 复用同一份运行事实。
+
+### 模块边界
+
+1. **入口与编排**：Vue、FastAPI 和 Typer 只负责收集请求、展示状态和导出结果；`Workflow` 负责状态、预算、取消与终态。
+2. **Agent 与事实隔离**：Interpreter、Planner、Coder、Reviewer、Repair Coder 和 Curator 通过 Pydantic 合约交接；算法执行与指标计算由独立验证器完成。
+3. **结果与治理回写**：报告、候选代码、Agent 事件、Harness 结果、知识关系和 SHA256 清单共同组成一次运行的证据包。
 
 | 模块 | 输入与职责 | 输出与协作边界 |
 | --- | --- | --- |
@@ -71,7 +87,7 @@ https://github.com/user-attachments/assets/0716fbd6-675a-4dd8-863c-39e44db8545a
 | 交付层 `reporting.py` / `optimization.py` | 聚合候选事实、选中结果、质量与成本 | 三种报告、候选代码、资源比较与 Pareto 前沿 |
 | 复核层 `harness.py` / `knowledge_governance.py` / `reproducibility.py` | 读取已保存轨迹、知识快照和运行制品 | 用例检查、来源与版本治理、SHA256 完整性结果 |
 
-需要深入了解接口、状态机、数据协议、部署和实验记录时，请进入[文档中心](docs/README.md)。文档中心按“首次运行、架构理解、Agent 工程、知识治理、部署验证、扩展开发”组织了完整资料，适合继续阅读代码边界和复现实验。
+深入核对接口、状态机、数据协议、部署和实验记录，请进入[文档中心](docs/README.md)。文档中心按“首次运行、架构理解、Agent 工程、知识治理、部署验证、扩展开发”组织了完整资料，用于核对代码边界并复现实验。
 
 ## 快速离线体验
 
@@ -102,6 +118,12 @@ axiomforge report RUN_ID --format html --output artifacts/demo-report.html
 ```
 
 Mock 使用确定性规则产生角色响应，同时执行真实的数据处理、算法训练和验证。报告通过 `mode` 区分 Mock 与真实模型运行。Python 模块入口 `python -m capability_factory` 与 `axiomforge` 命令等价。
+
+### 离线复现步骤
+
+1. **准备数据与知识底座**：执行 `verify_data.py` 和 `axiomforge init --provider mock`，固定公开数据版本、来源哈希与种子能力卡。
+2. **运行端到端任务**：使用 `axiomforge run` 创建候选、执行验证、保存事件并回写知识库；同一条命令支持银行和 SMS 场景。
+3. **导出工程制品**：通过 `axiomforge report` 生成 JSON、Markdown、HTML 三种报告，再用 `validate`、`harness` 和 `analyze-run` 做只读复核。
 
 ![CLI 初始化知识底座：mock provider、来源索引与能力卡](docs/images/cli-init.png)
 
@@ -134,7 +156,7 @@ CLI 与 Web 使用同一套 `Workflow`、SQLite 知识库和报告格式。诊�
 | `axiomforge validate RUN_ID --suite` | 对单次运行执行全部版本化 Harness 用例 | 只读 | `0` 全部通过，`1` 存在失败用例 | `--output artifacts/harness/suite.json` |
 | `axiomforge harness replay RUN_ID --through 12` | 回放脱敏 Agent 事件 | 只读；按游标裁剪 | `0` | 标准输出 `agent-trace.v1` |
 
-常用的本地检查路径如下。`status` 可以在刚安装的空目录执行；`validate` 会明确返回数据库缺失或质量门失败，适合作为 CI 门禁。
+常用的本地检查路径如下。`status` 在刚安装的空目录即可执行；`validate` 明确返回数据库缺失或质量门失败，作为 CI 门禁。
 
 ```bash
 axiomforge status --recent 5
@@ -152,7 +174,7 @@ axiomforge validate RUN_ID --suite \
 
 ![CLI 环境诊断：执行器限制、脱敏配置与 GPU 探测](docs/images/cli-doctor.png)
 
-`status` 适合开发者进入项目后的第一条命令，`doctor` 用于定位依赖、数据和端点配置。两者默认离线读取本地事实，输出可保存为 CI 附件。
+`status` 作为进入项目后的第一条命令，`doctor` 用于定位依赖、数据和端点配置。两者默认离线读取本地事实，输出可保存为 CI 附件。
 
 ## Web 研发工作台
 
@@ -176,7 +198,7 @@ axiomforge validate RUN_ID --suite \
 
 打开 <http://127.0.0.1:8501/app/>。API 也直接挂载工作台：<http://127.0.0.1:8000/app/>；交互式接口文档位于 <http://127.0.0.1:8000/docs>。
 
-启动脚本从自身位置定位项目根目录，并使用项目 Python 环境。Python 数据科学界面的兼容入口保留在 `scripts/start_legacy_ui.sh`。
+启动脚本从自身位置定位项目根目录，并使用项目 Python 环境。Python 数据科学界面的 Streamlit 入口位于 `scripts/start_legacy_ui.sh`。
 
 | 页面 | 路径 | 后端事实来源 |
 | --- | --- | --- |
@@ -189,7 +211,7 @@ axiomforge validate RUN_ID --suite \
 
 ![CLI 运行完整能力闭环：run_id、候选指标与报告路径](docs/images/cli-run.png)
 
-CLI 和 Web 进入同一个 Workflow。命令行输出保留运行标识、候选摘要、模型用量和报告路径，便于脚本继续调用 `validate`、`harness`、`report` 与 `analyze-run`。
+CLI 和 Web 进入同一个 Workflow。命令行输出保留运行标识、候选摘要、模型用量和报告路径，供脚本调用 `validate`、`harness`、`report` 与 `analyze-run`。
 
 ## 模型接入与计算资源
 
@@ -244,7 +266,7 @@ LOCAL_LLM_BASE_URL=http://127.0.0.1:8100/v1
 LOCAL_LLM_ENDPOINTS=http://127.0.0.1:8100/v1,http://127.0.0.1:8101/v1,http://127.0.0.1:8102/v1,http://127.0.0.1:8103/v1
 ```
 
-| 资源档位 | GPU | 主机内存建议 | 配置 |
+| 资源档位 | GPU | 主机内存 | 配置 |
 | --- | --- | --- | --- |
 | API / Mock | 0 | 16 GiB | `api` |
 | 单卡本地 14B | 1 × RTX 4090D 24 GB | 32 GiB | `single_gpu_14b` |
@@ -258,8 +280,6 @@ LOCAL_LLM_ENDPOINTS=http://127.0.0.1:8100/v1,http://127.0.0.1:8101/v1,http://127
 
 ![GPU 状态栏：设备可见性、显存、利用率与温度](docs/images/gpu-status-bar.png)
 
-图中使用 2/4 卡界面夹具展示部分设备可见的状态；实际页面读取当前服务所在环境的 GPU 快照。
-
 `GET /system/gpus` 与 `/health` 返回 `gpu-status.v1` 快照。设备可见性来自进程级 `nvidia-smi` 读取，模型端点状态单独管理。状态探测不改变 CUDA、代理或 SSH 配置；需要临时代理时，将参数限定在目标应用进程，详见部署指南。
 
 ## 端到端闭环
@@ -267,7 +287,7 @@ LOCAL_LLM_ENDPOINTS=http://127.0.0.1:8100/v1,http://127.0.0.1:8101/v1,http://127
 Web 通过 FastAPI 提交任务，CLI 直接调用同一个 Workflow。Agent 运行层负责结构化交接，独立验证器负责代码执行与算法指标；报告和知识回写保留运行事实。运行后的 Harness、知识治理与制品核验从已保存事实中按需产生检查结果。
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "22px", "primaryColor": "#e8f5f2", "primaryBorderColor": "#0d9488", "primaryTextColor": "#173c38", "lineColor": "#64748b", "clusterBkg": "#f8fafc", "clusterBorder": "#cbd5e1"}, "flowchart": {"nodeSpacing": 36, "rankSpacing": 54, "padding": 24, "curve": "basis"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "12px", "primaryColor": "#e8f5f2", "primaryBorderColor": "#0d9488", "primaryTextColor": "#173c38", "lineColor": "#64748b", "clusterBkg": "#f8fafc", "clusterBorder": "#cbd5e1"}, "flowchart": {"nodeSpacing": 18, "rankSpacing": 28, "padding": 12, "curve": "basis"}}}%%
 flowchart TD
     WEB[Vue 研发工作台] --> API[FastAPI · 任务接口]
     API --> WF[Workflow · 状态 / 预算 / 取消]
@@ -340,6 +360,16 @@ sequenceDiagram
 
 一次运行由选定的 Provider 承担多个专职角色。LangChain Core 的 `RunnableSequence` 连接 `invoke_provider → persist_response → validate_contract`，`StructuredTool` 封装只读能力检索，Workflow 控制搜索、修复、预算和终态。
 
+### Agent 执行步骤
+
+1. **理解**：Interpreter 将自然语言拆成任务类型、输入输出、约束、指标和预算。
+2. **检索**：StructuredTool 查询能力卡、来源、版本、失败经验和邻域关系，形成带 `evidence_ids` 的证据包。
+3. **规划**：Planner 生成候选算法、变体、父子关系、资源估计和设计依据，并执行有界 Beam 扩展。
+4. **生成**：Coder 按 `build_pipeline(task_spec)` 合约生成受限构造程序，AST 检查先于执行。
+5. **验证**：Worker 在固定数据协议和资源预算内运行，主进程独立计算接口、功能、稳定性和指标事实。
+6. **修复与搜索**：Reviewer 读取真实错误，Repair Coder 在预算内提交下一次尝试；通过候选比较选择终态。
+7. **沉淀**：Curator 汇总依据、代码、检查、失败指纹和资源记录，写入报告、能力版本与运行事件。
+
 | 角色 | 职责 | 输出合约 |
 | --- | --- | --- |
 | `interpreter` | 提取目标、特征约束、假设与警告 | `TaskInterpretation` |
@@ -358,7 +388,7 @@ sequenceDiagram
 
 Coder 接收计划、任务协议和检索结果，输出统一的 Pipeline 构造函数。执行器检查构造程序与计划的一致性，再训练和验证；错误以类型、消息和检查项进入 Reviewer。Reviewer 给出诊断与修改建议，Repair Coder 生成下一次代码，随后按相同数据协议重新验证。每次尝试保存独立代码哈希、检查结果与修复记录。
 
-候选比较从通过强制检查的方案中按验证 AP 降序选择，同分时优先训练耗时更短的方案。Curator 使用候选事实总结设计依据和取舍；运行状态、制品和经验随后写回知识库。经过验证的修复经验形成 `verified` 能力卡，待验证建议保留 `proposed` 经验状态。
+候选比较从通过强制检查的方案中按验证 AP 降序选择，同分时优先训练耗时更短的方案。Curator 使用候选事实总结设计依据和取舍；运行状态、制品和经验随后写回知识库。经过验证的修复经验形成 `verified` 能力卡，未完成验证的建议标记为 `proposed` 经验状态。
 
 ### 搜索、修复与终止策略
 
@@ -383,15 +413,21 @@ Coder 接收计划、任务协议和检索结果，输出统一的 Pipeline 构�
 | **NetworkX** | Python 兼容界面的有向图与布局 | 连接数据科学工作流；[兼容界面](ui/app.py)、[GraphML 导出](src/capability_factory/graph_export.py) |
 | **FastAPI / Pydantic / Typer** | API、结构化合约、OpenAPI、CLI | 多入口复用相同服务层；[API](src/capability_factory/api.py)、[CLI](src/capability_factory/cli.py) |
 | **Vue 3 / TypeScript / D3 / Lucide** | 主工作台、报告、交互图谱与状态图标 | 模块化组件、类型约束与图谱交互；[Web 源码](web) |
-| **Streamlit / Plotly** | 可选 Python 实验与图表入口 | 复用 FastAPI 数据，便于数据科学环境使用；[启动脚本](scripts/start_legacy_ui.sh) |
+| **Streamlit / Plotly** | Python 实验与图表入口 | 复用 FastAPI 数据，服务数据科学环境；[启动脚本](scripts/start_legacy_ui.sh) |
 | **scikit-learn / pandas / NumPy** | 算法 Pipeline、数据准备与独立指标 | 两类任务共享验证框架；[插件](src/capability_factory/plugins.py)、[验证器](src/capability_factory/execution/runner.py) |
-| **本地 Agent Evaluation Harness** | 版本化用例、运行事实检查与只读回放 | 可重复、无模型调用，适合 CI 和跨后端回归；[Harness](src/capability_factory/harness.py) |
+| **本地 Agent Evaluation Harness** | 版本化用例、运行事实检查与只读回放 | 无模型调用的版本化事实服务 CI 和跨后端回归；[Harness](src/capability_factory/harness.py) |
 
-扩展选型涵盖 LlamaIndex 的文档索引、AutoGen / CrewAI 的协作编排和 Neo4j 的服务化图存储。当前模块通过明确接口衔接，逐项比较与接入方式见 [技术选型与框架集成](docs/14_技术选型与框架集成.md)。
+LlamaIndex 的文档索引、AutoGen / CrewAI 的协作编排和 Neo4j 的服务化图存储均有适配契约与迁移路径，现有可复现入口使用 LangChain、SQLite 和 NetworkX；逐项接入方式见 [技术选型与框架集成](docs/14_技术选型与框架集成.md)。
 
 ## 验证报告与结果
 
 报告先呈现结论、候选比较、指标基线和设计依据，再展开逐项检查、代码、修复与来源。JSON、Markdown 和 HTML 共享同一份结构化事实，分别服务接口集成、代码审查和浏览阅读。
+
+### 报告功能
+
+1. **结论层**：给出运行状态、选中候选、AP / ROC-AUC / F1 / Lift、Dummy 基线和资源摘要。
+2. **证据层**：按需展开功能、接口、稳定性和指标检查，关联代码路径、修复尝试、来源和事件序列。
+3. **交付层**：同一份事实导出 JSON、Markdown、HTML，支持 API 集成、GitHub 阅读、打印归档和 Harness 复核。
 
 ![验证报告：结论、候选对照和可展开的检查证据](docs/images/workbench-report.png)
 
@@ -402,7 +438,7 @@ Coder 接收计划、任务协议和检索结果，输出统一的 Pipeline 构�
 | 运行稳定性 | 编译和子进程结果、边界输入、时间和资源预算 |
 | 指标表现 | 验证集 AP、Dummy 基线、ROC-AUC、F1 与 Lift |
 
-`status` 表示运行是否完成，`quality_status` 表示验证指标与建议基线的关系。缺少的指标显示为待评估；候选选择仅使用验证集，封存测试集按独立协议使用。
+`status` 表示运行是否完成，`quality_status` 表示验证指标与基线的关系。缺少的指标显示为待评估；候选选择仅使用验证集，封存测试集按独立协议使用。
 
 ### 公开运行记录
 
@@ -419,7 +455,7 @@ Coder 接收计划、任务协议和检索结果，输出统一的 Pipeline 构�
 
 ### 如何阅读一次验证结果
 
-银行 Beam 示例共比较 6 个候选，选中方案的验证 AP 为 **0.182877**，同一验证集的 Dummy AP 为 **0.110706**，绝对提升 **0.072171**；前 10% 联系名单的 Lift 为 **2.093790**。该结果用于衡量客户排序能力，业务阈值与联系预算可以继续结合报告中的 Precision、Recall 和 F1 分析。
+银行 Beam 示例共比较 6 个候选，选中方案的验证 AP 为 **0.182877**，同一验证集的 Dummy AP 为 **0.110706**，绝对提升 **0.072171**；前 10% 联系名单的 Lift 为 **2.093790**。该结果用于衡量客户排序能力，业务阈值与联系预算结合报告中的 Precision、Recall 和 F1 分析。
 
 短信迁移示例在 1,032 条验证样本上得到 AP **0.959834**、ROC-AUC **0.983741**、F1@0.5 **0.914729**。报告同时保存数据协议、选中候选和验证检查，可沿以下顺序阅读：
 
@@ -428,7 +464,7 @@ Coder 接收计划、任务协议和检索结果，输出统一的 Pipeline 构�
 3. 沿 `code_path` 打开候选代码，用 `code_sha256` 和制品清单对应具体版本。
 4. 查看 `evidence`、`events` 和 `knowledge_writeback`，追踪选型依据、角色执行与知识沉淀。
 
-JSON 适合程序读取，Markdown 可以直接在 GitHub 浏览，HTML 可下载后在浏览器打开。测试集评分与候选选择分离，当前示例的评估范围为验证集。
+JSON 面向程序读取，Markdown 直接在 GitHub 浏览，HTML 下载后在浏览器打开。测试集评分与候选选择分离，示例的评估范围为验证集。
 
 ### 生成代码接口
 
@@ -454,6 +490,12 @@ def build_pipeline(task_spec):
 ```
 
 构造程序先通过 AST 白名单解析，再交给受限 worker。可信执行器负责训练、预测和行号对齐，指标由主进程计算。执行范围与部署权限见 [安全说明](SECURITY.md)。
+
+### 生成接口约束
+
+1. **输入**：`task_spec` 明确数值列、类别列、随机种子、目标列和任务类型，生成器不读取隐含全局状态。
+2. **输出**：`build_pipeline(task_spec)` 返回尚未拟合的 sklearn Pipeline，验证器统一调用 `fit`、`predict_proba` 并检查行数、顺序和概率范围。
+3. **安全**：AST 白名单、导入限制、CPU / 内存 / 时间预算和 worker 隔离共同控制执行边界，所有拒绝与错误进入报告。
 
 `task_spec` 提供允许的数值列、类别列和随机种子，生成函数只负责返回尚未拟合的 Pipeline。worker 使用训练集拟合预处理与分类器，调用 `predict_proba` 取得正类概率；验证器检查输出长度、有限值、概率范围和边界输入。由执行器统一控制数据读写、标签和指标，避免候选自行改变评估协议。
 
@@ -487,15 +529,15 @@ axiomforge harness replay RUN_ID --through 12
 | `GET /runs/{id}/harness?case_id=bank_e2e` | 单用例 `observed` / `expected`、证据路径和检查结果 |
 | `GET /runs/{id}/harness-suite` | 全部登记用例的聚合分数、失败用例与逐项结果 |
 
-`suite` 对一条运行执行整个用例目录；不同任务、修复要求与预期状态由各用例独立判定。定向回归可选择与运行协议对应的单用例。Harness 只读已保存事实，无模型调用、无生成代码执行；schema 与扩展方式见 [离线评测指南](docs/17_Agent_Harness_离线评测.md)。
+`suite` 对一条运行执行整个用例目录；不同任务、修复要求与预期状态由各用例独立判定。定向回归选择与运行协议对应的单用例。Harness 只读已保存事实，无模型调用、无生成代码执行；schema 与扩展方式见 [离线评测指南](docs/17_Agent_Harness_离线评测.md)。
 
 ![CLI Harness 聚合评测与游标回放：suite 结果和事件 spans](docs/images/cli-harness-suite-replay.png)
 
-`suite` 负责聚合用例结果，`replay` 负责按游标回放脱敏事件。两条命令组合后可以从总体状态进入具体角色交接。
+`suite` 负责聚合用例结果，`replay` 负责按游标回放脱敏事件。两条命令组合后从总体状态进入具体角色交接。
 
 ## 知识图谱与能力资产
 
-知识探索提供搜索、节点类型与关系筛选、邻域扩展和详情面板。从能力可以定位来源、算法、依赖和验证运行，从失败经验可以回看修复结果与适用任务。
+知识探索提供搜索、节点类型与关系筛选、邻域扩展和详情面板。能力节点定位来源、算法、依赖和验证运行，失败经验节点回看修复结果与适用任务。
 
 ![知识探索：来源、能力版本、运行和失败经验的关系](docs/images/workbench-graph.png)
 
@@ -544,6 +586,16 @@ Source ← DERIVED_FROM — Capability v1 ← SUPERSEDES — Capability v2
 
 完整卡片还保存规则摘要、`evidence`、标签、关联能力和来源定位。每条来源包含 `source_id`、`uri`、`revision`、`license`、`locator` 和 `content_sha256`；代码来源进一步定位文件、函数和行号。该能力通过 `DERIVED_FROM` 关联 UCI 字段说明与项目业务协议，通过 `SOLVES` 关联表格二分类任务，生成的算法制品再通过 `IMPLEMENTS` 关联能力版本。
 
+![Web 能力库：能力卡、来源定位与关系探索](docs/images/workbench-graph.png)
+
+Web 知识探索页把能力卡字段、来源节点和关系路径放在同一详情面板中，分别对应 `/capabilities/{id}`、`/graph/explore` 和 `/knowledge/quality` 的运行事实；截图展示银行营销通话前特征能力的适用范围、来源与版本关系。
+
+### 图谱落地要点
+
+1. **节点模型**：`Source`、`Capability`、`TaskType`、`Algorithm`、`Transform`、`DatasetVersion`、`Environment`、`ValidationRun`、`Artifact` 和 `FailureExperience` 覆盖输入、实现、验证与经验。
+2. **关系模型**：`DERIVED_FROM`、`USES`、`REQUIRES`、`IMPLEMENTS`、`EVALUATES`、`REPAIRS`、`AVOIDED_BY`、`SUPERSEDES` 形成有向证据路径。
+3. **版本语义**：能力卡内容哈希用于幂等摄取，内容变化创建不可变版本；验证通过的经验标记为 `validated`，未完成验证的建议标记为 `proposed`。
+
 | 持久化表 | 核心字段与约束 | 作用 |
 | --- | --- | --- |
 | `cf_sources` | 来源 ID、内容哈希、来源 JSON | 保留原始证据及抽取定位 |
@@ -563,7 +615,7 @@ JSON 服务于 API 与前端，GraphML 供 Gephi、yEd 和图分析工具交换�
 
 ![CLI 图谱、报告与资源分析：导出、重生成和 Pareto 证据](docs/images/cli-export-report-analyze.png)
 
-图谱导出、报告重生成和资源分析共用同一份持久化运行事实；导出的 JSON、Markdown 和资源分析结果可以独立归档。
+图谱导出、报告重生成和资源分析共用同一份持久化运行事实；导出的 JSON、Markdown 和资源分析结果支持独立归档。
 
 ### 知识治理与制品完整性
 
@@ -579,6 +631,12 @@ JSON 服务于 API 与前端，GraphML 供 Gephi、yEd 和图分析工具交换�
 来源、许可、下载方式、行数与 SHA256 记录在 [数据协议](docs/02_数据与知识来源.md)、[数据审计](docs/research/data_audit.json) 和 [来源索引](docs/SOURCES.md)。训练集用于拟合，验证集用于候选比较，封存测试集保持独立。
 
 银行主协议使用 `age`、`job`、`marital`、`education`、`default`、`housing`、`loan`、`pdays`、`previous`、`poutcome`，禁用预测时不可获取的 `duration`。短信按大小写与空白规范化结果分组，保证同一规范化文本不跨集合；TF-IDF 词表与 IDF 仅由训练集拟合。
+
+### 数据协议与任务矩阵
+
+1. **银行营销响应**：41,188 行公开样本、10 个通话前字段、`duration` 泄漏约束，使用 AP、Dummy AP、ROC-AUC 和 Lift 评价排序效果。
+2. **SMS 垃圾信息分类**：5,574 条原始短信，规范化分组后 5,159 组，使用 TF-IDF 与分类器输出正类概率并评价 AP、F1 和 ROC-AUC。
+3. **Harness 覆盖**：`bank_e2e`、`bank_repair`、`sms_text_transfer`、未知类别、空批次和泄漏请求共同验证数据协议与接口边界。
 
 ### 可直接运行的测试任务
 
@@ -624,7 +682,7 @@ axiomforge run --dataset bank --provider mock --inject-failure \
 
 ![候选方案的验证质量、训练耗时和峰值内存](docs/images/resource-tradeoffs.png)
 
-上图对应保存的本地 14B 短信运行，两个候选均通过，选中候选验证 AP 为 **0.9598**。资源来自该次 worker 观测，适合解释本次方案取舍；重复测量可进一步评估波动。完整代码与检查见 [本地运行报告](examples/evidence/sms_local_resources/report.html)，分析实现见 [optimization.py](src/capability_factory/optimization.py)。
+上图对应保存的本地 14B 短信运行，两个候选均通过，选中候选验证 AP 为 **0.9598**。资源观测用于方案取舍，重复运行用于建立波动基线。完整代码与检查见 [本地运行报告](examples/evidence/sms_local_resources/report.html)，分析实现见 [optimization.py](src/capability_factory/optimization.py)。
 
 ### 工程设计细节
 
@@ -655,7 +713,7 @@ axiomforge/
 │   ├── reporting.py / gpu_status.py  报告与设备状态
 │   └── execution/              受限编译、worker 与独立验证
 ├── web/                        Vue 工作台与 Playwright 测试
-├── ui/                         可选 Streamlit 入口
+├── ui/                         Streamlit 数据科学入口
 ├── configs/                    任务、验证策略、Harness 与推理配置
 ├── knowledge/                  schema、种子能力卡与图谱说明
 ├── examples/evidence/          脱敏报告、代码和验证样例
@@ -690,7 +748,7 @@ GitHub Actions 分别运行 CPU 与 Web 工作流。浏览器测试使用 HTTP �
 
 ## 文档中心
 
-[文档中心](docs/README.md)按研发任务组织完整指南：首次使用可以沿“安装 → 数据 → 运行 → 报告”阅读，开发者可以从“架构 → 合约 → 插件 → 测试”进入源码，本地部署则从“四卡配置 → 模型端点 → 状态诊断”开始。每篇专题文档都链接对应实现和验证材料，便于边读边运行。
+[文档中心](docs/README.md)按研发任务组织完整指南：首次使用按“安装 → 数据 → 运行 → 报告”阅读，开发者从“架构 → 合约 → 插件 → 测试”进入源码，本地部署从“四卡配置 → 模型端点 → 状态诊断”开始。每篇专题文档都链接对应实现和验证材料，支持边读边运行。
 
 | 主题 | 文档 |
 | --- | --- |
@@ -731,7 +789,14 @@ GitHub Actions 分别运行 CPU 与 Web 工作流。浏览器测试使用 HTTP �
 | 长报告与原始 JSON 增加理解成本，异步返回可能覆盖其他运行 | 结论优先、候选比较、证据折叠、运行 ID 绑定请求与事件游标 | 报告可浏览、可下载、可回放，浏览器回归覆盖路由切换和错误恢复 |
 | API、单卡与四副本模型服务具有不同连接和资源状态 | Provider 统一合约；设备可见性与模型端点状态分别展示 | 同一工作台切换模型后端，见[四卡部署与状态诊断](docs/05_算力预算与四卡兼容.md) |
 
-当前部署面向本机与受控研发环境。工程边界、依赖版本、数据协议和运行事实均有对应入口，便于在同一套约束下复现结果。
+部署面向本机与受控研发环境。工程边界、依赖版本、数据协议和运行事实均有对应入口，保证同一套约束下复现结果。
+
+### 工程经验
+
+1. **数据协议**：字段白名单、固定切分、去重和泄漏检查在生成、执行、指标和报告阶段保持一致。
+2. **执行安全**：生成程序先经过 AST 构造器，再进入资源限制 worker；主进程掌握标签、指标和制品写入权限。
+3. **模型预算**：API、本地端点和 Mock 统一 Provider 合约，调用、搜索、修复和验证共享全局预算并写入事件。
+4. **知识版本**：来源哈希、能力版本、失败指纹和验证状态共同决定后续检索优先级，历史运行保持可追溯。
 
 ### 后续可扩展方向
 
