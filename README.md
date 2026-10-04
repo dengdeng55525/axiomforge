@@ -14,7 +14,7 @@ Knowledge-grounded agents for reproducible algorithm engineering.
 
 [![CPU verification](https://github.com/dengdeng55525/axiomforge/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/dengdeng55525/axiomforge/actions/workflows/ci.yml) [![Web verification](https://github.com/dengdeng55525/axiomforge/actions/workflows/frontend.yml/badge.svg?branch=main)](https://github.com/dengdeng55525/axiomforge/actions/workflows/frontend.yml)
 
-[项目目标](#项目背景与目标) · [演示视频](#项目演示视频) · [框架图](#系统框架与模块设计) · [快速开始](#快速离线体验) · [验证报告](#验证报告与结果) · [Agent Harness](#agent-harness-离线评测) · [知识图谱](#知识图谱与能力资产) · [文档中心](docs/README.md)
+[项目目标](#项目背景与目标) · [演示视频](#项目演示视频) · [能力库](#能力库) · [框架图](#系统框架与模块设计) · [快速开始](#快速离线体验) · [验证报告](#验证报告与结果) · [Agent Harness](#agent-harness-离线评测) · [知识图谱](#知识图谱与能力资产) · [文档中心](docs/README.md)
 
 ## 项目背景与目标
 
@@ -59,6 +59,28 @@ https://github.com/user-attachments/assets/0716fbd6-675a-4dd8-863c-39e44db8545a
 第二段项目视频聚焦能力库：能力卡检索、来源定位、关系探索、版本详情和 Web 端能力关联。点击播放器即可在 GitHub 内观看，也可[下载能力库演示视频](display/display2.mp4)。
 
 https://github.com/user-attachments/assets/d7f21835-b554-4202-b7f1-7fc689542f15
+
+第三段项目视频聚焦本地部署：模型与环境切换、GPU 状态、任务运行、验证报告和知识回写。点击播放器即可在 GitHub 内观看，也可[下载本地部署演示视频](display/display3.mp4)。
+
+https://github.com/user-attachments/assets/afe2894e-6596-485d-a983-74cdb6e76f8d
+
+## 能力库
+
+AxiomForge 的能力库把算法研发中的规则、指标、数据协议、代码经验和失败修复路径组织为可检索的能力卡。每张卡片都带有来源、版本、适用范围、输入输出、依赖环境和验证状态，能够直接参与下一次任务的检索、规划和复用。
+
+![能力库 Web 工作台：能力卡索引、筛选与详情](docs/images/lib.png)
+
+上图展示能力库的完整交互面：左侧进入知识探索，中间区域提供能力名称、说明或标签搜索，并按任务类型和状态筛选；卡片显示版本、能力类型、来源数量和抽取状态；右侧详情面板集中呈现能力说明、适用范围、输入输出与依赖，并通过“聚焦此节点”和“用于新任务”继续展开图谱或创建任务。
+
+### 能力资产的组织方式
+
+1. **能力卡索引**：覆盖平均精度、银行通话前特征与泄漏防护、`pdays=999` 未联系标记、未知类别处理和文本分类等可复用规则。
+2. **版本与状态**：使用 `capability_id + version + content_sha256` 管理不可变版本，状态区分 `draft`、`extracted`、`verified` 和 `deprecated`。
+3. **来源与证据**：每张卡关联公开数据说明、项目协议或固定 Git 提交，保存 `source_id`、revision、locator、许可证和内容哈希。
+4. **适用边界**：卡片明确任务类型、输入输出、依赖、评价指标和禁止条件；银行任务中的 `duration` 泄漏约束、SMS 文本去重和训练集词表隔离均以卡片形式进入规划。
+5. **复用闭环**：从能力详情聚焦图谱节点，沿 `DERIVED_FROM`、`USES`、`IMPLEMENTS`、`EVALUATES` 和 `SUPERSEDES` 追踪证据，再使用“用于新任务”把选中的能力带入 Workflow。
+
+能力库列表负责快速定位资产，知识图谱负责展开来源与关系，验证报告负责回看运行事实。三者共用 SQLite 持久化数据和版本化 API，形成“检索 → 复用 → 验证 → 回写”的资产闭环。
 
 ## 系统框架与模块设计
 
@@ -538,6 +560,8 @@ axiomforge harness replay RUN_ID --through 12
 ## 知识图谱与能力资产
 
 知识探索提供搜索、节点类型与关系筛选、邻域扩展和详情面板。能力节点定位来源、算法、依赖和验证运行，失败经验节点回看修复结果与适用任务。
+
+能力库列表和图谱关系是同一套知识资产的两种视图：先在[能力库](#能力库)中筛选能力卡，再进入下方图谱查看来源、版本、制品和验证路径。
 
 ![知识探索：来源、能力版本、运行和失败经验的关系](docs/images/workbench-graph.png)
 

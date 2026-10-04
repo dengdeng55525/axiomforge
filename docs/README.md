@@ -6,6 +6,8 @@
 
 - [项目演示视频：工作台与端到端闭环](../display/display.mp4)
 - [项目演示视频：能力库与来源探索](../display/display2.mp4)
+- [项目演示视频：本地部署与模型运行](../display/display3.mp4)
+- [能力库 Web 截图](images/lib.png)
 - [AxiomForge 系统框架图](../AxiomForge_Framework.svg)
 
 ## 按目标阅读
