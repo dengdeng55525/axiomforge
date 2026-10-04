@@ -85,18 +85,22 @@ const commands = computed(
           :class="[
             'badge',
             p.id === 'local_http'
-              ? 'warning'
+              ? p.available
+                ? 'success'
+                : 'warning'
               : p.available
                 ? 'success'
                 : 'warning',
           ]"
           >{{
             p.id === "local_http"
-              ? p.status === "planned_not_deployed"
-                ? "未部署（规划）"
-                : p.status === "operator_managed"
-                  ? "已接入，待启动"
-                  : "接入待验证"
+              ? p.available
+                ? "已连接"
+                : p.status === "planned_not_deployed"
+                  ? "未部署（规划）"
+                  : p.status === "operator_managed"
+                    ? "已接入，待启动"
+                    : "接入待验证"
               : p.available
                 ? "已配置"
                 : "未配置"

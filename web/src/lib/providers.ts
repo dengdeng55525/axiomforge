@@ -13,6 +13,7 @@ export interface ProviderEntry {
   model?: string;
   endpoint?: string;
   endpoint_count?: number;
+  live_endpoint_count?: number;
 }
 
 export const providerNames: Record<ProviderId, string> = {
@@ -43,6 +44,8 @@ export function providerTip(provider: ProviderEntry): string {
 
 export function providerStatus(provider: ProviderEntry): string {
   if (provider.id === "local_http") {
+    if (provider.available)
+      return `本地服务已连接 · ${provider.live_endpoint_count || provider.endpoint_count || 0} 个`;
     return provider.configured
       ? `本地端点池 · ${provider.endpoint_count || 0} 个`
       : "待配置本地端点";

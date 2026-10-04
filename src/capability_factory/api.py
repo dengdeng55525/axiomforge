@@ -7,6 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 from urllib.parse import urlsplit, urlunsplit
 
+import httpx
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import HTMLResponse, PlainTextResponse
 
@@ -100,6 +101,41 @@ def _safe_endpoint(value: str) -> str | None:
         return None
 
 
+def _probe_local_endpoint(endpoint: str) -> bool:
+    """Probe a configured loopback endpoint without using proxy settings."""
+
+    try:
+        parsed = urlsplit(endpoint)
+        if parsed.hostname not in {"127.0.0.1", "localhost", "::1"}:
+            return False
+        response = httpx.get(
+            endpoint.rstrip("/") + "/models",
+            timeout=0.8,
+            follow_redirects=False,
+            trust_env=False,
+        )
+        if response.status_code != 200:
+            return False
+        payload = response.json()
+        return isinstance(payload, dict) and isinstance(payload.get("data"), list)
+    except (httpx.HTTPError, ValueError, TypeError):
+        return False
+
+
+def _probe_local_endpoints(endpoints: list[str]) -> list[str]:
+    """Return live loopback endpoints for a bounded operator status view."""
+
+    return [endpoint for endpoint in endpoints if _probe_local_endpoint(endpoint)]
+
+
+def _local_probe_enabled(settings: Settings) -> bool:
+    """Probe only when the operator explicitly configured local serving."""
+
+    if str(getattr(settings, "local_base_urls", "")).strip():
+        return True
+    return (settings.root / ".env").is_file()
+
+
 def _provider_catalog(settings: Settings) -> dict:
     """Safe provider profiles consumed by the visual workflow client.
 
@@ -113,6 +149,7 @@ def _provider_catalog(settings: Settings) -> dict:
     local_endpoints = [_safe_endpoint(value) for value in settings.local_endpoints]
     local_endpoints = [value for value in local_endpoints if value]
     local_endpoint = local_endpoints[0] if local_endpoints else None
+    live_local_endpoints = _probe_local_endpoints(local_endpoints) if _local_probe_enabled(settings) else []
     openai_configured = bool(settings.openai_api_key.get_secret_value())
     openai_endpoint = _safe_endpoint(settings.openai_base_url)
     parsed_openai = urlsplit(openai_endpoint or "")
@@ -176,10 +213,10 @@ def _provider_catalog(settings: Settings) -> dict:
                 "model": settings.local_model,
                 "endpoint": local_endpoint,
                 "configured": bool(local_endpoints),
-                "available": False,
-                "status": "operator_managed",
+                "available": bool(live_local_endpoints),
+                "status": "ready" if live_local_endpoints else "operator_managed",
                 "requires_api_key": False,
-                "local_model_deployed": False,
+                "local_model_deployed": bool(live_local_endpoints),
                 "model_plan": {
                     "model_family": "Qwen2.5-Coder-14B-Instruct-AWQ",
                     "profile": "four_gpu_14b",
@@ -191,6 +228,8 @@ def _provider_catalog(settings: Settings) -> dict:
                 },
                 "endpoints": local_endpoints,
                 "endpoint_count": len(local_endpoints),
+                "live_endpoints": live_local_endpoints,
+                "live_endpoint_count": len(live_local_endpoints),
                 "capabilities": ["structured_json", "multi_role", "beam_search"],
             },
             {
@@ -219,6 +258,12 @@ def _safe_local_profile(settings: Settings) -> dict:
     profile["base_url"] = safe_urls[0] if safe_urls else None
     profile["endpoint_count"] = len(safe_urls)
     profile["configured"] = bool(safe_urls)
+    live_urls = _probe_local_endpoints(safe_urls) if _local_probe_enabled(settings) else []
+    profile["live_endpoints"] = live_urls
+    profile["live_endpoint_count"] = len(live_urls)
+    profile["deployed"] = bool(live_urls)
+    if live_urls:
+        profile["status"] = "ready"
     return profile
 
 
@@ -374,7 +419,7 @@ def create_app(settings: Settings | None = None):
         return {"status": "ok", "provider": "deepseek", "model": settings.model,
                 "credential_configured": bool(settings.api_key.get_secret_value()),
                 "sandbox": "constrained_ast_subprocess", "os_sandbox": False,
-                "local_model_deployed": False, "local_provider": local_provider,
+                "local_model_deployed": bool(local_provider.get("deployed")), "local_provider": local_provider,
                 "gpu_status": gpu_status,
                 "max_parallel_runs": 2}
 
