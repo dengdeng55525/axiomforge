@@ -20,7 +20,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.0",
     "@types/d3": "^7.4.3",
-    "@types/node": "^22.0.0",
+    "@types/node": "^26.6.4",
     "@playwright/test": "^1.55.0",
     "typescript": "~5.9.2",
     "vite": "^7.1.0",
