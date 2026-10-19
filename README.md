@@ -4,8 +4,6 @@
 
 <h1 align="center">AxiomForge · 知衡</h1>
 
-<p align="center"><strong>作者：丁俊泽（Ding Junze）</strong></p>
-
 ### 知识驱动，验证有据。让算法能力持续生长。
 
 **AxiomForge · 知衡**是面向算法研发的 Agent 工程平台。它将自然语言需求、行业知识与历史代码连接起来，完成**理解 → 检索 → 规划 → 生成 → 验证 → 修复 → 沉淀**，交付可运行代码、可阅读报告和可追溯的能力版本。
